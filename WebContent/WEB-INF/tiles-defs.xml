@@ -1,0 +1,1343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+	<definition name="template" template="/WEB-INF/tiles/theme.jsp">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
+		<put-attribute name="sidebar" value="sidebar" />
+		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
+	</definition>
+
+	<definition name="sidebar" template="/WEB-INF/tiles/sidebar.jsp" />
+
+	<definition name="admintemplate" template="/WEB-INF/tiles/theme.jsp">
+		<put-attribute name="statictitle" value="Caribbean Online Judge" />
+		<put-attribute name="title" value="pagetit.coj" />
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
+		<put-attribute name="sidebar" value="sidebar" />
+		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
+	</definition>
+
+	<definition name="virtualcontest" template="/WEB-INF/tiles/theme.jsp">
+		<put-attribute name="statictitle" value="Caribbean Online Judge" />
+		<put-attribute name="title" value="pagetit.coj" />
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/tiles/virtualsidebar.jsp" />
+		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
+	</definition>
+
+	<definition name="scoreboard" template="/WEB-INF/tiles/scoreboard.jsp">
+		<put-attribute name="statictitle" value="Caribbean Online Judge" />
+		<put-attribute name="title" value="pagetit.coj" />
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
+		<put-attribute name="content" value="/WEB-INF/tiles/content.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
+	</definition>
+
+	<definition name="saris" template="/WEB-INF/tiles/saris.jsp">
+		<put-attribute name="statictitle" value="Caribbean Online Judge" />
+		<put-attribute name="title" value="pagetit.coj" />
+		<put-attribute name="content" value="/WEB-INF/tiles/content.jsp" />
+	</definition>
+
+
+	<definition name="errortemplate" template="/WEB-INF/tiles/scoreboard.jsp">
+		<put-attribute name="title" value="pagetit.coj" />
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
+		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
+	</definition>
+
+	<definition name="contest" template="/WEB-INF/tiles/theme.jsp">
+		<put-attribute name="title" value="pagetit.coj" />
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
+		<put-attribute name="sidebar" value="/WEB-INF/tiles/contestsidebar.jsp" />
+		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
+	</definition>
+
+	<definition name="maintenancetemplate" template="/WEB-INF/tiles/maintenance.jsp">
+		<put-attribute name="title" value="pagetit.coj" />
+		<put-attribute name="header"
+			value="/WEB-INF/tiles/maintenanceheader.jsp" />
+		<put-attribute name="sidebar"
+			value="/WEB-INF/tiles/maintenancesidebar.jsp" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/general/maintenance.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
+	</definition>
+
+	<definition name="template2" template="/WEB-INF/tiles/blank.jsp">
+	</definition>
+
+	<definition name="/contest/cstatus" extends="contest">
+		<put-attribute name="title" value="pagetit.rcjudgments" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/cstatus.jsp" />
+	</definition>
+
+	<definition name="/practice/index" extends="virtualcontest">
+		<put-attribute name="title" value="pagetit.vcoverview" />
+		<put-attribute name="content" value="/WEB-INF/jsp/practice/index.jsp" />
+	</definition>
+
+	<definition name="/practice/vcontestview" extends="virtualcontest">
+		<put-attribute name="title" value="pagetit.vcoverview" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/practice/vcontestview.jsp" />
+	</definition>
+
+	<definition name="/practice/vsubmission" extends="virtualcontest">
+		<put-attribute name="title" value="Virtual Contest: SubmissionJudge View" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/practice/vsubmission.jsp" />
+	</definition>
+
+	<definition name="/practice/createvc" extends="template">
+		<put-attribute name="title" value="pagetit.pcscreate" />
+		<put-attribute name="content" value="/WEB-INF/jsp/practice/createvc.jsp" />
+	</definition>
+
+	<definition name="/practice/mylist" extends="template">
+		<put-attribute name="title" value="pagetit.pcsmylist" />
+		<put-attribute name="content" value="/WEB-INF/jsp/practice/mylist.jsp" />
+	</definition>
+
+	<definition name="/practice/globallist" extends="template">
+		<put-attribute name="title" value="pagetit.pcsglist" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/practice/globallist.jsp" />
+	</definition>
+
+	<definition name="/practice/vproblems" extends="virtualcontest">
+		<put-attribute name="title" value="pagetit.vcproblems" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/practice/vproblems.jsp" />
+	</definition>
+
+	<definition name="/practice/vproblem" extends="virtualcontest">
+		<put-attribute name="title" value="pagetit.vcproblem" />
+		<put-attribute name="content" value="/WEB-INF/jsp/practice/vproblem.jsp" />
+	</definition>
+
+	<definition name="/practice/vstatus" extends="virtualcontest">
+		<put-attribute name="title" value="pagetit.vcjudgments" />
+		<put-attribute name="content" value="/WEB-INF/jsp/practice/vstatus.jsp" />
+	</definition>
+
+	<definition name="/practice/vsubmit" extends="virtualcontest">
+		<put-attribute name="title" value="pagetit.vcsubmit" />
+		<put-attribute name="content" value="/WEB-INF/jsp/practice/vsubmit.jsp" />
+	</definition>
+
+	<definition name="/practice/vscoreboard" extends="scoreboard">
+		<put-attribute name="title" value="pagetit.vcstandings" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/practice/vscoreboard.jsp" />
+	</definition>
+
+	<definition name="/practice/vuseraccount" extends="virtualcontest">
+		<put-attribute name="title" value="Virtual Contest: User Account" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/practice/vuseraccount.jsp" />
+	</definition>
+
+	<definition name="/practice/vcompileinfo" extends="virtualcontest">
+		<put-attribute name="title" value="pagetit.vccompileinf" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/practice/vcompileinfo.jsp" />
+	</definition>
+
+	<definition name="/practice/vbestsolutions" extends="virtualcontest">
+		<put-attribute name="title" value="Virtual Contest: Best Solutions" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/practice/vbestsolutions.jsp" />
+	</definition>
+
+	<definition name="/practice/getvirtualtemplates" extends="template2">
+		<put-attribute name="title" value="" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/practice/getvirtualtemplates.jsp" />
+	</definition>
+
+	<definition name="/24h/votes" extends="template">
+		<put-attribute name="title" value="pagetit.votes" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/votes.jsp" />
+	</definition>
+
+	<definition name="/admin/index" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.admin" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/index.jsp" />
+	</definition>
+
+	<definition name="/user/addentry" extends="template">
+		<put-attribute name="title" value="Add Entry" />
+		<put-attribute name="content" value="/WEB-INF/jsp/user/addentry.jsp" />
+	</definition>
+
+	<definition name="/admin/addfaq" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.faq" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/addfaq.jsp" />
+	</definition>
+
+	<definition name="/admin/notify" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.mailnotification" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/mailnotification.jsp" />
+	</definition>
+
+	<definition name="/admin/faqs" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.faq" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/faqs.jsp" />
+	</definition>
+
+	<definition name="/admin/addann" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.aaddannouncement" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/addann.jsp" />
+	</definition>
+
+	<definition name="/user/entry" extends="template">
+		<put-attribute name="title" value="Entry" />
+		<put-attribute name="content" value="/WEB-INF/jsp/user/entry.jsp" />
+	</definition>
+
+	<definition name="/user/manageentries" extends="template">
+		<put-attribute name="title" value="pagetit.listentries" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/user/manageentries.jsp" />
+	</definition>
+	
+	<definition name="/admin/managesources" extends="admintemplate">
+		<put-attribute name="title" value="Sources list" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/managesources.jsp" />
+	</definition>
+
+	<definition name="/admin/managecomments" extends="admintemplate">
+		<put-attribute name="title" value="Comments list" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/managecomments.jsp" />
+	</definition>
+
+	<definition name="/admin/entry" extends="admintemplate">
+		<put-attribute name="title" value="Entry" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/entry.jsp" />
+	</definition>
+
+	<definition name="/admin/manageentries" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.listentries" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/manageentries.jsp" />
+	</definition>
+
+	<definition name="/admin/manageann" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.aeannouncement" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/manageann.jsp" />
+	</definition>
+
+	<definition name="/admin/listnews" extends="admintemplate">
+		<put-attribute name="title" value="Add News" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/listnews.jsp" />
+	</definition>
+
+	<definition name="/admin/listann" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.amannouncement" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/listann.jsp" />
+	</definition>
+
+	<definition name="/admin/sessions" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.amannouncement" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/sessions.jsp" />
+	</definition>
+
+	<definition name="/admin/listlog" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.log" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/listlog.jsp" />
+	</definition>
+
+	<definition name="/admin/programminglanguages" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/programminglanguages.jsp" />
+	</definition>
+
+	<definition name="/admin/managelanguage" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/managelanguage.jsp" />
+	</definition>
+
+	<definition name="/admin/sendmail" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/sendmail.jsp" />
+	</definition>
+
+	<definition name="/admin/adminproblems" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/adminproblems.jsp" />
+	</definition>
+
+	<definition name="/admin/managesubmissions" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/managesubmissions.jsp" />
+	</definition>
+
+	<definition name="/admin/managecountries" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/managecountries.jsp" />
+	</definition>
+	<definition name="/admin/manageactivations" extends="admintemplate">
+		<put-attribute name="title" value="Manage Activations" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/manageactivations.jsp" />
+	</definition>
+
+	<definition name="/admin/managecountry" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/managecountry.jsp" />
+	</definition>
+
+	<definition name="/admin/manageinstitution" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/manageinstitution.jsp" />
+	</definition>
+
+	<definition name="/admin/globalflags" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/globalflags.jsp" />
+	</definition>
+
+	<definition name="/admin/managesubmission" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/managesubmission.jsp" />
+	</definition>
+
+	<definition name="/admin/contestrejudge" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/contestrejudge.jsp" />
+	</definition>
+
+	<definition name="/admin/contestsubmissions" extends="admintemplate">
+		<put-attribute name="title" value="Manage Contest Submissions" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/contestsubmissions.jsp" />
+	</definition>
+
+	<definition name="/admin/contestsubmission" extends="admintemplate">
+		<put-attribute name="title" value="Manage Contest Submissions" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/contestsubmission.jsp" />
+	</definition>
+
+	<definition name="/admin/manageusers" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/manageusers.jsp" />
+	</definition>
+
+	<definition name="/admin/manageuser" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/manageuser.jsp" />
+	</definition>
+
+	<definition name="/admin/manageteams" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/manageteams.jsp" />
+	</definition>
+
+	<definition name="/admin/admincontests" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.amcontests" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/admincontests.jsp" />
+	</definition>
+
+	<definition name="/admin/virtualcontests" extends="admintemplate">
+		<put-attribute name="title" value="Manage Virtual Contests" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/virtualcontests.jsp" />
+	</definition>
+	
+	<definition name="/admin/manageparsers" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.manageparsers" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/manageparsers.jsp" />
+	</definition>
+
+	<definition name="/admin/managecorrections" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.managecorrections" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/managecorrections.jsp" />
+	</definition>
+
+	<definition name="/contest/myclarifications" extends="contest">
+		<put-attribute name="title" value="pagetit.rcclarifications" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/myclarifications.jsp" />
+	</definition>
+
+	<definition name="/contest/sendclarification" extends="contest">
+		<put-attribute name="title" value="pagetit.rcsendclarif" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/sendclarification.jsp" />
+	</definition>
+
+	<definition name="/mail/composemail" extends="template">
+		<put-attribute name="title" value="pagetit.mailcomposemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/mail/composemail.jsp" />
+	</definition>
+
+	<definition name="/mail/inbox" extends="template">
+		<put-attribute name="title" value="pagetit.mailinbox" />
+		<put-attribute name="content" value="/WEB-INF/jsp/mail/inbox.jsp" />
+	</definition>
+
+	<definition name="/mail/draft" extends="template">
+		<put-attribute name="title" value="pagetit.maildraft" />
+		<put-attribute name="content" value="/WEB-INF/jsp/mail/draft.jsp" />
+	</definition>
+
+	<definition name="/mail/outbox" extends="template">
+		<put-attribute name="title" value="pagetit.mailsent" />
+		<put-attribute name="content" value="/WEB-INF/jsp/mail/outbox.jsp" />
+	</definition>
+
+	<definition name="/mail/mailview" extends="template">
+		<put-attribute name="title" value="pagetit.mailmsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/mail/mailview.jsp" />
+	</definition>
+
+	<definition name="/mail/deletemail" extends="template">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/mail/deletemail.jsp" />
+	</definition>
+
+	<definition name="/mail/savedraft" extends="template2">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/mail/savedraft.jsp" />
+	</definition>
+
+	<definition name="/contest/clarificationview" extends="contest">
+		<put-attribute name="title" value="pagetit.rcclarification" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/clarificationview.jsp" />
+	</definition>
+
+	<definition name="/contest/clarification" extends="contest">
+		<put-attribute name="title" value="pagetit.rcreqclarif" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/clarification.jsp" />
+	</definition>
+
+	<definition name="/contest/crejudge" extends="contest">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/crejudge.jsp" />
+	</definition>
+
+	<definition name="/contest/cstatistics" extends="contest">
+		<put-attribute name="title" value="pagetit.rcstatistics" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/cstatistics.jsp" />
+	</definition>
+
+	<definition name="/contest/globalstatistics" extends="template">
+		<put-attribute name="title" value="pagetit.rcsstats" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/globalstatistics.jsp" />
+	</definition>
+
+	<definition name="/practice/virtualstatistics" extends="template">
+		<put-attribute name="title" value="pagetit.vcstatistics" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/practice/virtualstatistics.jsp" />
+	</definition>
+
+	<definition name="/contest/repoint" extends="contest">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/repoint.jsp" />
+	</definition>
+
+	<definition name="/contest/unlock" extends="contest">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/unlock.jsp" />
+	</definition>
+
+	<definition name="/contest/csubmission" extends="contest">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/csubmission.jsp" />
+	</definition>
+
+	<definition name="/contest/ccompileinfo" extends="contest">
+		<put-attribute name="title" value="pagetit.rccompileinfo" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/ccompileinfo.jsp" />
+	</definition>
+
+	<definition name="/contest/csubmissions" extends="contest">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/csubmissions.jsp" />
+	</definition>
+
+	<definition name="/contest/cawards" extends="contest">
+		<put-attribute name="title" value="pagehdr.contest.awards" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/cawards.jsp" />
+	</definition>
+
+	<definition name="/contest/cscoreboard" extends="scoreboard">
+		<put-attribute name="title" value="pagetit.rcstandings" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/cscoreboard.jsp" />
+	</definition>
+
+	<definition name="/contest/saris" extends="saris">
+		<put-attribute name="title" value="pagehdr.saris" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/saris/saris.jsp" />
+	</definition>
+
+	<definition name="/contest/globalcontestscoreboard" extends="scoreboard">
+		<put-attribute name="title" value="pagetit.rcstandings" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/globalcontestscoreboard.jsp" />
+	</definition>
+
+	<definition name="/contest/contestsrank" extends="template">
+		<put-attribute name="title" value="pagetit.rcststandings" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/contestsrank.jsp" />
+	</definition>
+
+	<definition name="/contest/cuseraccount" extends="contest">
+		<put-attribute name="title" value="pagetit.rcprofileofuser" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/cuseraccount.jsp" />
+	</definition>
+
+	<definition name="/contest/cbestsolutions" extends="contest">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/cbestsolutions.jsp" />
+	</definition>
+
+	<definition name="/contest/cacceptedsubmissions" extends="contest">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/cacceptedsubmissions.jsp" />
+	</definition>
+
+	<definition name="/contest/cproblems" extends="contest">
+		<put-attribute name="title" value="pagetit.rcproblems" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/cproblems.jsp" />
+	</definition>
+
+	<definition name="/contest/csubmit" extends="contest">
+		<put-attribute name="title" value="pagetit.rcsubmit" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/csubmit.jsp" />
+	</definition>
+
+<definition name="/contest/cballoontracker" extends="contest">
+		<put-attribute name="title" value="pagetit.balloontracker" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/cballoontracker.jsp" />
+	</definition>
+
+	<definition name="/contest/contestview" extends="contest">
+		<put-attribute name="title" value="pagetit.rcoverview" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/contestview.jsp" />
+	</definition>
+
+	<definition name="/contest/cmysubmissions" extends="contest">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/cmysubmissions.jsp" />
+	</definition>
+
+	<definition name="/contest/cusersubmissions" extends="contest">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/cusersubmissions.jsp" />
+	</definition>
+
+	<definition name="/contest/cproblem" extends="contest">
+		<put-attribute name="title" value="pagetit.rcproblem" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/cproblem.jsp" />
+	</definition>
+
+	<definition name="index" extends="template">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
+	</definition>
+
+	<definition name="/general/faqs" extends="template">
+		<put-attribute name="title" value="pagetit.faq" />
+		<put-attribute name="content" value="/WEB-INF/jsp/general/faqs.jsp" />
+	</definition>
+
+	<definition name="/general/tools" extends="template">
+		<put-attribute name="title" value="pagetit.tools" />
+		<put-attribute name="content" value="/WEB-INF/jsp/general/tools.jsp" />
+	</definition>
+
+	<definition name="/user/following" extends="template">
+		<put-attribute name="title" value="pagetit.following" />
+		<put-attribute name="content" value="/WEB-INF/jsp/user/following.jsp" />
+	</definition>
+	
+	<definition name="/general/downloads" extends="template">
+		<put-attribute name="title" value="pagetit.downloads" />
+		<put-attribute name="content" value="/WEB-INF/jsp/general/downloads.jsp" />
+	</definition>
+	
+	
+	<definition name="/user/pagefollowing" template="/WEB-INF/jsp/user/pagefollowing.jsp" />
+	<definition name="/general/pagedownloads" template="/WEB-INF/jsp/general/pagedownloads.jsp" />
+	
+	<definition name="/user/pagefollowers" template="/WEB-INF/jsp/user/pagefollowers.jsp" />
+	
+	<definition name="/user/listentries" extends="template">
+		<put-attribute name="title" value="pagetit.listentries" />
+		<put-attribute name="content" value="/WEB-INF/jsp/user/listentries.jsp" />
+	</definition>
+
+	<definition name="/general/contact" extends="template">
+		<put-attribute name="title" value="pagetit.contactus" />
+		<put-attribute name="content" value="/WEB-INF/jsp/general/contact.jsp" />
+	</definition>
+
+	<definition name="/general/links" extends="template">
+		<put-attribute name="title" value="pagetit.links" />
+		<put-attribute name="content" value="/WEB-INF/jsp/general/links.jsp" />
+	</definition>
+
+	<definition name="/general/documentation" extends="template">
+		<put-attribute name="title" value="pagetit.doc" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/general/documentation.jsp" />
+	</definition>
+
+	<definition name="/general/about" extends="template">
+		<put-attribute name="title" value="pagetit.about" />
+		<put-attribute name="content" value="/WEB-INF/jsp/general/about.jsp" />
+	</definition>
+
+	<definition name="/general/tos" extends="template">
+		<put-attribute name="title" value="pagetit.tos" />
+		<put-attribute name="content" value="/WEB-INF/jsp/general/tos.jsp" />
+	</definition>
+
+	<definition name="/user/compareusers" extends="template">
+		<put-attribute name="title" value="pagetit.24hcusers" />
+		<put-attribute name="content" value="/WEB-INF/jsp/user/compareusers.jsp" />
+	</definition>
+
+	<definition name="/error/flush" extends="errortemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/error/flush.jsp" />
+	</definition>
+
+	<definition name="/error/maxupload" extends="errortemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/error/maxupload.jsp" />
+	</definition>
+
+	<definition name="/error/cancel" extends="errortemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/error/cancel.jsp" />
+	</definition>
+
+	<definition name="/error/contestover" extends="errortemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/error/contestover.jsp" />
+	</definition>
+
+	<definition name="/error/accessdenied" extends="errortemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/error/accessdenied.jsp" />
+	</definition>
+
+    <definition name="/error/serviceunavaliable" extends="errortemplate">
+		<put-attribute name="title" value="Service unavailable" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/error/serviceunavaliable.jsp" />
+	</definition>
+
+
+	<definition name="/admin/rejudge" extends="template">
+		<put-attribute name="title" value="Rejudge 24h" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/rejudge.jsp" />
+	</definition>
+
+	<definition name="/admin/globalaccessrules" extends="template">
+		<put-attribute name="title" value="Rejudge 24h" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/globalaccessrules.jsp" />
+	</definition>
+
+	<definition name="/admin/createteams" extends="template">
+		<put-attribute name="title" value="Create Teams" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/createteams.jsp" />
+	</definition>
+
+	<definition name="/admin/addcountry" extends="template">
+		<put-attribute name="title" value="Add Country" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/addcountry.jsp" />
+	</definition>
+
+	<definition name="/admin/addinstitution" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/addinstitution.jsp" />
+	</definition>
+
+	<definition name="/general/maintenance" extends="maintenancetemplate">
+		<put-attribute name="title" value="Maintenance" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/general/maintenance.jsp" />
+	</definition>
+
+	<definition name="/admin/manageinstitutions" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/manageinstitutions.jsp" />
+	</definition>
+
+	<definition name="/user/accountactivation" extends="template">
+		<put-attribute name="title" value="Account Activation" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/user/accountactivation.jsp" />
+	</definition>
+
+	<definition name="/user/forgottenpassword" extends="template">
+		<put-attribute name="title" value="pagetit.rupassword" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/user/forgottenpassword.jsp" />
+	</definition>
+
+	<definition name="/admin/addproblem" extends="template">
+		<put-attribute name="title" value="Add Problem" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/addproblem.jsp" />
+	</definition>
+
+	<definition name="/contest/coming" extends="template">
+		<put-attribute name="title" value="pagetit.rcscoming" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/coming.jsp" />
+	</definition>
+
+	<definition name="/contestboard/coming" extends="template">
+		<put-attribute name="title" value="pagetit.rcscoming" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/coming.jsp" />
+	</definition>
+
+	<definition name="/contest/running" extends="template">
+		<put-attribute name="title" value="pagetit.rcsrunning" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/running.jsp" />
+	</definition>
+
+	<definition name="/contest/past" extends="template">
+		<put-attribute name="title" value="pagetit.rcsprevious" />
+		<put-attribute name="content" value="/WEB-INF/jsp/contest/past.jsp" />
+	</definition>
+
+	<definition name="/admin/createcontest" extends="template">
+		<put-attribute name="title" value="Create Contest" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/createcontest.jsp" />
+	</definition>
+
+	<definition name="/admin/contestproblems" extends="template">
+		<put-attribute name="title" value="Manage Contests Problems" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/contestproblems.jsp" />
+	</definition>
+
+
+	<definition name="/admin/baylorxml" extends="template">
+		<put-attribute name="title" value="Baylor XMl Export" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/baylorxml.jsp" />
+	</definition>
+
+	<definition name="/admin/contestproblemcolors" extends="template">
+		<put-attribute name="title" value="Manage Contests Problems Colors" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/contestproblemcolors.jsp" />
+	</definition>
+	
+	<definition name="/admin/importicpcusers" extends="template">
+		<put-attribute name="title" value="page.managecontest.link.iiu" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/importicpcusers.jsp" />
+	</definition>
+
+	<definition name="/admin/contestlanguages" extends="template">
+		<put-attribute name="title" value="Manage Contests Languages" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/contestlanguages.jsp" />
+	</definition>
+
+	<definition name="/admin/managecontest" extends="template">
+		<put-attribute name="title" value="pagetit.managecontest" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/managecontest.jsp" />
+	</definition>
+
+	<definition name="/admin/contestawards" extends="template">
+		<put-attribute name="title" value="Contest Awards" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/contestawards.jsp" />
+	</definition>
+
+
+	<definition name="/admin/contestglobalflags" extends="template">
+		<put-attribute name="title" value="Contest Global Flags" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/contestglobalflags.jsp" />
+	</definition>
+
+	<definition name="/admin/contestoverview" extends="template">
+		<put-attribute name="title" value="Contest Overview" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/contestoverview.jsp" />
+	</definition>
+
+	<definition name="/admin/uploadfile" extends="template">
+		<put-attribute name="title" value="Upload File" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/uploadfile.jsp" />
+	</definition>
+	<definition name="/admin/files" extends="template">
+		<put-attribute name="title" value="pagetit.files" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/files.jsp" />
+	</definition>
+
+	<definition name="/admin/globalsettings" extends="template">
+		<put-attribute name="title" value="Manage Contest Global Settings" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/globalsettings.jsp" />
+	</definition>
+
+	<definition name="/admin/contestusers" extends="template">
+		<put-attribute name="title" value="Manage Contest Users" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/contestusers.jsp" />
+	</definition>
+
+	<definition name="/admin/manageproblem" extends="template">
+		<put-attribute name="title" value="pagetit.manageproblem" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/manageproblem.jsp" />
+	</definition>
+	
+	<definition name="/admin/manageproblemI18N" extends="template">
+		<put-attribute name="title" value="pagetit.manageproblem" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/manageproblemI18N.jsp" />
+	</definition>
+
+	<definition name="/24h/calification" extends="template">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/calification.jsp" />
+	</definition>
+
+	<definition name="/24h/acceptedsubmissions" extends="template">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/24h/acceptedsubmissions.jsp" />
+	</definition>
+
+	<definition name="/24h/statistics" extends="template">
+		<put-attribute name="title" value="pagetit.24hstats" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/statistics.jsp" />
+	</definition>
+
+	<definition name="/admin/problemControl" extends="template">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/problemControl.jsp" />
+	</definition>
+
+	<definition name="/error/wproblem" extends="template">
+		<put-attribute name="title" value="pagetit.wrongproblem" />
+		<put-attribute name="content" value="/WEB-INF/jsp/error/wproblem.jsp" />
+	</definition>
+
+	<definition name="/error/error" extends="errortemplate">
+		<put-attribute name="title" value="pagetit.generalerror" />
+		<put-attribute name="content" value="/WEB-INF/jsp/error/error.jsp" />
+	</definition>
+
+	<definition name="/24h/submit" extends="template">
+		<put-attribute name="title" value="pagetit.24hsubmit" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/submit.jsp" />
+	</definition>
+
+	<definition name="/24h/scriptsubmit" extends="template">
+		<put-attribute name="title" value="pagetit.24hsubmit" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/scriptsubmit.jsp" />
+	</definition>
+	<definition name="/lsb/index" extends="template2">
+		<put-attribute name="title" value="pagetit.xtats.compareusers" />
+		<put-attribute name="content" value="/WEB-INF/jsp/lsb/index.jsp" />
+	</definition>
+
+
+	<definition name="/24h/usersubmissions" extends="template">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/24h/usersubmissions.jsp" />
+	</definition>
+
+	<definition name="/24h/problems" extends="template">
+		<put-attribute name="title" value="pagetit.24hproblems" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/problems.jsp" />
+	</definition>
+
+	<definition name="/datagen/datasets" extends="template">
+		<put-attribute name="title" value="pagetit.datagen" />
+		<put-attribute name="content" value="/WEB-INF/jsp/datagen/datasets.jsp" />
+	</definition>
+
+	<definition name="/24h/problem" extends="template">
+		<put-attribute name="title" value="pagetit.24hproblem" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/problem.jsp" />
+	</definition>
+
+	<definition name="/24h/problempdf" extends="template">
+		<put-attribute name="title" value="pagetit.24hproblem" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/problem.jsp" />
+	</definition>
+
+	<definition name="/24h/compileinfo" extends="template">
+		<put-attribute name="title" value="pagetit.24hcompileinfo" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/compileinfo.jsp" />
+	</definition>
+	<definition name="/24h/status" extends="template">
+		<put-attribute name="title" value="pagetit.24hjudgments" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/status.jsp" />
+	</definition>
+	<definition name="/24h/bestsolutions" extends="template">
+		<put-attribute name="title" value="pagetit.24hprobbestsolutions" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/bestsolutions.jsp" />
+	</definition>
+	<definition name="/24h/submissions" extends="template">
+		<put-attribute name="title" value="pagetit.24hsubmission" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/submissions.jsp" />
+	</definition>
+	<definition name="/24h/submission" extends="template">
+		<put-attribute name="title" value="pagetit.24hsubmission" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/submission.jsp" />
+	</definition>
+	<definition name="/24h/mysubmissions" extends="template">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/mysubmissions.jsp" />
+	</definition>
+	<definition name="/24h/usersrank" extends="template">
+		<put-attribute name="title" value="pagetit.24hustandings" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/usersrank.jsp" />
+	</definition>
+
+	<definition name="/24h/institutionsrank" extends="template">
+		<put-attribute name="title" value="pagetit.24histandings" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/24h/institutionsrank.jsp" />
+	</definition>
+
+	<definition name="/24h/institutionsrankbycountry" extends="template">
+		<put-attribute name="title" value="pagetit.24hiscountry" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/24h/institutionsrankbycountry.jsp" />
+	</definition>
+
+	<definition name="/24h/countriesrank" extends="template">
+		<put-attribute name="title" value="pagetit.24hcstandings" />
+		<put-attribute name="content" value="/WEB-INF/jsp/24h/countriesrank.jsp" />
+	</definition>
+
+	<definition name="/24h/usersinstitutionrank" extends="template">
+		<put-attribute name="title" value="pagetit.24husinstitution" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/24h/usersinstitutionrank.jsp" />
+	</definition>
+
+	<definition name="/24h/userscountryrank" extends="template">
+		<put-attribute name="title" value="pagetit.24huscountry" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/24h/userscountryrank.jsp" />
+	</definition>
+
+	<definition name="/user/useraccount" extends="template">
+		<put-attribute name="title" value="pagetit.profileofuser" />
+		<put-attribute name="content" value="/WEB-INF/jsp/user/useraccount.jsp" />
+	</definition>
+
+	<definition name="/general/achievements" extends="template">
+		<put-attribute name="title" value="pagetit.achievements" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/general/achievements.jsp" />
+	</definition>
+
+	<definition name="/user/createnewaccount" extends="template">
+		<put-attribute name="title" value="pagetit.ruaccount" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/user/createnewaccount.jsp" />
+	</definition>
+	<definition name="/user/getInstitution" extends="template2">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/user/getInstitution.jsp" />
+	</definition>
+	<definition name="/user/updateaccount" extends="template">
+		<put-attribute name="title" value="pagetit.euaccount" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/user/updateaccount.jsp" />
+	</definition>
+	<definition name="/user/login" extends="template">
+		<put-attribute name="title" value="Login" />
+		<put-attribute name="content" value="/WEB-INF/jsp/user/login.jsp" />
+	</definition>
+	<definition name="/user/registrationsuccess" extends="template">
+		<put-attribute name="title" value="pagetit.suaregistration" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/user/registrationsuccess.jsp" />
+	</definition>
+
+	<definition name="/user/forgottensuccess" extends="template">
+		<put-attribute name="title" value="pagetit.suprecovery" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/user/forgottensuccess.jsp" />
+	</definition>
+
+			<!-- PlagiCOJ -->
+
+	<definition name="/admin/manageplagicoj" extends="template">
+		<put-attribute name="title" value="Manage Plagiarism Detection" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/manageplagicoj.jsp" />
+	</definition>
+
+	<definition name="/admin/manageproblemclassification"
+		extends="template">
+		<put-attribute name="title" value="Manage Problem Classification" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/manageproblemclassification.jsp" />
+	</definition>
+
+	<definition name="/admin/manageclassifications" extends="template">
+		<put-attribute name="title" value="Manage Classification" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/manageclassifications.jsp" />
+	</definition>
+
+	<definition name="/plagicoj/plagicojinspectionresult"
+		extends="template">
+		<put-attribute name="title" value="Plagiarism Inspection Result" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/plagicoj/plagicojinspectionresult.jsp" />
+	</definition>
+        
+        <!-- TODO: @LAN - Aquí no se debe extender de template, esto debe salir solo pero cuando lo hice me dio bateo, se debe arreglar. -->
+        
+        <definition name="/plagicoj/plagicojinspectionresultmatrix"
+		extends="template">
+		<put-attribute name="title" value="Plagiarism Inspection Result" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/plagicoj/plagicojinspectionresultmatrix.jsp" />
+	</definition>
+        
+        <definition name="/plagicoj/plagicojinspectionresultlist"
+		extends="template">
+		<put-attribute name="title" value="Plagiarism Inspection Result List" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/plagicoj/plagicojinspectionresultlist.jsp" />
+	</definition>
+<!--        
+        
+	<definition name="/plagicoj/plagicojinspectionresultmatrix" template="/WEB-INF/jsp/plagicoj/plagicojinspectionresultmatrix.jsp" />-->
+
+	<definition name="/plagicoj/plagicojresult" extends="template">
+		<put-attribute name="title"
+			value="Result of Plagiarism Detection Between Two Submissions" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/plagicoj/plagicojresult.jsp" />
+	</definition>
+
+	<definition name="/plagicoj/plagicojdetectorresult" extends="template">
+		<put-attribute name="title"
+			value="Detector Result Between Two Submissions" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/plagicoj/plagicojdetectorresult.jsp" />
+	</definition>
+        
+        	<definition name="/plagicoj/sourcecodedetectorresult" extends="template">
+		<put-attribute name="title"
+			value="Detector Result Between Two Submissions" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/plagicoj/sourcecodedetectorresult.jsp" />
+	</definition>
+
+
+
+	<definition name="/profile/institution" extends="template">
+		<put-attribute name="title" value="pagetit.profileofinstitution" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/profile/institution.jsp" />
+	</definition>
+
+	<definition name="/profile/country" extends="template">
+		<put-attribute name="title" value="pagetit.profileofcountry" />
+		<put-attribute name="content" value="/WEB-INF/jsp/profile/country.jsp" />
+	</definition>
+
+	<definition name="/services/specification" extends="template">
+		<put-attribute name="title" value="pagetit.services" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/services/specification.jsp" />
+	</definition>
+
+	<definition name="/schoolar/createcourse" extends="template">
+		<put-attribute name="title" value="pagetit.pcscreate" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/schoolar/createcourse.jsp" />
+	</definition>
+
+	<definition name="/schoolar/editcourse" extends="template">
+		<put-attribute name="title" value="Edit Course" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/schoolar/editcourse.jsp" />
+	</definition>
+
+	<definition name="/schoolar/editcoursechapters" extends="template">
+		<put-attribute name="title" value="pagetit.coursechapters" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/schoolar/editcoursechapters.jsp" />
+	</definition>
+
+	<definition name="/schoolar/getchapterinfo" extends="template2">
+		<put-attribute name="title" value="pagetit.coursechapters" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/schoolar/getchapterinfo.jsp" />
+	</definition>
+
+	<definition name="/schoolar/updateboard" extends="template2">
+		<put-attribute name="title" value="pagetit.coursechapters" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/schoolar/updateboard.jsp" />
+	</definition>
+
+	<definition name="/schoolar/removematerial" extends="template2">
+		<put-attribute name="title" value="pagetit.coursechapters" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/schoolar/removematerial.jsp" />
+	</definition>
+
+	<definition name="/schoolar/editcourseusers" extends="template">
+		<put-attribute name="title" value="pagetit.coursechapters" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/schoolar/editcourseusers.jsp" />
+	</definition>
+
+	<definition name="/schoolar/coursesboard" extends="template">
+		<put-attribute name="title" value="pagetit.coursechapters" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/schoolar/coursesboard.jsp" />
+	</definition>
+
+	<definition name="/schoolar/editcourseginfo" extends="template">
+		<put-attribute name="title" value="pagetit.coursechapters" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/schoolar/editcourseginfo.jsp" />
+	</definition>
+
+	<definition name="/schoolar/course" extends="scoreboard">
+		<put-attribute name="title" value="pagetit.coursechapters" />
+		<put-attribute name="content" value="/WEB-INF/jsp/schoolar/course.jsp" />
+	</definition>
+
+	<definition name="/schoolar/viewproblem" extends="scoreboard">
+		<put-attribute name="title" value="pagetit.coursechapters" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/schoolar/viewproblem.jsp" />
+	</definition>
+
+	<definition name="/schoolar/coursesubmit" extends="scoreboard">
+		<put-attribute name="title" value="pagetit.coursechapters" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/schoolar/coursesubmit.jsp" />
+	</definition>
+
+	<definition name="/schoolar/mycourses" extends="template">
+		<put-attribute name="title" value="pagetit.coursechapters" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/schoolar/mycourses.jsp" />
+	</definition>
+
+	<definition name="/xtats/records" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.records" />
+		<put-attribute name="content" value="/WEB-INF/jsp/xtats/records.jsp" />
+	</definition>
+
+	<definition name="/xtats/offrecords" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.offrecords" />
+		<put-attribute name="content" value="/WEB-INF/jsp/xtats/offrecords.jsp" />
+	</definition>
+
+	<definition name="/xtats/problems" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.problems" />
+		<put-attribute name="content" value="/WEB-INF/jsp/xtats/problems.jsp" />
+	</definition>
+
+	<definition name="/xtats/distsubmitions" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.distsubmitions" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/xtats/distsubmitions.jsp" />
+	</definition>
+
+	<definition name="/xtats/distsubuser" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.distsubuser" />
+		<put-attribute name="content" value="/WEB-INF/jsp/xtats/distsubuser.jsp" />
+	</definition>
+
+	<definition name="/xtats/veredictstl" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.veredictstl" />
+		<put-attribute name="content" value="/WEB-INF/jsp/xtats/veredictstl.jsp" />
+	</definition>
+
+	<definition name="/xtats/problemsubmitions" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.problemsubmitions" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/xtats/problemsubmitions.jsp" />
+	</definition>
+
+	<definition name="/xtats/compareproblems" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.compareproblems" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/xtats/compareproblems.jsp" />
+	</definition>
+
+	<definition name="/xtats/veredictsproblems" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.veredictsproblems" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/xtats/veredictsproblems.jsp" />
+	</definition>
+
+	<definition name="/xtats/contestsubmitions" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.contestsubmitions" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/xtats/contestsubmitions.jsp" />
+	</definition>
+
+	<definition name="/xtats/subaftercontest" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.subaftercontest" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/xtats/subaftercontest.jsp" />
+	</definition>
+
+	<definition name="/xtats/veredictscontest" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.veredictscontest" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/xtats/veredictscontest.jsp" />
+	</definition>
+
+	<definition name="/xtats/developmentincontest" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.developmentincontest" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/xtats/developmentincontest.jsp" />
+	</definition>
+
+	<definition name="/xtats/problemscontest" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.problemscontest" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/xtats/problemscontest.jsp" />
+	</definition>
+
+	<definition name="/xtats/compareusers" extends="template">
+		<put-attribute name="title" value="pagetit.xtats.compareusers" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/xtats/compareusers.jsp" />
+	</definition>
+	
+	<definition name="/wboard/contests" extends="template">
+		<put-attribute name="title" value="pagetit.wboard" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/wboard/contests.jsp" />
+	</definition>
+	
+	<definition name="/admin/wbsite/list" extends="template">
+		<put-attribute name="title" value="pagetit.wboard.wbsite.list" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/wbsite/list.jsp" />
+	</definition>
+	
+	<definition name="/admin/wbsite/details" extends="template">
+		<put-attribute name="title" value="pagetit.wboard.wbsite.details" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/wbsite/details.jsp" />
+	</definition>
+	
+	<definition name="/admin/wbsite/create" extends="template">
+		<put-attribute name="title" value="pagetit.wboard.wbsite.create" />
+		<put-attribute name="content" value="wbsitecreate" />
+	</definition>
+	
+	<definition name="wbsitecreate" template="/WEB-INF/jsp/admin/wbsite/create.jsp">
+		<put-attribute name="form"
+			value="/WEB-INF/jsp/admin/wbsite/form.jsp" />
+	</definition>
+
+	<definition name="/admin/wbsite/edit" extends="template">
+		<put-attribute name="title" value="pagetit.wboard.wbsite.edit" />
+		<put-attribute name="content" value="wbsiteedit" />
+	</definition>
+	
+	<definition name="wbsiteedit" template="/WEB-INF/jsp/admin/wbsite/edit.jsp">
+		<put-attribute name="form"
+			value="/WEB-INF/jsp/admin/wbsite/form.jsp" />
+	</definition>
+	
+	<definition name="/admin/wbcontest/list" extends="template">
+		<put-attribute name="title" value="pagetit.wboard.wbcontest.list" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/wbcontest/list.jsp" />
+	</definition>
+	
+	<definition name="/admin/wbcontest/details" extends="template">
+		<put-attribute name="title" value="pagetit.wboard.wbcontest.details" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/wbcontest/details.jsp" />
+	</definition>
+	
+	<definition name="/admin/wbcontest/create" extends="template">
+		<put-attribute name="title" value="pagetit.wboard.wbcontest.create" />
+		<put-attribute name="content" value="wbcontestcreate" />
+	</definition>
+	
+	<definition name="wbcontestcreate" template="/WEB-INF/jsp/admin/wbcontest/create.jsp">
+		<put-attribute name="form"
+			value="/WEB-INF/jsp/admin/wbcontest/form.jsp" />
+	</definition>
+
+	<definition name="/admin/wbcontest/edit" extends="template">
+		<put-attribute name="title" value="pagetit.wboard.wbcontest.edit" />
+		<put-attribute name="content" value="wbcontestedit" />
+	</definition>
+	
+	<definition name="wbcontestedit" template="/WEB-INF/jsp/admin/wbcontest/edit.jsp">
+		<put-attribute name="form"
+			value="/WEB-INF/jsp/admin/wbcontest/form.jsp" />
+	</definition>
+	
+
+</tiles-definitions>
