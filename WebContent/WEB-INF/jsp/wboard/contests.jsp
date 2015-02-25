@@ -62,7 +62,7 @@ $(document).ready(function(){
 	var sid = ${site};
 	var follow_text = "<spring:message code="button.follow"/>";
 	var unfollow_text = "<spring:message code="button.unfollow"/>";
-	var server_time = ${now};
+	var server_time = ${now.time};
 	var time_access = (new Date().getTime());
 	
 	$("#site-select, #follow-select").change(function(){

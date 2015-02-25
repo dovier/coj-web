@@ -66,7 +66,6 @@ public class WbBoardController extends BaseController {
 		}		
 				
 		
-		model.addAttribute("now", new Date().getTime());
 		model.addAttribute("site", site);
 		model.addAttribute("followed", followed);
 		
@@ -111,7 +110,6 @@ public class WbBoardController extends BaseController {
 	
 		
 		model.addAttribute("mapsites", map);
-		model.addAttribute("now", new Date().getTime());
 		model.addAttribute("site", site);
 		model.addAttribute("followed", followed);
 		model.addAttribute("contests", contests);
