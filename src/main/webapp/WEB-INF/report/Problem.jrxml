@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Problem" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<parameter name="ABB" class="java.lang.String">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     problem."title" AS problem_title,
+     problem."pid" AS problem_pid,
+     problem."description" AS problem_description,
+     problem."input" AS problem_input,
+     problem."output" AS problem_output,
+     problem."input_example" AS problem_input_example,
+     problem."output_example" AS problem_output_example,
+     problem."time" AS problem_time,
+     problem."memory" AS problem_memory,
+     problem."fontsize" AS problem_fontsize,
+     problem."coments" AS problem_coments,
+     problem."author" AS problem_author,
+     problem."case_time_limit" AS problem_case_time_limit,
+     problem."date" AS problem_date
+FROM
+     "public"."problem" problem
+WHERE
+     problem."pid" = $P{PID}]]>
+	</queryString>
+	<field name="problem_title" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_abb" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_description" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_input" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_output" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_input_example" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_output_example" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_time" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_memory" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_fontsize" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_coments" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_author" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_case_time_limit" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="problem_date" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="0" width="595" height="55" backcolor="#006699"/>
+				<staticText>
+					<reportElement x="0" y="13" width="595" height="29" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Center">
+						<font fontName="sansserif" size="20" isBold="true" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Caribbean Online Judge]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="1"/>
+	</pageHeader>
+	<detail>
+		<band height="25">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="20"/>
+				<textElement textAlignment="Center" markup="html">
+					<font fontName="sansserif" size="14" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{problem_title}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="23">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="555" height="20"/>
+				<textElement textAlignment="Center" markup="html">
+					<font fontName="sansserif" size="14" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{problem_abb}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="72" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="20" width="555" height="20"/>
+				<textElement textAlignment="Justified" lineSpacing="1_1_2" markup="html">
+					<font fontName="sansserif" size="12" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{problem_description}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="126" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="14" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+		</band>
+		<band height="68" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement x="0" y="20" width="555" height="20"/>
+				<textElement textAlignment="Justified" lineSpacing="1_1_2" markup="html">
+					<font fontName="sansserif" size="12" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{problem_input}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="165" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="14" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Input Specification]]></text>
+			</staticText>
+		</band>
+		<band height="71">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="20" width="555" height="20"/>
+				<textElement textAlignment="Justified" lineSpacing="1_1_2" markup="html">
+					<font fontName="sansserif" size="12" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{problem_output}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="165" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="14" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Output Specification]]></text>
+			</staticText>
+		</band>
+		<band height="73">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="20" width="555" height="20"/>
+				<textElement textAlignment="Justified" lineSpacing="1_1_2" markup="html">
+					<font fontName="sansserif" size="12" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{problem_input_example}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="204" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="14" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Sample Input]]></text>
+			</staticText>
+		</band>
+		<band height="74">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="20" width="555" height="20"/>
+				<textElement textAlignment="Justified" lineSpacing="1_1_2" markup="html">
+					<font fontName="sansserif" size="12" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{problem_output_example}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="165" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="14" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Sample Output]]></text>
+			</staticText>
+		</band>
+		<band height="41">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="20" width="555" height="20"/>
+				<textElement markup="html">
+					<font fontName="sansserif" size="12" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{problem_coments}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="165" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="14" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Hint]]></text>
+			</staticText>
+		</band>
+		<band height="173">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="115" y="76" width="145" height="20"/>
+				<textElement markup="html">
+					<font fontName="sansserif" size="12" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{problem_time}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="115" y="31" width="436" height="20"/>
+				<textElement markup="html">
+					<font fontName="sansserif" size="12" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{problem_date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="115" y="144" width="147" height="20"/>
+				<textElement markup="html">
+					<font fontName="sansserif" size="12" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{problem_fontsize}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="144" width="114" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="12" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Size Limit (Bytes):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="76" width="100" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="12" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Time Limit (MS):]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="115" y="99" width="147" height="20"/>
+				<textElement markup="html">
+					<font fontName="sansserif" size="12" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{problem_memory}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="168" width="553" height="1"/>
+			</line>
+			<line>
+				<reportElement x="2" y="4" width="553" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="31" width="100" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="12" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Addition Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="99" width="100" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="12" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Memory (KB):]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="115" y="9" width="436" height="20"/>
+				<textElement markup="html">
+					<font fontName="sansserif" size="12" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{problem_author}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="9" width="100" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="12" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Created by:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="115" y="53" width="235" height="20"/>
+				<textElement markup="html">
+					<font fontName="sansserif" size="12" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{problem_case_time_limit}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="53" width="100" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="12" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Test Limit (MS):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="121" width="114" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="12" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Output Limit (MB):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="115" y="121" width="100" height="20"/>
+				<textElement>
+					<font fontName="sansserif" size="12" isBold="false" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[64]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm:ss">
+				<reportElement x="0" y="4" width="165" height="13"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>
