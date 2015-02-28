@@ -283,6 +283,7 @@ public class SubmissionController extends BaseController {
 		} catch (Exception e) {
 			submissionDAO.changeStatus(sid, "Unqualified");
 		}
+                
 		return "redirect:/24h/status.xhtml";
 	}
 }
