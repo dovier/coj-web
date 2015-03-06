@@ -45,7 +45,7 @@ public class AMQPConfiguration {
 		bean.setMessageConverter(jsonMessageConverter());
 		// para enviar, el binding del exchange se configura en el rabbitmq
 		// server a la cola correspondiente (que aqui no interesa)
-		bean.setExchange("test.submit.exchange");
+		bean.setExchange(env.getProperty("submit.exchange"));
 		return bean;
 	}
 
@@ -63,7 +63,7 @@ public class AMQPConfiguration {
 	public SimpleMessageListenerContainer listenerContainer() {
 		SimpleMessageListenerContainer bean = new SimpleMessageListenerContainer(connectionFactory());
 		bean.setMessageListener(messageListener);
-		bean.setQueueNames("test.submit.response.queue");
+		bean.setQueueNames(env.getProperty("submit.response.queue"));
 		bean.setAcknowledgeMode(AcknowledgeMode.AUTO);
 		return bean;
 	}
