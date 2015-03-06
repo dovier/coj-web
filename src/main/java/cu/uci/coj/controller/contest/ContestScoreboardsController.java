@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,7 @@ import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.ContestAwards;
+import cu.uci.coj.model.ContestAwardsFlags;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.SarisSubmission;
@@ -353,14 +355,28 @@ break;
 		if (!contest.isPast()) {
 			return "/error/accessdenied";
 		}
-
-	//	List<ContestAwards> awards = contestAwardsDAO.loadAwards(cid);
-
 		model.addAttribute("contest", contest);
-	//	model.addAttribute("contestAwards", awards);
+		awards(model, cid);
 		return "/contest/cawards";
 	}
 
+	public void awards(Model model,Integer cid) {
+		List<Integer> aids = baseDAO.integers("load.contest.awards.id", cid);
+		for (Integer aid : aids) {
+			switch (aid) {
+			case ContestAwardsFlags.FAST_AWARD:
+				model.addAttribute("fastAward",baseDAO.object("fast.award", ContestAwards.class, cid,cid));
+				break;
+			case ContestAwardsFlags.EXCLUSIVE_AWARD:
+				model.addAttribute("exclusiveAward",baseDAO.object("exclusive.award", ContestAwards.class, cid,cid));
+				break;
+			case ContestAwardsFlags.ACCURATE_AWARD:
+				model.addAttribute("accurateAward",baseDAO.object("accurate.award", ContestAwards.class, cid,cid));
+				break;
+			}
+		}
+	}
+	
 	public void setMedals(List<User> users, Contest contest, int i) {
 		while (i < users.size() && i < contest.getGold()) {
 			if (users.get(i).getAcc() == 0) {

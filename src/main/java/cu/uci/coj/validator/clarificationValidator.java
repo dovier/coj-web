@@ -44,7 +44,7 @@ public class clarificationValidator implements Validator {
         Clarification clarification = (Clarification) o;
         try {            
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "general.error.empty");
-            if (!userDAO.isInContest(userDAO.integer("user.uid",clarification.getUsername()), clarification.getCid()) && !userDAO.isJudgeInContest(userDAO.integer("user.uid",clarification.getUsername()), clarification.getCid())) {
+            if (!userDAO.isInContest(userDAO.integer("select.uid.by.username",clarification.getUsername()), clarification.getCid()) && !userDAO.isJudgeInContest(userDAO.integer("select.uid.by.username",clarification.getUsername()), clarification.getCid())) {
                 errors.rejectValue("general", "errormsg.30");
             }
         } catch (Exception e) {
@@ -68,7 +68,7 @@ public class clarificationValidator implements Validator {
                         errors.rejectValue("username", "general.error.user.notexist");
                     }
                     if (!errors.hasErrors() && !clarification.isForall()) {
-                        int uid = userDAO.integer("user.uid",string);
+                        int uid = userDAO.integer("select.uid.by.username",string);
                         if (!userDAO.isInContest(uid, clarification.getCid()) && !userDAO.isJudgeInContest(uid, clarification.getCid())) {
                             errors.rejectValue("username", "clarification.error.notin");
                         }

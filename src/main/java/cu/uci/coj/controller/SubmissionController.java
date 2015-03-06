@@ -13,6 +13,7 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -90,7 +91,7 @@ public class SubmissionController extends BaseController {
 	public String BestSolutions(Locale locale, Principal principal, SecurityContextHolderAwareRequestWrapper requestWrapper, PagingOptions options, Model model, @RequestParam Integer pid) {
 		Problem problem = problemDAO.getStatistics(locale.getLanguage(), pid);
 		if (requestWrapper.isUserInRole(Roles.ROLE_USER)) {
-			int uid = submissionDAO.integer("user.uid", getUsername(principal));
+			int uid = submissionDAO.integer("select.uid.by.username", getUsername(principal));
 			problem.setSolved(problemDAO.bool("issolved.byuser", uid, problem.getPid()));
 			if (problem.isSolved()) {
 				problem.setLocked(problemDAO.isLocked(uid, problem.getPid()));
@@ -104,7 +105,7 @@ public class SubmissionController extends BaseController {
 	public String testBestSolutions(Locale locale, Principal principal, SecurityContextHolderAwareRequestWrapper requestWrapper, PagingOptions options, Model model, @RequestParam Integer pid) {
 		Problem problem = problemDAO.getStatistics(locale.getLanguage(), pid);
 		if (requestWrapper.isUserInRole(Roles.ROLE_USER)) {
-			int uid = submissionDAO.integer("user.uid", getUsername(principal));
+			int uid = submissionDAO.integer("select.uid.by.username", getUsername(principal));
 			problem.setSolved(problemDAO.bool("issolved.byuser", uid, problem.getPid()));
 			if (problem.isSolved()) {
 				problem.setLocked(problemDAO.isLocked(uid, problem.getPid()));
@@ -144,7 +145,7 @@ public class SubmissionController extends BaseController {
 				return "/error/cancel";
 			} else {
 				SubmissionJudge submission = submissionDAO.getSourceCode(id);
-				int uid = submissionDAO.integer("user.uid", getUsername(principal));
+				int uid = submissionDAO.integer("select.uid.by.username", getUsername(principal));
 				if (!requestWrapper.isUserInRole(Roles.ROLE_ADMIN) && !(submission.getUsername().equals(getUsername(principal)))
 						&& !(problemDAO.bool("issolved.byuser", uid, submission.getPid()) && problemDAO.isLocked(uid, submission.getPid()))) {
 					throw new EmptyResultDataAccessException(0);
@@ -165,7 +166,7 @@ public class SubmissionController extends BaseController {
 				return "/error/cancel";
 			} else {
 				SubmissionJudge submission = submissionDAO.getSourceCode(id);
-				int uid = submissionDAO.integer("user.uid", getUsername(principal));
+				int uid = submissionDAO.integer("select.uid.by.username", getUsername(principal));
 				if (!requestWrapper.isUserInRole(Roles.ROLE_ADMIN) && !(submission.getUsername().equals(getUsername(principal)))
 						&& !(problemDAO.bool("issolved.byuser", uid, submission.getPid()) && problemDAO.isLocked(uid, submission.getPid()))) {
 					throw new EmptyResultDataAccessException(0);
@@ -182,9 +183,9 @@ public class SubmissionController extends BaseController {
 	}
 
 	@RequestMapping(value = "/24h/downloadsourcezip.xhtml", method = RequestMethod.GET)
-	public String SourceZipDownload(Principal principal, HttpServletResponse response, Model model, @RequestParam(value = "status", required = false, defaultValue = "0") Integer type) {
+	public void SourceZipDownload(Principal principal, HttpServletResponse response, Model model, @RequestParam(value = "status", required = false, defaultValue = "0") Integer type) {
 		try {
-			int uid = submissionDAO.integer("user.uid", getUsername(principal));
+			int uid = submissionDAO.integer("select.uid.by.username", getUsername(principal));
 			response.setContentType("application/octet-stream");
 			String name = "coj";
 			switch (type) {
@@ -200,10 +201,8 @@ public class SubmissionController extends BaseController {
 			response.setHeader("Content-disposition", "inline; filename=" + getUsername(principal) + "-" + name + ".zip");
 			FileUtils.crearArchivoComprimido(response.getOutputStream(), submissionDAO.getSourceCodes(getUsername(principal), type));
 			response.getOutputStream().flush();
-			return null;
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
-			return "/error/accessdenied";
 		}
 	}
 
@@ -215,7 +214,7 @@ public class SubmissionController extends BaseController {
 		submit.setPid(pid == null ? 0 : pid);
 		if (sid != 0) {
 			SubmissionJudge submission = submissionDAO.getSourceCode(sid);
-			int uid = userDAO.integer("user.uid", getUsername(principal));
+			int uid = userDAO.integer("select.uid.by.username", getUsername(principal));
 			if (!requestWrapper.isUserInRole(Roles.ROLE_ADMIN) && !(submission.getUsername().equals(getUsername(principal)))
 					&& !(problemDAO.bool("issolved.byuser", uid, submission.getPid()) && problemDAO.isLocked(uid, submission.getPid()))) {
 			} else {
@@ -249,9 +248,9 @@ public class SubmissionController extends BaseController {
 	}
 
 	@RequestMapping(value = "/24h/submit.xhtml", method = RequestMethod.POST)
-	public String SubmitController(SecurityContextHolderAwareRequestWrapper requestWrapper, Locale locale, Principal principal, Model model, SubmissionJudge submit, BindingResult bindingResult) {
+	public String SubmitController(SecurityContextHolderAwareRequestWrapper requestWrapper, Locale locale, Principal principal, Model model, @ModelAttribute("submit")SubmissionJudge submit, BindingResult bindingResult) {
 		List<Language> languages = new LinkedList<Language>();
-		Integer uid = userDAO.integer("user.uid", getUsername(principal));
+		Integer uid = userDAO.integer("select.uid.by.username", getUsername(principal));
 		try {
 			if (problemDAO.exists(submit.getPid())) {
 				languages.addAll(utilDAO.getEnabledLanguagesByProblem(submit.getPid()));
@@ -271,7 +270,7 @@ public class SubmissionController extends BaseController {
 			model.addAttribute("submit",submit);
 			return "/24h/submit";
 		}
-		int iduser = userDAO.integer("user.uid", getUsername(principal));
+		int iduser = userDAO.integer("select.uid.by.username", getUsername(principal));
 		Problem problem = problemDAO.getProblemSubmitDataByAbb(locale.getLanguage(), submit.getPid());
 		boolean locked = problemDAO.bool("issolved.byuser", iduser, problem.getPid()) && problemDAO.isLocked(iduser, problem.getPid());
 		int sid = submissionDAO.insertSubmission(iduser, getUsername(principal), problem.getPid(), submit.getCode(), submit.getLanguageByLid(), locked, null);
@@ -283,7 +282,6 @@ public class SubmissionController extends BaseController {
 		} catch (Exception e) {
 			submissionDAO.changeStatus(sid, "Unqualified");
 		}
-                
 		return "redirect:/24h/status.xhtml";
 	}
 }

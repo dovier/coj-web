@@ -26,6 +26,8 @@ import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.Lexer;
 import org.antlr.runtime.Token;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -248,6 +250,31 @@ public class Utils {
 		return result;
 	}
 
+	/**
+	 * Reporta las fotos del contest (se asume extension png)
+	 * 
+	 * @param cid
+	 * @return una lista ordenada de fotos del contest
+	 */
+	public List<String> getContestImages(int cid) {
+		File contestFile = new File(Config.getProperty("base.contest.images"), String.valueOf(cid));
+
+		List<String> result = new ArrayList<>();
+		File[] list = contestFile.listFiles(new FilenameFilter() {
+
+			@Override
+			public boolean accept(File arg0, String arg1) {
+				return arg1.toLowerCase().endsWith(".png") || arg1.toLowerCase().endsWith(".jpg");
+			}
+		});
+		
+		if (!ArrayUtils.isEmpty(list))
+		for (int i = 0; i < list.length; i++) {
+			result.add(list[i].getName());
+		}
+		return result;
+	}
+
 	public Set<String> getDatasets(int pid) {
 		File problemFile = new File(Config.getProperty("problems.directory"), String.valueOf(pid));
 
@@ -266,6 +293,14 @@ public class Utils {
 		try {
 			Files.deleteIfExists(Paths.get(Config.getProperty("problems.directory"), String.valueOf(pid)).resolve(dataset + ".in"));
 			Files.deleteIfExists(Paths.get(Config.getProperty("problems.directory"), String.valueOf(pid)).resolve(dataset + ".out"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void removeImage(int cid, String image) {
+		try {
+			Files.deleteIfExists(Paths.get(Config.getProperty("base.contest.images"), String.valueOf(cid)).resolve(image));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -303,10 +338,11 @@ public class Utils {
 		}
 
 		if (needReload)
-		datasets = getDatasets(pid);
-		//para los datasets restantes, se le quitan los espacios en blanco y se sustituyen por .
-		for(String dataset:datasets) {
-			new File(problemFile,dataset).renameTo(new File(problemFile,dataset.replace(" ", ".")));
+			datasets = getDatasets(pid);
+		// para los datasets restantes, se le quitan los espacios en blanco y se
+		// sustituyen por .
+		for (String dataset : datasets) {
+			new File(problemFile, dataset).renameTo(new File(problemFile, dataset.replace(" ", ".")));
 		}
 	}
 

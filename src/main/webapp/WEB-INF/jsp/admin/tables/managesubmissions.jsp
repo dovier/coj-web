@@ -29,8 +29,14 @@
 			<label class="sub${submission.statusClass}">${submission.status}</label>
 		</c:if>
 	</display:column>
-	<display:column property="timeUsed" titleKey="tablehdr.time"
-		headerClass="headtime" />
+	<display:column titleKey="tablehdr.time" headerClass="headtime">
+		<c:if test="${submission.timeUsed == -1}">
+				...
+			</c:if>
+			<c:if test="${submission.timeUsed != -1}">
+				${submission.timeUsed}
+			</c:if>
+	</display:column>
 	<display:column property="memoryMB" titleKey="tablehdr.mem"
 		headerClass="headmem" />
 	<display:column property="fontMB" titleKey="tablehdr.size"
@@ -59,12 +65,28 @@
 		<c:if test="${submission.cid == 0}">
 			<a title="<spring:message code="tablehdr.rejudge"/>"
 				href="<c:url value="javascript:rejudge24h(${submission.sid})"/>"><i
-				class="fa fa-repeat"></i></a>
+				class="fa fa-repeat"></i></a>&nbsp;
+			<a title="<spring:message code="tablehdr.enable"/>"
+				href="<c:url value="javascript:toggle24h(${submission.sid})"/>">
+				<c:if test="${submission.enabled}">
+					<i class="fa fa-eye-slash"></i>
+				</c:if> <c:if test="${not submission.enabled}">
+					<i class="fa fa-eye"></i>
+				</c:if>
+			</a>
 		</c:if>
 		<c:if test="${submission.cid!=0 }">
 			<a title="<spring:message code="tablehdr.rejudge"/>"
 				href="<c:url value="javascript:rejudgeContest(${submission.sid})"/>"><i
-				class="fa fa-repeat"></i></a>
+				class="fa fa-repeat"></i></a>&nbsp;
+			<a title="<spring:message code="tablehdr.enable"/>"
+				href="<c:url value="javascript:toggleContest(${submission.sid})"/>">
+				<c:if test="${submission.enabled}">
+					<i class="fa fa-eye-slash"></i>
+				</c:if> <c:if test="${not submission.enabled}">
+					<i class="fa fa-eye"></i>
+				</c:if>
+			</a>
 		</c:if>
 	</display:column>
 </display:table>

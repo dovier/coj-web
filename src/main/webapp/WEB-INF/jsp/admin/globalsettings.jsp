@@ -6,21 +6,43 @@
 	<fmt:message key="page.header.admin.managecontest" />
 </h2>
 <div class="postcontent">
-	<table class="navigating" width="100%">
-		<tr>
-			<td width="10%"><a href="<c:url value="managecontest.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.mc" /></a></td>
-			<td width="10%"><a href="<c:url value="contestglobalflags.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.gf" /></a></td>
-			<td width="10%"><fmt:message key="page.managecontest.link.gs" /></td>
-			<td width="10%"><a href="<c:url  value="contestproblems.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.mp" /></a></td>
-			<td width="10%"><a href="contestproblemcolors.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.mpc" /></a></td>
-			<td width="10%"><a href="importicpcusers.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.iiu" /></a></td>
-			<td width="10%"><a href="baylorxml.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.bx" /></a></td>
-			<td width="10%"><a href="contestlanguages.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.ml" /></a></td>
-			<td width="10%"><a href="contestusers.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.mu" /></a></td>
-			<td width="10%"><a href="contestawards.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.aw" /></a></td>
-			<td width="10%"><a href="contestoverview.xhtml?cid=<c:url value="${contest.cid}" />"><fmt:message key="page.managecontest.link.ov" /></a></td>
-		</tr>
-	</table>
+	<ul class="nav nav-pills">
+		<li><a
+			href="<c:url value="managecontest.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.mc" /></a></li>
+		<li><a
+			href="<c:url value="contestglobalflags.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.gf" /></a></li>
+		<li class="active"><a
+			href="<c:url value="globalsettings.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.gs" /></a></li>
+		<li><a
+			href="<c:url value="contestproblems.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.mp" /></a></li>
+		<li><a
+			href="<c:url value="contestproblemcolors.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.mpc" /></a></li>
+		<li><a
+			href="<c:url value="importicpcusers.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.iiu" /></a></li>
+		<li><a href="<c:url value="baylorxml.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.bx" /></a></li>
+		<li><a
+			href="<c:url value="contestlanguages.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.ml" /></a></li>
+		<li><a
+			href="<c:url value="contestusers.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.mu" /></a></li>
+		<li><a
+			href="<c:url value="contestawards.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.aw" /></a></li>
+		<li><a
+			href="<c:url value="contestoverview.xhtml?cid=${contest.cid}" />"><fmt:message
+					key="page.managecontest.link.ov" /></a></li>
+		<li><a
+			href="<c:url value="contestimg.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.img" /></a></li>
+	</ul>
 
 	<form:form method="post" commandName="contest">
 		<fieldset style="width: 400px;">
@@ -29,12 +51,31 @@
 			</legend>
 			<table class="contestlanguages">
 				<tr>
-					<td><fmt:message key="page.managecontest.style" />:</td>
-					<td><form:input path="style" readonly="true" /></td>
+					<td><fmt:message key="page.managecontest.style" /></td>
+					<td>${style.name}</td>
 				</tr>
 				<tr>
-					<td><fmt:message key="page.managecontest.registration" />:</td>
-					<td><form:input path="registration" readonly="true" /></td>
+					<td><fmt:message key="page.managecontest.registration" /></td>
+					<td><c:choose>
+							<c:when test="${contest.registration eq 0}">
+								<span class="label label-info"><i
+									class="fa fa-info-circle"></i> <fmt:message
+										key="page.managecontest.register.free" /> </span>
+							</c:when>
+
+							<c:when test="${contest.registration eq 1}">
+								<fmt:message key="page.globalsettings.rg.limit" />&nbsp;
+									<form:input path="total_users" />&nbsp;
+									<span class="label label-danger">&nbsp;<form:errors
+										path="total_users" /></span>
+							</c:when>
+
+							<c:when test="${contest.registration eq 2}">
+								<span class="label label-info"><i
+									class="fa fa-info-circle"></i> <fmt:message
+										key="page.managecontest.register.admin" /> </span>
+							</c:when>
+						</c:choose></td>
 				</tr>
 			</table>
 		</fieldset>
@@ -46,29 +87,34 @@
 				<c:choose>
 					<c:when test="${contest.style eq 0}">
 						<tr>
-							<td><span class="label label-danger">Undefined Property</span></td>
+							<td><span class="label label-danger">Undefined
+									Property</span></td>
 						</tr>
 					</c:when>
 					<c:when test="${contest.style eq 1}">
 						<tr>
 							<td><fmt:message key="page.globalsettings.acm.penal" /></td>
 							<td><form:input path="penalty" /></td>
-							<td><span class="label label-danger"><form:errors path="penalty" /></span></td>
+							<td><span class="label label-danger"><form:errors
+										path="penalty" /></span></td>
 						</tr>
 						<tr>
 							<td><fmt:message key="page.globalsettings.acm.frtime" /></td>
 							<td><form:input path="frtime" /></td>
-							<td><span class="label label-danger"><form:errors path="frtime" /></span></td>
+							<td><span class="label label-danger"><form:errors
+										path="frtime" /></span></td>
 						</tr>
 						<tr>
 							<td><fmt:message key="page.globalsettings.acm.dead" /></td>
 							<td><form:input path="deadtime" /></td>
-							<td><span class="label label-danger"><form:errors path="deadtime" /></span></td>
+							<td><span class="label label-danger"><form:errors
+										path="deadtime" /></span></td>
 						</tr>
 						<tr>
 							<td><fmt:message key="page.globalsettings.acm.unfreeze" /></td>
 							<td><form:input path="unfreeze_time" /></td>
-							<td><span class="label label-danger"><form:errors path="unfreeze_time" /></span></td>
+							<td><span class="label label-danger"><form:errors
+										path="unfreeze_time" /></span></td>
 						</tr>
 					</c:when>
 
@@ -76,7 +122,8 @@
 						<tr>
 							<td><fmt:message key="page.globalsettings.ioi.task" /></td>
 							<td><form:input path="ioimark" /></td>
-							<td><span class="label label-danger"><form:errors path="ioimark" /></span></td>
+							<td><span class="label label-danger"><form:errors
+										path="ioimark" /></span></td>
 						</tr>
 					</c:when>
 
@@ -84,7 +131,8 @@
 						<tr>
 							<td><fmt:message key="page.globalsettings.free.points" /></td>
 							<td><form:input path="ppoints" /></td>
-							<td><span class="label label-danger"><form:errors path="ppoints" /></span></td>
+							<td><span class="label label-danger"><form:errors
+										path="ppoints" /></span></td>
 						</tr>
 					</c:when>
 
@@ -92,64 +140,31 @@
 						<tr>
 							<td><spring:message code="fieldhdr.levels" /></td>
 							<td><form:input path="levels" /></td>
-							<td><span class="label label-danger"><form:errors path="levels" /></span></td>
+							<td><span class="label label-danger"><form:errors
+										path="levels" /></span></td>
 						</tr>
 
 						<tr>
 							<td><spring:message code="fieldhdr.acbylevels" /></td>
 							<td><form:input path="acbylevels" /></td>
-							<td><span class="label label-danger"><form:errors path="acbylevels" /></span></td>
+							<td><span class="label label-danger"><form:errors
+										path="acbylevels" /></span></td>
 						</tr>
 
 						<tr>
 							<td><spring:message code="fieldhdr.aclimit" /></td>
 							<td><form:input path="aclimit" /></td>
-							<td><span class="label label-danger"><form:errors path="aclimit" /></span></td>
+							<td><span class="label label-danger"><form:errors
+										path="aclimit" /></span></td>
 						</tr>
 
 						<tr>
 							<td><spring:message code="fieldhdr.pointsbyproblem" /></td>
 							<td><form:input path="ppoints" /></td>
-							<td><span class="label label-danger"><form:errors path="ppoints" /></span></td>
+							<td><span class="label label-danger"><form:errors
+										path="ppoints" /></span></td>
 						</tr>
 
-					</c:when>
-
-				</c:choose>
-
-			</table>
-		</fieldset>
-
-		<fieldset style="width: 400px;">
-			<legend>
-				<fmt:message key="page.managecontest.registration" />
-			</legend>
-			<table class="contestlanguages">
-				<c:choose>
-					<c:when test="${contest.registration eq 0}">
-						<tr>
-
-							<td><span class="label label-danger"> <fmt:message key="page.managecontest.register.free" />
-							</span></td>
-
-						</tr>
-					</c:when>
-
-					<c:when test="${contest.registration eq 1}">
-						<tr>
-							<td><fmt:message key="page.globalsettings.rg.limit" /></td>
-							<td><form:input path="total_users" /></td>
-							<td><span class="label label-danger"><form:errors path="total_users" /></span></td>
-						</tr>
-					</c:when>
-
-					<c:when test="${contest.registration eq 2}">
-						<tr>
-
-							<td><span class="label label-danger"> <fmt:message key="page.managecontest.register.admin" />
-							</span></td>
-
-						</tr>
 					</c:when>
 
 				</c:choose>
@@ -164,6 +179,23 @@
 				<tr>
 					<td><fmt:message key="page.globalsettings.flags.balloon" /></td>
 					<td><form:checkbox path="balloon" /></td>
+				</tr>
+				<tr>
+					<td><fmt:message key="page.globalsettings.flags.gallery" /></td>
+					<td><form:checkbox path="gallery" /></td>
+				</tr>
+				<tr>
+					<td><fmt:message key="page.globalsettings.flags.saris" /></td>
+					<td><form:checkbox path="saris" /></td>
+				</tr>
+				<tr>
+					<td><fmt:message key="page.globalsettings.flags.stats" /></td>
+					<td><form:checkbox path="show_stats" /></td>
+				</tr>
+
+				<tr>
+					<td><fmt:message key="page.globalsettings.flags.statsout" /></td>
+					<td><form:checkbox path="show_stats_out" /></td>
 				</tr>
 				<tr>
 					<td><fmt:message key="page.globalsettings.flags.status" /></td>
@@ -217,21 +249,25 @@
 				<tr>
 					<td><fmt:message key="page.general.gold" /></td>
 					<td><form:input path="gold" /></td>
-					<td><span class="label label-danger"><form:errors path="gold" /></span></td>
+					<td><span class="label label-danger"><form:errors
+								path="gold" /></span></td>
 				</tr>
 				<tr>
 					<td><fmt:message key="page.general.silver" /></td>
 					<td><form:input path="silver" /></td>
-					<td><span class="label label-danger"><form:errors path="silver" /></span></td>
+					<td><span class="label label-danger"><form:errors
+								path="silver" /></span></td>
 				</tr>
 				<tr>
 					<td><fmt:message key="page.general.bronze" /></td>
 					<td><form:input path="bronze" /></td>
-					<td><span class="label label-danger"><form:errors path="bronze" /></span></td>
+					<td><span class="label label-danger"><form:errors
+								path="bronze" /></span></td>
 				</tr>
 			</table>
 		</fieldset>
-		<input type="submit" name="but" value="<spring:message code="button.update"/>" />
+		<input type="submit" name="but"
+			value="<spring:message code="button.update"/>" />
 	</form:form>
 </div>
 

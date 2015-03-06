@@ -68,7 +68,7 @@
 							id="hint" rows="15" />
 					</div>
 				</div>
-				<div class="tab-pane fade in active" id="es">
+				<div class="tab-pane fade in active" style="position:fixed;left:10000px;"  id="es">
 					<div class="form-group col-xs-12">
 
 						<label class="control-label col-xs-3"><fmt:message
@@ -110,7 +110,7 @@
 							id="hintEs" rows="15" />
 					</div>
 				</div>
-				<div class="tab-pane fade in active" id="pt">
+				<div class="tab-pane fade in active" style="position:fixed;left:10000px;"  id="pt">
 					<div class="form-group col-xs-12">
 						<label class="control-label col-xs-3"><fmt:message
 								key="addproblem.name" /></label>
@@ -161,5 +161,11 @@
 	src="<c:url value="/js/WYSIWYG/source.js" />"></script>
 
 <script>
+
+	$(".nav-tabs li").on("click", function(){
+		$(".tab-pane").each(function(){
+			$(this).css("position", "static");	
+		});
+	});	
 	
 </script>

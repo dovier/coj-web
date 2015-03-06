@@ -1,18 +1,22 @@
 package cu.uci.coj.controller.admin;
 
-import cu.uci.coj.model.Faq;
-import cu.uci.coj.controller.BaseController;
-import cu.uci.coj.dao.UtilDAO;
-import cu.uci.coj.validator.FaqValidator;
 import java.util.List;
 import java.util.Locale;
+
 import javax.annotation.Resource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import cu.uci.coj.controller.BaseController;
+import cu.uci.coj.dao.UtilDAO;
+import cu.uci.coj.model.Faq;
+import cu.uci.coj.model.Language;
+import cu.uci.coj.validator.FaqValidator;
 
 @Controller("FaqController")
 public class FaqController extends BaseController {
@@ -46,7 +50,7 @@ public class FaqController extends BaseController {
     public String adminListFaqs(Locale locale,Model model) {
         
         List<Faq> faqs = utilDao.objects("list.faq", Faq.class);
-        
+        model.addAttribute("languages",baseDAO.objects("select.language.faq", Language.class));
         model.addAttribute("faqs", faqs);
         return "/general/faqs";
     }

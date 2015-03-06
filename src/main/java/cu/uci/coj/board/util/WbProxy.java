@@ -6,23 +6,26 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
 
+import cu.uci.coj.config.Config;
+
 /**
 *
 * @author Eddy Roberto Morales Perez
 */
 
 @Component
-public class WbProxy {
+public class WbProxy {	
+	final static String proxy = Config.getProperty("system.proxy");
+	final static String port = Config.getProperty("system.port");
+	final static String noProxy = Config.getProperty("system.noproxyfor");
+	final static String username = Config.getProperty("system.username");
+	final static String password = Config.getProperty("system.password");	
 	
-	final static String proxy = "10.0.0.1", port = "8080",
-			username = "uci.cu\\", password = "";
-	
-	final static String noProxy = "localhost|*.uci.cu";
 	
 	@PostConstruct
     public static void setProxy() {    
     	Authenticator.setDefault(new SimpleAuthenticator(username, password));
-		System.setProperty("http.proxyHost", proxy);
+    	System.setProperty("http.proxyHost", proxy);
 		System.setProperty("http.proxyPort", port);
 		System.setProperty("http.nonProxyHosts", noProxy);
     }

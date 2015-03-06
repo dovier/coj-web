@@ -1,7 +1,7 @@
 package cu.uci.coj.controller.statistics;
 
+import java.security.Principal;
 import java.text.NumberFormat;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -114,8 +114,11 @@ public class StatisticsController extends BaseController  {
     }
 
     @RequestMapping(value = "/contest/cstatistics.xhtml", method = RequestMethod.GET)
-    public String ContestStatistics(Model model, @RequestParam("cid") Integer cid) {
+    public String ContestStatistics(Principal principal,Model model, @RequestParam("cid") Integer cid) {
         Contest contest = contestDAO.loadContest(cid);
+        Integer uid = getUid(principal);
+        boolean uidInContest = baseDAO.bool("exist.user.in.contest",uid,cid	);
+        model.addAttribute("showStats", (uidInContest && contest.isShow_stats()) || contest.isShow_stats_out());
         contestDAO.unfreezeIfNecessary(contest);
         model.addAttribute("stat", baseDAO.object("statistics.contest.total.status", Stats.class, contest.getCid()));
         model.addAttribute("statistics", baseDAO.objects("statistics.contest", Language.class, contest.getCid()));

@@ -550,6 +550,7 @@ function activate_editor(enable) {
 function SeleccionarRangosContest() {
     SeleccionaRangos('contest_users_clarification');
     SeleccionaRangos('contest_users');
+    SeleccionaRangos('balloontrackers');
 }
 
 function SeleccionarRangosVirtualContest() {

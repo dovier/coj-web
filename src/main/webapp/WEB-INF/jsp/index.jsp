@@ -34,7 +34,7 @@
 </div>
 <div class="row">
 	<authz:authorize access="isAuthenticated()">
-		<div class="col-xs-3 col-xs-offset-9">
+		<div class="col-xs-3 col-xs-offset-9 filter-follow">
 			<ul class="list-inline pull-right">
 				<li><a href="javascript:displayTableReload('');"><spring:message
 							code="link.all" /></a></li>

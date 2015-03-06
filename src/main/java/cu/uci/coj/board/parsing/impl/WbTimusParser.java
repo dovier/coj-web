@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import cu.uci.coj.board.dao.WbSiteDAO;
 import cu.uci.coj.board.parsing.WbParser;
 import cu.uci.coj.board.util.ConnectionErrorException;
+import cu.uci.coj.config.Config;
 import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
 
@@ -29,16 +30,22 @@ public class WbTimusParser  extends WbParser  {
 	    
 		@Resource
 		WbSiteDAO wbSiteDAO;
+		
+		private String contestUrl;
+		private String url;
 
 	    public WbTimusParser() {
-	        this.siteUrl = "http://acm.timus.ru/schedule.aspx";
+	    	this.url = Config.getProperty("timus.url");
+	    	this.siteUrl = Config.getProperty("timus.parsing.url");
+	        this.contestUrl = Config.getProperty("timus.parsing.url.contest");;
 	    }
 	    
 	    @PostConstruct
 	    public void init() {
-	    	site = wbSiteDAO.getSiteByUrl(siteUrl);
+	    	site = wbSiteDAO.getSiteByUrl(Config.getProperty("timus.url"));
 	    	if(site == null) {
-	    		site = new WbSite(0, "Timus Online Judge", siteUrl, "Timus", false, true, 358, "Asia/Yekaterinburg");
+	    		site = new WbSite(0, Config.getProperty("timus.name"), Config.getProperty("timus.url"), Config.getProperty("timus.code"),
+	    				false, true, Integer.parseInt(Config.getProperty("timus.timeanddateid")), Config.getProperty("timus.timeregion"));
 	    		int sid = wbSiteDAO.insertSite(site);
 	    		site.setSid(sid);
 	    	}
@@ -65,13 +72,13 @@ public class WbTimusParser  extends WbParser  {
 	            throw new ConnectionErrorException(site.getSite());
 	        }        
 	               
-	        Elements entries = doc.getElementsByAttributeValueStarting("href", "http://acm.timus.ru/contest.aspx?id=");        
+	        Elements entries = doc.getElementsByAttributeValueStarting("href", contestUrl +  "?id=");        
 	                
 	        for(int i = 0;i<entries.size();i++) {
 	            Element entry = entries.get(i);	            
 	                        
 	            strName = entry.html();
-	            strUrl = entry.attr("href");
+	            strUrl = url + "/" + entry.attr("href");
 	            
 	            Document doc2 = null;	            
 	            try {        	

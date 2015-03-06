@@ -63,13 +63,17 @@ public class contestSubmitValidator implements Validator {
             submit.getLanguageIdByKey();
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "pid", "errormsg.24");
             
-            
+          
             boolean isteam = userDAO.bool("is.team",submit.getUsername());            
-            if (!((submit.getContest().getContestant() == 3 || (isteam && submit.getContest().getContestant() == 1) || (!isteam && submit.getContest().getContestant() == 2) ) && submit.getContest().getRegistration() == 0 && submit.getContest().isAllow_registration()) && !contestDAO.isInContest(submit.getCid(), userDAO.integer("user.uid",submit.getUsername()))) {
+            if (!((submit.getContest().getContestant() == 3 || (isteam && submit.getContest().getContestant() == 1) || (!isteam && submit.getContest().getContestant() == 2) ) && submit.getContest().getRegistration() == 0 && submit.getContest().isAllow_registration()) && !contestDAO.isInContest(submit.getCid(), userDAO.integer("select.uid.by.username",submit.getUsername()))) {
                 errors.rejectValue("username", "errormsg.30");
             }
 
+            if (!errors.hasFieldErrors("pid") && !contestDAO.isProblemInContest(submit.getPid(), submit.getCid(), problemDAO.getCurrentLevel(userDAO.integer("select.uid.by.username",submit.getUsername()), submit.getCid()))) {
+                errors.rejectValue("pid", "errormsg.25");
+            }
             int problemSourceLimit = problemDAO.getSourceLimitByPid(submit.getPid());
+            
             if (submit.getCode().length() == 0 && submit.getUploadfile().getSize() <= 0) {
                 errors.rejectValue("code", "errormsg.27");
             } else if (submit.getCode().length() > problemSourceLimit || submit.getUploadfile().getSize() > problemSourceLimit) {
@@ -80,9 +84,7 @@ public class contestSubmitValidator implements Validator {
                 submit.setCode(new String(submit.getUploadfile().getBytes()));
             }
             
-            if (!errors.hasFieldErrors("pid") && !contestDAO.isProblemInContest(submit.getPid(), submit.getCid(), problemDAO.getCurrentLevel(userDAO.integer("user.uid",submit.getUsername()), submit.getCid()))) {
-                errors.rejectValue("pid", "errormsg.25");
-            }
+           
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

@@ -421,7 +421,7 @@ public class ScholarController extends BaseController {
 		if (bindingResult.hasErrors()) {
 			return "/schoolar/coursesubmit";
 		}
-		int iduser = userDAO.integer("user.uid", getUsername(principal));
+		int iduser = userDAO.integer("select.uid.by.username", getUsername(principal));
 		Problem problem = problemDAO.getProblemSubmitDataByAbb(locale.getLanguage(), submit.getPid());
 		boolean locked = problemDAO.bool("issolved.byuser", iduser, problem.getPid()) && problemDAO.isLocked(iduser, problem.getPid());
 		int sid = submissionDAO.insertSubmission(iduser, getUsername(principal), problem.getPid(), submit.getCode(), submit.getLanguageByLid(), locked, course_id);

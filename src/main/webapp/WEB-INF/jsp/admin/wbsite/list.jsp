@@ -18,7 +18,6 @@
 
 </div>
 
-<%@include file="/WEB-INF/jsp/general/confirmmessage.jsp"%>
 <script>
 	$(document).ready(displayTableReload(" "));
 </script>

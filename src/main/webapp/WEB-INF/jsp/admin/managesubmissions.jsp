@@ -127,6 +127,27 @@
 			}
 		});
 	}
+	
+	function toggle24h(sid) {
+		$.ajax({
+			type : "GET",
+			url : "/admin/24h/togglesub.json",
+			data : "sid=" + sid,
+			dataType : 'text',
+			success : function(data) {
+			}
+		});
+	}
+	function toggleContest(sid) {
+		$.ajax({
+			type : "GET",
+			url : "/admin/contest/togglesub.json",
+			data : "sid=" + sid,
+			dataType : 'text',
+			success : function(data) {
+			}
+		});
+	}
 
 	$('#rejudge').click(function() {
 		$('#form').attr('action', '/admin/rejudgesubmissions.xhtml');
@@ -142,14 +163,14 @@
 				$('#count').html(data);
 			},
 			complete : function(data) {
-				setTimeout(count, 2000);
+				
 			}
 		});
 
 	};
 
 	$(function() {
-		count();
+		setInterval(count, 2000);
 	});
 
 	$(function() {

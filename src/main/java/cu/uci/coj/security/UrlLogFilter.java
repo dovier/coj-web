@@ -24,11 +24,11 @@ public class UrlLogFilter extends GenericFilterBean {
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws ServletException, IOException {
 		final HttpServletRequest httpRequest = (HttpServletRequest) req;
 		String url = httpRequest.getRequestURL().toString();
-		if (url.endsWith("xhtml")) {	
-		//	System.out.println(url + " - " + httpRequest.getSession().getId());
-			baseDAO.log(url + " - " + httpRequest.getSession().getId(),"navigation");
+		if (url.endsWith("xhtml")) {
+			// System.out.println(url + " - " +
+			// httpRequest.getSession().getId());
+			baseDAO.log(url + " - " + httpRequest.getSession().getId(), "navigation");
 		}
 		chain.doFilter(req, res);
 	}
-
 }

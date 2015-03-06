@@ -51,7 +51,7 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	private MailNotificationService mailNotificationService;
 
 	public IPaginatedList<SubmissionJudge> pendingBalloons(int cid, PagingOptions options, String group) {
-		if (group != null)
+		if (StringUtils.hasText(group))
 			return paginated("pending.balloons.grouped", SubmissionJudge.class, 10, options, cid, group);
 		return paginated("pending.balloons", SubmissionJudge.class, 10, options, cid);
 	}
@@ -218,9 +218,9 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		}
 		if (!contest.isFrozen()) {
 			String key = Config.getProperty(sub.getStatus().replaceAll(" ", "."));
-			dml(replaceSql("update.user.stats.contest.key", "<key>", key), sub.getUid(), contest.getCid());
-			dml(replaceSql("update.problem.contest.contest.key", "<key>", key), sub.getPid(), contest.getCid());
-			dml(replaceSql("update.language.stats.contest.key", "<key>", key), sub.getLang(), contest.getCid());
+			dml(replaceSql("upsert.user.stats.contest.key", "<key>", key), sub.getUid(), contest.getCid(), sub.getUid(), contest.getCid());
+			dml(replaceSql("upsert.problem.contest.contest.key", "<key>", key), sub.getPid(), contest.getCid(), sub.getPid(), contest.getCid());
+			dml(replaceSql("upsert.language.stats.contest.key", "<key>", key), sub.getLang(), contest.getCid(), sub.getLang(), contest.getCid());
 		}
 	}
 
@@ -265,9 +265,7 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
 		dml("update.contest.submit", submit.isAccepted(), submit.getStatus(), submit.getTimeUsed(), submit.getMemoryUsed(), submit.getFirstWaCase(), submit.getMaxTimeUsed(), submit.getMinTimeUsed(),
 				submit.getAvgTimeUsed(), submit.getSid());
-		submit.setDate(date("select date from contest_submition where submit_id=?",submit.getSid()));
-		dml("update.contest.source.error", submit.getErrMsg(), submit.getSid());
-
+		
 		boolean alreadySolved = false;
 		alreadySolved = bool("solved.contest.problem.bef", submit.getUid(), submit.getPid(), contest.getCid(), submit.getSid());
 		switch (contest.getStyle()) {
@@ -282,14 +280,14 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 				}
 				if (submit.isAccepted()) {
 					dml("update.problem.contest.accu", submit.getPid(), submit.getCid(), submit.getPid(), submit.getCid());
-					dml("update.user.contest.last.acc",	submit.getCid(), submit.getCid(), submit.getUid(),submit.getUid(),submit.getCid());
-					
+					dml("update.user.contest.last.acc", submit.getCid(), submit.getCid(), submit.getUid(), submit.getUid(), submit.getCid());
+
 					if (!alreadySolved) {
 						int total_bef = countBeforeSubmissionsContest(submit.getUid(), submit.getPid(), submit.getCid(), submit.getSid());
 						int penalty = total_bef * contest.getPenalty() + (int) (submit.getDate().getTime() - contest.getInitdate().getTime()) / 60000;
 
-						dml("update user_contest set penalty = penalty + ?,accepted = accepted + 1,lastacc = '" + submit.getDate().toString() + "', " + c + "_time = ? where uid = ? and cid = ?", penalty,
-								(submit.getDate().getTime() - contest.getInitdate().getTime()), submit.getUid(), submit.getCid());
+						dml("update user_contest set penalty = penalty + ?,accepted = accepted + 1,lastacc = '" + submit.getDate().toString() + "', " + c + "_time = ? where uid = ? and cid = ?",
+								penalty, (submit.getDate().getTime() - contest.getInitdate().getTime()), submit.getUid(), submit.getCid());
 					}
 				} else if (!alreadySolved) {
 					dml("update user_contest set " + c + "_beforeac = " + c + "_beforeac + 1 where uid = ? and cid = ?", submit.getUid(), submit.getCid());
@@ -305,7 +303,7 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		}
 		case 3: {
 			dml("update.problem.contest.accu", submit.getPid(), submit.getCid(), submit.getPid(), submit.getCid());
-			dml("update.user.contest.last.acc",	submit.getCid(), submit.getCid(), submit.getUid(),submit.getUid(),submit.getCid());
+			dml("update.user.contest.last.acc", submit.getCid(), submit.getCid(), submit.getUid(), submit.getUid(), submit.getCid());
 			dml("update.user.contest.accepted", submit.getCid(), submit.getUid(), submit.getUid(), submit.getCid());
 			dml("update.user.points.free.contest", submit.getCid(), submit.getCid(), submit.getCid());
 			break;
@@ -326,9 +324,9 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		if (!contest.isFrozen()) {
 			String key = Config.getProperty(submit.getStatus().replaceAll(" ", "."));
 			if (key != null && !"sie".equals(key) && !"jdg".equals(key)) {
-				dml(replaceSql("update.user.stats.contest.key", "<key>", key), submit.getUid(), submit.getCid());
-				dml(replaceSql("update.problem.contest.contest.key", "<key>", key), submit.getPid(), submit.getCid());
-				dml(replaceSql("update.language.stats.contest.key", "<key>", key), submit.getLang(), submit.getCid());
+				dml(replaceSql("upsert.user.stats.contest.key", "<key>", key), submit.getUid(), submit.getCid(), submit.getUid(), submit.getCid());
+				dml(replaceSql("upsert.problem.contest.contest.key", "<key>", key), submit.getPid(), submit.getCid(), submit.getPid(), submit.getCid());
+				dml(replaceSql("upsert.language.stats.contest.key", "<key>", key), submit.getLang(), submit.getCid(), submit.getLang(), submit.getCid());
 			} else
 				System.out.println(submit.getStatus());
 		}
@@ -415,10 +413,20 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		dml("insert.user.stats.contest", uid, cid);
 	}
 
+	public void insertBalloonTrackerContest(int uid, int cid) {
+		dml("insert.balloontracker.contest", uid, cid);
+	}
+
 	@Transactional(readOnly = true)
 	public List<ContestStyle> loadEnabledScoringStyles() {
 		return objects("contest.style.enabled", ContestStyle.class);
 	}
+	
+	@Transactional(readOnly = true)
+	public ContestStyle loadScoringStyle(int cid) {
+		return object("contest.style.enabled.id", ContestStyle.class,cid);
+	}
+
 
 	@Transactional(readOnly = true)
 	public Contest loadContestFull(int cid) {
@@ -556,13 +564,31 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		return objects("contest.import", Contest.class);
 	}
 
-	public void InsertContest(Contest contest, List<Language> languages) {
-		dml("insert.contest", contest.getCid(),contest.getCid(), contest.getCid() + "_Default");
+	public void InsertContest(Contest contest) {
+		dml("insert.contest", contest.getCid(), contest.getCid(), contest.getCid() + "_Default");
+
+		insertLanguages(contest);
+	}
+	
+	public int getStyle(int cid) {
+		return integer("select style from contest where cid=?",cid);
+	}
+
+	public void insertLanguages(Contest contest) {
+		clearProgrammingLanguages(contest.getCid());
+		List<Language> languages = objects(contest.isICPC() ? "enabled.icpc.language" : "enabled.programming.language", Language.class);
 		for (int i = 0; i < languages.size(); i++) {
 			insertLanguageContest(languages.get(i).getLid(), contest.getCid());
 		}
 	}
 
+	public void insertLanguages(int cid, int[] languagesids) {
+		clearProgrammingLanguages(cid);
+		for (int i = 0; i < languagesids.length; i++) {
+			insertLanguageContest(languagesids[i], cid);
+		}
+	}
+	
 	private void insertVirtualLanguages(int cid, List<Language> languages) {
 		for (int i = 0; i < languages.size(); i++) {
 			insertLanguageContest(languages.get(i).getLid(), cid);
@@ -600,8 +626,9 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	public void updateContestFlags(Contest contest) {
-		dml("update.contest.flags", contest.isShow_status(), contest.isShow_status_out(), contest.isShow_scoreboard(), contest.isShow_scoreboard_out(), contest.isAllow_registration(),
-				contest.isUnfreeze_auto(), contest.isShow_problem_out(), contest.isShow_ontest(), contest.getCid());
+		dml("update.contest.flags", contest.isGallery(), contest.isBalloon(), contest.isSaris(), contest.isShow_stats(), contest.isShow_stats_out(), contest.isShow_status(), contest.isShow_status_out(),
+				contest.isShow_scoreboard(), contest.isShow_scoreboard_out(), contest.isAllow_registration(), contest.isUnfreeze_auto(), contest.isShow_problem_out(), contest.isShow_ontest(),
+				contest.getCid());
 	}
 
 	private void importGeneralFromContest(int cidto, Contest from) {
@@ -718,6 +745,13 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		}
 	}
 
+	public void insertBalloonTrackerContest(Contest contest) {
+		dml("clear.balloontracker.contest", contest.getCid());
+		for (int i = 0; i < contest.getBalloontrackerids().length; i++) {
+			insertBalloonTrackerContest(new Integer(contest.getBalloontrackerids()[i].toString()), contest.getCid());
+		}
+	}
+
 	public void insertJudgesContest(Contest contest) {
 		for (int i = 0; i < contest.getJudgesids().length; i++) {
 			insertJudgeContest(contest.getCid(), contest.getJudgesids()[i]);
@@ -782,35 +816,35 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		switch (contest.getStyle()) {
 		case 1:
 			if (contest.getRegistration() == 1) {
-				dml("update.contest.global.settings.tusers", contest.isBalloon(), contest.getPenalty(), contest.getFrtime(), contest.getDeadtime(), contest.getUnfreeze_time(),
+				dml("update.contest.global.settings.tusers", contest.isGallery(),contest.isBalloon(), contest.getPenalty(), contest.getFrtime(), contest.getDeadtime(), contest.getUnfreeze_time(),
 						contest.getTotal_users(), contest.getGold(), contest.getSilver(), contest.getBronze(), contest.getCid());
 			} else {
-				dml("update.contest.global.settings", contest.isBalloon(), contest.getPenalty(), contest.getFrtime(), contest.getDeadtime(), contest.getUnfreeze_time(), contest.getGold(),
+				dml("update.contest.global.settings", contest.isGallery(),contest.isBalloon(), contest.getPenalty(), contest.getFrtime(), contest.getDeadtime(), contest.getUnfreeze_time(), contest.getGold(),
 						contest.getSilver(), contest.getBronze(), contest.getCid());
 			}
 			break;
 		case 2:
 			if (contest.getRegistration() == 1) {
-				dml("update.contest.global.settings.tusers.ioi", contest.isBalloon(), contest.getIoimark(), contest.getTotal_users(), contest.getGold(), contest.getSilver(), contest.getBronze(),
+				dml("update.contest.global.settings.tusers.ioi", contest.isGallery(),contest.isBalloon(), contest.getIoimark(), contest.getTotal_users(), contest.getGold(), contest.getSilver(), contest.getBronze(),
 						contest.getCid());
 			} else {
-				dml("update.contest.global.settings.ioi", contest.isBalloon(), contest.getIoimark(), contest.getGold(), contest.getSilver(), contest.getBronze(), contest.getCid());
+				dml("update.contest.global.settings.ioi", contest.isGallery(),contest.isBalloon(), contest.getIoimark(), contest.getGold(), contest.getSilver(), contest.getBronze(), contest.getCid());
 			}
 			break;
 		case 3:
 			if (contest.getRegistration() == 1) {
-				dml("update.contest.global.settings.tusers.points", contest.isBalloon(), contest.getPpoints(), contest.getTotal_users(), contest.getGold(), contest.getSilver(), contest.getBronze(),
+				dml("update.contest.global.settings.tusers.points", contest.isGallery(),contest.isBalloon(), contest.getPpoints(), contest.getTotal_users(), contest.getGold(), contest.getSilver(), contest.getBronze(),
 						contest.getCid());
 			} else {
-				dml("update.contest.global.settings.points", contest.isBalloon(), contest.getPpoints(), contest.getGold(), contest.getSilver(), contest.getBronze(), contest.getCid());
+				dml("update.contest.global.settings.points", contest.isGallery(),contest.isBalloon(), contest.getPpoints(), contest.getGold(), contest.getSilver(), contest.getBronze(), contest.getCid());
 			}
 			break;
 		case 4:
 			if (contest.getRegistration() == 1) {
-				dml("update.contest.global.settings.tusers.4", contest.isBalloon(), contest.getTotal_users(), contest.getLevels(), contest.getAcbylevels(), contest.getAclimit(), contest.getPpoints(),
+				dml("update.contest.global.settings.tusers.4", contest.isGallery(),contest.isBalloon(), contest.getTotal_users(), contest.getLevels(), contest.getAcbylevels(), contest.getAclimit(), contest.getPpoints(),
 						contest.getGold(), contest.getSilver(), contest.getBronze(), contest.getCid());
 			} else {
-				dml("update.contest.global.settings.4", contest.isBalloon(), contest.getLevels(), contest.getAcbylevels(), contest.getAclimit(), contest.getPpoints(), contest.getGold(),
+				dml("update.contest.global.settings.4", contest.isGallery(),contest.isBalloon(), contest.getLevels(), contest.getAcbylevels(), contest.getAclimit(), contest.getPpoints(), contest.getGold(),
 						contest.getSilver(), contest.getBronze(), contest.getCid());
 			}
 			break;
@@ -825,6 +859,9 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	public void updateContestManage(Contest contest) {
 		dml("update.contest.manage", contest.getName(), contest.getInitdate(), contest.getEnddate(), contest.getRglimit(), contest.getStyle(), contest.getRegistration(), contest.isEnabled(),
 				contest.getContestant(), contest.isVtemplate(), contest.isBlocked(), contest.isGrouped(), contest.getCid());
+		if (contest.isICPC()) {
+			insertLanguages(contest);
+		}
 	}
 
 	@Transactional(readOnly = true)
@@ -881,8 +918,9 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 				template.getDeadtime(), template.getFrtime(), template.isBlocked(), template.getPenalty(), template.isEnabled(), new Date(), template.getRglimit(), template.getRegistration(),
 				template.getIoimark(), template.getPpoints(), template.getUnfreeze_time(), template.getContestant(), template.getGold(), template.getSilver(), template.getBronze(), false,
 				template.getLevels(), template.getAcbylevels(), template.getAclimit(), template.isRepointing(), template.getGuestGroup(), template.isGrouped(), template.isBalloon(),
-				contest.getTemplate(), template.getUid(), true, template.isShow_scoreboard(), contest.isShow_status_out(), contest.isAllow_registration(), contest.isUnfreeze_auto(),
-				contest.isShow_scoreboard_out(), template.isShow_status(), contest.isShow_problem_out(), contest.isShow_ontest(), template.getOverview());
+				contest.getTemplate(), template.getUid(), true, template.isShow_scoreboard(), contest.isSaris(), contest.isShow_stats(), contest.isShow_stats_out(), contest.isShow_status_out(),
+				contest.isAllow_registration(), contest.isUnfreeze_auto(), contest.isShow_scoreboard_out(), template.isShow_status(), contest.isShow_problem_out(), contest.isShow_ontest(),
+				template.getOverview());
 		return contest.getCid();
 	}
 

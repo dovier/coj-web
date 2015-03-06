@@ -62,7 +62,7 @@ public class Interceptor implements WebRequestInterceptor {
                 int unreply = 0;
                 Contest contest = (Contest) model.get("contest");
                 if (request.getUserPrincipal() != null) {
-                    int uid = userDAO.integer("user.uid", getUsername(request.getUserPrincipal()));
+                    int uid = userDAO.integer("select.uid.by.username", getUsername(request.getUserPrincipal()));
                     boolean isjudge = false;
                     if ((isjudge = contestDAO.isJudgeInContest(contest.getCid(), uid)) == true || contestDAO.isInContest(contest.getCid(), uid)) {
                         if (isjudge) {

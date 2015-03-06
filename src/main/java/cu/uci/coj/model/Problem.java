@@ -599,7 +599,7 @@ public class Problem {
 	}
 
 	public String getTitle() {
-		title = selectByLanguage(titleEs, title, titlePt, userLanguage);
+	//	title = selectByLanguage(titleEs, title, titlePt, userLanguage);
 		return title;
 	}
 
@@ -1159,5 +1159,20 @@ public class Problem {
 			Language language = it.next();
 			languageids[i++] = language.getLid();
 		}
+	}
+	
+	public boolean isAvailableInEn() {
+		if(title == null || description == null || input == null || output == null) return false;		
+		return !title.equals("") && !description.equals("") && !input.equals("") && !output.equals("");
+	}
+	
+	public boolean isAvailableInEs() {
+		if(titleEs == null || descriptionEs == null || inputEs == null || outputEs == null) return false;
+		return !titleEs.equals("") && !descriptionEs.equals("") && !inputEs.equals("") && !outputEs.equals("");
+	}
+	
+	public boolean isAvailableInPt() {
+		if(titlePt == null || descriptionPt == null || inputPt == null || outputPt == null) return false;
+		return !titlePt.equals("") && !descriptionPt.equals("") && !inputPt.equals("") && !outputPt.equals("");
 	}
 }

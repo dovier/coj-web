@@ -7,6 +7,7 @@ import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.ProblemClassification;
 import cu.uci.coj.model.ProblemSource;
+import cu.uci.coj.model.Translation;
 import cu.uci.coj.model.UserProfile;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
@@ -139,4 +140,17 @@ public interface ProblemDAO extends BaseDAO {
 	public void deleteProblemSource(Integer idSource);
 
 	public List<Problem> fillInformation(String username, int uid, List<Problem> problems);
+	
+	public void insertTranslation(String username, Translation translation);
+	
+	public IPaginatedList<Translation> getTranslationList(String username, Integer pid, String locale , PagingOptions options);
+	
+	public void deleteTranslation(Integer id);
+	
+	public void editTranslation(Translation translation);
+	
+	public void approveTranslation(Translation translation, String username);	
+	
+	public Translation getTranslation(Integer id);
+	
 }

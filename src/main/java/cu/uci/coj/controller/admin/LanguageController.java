@@ -33,9 +33,13 @@ public class LanguageController  extends BaseController {
     }
 
     @RequestMapping(value = "/managelanguage.xhtml", method = RequestMethod.GET)
-    public String manageLanguages(Model model, @RequestParam("lid") Integer lid) {
-        Language language = baseDAO.object("load.language", Language.class, lid);
-        language.setLid(lid);
+    public String manageLanguages(Model model, @RequestParam(value="lid",required=false) Integer lid) {
+    	Language language = null;
+    	if (lid == null)
+    		language = new Language();
+    	else {
+         language = baseDAO.object("load.language", Language.class, lid);
+    	}
         model.addAttribute(language);
         return "/admin/managelanguage";
     }
@@ -47,8 +51,7 @@ public class LanguageController  extends BaseController {
             model.addAttribute(language);
             return "/admin/managelanguage";
         }
-        baseDAO.dml("update.language",language.getName_bin(),language.isEnabled(),language.getDescripcion(),language.getLid());
-   //     eventManager.publish(EventType.LOGGABLE_ACTION, "msg:editing language " + language.getName_bin() + "username:" +getUsername(principal));
-        return "redirect:/admin/managelanguage.xhtml?lid="+ language.getLid();
+        baseDAO.dml("upsert.language",language.getLanguage(),language.getKey(),language.getName_bin(),language.isEnabled(),language.getDescripcion(),language.getLid(),language.getLanguage(),language.getKey(),language.getName_bin(),language.isEnabled(),language.getDescripcion());
+        return "redirect:/admin/programminglanguages.xhtml";
     }
 }

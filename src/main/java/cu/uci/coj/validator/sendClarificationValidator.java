@@ -38,14 +38,14 @@ public class sendClarificationValidator implements Validator {
                         errors.rejectValue("username", "general.error.user.notexist");
                     }
                     if (!errors.hasErrors() && !clarification.isForall()) {
-                        int uid = userDAO.integer("user.uid", clarification.getUsername());
+                        int uid = userDAO.integer("select.uid.by.username", clarification.getUsername());
                         if (!userDAO.isInContest(uid, clarification.getCid()) && !userDAO.isJudgeInContest(uid, clarification.getCid())) {
                             errors.rejectValue("username", "clarification.error.notin");
                         }
                     }
                 }
             }
-            if (!userDAO.isJudgeInContest(userDAO.integer("user.uid", clarification.getUsername()), clarification.getCid())) {
+            if (!userDAO.isJudgeInContest(userDAO.integer("select.uid.by.username", clarification.getUsername()), clarification.getCid())) {
                 errors.rejectValue("general", "general.error.clarification.judges");
             }
         } catch (Exception e) {

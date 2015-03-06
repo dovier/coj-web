@@ -216,7 +216,6 @@ public class EntryController extends BaseController {
 		model.addAttribute("entry", new Entry());
 		model.addAttribute("emoties", entryHelper.getEmoties().entrySet());
 
-		model.addAttribute("principal", principal);
 
 		return "index";
 	}
@@ -234,7 +233,6 @@ public class EntryController extends BaseController {
 		} else {
 			entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options);
 		}
-		model.addAttribute("principal", principal);
 		model.addAttribute("entries", entries);
 
 		return "tables/entries";

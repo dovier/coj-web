@@ -109,6 +109,14 @@
 										code="tableval.tags" /></a>
 							</div>
 						</authz:authorize>
+						<authz:authorize ifAnyGranted="ROLE_ADMIN,ROLE_TRANSLATOR">
+							<div class="col-xs-4">
+								<a href="<c:url value="managetranslations.xhtml" />"
+									title="<spring:message code="titval.manage"/>"><i
+									class="fa fa-gear"></i>&nbsp;<spring:message
+										code="tableval.translations" /></a>
+							</div>
+						</authz:authorize>
 					</div>
 				</div>
 			</div>

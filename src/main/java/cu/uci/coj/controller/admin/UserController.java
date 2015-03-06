@@ -81,7 +81,7 @@ public class UserController extends BaseController {
 
 	@RequestMapping(value = "/manageuser.xhtml", method = RequestMethod.POST)
 	public String manageUsers(Model model, User user, BindingResult result) {
-		user.setUid(userDAO.integer("user.uid", user.getUsername()));
+		user.setUid(userDAO.integer("select.uid.by.username", user.getUsername()));
 		user.setTeam(userDAO.bool("is.team", user.getUsername()));
 		validator.validateManageAdmin(user, result);
 		if (result.hasErrors()) {

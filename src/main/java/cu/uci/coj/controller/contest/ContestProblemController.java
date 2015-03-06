@@ -1,7 +1,6 @@
 package cu.uci.coj.controller.contest;
 
 import java.security.Principal;
-import java.util.Date;
 import java.util.Locale;
 
 import javax.annotation.Resource;
@@ -53,7 +52,7 @@ public class ContestProblemController extends BaseController {
         model.addAttribute("contest", contest);
         if (contest.isRunning() || contest.isPast()) {
             contest.setShow_status(false);
-            if (contest.isShow_problem_out() || (username != null && hasAnyPrivileges(requestWrapper,Roles.ROLE_ADMIN,Roles.ROLE_SUPER_PSETTER,Roles.ROLE_PSETTER)) || (!contest.isShow_problem_out() && username != null && contestDAO.isInContest(cid, contestDAO.integer("user.uid", username)))) {
+            if (contest.isShow_problem_out() || (username != null && hasAnyPrivileges(requestWrapper,Roles.ROLE_ADMIN,Roles.ROLE_SUPER_PSETTER,Roles.ROLE_PSETTER)) || (!contest.isShow_problem_out() && username != null && contestDAO.isInContest(cid, contestDAO.integer("select.uid.by.username", username)))) {
                 contest.setShow_status(true);
                 int found = problemDAO.countProblemContest(cid);
                 if (found > 0) {
@@ -72,7 +71,7 @@ public class ContestProblemController extends BaseController {
         model.addAttribute("contest", contest);
         if (contest.isRunning() || contest.isPast()) {
             contest.setShow_status(false);
-            if (contest.isShow_problem_out() || (username != null && request.isUserInRole(Roles.ROLE_ADMIN)) || (!contest.isShow_problem_out() && username != null && contestDAO.isInContest(cid, contestDAO.integer("user.uid", username))) || (request.isUserInRole(Roles.ROLE_JUDGE) && contestDAO.isJudgeInContest(cid, userDAO.integer("user.uid", principal.getName())))) {
+            if (contest.isShow_problem_out() || (username != null && request.isUserInRole(Roles.ROLE_ADMIN)) || (!contest.isShow_problem_out() && username != null && contestDAO.isInContest(cid, contestDAO.integer("select.uid.by.username", username))) || (request.isUserInRole(Roles.ROLE_JUDGE) && contestDAO.isJudgeInContest(cid, userDAO.integer("select.uid.by.username", principal.getName())))) {
                 contest.setShow_status(true);
                 Problem problem = problemDAO.getContestProblem(locale.getLanguage(),pid, contest);
                 problem.setDate(problem.getDate().split("\\.")[0]);
@@ -80,7 +79,7 @@ public class ContestProblemController extends BaseController {
                 if (contest.getStyle() == 4) {
                     if (username != null) {
                         try {
-                            current_level = problemDAO.getCurrentLevel(contestDAO.integer("user.uid", username), cid);
+                            current_level = problemDAO.getCurrentLevel(contestDAO.integer("select.uid.by.username", username), cid);
                         } catch (Exception e) {
                         }
                     }

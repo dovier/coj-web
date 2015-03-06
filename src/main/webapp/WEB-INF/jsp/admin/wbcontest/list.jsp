@@ -16,8 +16,6 @@
 	<div id="display-table-container"
 		data-reload-url="/admin/tables/wbcontests.xhtml"></div>
 </div>
-
-<%@include file="/WEB-INF/jsp/general/confirmmessage.jsp"%>
 <script>
 	$(document).ready(displayTableReload(" "));
 </script>

@@ -57,11 +57,11 @@ public class JsonContestDAOImpl extends BaseDAOImpl implements JsonContestDAO {
     public List<JsonContest> contestSubmissions(int cid, String username){
         String sql=getSql("xtats.contest.submissions");
             if(!StringUtils.isEmpty(username)){
-                sql+=" and cid = ? and users.username = ? group by cs.status";
+                sql+=" and cid = ? and users.username = ? group by cs.status order by state ";
                 return objects(sql, JsonContest.class, cid, username);
             }
             else{
-                sql+=" and cid = ? group by cs.status";
+                sql+=" and cid = ? group by cs.status order by state ";
                 return objects(sql, JsonContest.class, cid);
             }
     }

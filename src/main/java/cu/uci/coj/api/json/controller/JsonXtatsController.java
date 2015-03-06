@@ -28,6 +28,7 @@ import cu.uci.coj.api.json.dao.JsonSubmissionDAO;
 import cu.uci.coj.api.json.dao.JsonUserDAO;
 import cu.uci.coj.api.json.model.JsonContest;
 import cu.uci.coj.api.json.model.JsonProblem;
+import cu.uci.coj.config.Config;
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.CountryDAO;
 import cu.uci.coj.dao.InstitutionDAO;
@@ -431,16 +432,19 @@ public class JsonXtatsController extends BaseController {
 
 	// devuelve los datos relacionados con los envios en un concurso
 	@RequestMapping(produces = "application/json", value = "/contestsubmits.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
-	public @ResponseBody() String contestSubmits(@RequestParam int cid, @RequestParam String username) {
+	public @ResponseBody() List<String>[] contestSubmits(@RequestParam int cid, @RequestParam(required=false) String username) {
+		
 		List<JsonContest> mapa = jsonContestDAO.contestSubmissions(cid, username);
-		List<String[]> other = new ArrayList<String[]>();
+		List<String> tags = new ArrayList<String>();
+		List<String> values = new ArrayList<String>();
+		List[] other = new ArrayList[2];
 		for (JsonContest u : mapa) {
-			String[] aux = new String[2];
-			aux[0] = u.getState();
-			aux[1] = String.valueOf(u.getCstats());
-			other.add(aux);
+			tags.add(Config.getProperty(u.getState().replace(" ", ".")));
+			values.add(String.valueOf(u.getCstats()));
 		}
-		return JSONArray.fromObject(other).toString();
+		other[0] = tags;
+		other[1] = values;
+		return other;
 	}
 
 }

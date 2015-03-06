@@ -928,6 +928,10 @@ ol,ul {
 	font-size: 12px;
 }
 
+.filter-follow ol, .filter-follow ul {
+	font-size: 14px;
+}
+
 .postcontent ol {
 	font-size: 14px;
 }

@@ -21,7 +21,8 @@
 			</thead>
 			<tr>
 				<td><c:out value="${submission.sid}" /></td>
-				<td class="date"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${submission.date}" /></td>
+				<td class="date"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss"
+						value="${submission.date}" /></td>
 				<td><a
 					href="<c:url value="/user/useraccount.xhtml?username=${submission.username}"/>"><c:out
 							value="${submission.username}" /></a></td>
@@ -30,26 +31,30 @@
 							value="${submission.pid}" /></a></td>
 				<td width="15%" id="<c:out value="${submission.statusId}"/>"
 					name="<c:out value="${submission.statusName}"/>"><b><c:if
-						test="${!empty submission.statusName}">
-						<c:choose>
-							<c:when test="${submission.status eq 'Compilation Error'}">
-								<a href="compileinfo.xhtml?sid=${submission.sid}">${submission.status}</a>
-							</c:when>
-							<c:otherwise>
-								<label class="sub${submission.statusClass}">
-									${submission.status} </label>
-							</c:otherwise>
-						</c:choose>
-					</c:if> <c:if test="${empty submission.statusName}">
-						<label class="sub${submission.statusClass}">
-							${submission.status} </label>
-						<c:if test="${submission.ontest == true}">
-							<br />
-							<i><sub><spring:message code="tableval.test" />
-									${submission.firstWaCase}</sub></i>
-						</c:if>
-					</c:if></b></td>
-				<td><c:out value="${submission.timeUsed}" /></td>
+							test="${!empty submission.statusName}">
+							<c:choose>
+								<c:when test="${submission.status eq 'Compilation Error'}">
+									<a href="compileinfo.xhtml?sid=${submission.sid}">${submission.status}</a>
+								</c:when>
+								<c:otherwise>
+									<label class="sub${submission.statusClass}">
+										${submission.status} </label>
+								</c:otherwise>
+							</c:choose>
+						</c:if> <c:if test="${empty submission.statusName}">
+							<label class="sub${submission.statusClass}">
+								${submission.status} </label>
+							<c:if test="${submission.ontest == true}">
+								<br />
+								<i><sub><spring:message code="tableval.test" />
+										${submission.firstWaCase}</sub></i>
+							</c:if>
+						</c:if></b></td>
+				<td><c:if test="${submission.timeUsed == -1}">
+				...
+			</c:if> <c:if test="${submission.timeUsed != -1}">
+				${submission.timeUsed}
+			</c:if></td>
 				<td><c:out value="${submission.memoryMB}" /></td>
 				<td><c:out value="${submission.fontMB}" /></td>
 				<td id="lang"><c:out value="${submission.lang}" /></td>
@@ -80,10 +85,11 @@
 		<a href="/24h/submit.xhtml?sid=${submission.sid}"> <i
 			class="fa fa-edit"></i>&nbsp;<spring:message code="link.edit" /></a> <a
 			href="/24h/downloadsource.xhtml?sid=${submission.sid}"><i
-			class="fa fa-save"></i>&nbsp;<spring:message code="link.download" /></a> <a
-			href="/mail/composemail.xhtml?usernameto=dovier;ymondelo20;jasoria"
+			class="fa fa-save"></i>&nbsp;<spring:message code="link.download" /></a>
+		<a href="/mail/composemail.xhtml?usernameto=dovier;ymondelo20;jasoria"
 			title="<spring:message code="link.fraud"/>"><i
-			class="red fa fa-minus-circle"></i>&nbsp;<spring:message code="link.fraud"/></a>
+			class="red fa fa-minus-circle"></i>&nbsp;<spring:message
+				code="link.fraud" /></a>
 	</div>
 	<div>
 		<textarea cols="" rows="" id="code" name="code"

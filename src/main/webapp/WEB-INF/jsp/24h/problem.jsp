@@ -19,8 +19,9 @@
 							&nbsp;&nbsp;<a
 						href="problempdf.xhtml?pid=<c:url value="${problem.pid}"/>">PDF</a>
 					<c:if test="${not empty problem.forumLink}">
-				&nbsp;&nbsp;<a href="${problem.forumLink}"><spring:message
-								code="link.discussion" /></a>
+							&nbsp;&nbsp;<a
+						href="${problem.forumLink}"><spring:message
+							code="link.discussion" /></a>
 					</c:if>
 				</authz:authorize>
 				<authz:authorize ifNotGranted="ROLE_ANONYMOUS">
@@ -50,14 +51,22 @@
 			&nbsp;<a href="${problem.forumLink}"><spring:message
 								code="link.discussion" /></a>
 					</c:if>
+			&nbsp;<a href="/24h/translation.xhtml?pid=${problem.pid}"><spring:message
+								code="link.translation" /></a>
 				</authz:authorize>
 			</div>
 		</div>
 	</div>
 	<div class="col-xs-12">
 		<h3 class="text-center">
-			<b><c:out value=" ${problem.pid}" /> - <c:out
-					value="${problem.title}" /></b>
+			<b class="text" data-language="en"><c:out value=" ${problem.pid}" /> - <c:out
+					value="${problem.titleEN}" /></b>
+			<b class="text" data-language="es"><c:out value=" ${problem.pid}" /> - <c:out
+					value="${problem.titleEs}" /></b>
+			<b class="text" data-language="pt"><c:out value=" ${problem.pid}" /> - <c:out
+					value="${problem.titlePt}" /></b>
+			
+			
 			<c:if test="${problem.special_judge}">
 				<a data-toggle="tooltip"
 					title="<spring:message code="titval.special.judge"/>"><span
@@ -94,18 +103,18 @@
 					<tr>
 						<td><spring:message code="fieldhdr.limits" /></td>
 						<td><b><spring:message code="fieldhdr.timelimit" />:</b> <c:out
-								value="${problem.time}" /> ms <c:choose>
+								value="${problem.time}" /> MS <c:choose>
 								<c:when test="${problem.multidata}">
 									<c:out value="|" />
 									<b><spring:message
 											code="fieldhdr.testlimit" />:</b>
-									<c:out value="${problem.casetimelimit}" /> ms
+									<c:out value="${problem.casetimelimit}" /> MS
 					</c:when>
 							</c:choose> <c:out value="|" /><b><spring:message
 									code="fieldhdr.memorylimit" />:</b> <c:out
 								value="${problem.memoryMB}" /> <c:out value=" | " /> <span
 							style="font-weight: bold;"><spring:message
-									code="fieldhdr.outputlimit" />:</span> <c:out value="64" /> mb<c:out
+									code="fieldhdr.outputlimit" />:</span> <c:out value="64" /> MB<c:out
 								value=" | " /><b><spring:message code="fieldhdr.sizelimit" />:</b>
 							<c:out value="${problem.fontMB}" /></td>
 					</tr>
@@ -139,6 +148,26 @@
 
 						</authz:authorize>
 					</c:if>
+					<tr>
+						<td><spring:message code="fieldhdr.availablein" /></td>
+						<td>
+							<c:if test="${problem.availableInEn}">
+								<a href=""><img data-toggle="tooltip" data-placement="bottom" class="image change-language" data-language="en"
+									 title="<spring:message code="titval.en"/>"
+									 src="/images/i18n/en.png"/></a>
+							</c:if>
+							<c:if test="${problem.availableInEs}">
+								<a href=""><img data-toggle="tooltip" data-placement="bottom" class="image change-language" data-language="es"
+									 title="<spring:message code="titval.es"/>"
+									 src="/images/i18n/es.png"/></a>
+							</c:if>
+							<c:if test="${problem.availableInPt}">
+								<a><img data-toggle="tooltip" data-placement="bottom" class="image change-language" data-language="pt"
+									 title="<spring:message code="titval.pt"/>"
+									 src="/images/i18n/pt.png"/></a>
+							</c:if>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -149,8 +178,14 @@
 				<spring:message code="fieldhdr.description" />
 			</h4>
 			<div class="ex row">
-				<div class="col-xs-12">
-					<c:url value="${problem.description}" />
+				<div class="col-xs-12 text" data-language="en">
+					<c:url value="${problem.descriptionEN}" />
+				</div>
+				<div class="col-xs-12 text" data-language="es">
+					<c:url value="${problem.descriptionEs}" />
+				</div>
+				<div class="col-xs-12 text" data-language="pt">
+					<c:url value="${problem.descriptionPt}" />
 				</div>
 			</div>
 		</div>
@@ -161,8 +196,14 @@
 				<spring:message code="fieldhdr.inputspec" />
 			</h4>
 			<div class="ex row">
-				<div class="col-xs-12">
-					<c:url value="${problem.input}" />
+				<div class="col-xs-12 text" data-language="en">
+					<c:url value="${problem.inputEN}" />
+				</div>
+				<div class="col-xs-12 text" data-language="es">
+					<c:url value="${problem.inputEs}" />
+				</div>
+				<div class="col-xs-12 text" data-language="pt">
+					<c:url value="${problem.inputPt}" />
 				</div>
 			</div>
 		</div>
@@ -173,8 +214,14 @@
 				<spring:message code="fieldhdr.outputspec" />
 			</h4>
 			<div class="row">
-				<div class="col-xs-12">
-					<c:url value="${problem.output}" />
+				<div class="col-xs-12 text" data-language="en">
+					<c:url value="${problem.outputEN}" />
+				</div>
+				<div class="col-xs-12 text" data-language="es">
+					<c:url value="${problem.outputEs}" />
+				</div>
+				<div class="col-xs-12 text" data-language="pt">
+					<c:url value="${problem.outputPt}" />
 				</div>
 			</div>
 		</div>
@@ -202,10 +249,18 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<h4 class="text-primary">
-				<spring:message code="fieldhdr.hint" />
+				<spring:message code="fieldhdr.hint" />e
 			</h4>
-			<div class="ex">
-				<c:url value="${problem.comments}" />
+			<div class="ex row">
+				<div class="col-xs-12 text" data-language="en">
+					<c:url value="${problem.commentsEN}" />
+				</div>
+				<div class="col-xs-12 text" data-language="es">
+					<c:url value="${problem.commentsEs}" />
+				</div>
+				<div class="col-xs-12 text" data-language="pt">
+					<c:url value="${problem.commentsPt}" />
+				</div>
 			</div>
 		</div>
 	</div>
@@ -234,8 +289,28 @@
 		</div>
 	</c:if>
 </div>
+
 <script>
 	$(function() {
-		$("[data-toggle='tooltip']").tooltip();
+		$("[data-toggle='tooltip']").tooltip();		
+		
+		$(".text").each(function(){
+			if("${locale}" == $(this).data("language")) {
+				$(this).removeClass("hide");
+			} else {
+				$(this).addClass("hide");
+			}			
+		});
+		
+		$(".change-language").click(function() {
+			lang = $(this).data("language");
+			$(".text").each(function(){
+				if(lang == $(this).data("language")) {
+					$(this).removeClass("hide");
+				} else {
+					$(this).addClass("hide");
+				}			
+			});
+		});		
 	});
 </script>

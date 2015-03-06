@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import cu.uci.coj.board.dao.WbContestDAO;
 import cu.uci.coj.board.dao.WbSiteDAO;
-import cu.uci.coj.board.parsing.impl.WbCojParser;
 import cu.uci.coj.board.parsing.impl.WbCodeforcesParser;
 import cu.uci.coj.board.parsing.impl.WbUvaParser;
 import cu.uci.coj.board.parsing.impl.WbCodechefParser;

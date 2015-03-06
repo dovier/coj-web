@@ -1,6 +1,8 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
+
+
 <display:table id="site" name="sites" class="volume" requestURI=""
 	defaultsort="0" defaultorder="ascending">
 	<display:column property="site" titleKey="tablehdr.site"
@@ -33,14 +35,17 @@
 	</display:column>
 	<display:column titleKey="tablehdr.actions" headerClass="headedit">
 		<a class="details"
+			data-toggle="tooltip"
 			href="<c:url value="/admin/wboard/site/details.xhtml?sid=${site.sid}"/>"
 			title="<spring:message code="messages.general.details"/>"><i
 			class="fa fa-eye"></i></a>
 		<a class="edit"
+			data-toggle="tooltip"
 			href="<c:url value="/admin/wboard/site/edit.xhtml?sid=${site.sid}"/>"
 			title="<spring:message code="messages.general.edit"/>"><i
 			class="fa fa-edit"></i></a>
 		<a class="confirm-message"
+			data-toggle="tooltip"
 			data-confirm-title='<spring:message code="message.confirm.delete.hdr.wbsite"/>'
 			data-confirm-message='<spring:message code="message.confirm.delete.wbsite"/>'
 			data-confirm-type="delete"
@@ -49,3 +54,9 @@
 			class="fa fa-trash"></i> </a>
 	</display:column>
 </display:table>
+
+<script>
+	$("[data-toggle='tooltip']").tooltip();
+</script>
+
+<%@include file="/WEB-INF/jsp/general/confirmmessage.jsp"%>

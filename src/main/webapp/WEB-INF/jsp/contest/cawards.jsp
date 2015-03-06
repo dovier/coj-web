@@ -8,28 +8,6 @@
 		title="Go to Contest">${contest.name}</a> <br />
 	<spring:message code="pagehdr.contest.awards" />
 </h2>
-
-<c:if test="${not empty contestAwards}">
-	<div class="row">
-		<div class="col-xs-6 col-xs-offset-3">
-			<div class="panel panel-primary">
-				<div class="panel-body">
-					<c:forEach items="${contestAwards}" var="award">
-						<div class="row">
-							<div class="col-xs-12">
-								<a><i class="fa fa-trophy"></i></a> ${award.name} <a
-									href="<c:url value="/contest/cuseraccount.xhtml?uid=${award.username}&cid=${award.cid}" />">${award.nick}</a>
-								<a data-toggle="tooltip" data-placement="top"
-									title="<c:out value="${award.description}" />"><i
-									class="fa fa-info-circle"></i></a>
-							</div>
-						</div>
-					</c:forEach>
-				</div>
-			</div>
-		</div>
-	</div>
-</c:if>
 <c:if test="${not empty users}">
 	<div class="row">
 		<c:forEach items="${users}" var="user">
@@ -46,8 +24,61 @@
 		</c:forEach>
 	</div>
 </c:if>
-</div>
-</div>
+
+<c:if test="${not empty fastAward}">
+	<div class="row">
+		<div class="col-xs-6 col-xs-offset-3">
+			<div class="panel panel-primary">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="/images/<c:url value="fast.png"/>">
+							<spring:message code="contest.award.fast" />
+							<a
+								href="<c:url value="/contest/cuseraccount.xhtml?uid=${fastAward.uid}&cid=${fastAward.cid}" />">${fastAward.nick}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</c:if>
+<c:if test="${not empty exclusiveAward}">
+	<div class="row">
+		<div class="col-xs-6 col-xs-offset-3">
+			<div class="panel panel-primary">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="/images/<c:url value="exclusive.png"/>">
+							<spring:message code="contest.award.exclusive" />
+							<a
+								href="<c:url value="/contest/cuseraccount.xhtml?uid=${exclusiveAward.uid}&cid=${exclusiveAward.cid}" />">${exclusiveAward.nick}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</c:if>
+<c:if test="${not empty accurateAward}">
+	<div class="row">
+		<div class="col-xs-6 col-xs-offset-3">
+			<div class="panel panel-primary">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="/images/<c:url value="accurate.png"/>">
+							<spring:message code="contest.award.accurate" />
+							<a
+								href="<c:url value="/contest/cuseraccount.xhtml?uid=${accurateAward.uid}&cid=${accurateAward.cid}" />">${accurateAward.nick}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</c:if>
 <script>
 	$(function() {
 		$("[data-toggle='tooltip']").tooltip();

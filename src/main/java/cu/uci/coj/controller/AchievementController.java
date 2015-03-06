@@ -26,7 +26,7 @@ public class AchievementController extends BaseController {
     public String userAccount(HttpServletRequest request, Model model, Principal principal, @RequestParam(required = false, value="username") String username) {
         List<Achievement> trophies = null;
         if (userDAO.isUser(username)) {
-            int uid = userDAO.integer("user.uid", username);
+            int uid = userDAO.integer("select.uid.by.username", username);
             trophies = userDAO.objects("achievements.by.user",Achievement.class,uid);
         }
         else{

@@ -31,7 +31,6 @@ import cu.uci.coj.utils.paging.PagingOptions;
 @Transactional
 public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 
-	
 	@Resource
 	private AchievementDAO achievementDAO;
 
@@ -45,35 +44,34 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 
 	}
 
-	
+	public List<SubmissionJudge> rejudgeSubmits(Filter filter, PagingOptions options) {
 
-	
-	public List<SubmissionJudge> rejudgeSubmits(Filter filter,PagingOptions options) {
-
-		Query query = new Query(filter.getCid() == null ? "submition": "contest_submition");
+		Query query = new Query(filter.getCid() == null ? "submition" : "contest_submition");
 		query.where(Where.bt("submit_id", filter.getStartSid(), filter.getEndSid()), Where.bt("date", filter.getStartDate(), filter.getEndDate()), Where.eq("username", filter.getUsername()),
 				Where.eq("cid", filter.getCid()), Where.eq("language", filter.getLanguage()), Where.eq("status", Config.getProperty("judge.status." + filter.getStatus())),
 				Where.eq("pid", filter.getPid()));
 		query.order(Order.desc("submit_id"));
 		query.paginate(options, 20);
-		return objects(query.select("submit_id as sid"), SubmissionJudge.class, query.arguments());
+		return objects(query.select("submit_id as sid,status"), SubmissionJudge.class, query.arguments());
 	}
 
-	
-
 	public void applyEffects(SubmissionJudge submit) {
+		applyEffects(submit,false);
+	}
+	public void applyEffects(SubmissionJudge submit,boolean isDisabling) {
+		if (!isDisabling) {
 		dml("update.submit", submit.isAccepted(), submit.getStatus(), submit.getTimeUsed(), submit.getMemoryUsed(), submit.getFirstWaCase(), (int) submit.getMaxTimeUsed(),
 				(int) submit.getMinTimeUsed(), (int) submit.getAvgTimeUsed(), submit.getAcTestCases(), submit.getSid());
 		dml("update.source.error", submit.getErrMsg(), submit.getSid());
-
+		}
 		dml("update.last.user.submit", submit.getSid(), submit.getUid());
 
 		// se inserta la rel de user con problem la primera vez, sea aceptado o
 		// no.
 		if (!bool("exist.problemid", submit.getPid(), submit.getUid())) {
 			dml("insert.user.problem.accepted", submit.getPid(), submit.getUid(), submit.isAccepted());
-			dml("clean.submition.first.ac",submit.getPid(),submit.getUid());
-			dml("update.submition.first.ac",submit.getPid(),submit.getUid());
+			dml("clean.submition.first.ac", submit.getPid(), submit.getUid());
+			dml("update.submition.first.ac", submit.getPid(), submit.getUid());
 		}
 		if (submit.isAccepted()) {
 			// esto es importante, debido a que es posible aceptar un problema
@@ -96,7 +94,7 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 		}
 
 		String key = Config.getProperty(submit.getStatus().replaceAll(" ", "."));
-		if (!StringUtils.isEmpty(key) && !"jdg".equals(key)  && !"sie".equals(key)) {
+		if (!StringUtils.isEmpty(key) && !"jdg".equals(key) && !"sie".equals(key)) {
 			dml(replaceSql("update.user.stats.after.submition", "<key>", key), submit.getUid());
 			dml(replaceSql("update.problem.stats.after.submition", "<key>", key), submit.getPid());
 			dml(replaceSql("update.lang.stats.after.submition", "<key>", key), submit.getLang());
@@ -107,12 +105,11 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 
 	}
 
-	public void removeEffects(SubmissionJudge submit) {
-
-		dml("update.submit.for.removal", submit.getSid());
-
-		dml("update.source.error.for.removal", submit.getSid());
-
+	public void removeEffects(SubmissionJudge submit, boolean isDisabling) {
+		if (!isDisabling) {
+			dml("update.submit.for.removal", submit.getSid());
+			dml("update.source.error.for.removal", submit.getSid());
+		}
 		// INFO: aqui deberiamos limpiar la ocurrencia de este submit en
 		// user_problem
 		// si este es el unico submit del usuario. No lo hacemos porque es una
@@ -122,7 +119,7 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 		// todas maneras.
 		if (submit.isAccepted()) {
 			dml("update.problem.stats.for.removal", submit.getPid());
-			
+
 			if (bool("is.first.accepted", submit.getSid(), submit.getPid(), submit.getUid())) {
 				int ac = integer(0, "load.problem.stats", submit.getPid());
 				double totbefore = Utils.formula(ac), totAfter = Utils.formula(ac - 1);
@@ -134,7 +131,7 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 		}
 
 		String key = Config.getProperty(submit.getStatus().replaceAll(" ", "."));
-		if (!StringUtils.isEmpty(key) && !"jdg".equals(key)  && !"sie".equals(key)) {
+		if (!StringUtils.isEmpty(key) && !"jdg".equals(key) && !"sie".equals(key)) {
 			dml(replaceSql("update.user.stats.after.submition.for.removal", "<key>", key), submit.getUid());
 			dml(replaceSql("update.problem.stats.after.submition.for.removal", "<key>", key), submit.getPid());
 			dml(replaceSql("update.lang.stats.after.submition.for.removal", "<key>", key), submit.getLang());
@@ -145,6 +142,11 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 		// esto tiene que quedarse al final para asegurarse que cuando se
 		// dispare el evento sea cuando se haya calculado todo lo anterior
 		dml("reset.event.processing", submit.getSid());
+	}
+
+	public void removeEffects(SubmissionJudge submit) {
+		removeEffects(submit, false);
+
 	}
 
 	@Override
@@ -238,17 +240,17 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<SubmissionJudge> getSubmissionsAdmin(Filter filter, int found, PagingOptions options,boolean asc) {
+	public IPaginatedList<SubmissionJudge> getSubmissionsAdmin(Filter filter, int found, PagingOptions options, boolean asc) {
 		Query query = new Query(filter.getCid() == null ? "submition" : "contest_submition");
 		query.where(Where.bt("submit_id", filter.getStartSid(), filter.getEndSid()), Where.bt("date", filter.getStartDate(), filter.getEndDate()), Where.eq("username", filter.getUsername()),
 				Where.eq("cid", filter.getCid()), Where.eq("language", filter.getLanguage()), Where.eq("status", Config.getProperty("judge.status." + filter.getStatus())),
 				Where.eq("pid", filter.getPid()));
 
-		query.order(asc?Order.asc("submit_id"):Order.desc("submit_id"));
+		query.order(asc ? Order.asc("submit_id") : Order.desc("submit_id"));
 		query.paginate(options, 20);
 
-		List<SubmissionJudge> submissions = objects(query.select("uid,username","pid","submit_id as sid","time as time_used","memory as memory_used","fontsize as font","date","status",
-				"language as lang","testcase","average_case as avg_time_used","enabled",filter.getCid() == null ?"":"cid"), SubmissionJudge.class, query.arguments());
+		List<SubmissionJudge> submissions = objects(query.select("uid,username", "pid", "submit_id as sid", "time as time_used", "memory as memory_used", "fontsize as font", "date", "status",
+				"language as lang", "testcase", "average_case as avg_time_used", "enabled", filter.getCid() == null ? "" : "cid"), SubmissionJudge.class, query.arguments());
 		for (SubmissionJudge s : submissions) {
 			s.setAuthorize(true);
 			s.initialize();
@@ -344,8 +346,9 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 		Query query = getSubmissionsContestQuery(username, language, pid, status, contest);
 		query.order(Order.desc("submit_id"));
 		query.paginate(options, 20);
-		List<SubmissionJudge> submissions = objects(query.select("contest_submition.testcase as FirstWaCase,contest_submition.uid,username,contest_submition.pid,submit_id as sid,contest_submition.time as time_used,"
-				+ "contest_submition.memory as memory_used,contest_submition.fontsize as font,contest_submition.date,status,language as lang,testcase,average_case as avg_time_used"),
+		List<SubmissionJudge> submissions = objects(
+				query.select("contest_submition.testcase as FirstWaCase,contest_submition.uid,username,contest_submition.pid,submit_id as sid,contest_submition.time as time_used,"
+						+ "contest_submition.memory as memory_used,contest_submition.fontsize as font,contest_submition.date,status,language as lang,testcase,average_case as avg_time_used"),
 				SubmissionJudge.class, query.arguments());
 
 		for (SubmissionJudge submission : submissions) {
@@ -453,7 +456,7 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 	}
 
 	public int insertContestSubmission(int iduser, String username, int pid, String source, String language, int cid, boolean virtual) {
-		dml("insert.contest.submission", iduser, pid, username, "Judging", language, cid, virtual);
+		dml("insert.contest.submission", iduser, pid, source.length(), username, "Judging", language, cid, virtual);
 		int sid = getMaxSubmitionIDByUsernameAndPcodeInContest(username, pid);
 		dml("insert.contest.submission.1", sid, source);
 		return sid;

@@ -23,7 +23,7 @@ public class ClarificationDAOImpl extends BaseDAOImpl implements ClarificationDA
         int uid = 0;
         for (int i = 0; i < users.size(); i++) {
             String string = users.get(i);
-            if (!send.containsKey(string) && (uid = integer("user.uid", string)) != -1) {
+            if (!send.containsKey(string) && (uid = integer("select.uid.by.username", string)) != -1) {
                 send.put(string, string);
                 dml("insert.user.clarification.read", id_clarification, uid);
             }
@@ -55,7 +55,7 @@ public class ClarificationDAOImpl extends BaseDAOImpl implements ClarificationDA
         Integer id_clarification = integer("max.id.clarification", clarification.getIdteam());
         for (int i = 0; i < users.size(); i++) {
             String string = users.get(i);
-            if (!send.containsKey(string) && (uid = integer("user.uid", string)) != -1) {
+            if (!send.containsKey(string) && (uid = integer("select.uid.by.username", string)) != -1) {
                 if (clarification.getId() > 0) {
                     dml("delete.clarification", uid, clarification.getId());
                 }

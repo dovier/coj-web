@@ -55,7 +55,6 @@
 		<thead>
 			<th><spring:message code="tablehdr.id" /></th>
 			<th class="headfrom"><spring:message code="tablehdr.from" /></th>
-			<th class="headto"><spring:message code="tablehdr.to" /></th>
 			<th><spring:message code="tablehdr.subject" /></th>
 			<!--th><spring:message code="tablehdr.topic" /></th-->
 			<th><spring:message code="tablehdr.date" /></th>
@@ -68,20 +67,6 @@
 						href="<c:url value="clarificationview.xhtml?cid=${contest.cid}&ccid=${clarification.id}"/>">${clarification.id}</a></td>
 					<td><a
 						href="<c:url value="/user/useraccount.xhtml?username=${clarification.username}" />">${clarification.username}</a></td>
-					<td class="${clarification.cclass}"><c:choose>
-							<c:when test="${clarification.publics == true}">
-								<spring:message code="tableval.all" />
-							</c:when>
-							<c:when test="${clarification.forall == true}">
-								<spring:message code="tableval.contestants" />
-							</c:when>
-							<c:when test="${clarification.request == true}">
-								<spring:message code="tableval.judges" />
-							</c:when>
-							<c:otherwise>
-								<spring:message code="tableval.me" />
-							</c:otherwise>
-						</c:choose></td>
 					<!--td>
                         <a href="<c:url value="clarificationview.xhtml?cid=${contest.cid}&ccid=${clarification.id}"/>">${clarification.title}</a>
                     </td-->

@@ -39,24 +39,34 @@
 		<div class="col-xs-12">
 			<table class="pinfo">
 				<tbody>
+					<c:if test="${contest.past == true}">
+						<tr>
+							<td><spring:message code="fieldhdr.createdby" /></td>
+							<td><c:out value="${problem.author}" /></td>
+						</tr>
+						<tr>
+							<td width="20%"><spring:message code="fieldhdr.addedby" /></td>
+							<td><a
+								href="<c:url value="/user/useraccount.xhtml?username=${problem.username}"/>"><c:out
+										value="${problem.username}" /></a>&nbsp;(<c:out
+									value="${problem.date}" />)</td>
+						</tr>
+					</c:if>
 					<tr>
 						<td><spring:message code="fieldhdr.limits" /></td>
-						<td><b><spring:message
-									code="fieldhdr.timelimit" />:</b> <c:out value="${problem.time}" />
-							ms <c:choose>
+						<td><b><spring:message code="fieldhdr.timelimit" />:</b> <c:out
+								value="${problem.time}" /> MS <c:choose>
 								<c:when test="${problem.multidata}">
 									<c:out value="|" />
-									<b><spring:message
-											code="fieldhdr.testlimit" />:</b>
-									<c:out value="${problem.casetimelimit}" /> ms
+									<b><spring:message code="fieldhdr.testlimit" />:</b>
+									<c:out value="${problem.casetimelimit}" /> MS
 					</c:when>
 							</c:choose> <c:out value="|" /> <span style="font-weight: bold;"><spring:message
 									code="fieldhdr.memorylimit" />:</span> <c:out
 								value="${problem.memoryMB}" /> <c:out value=" | " /><b><spring:message
-									code="fieldhdr.outputlimit" />:</b> <c:out value="64" /> mb<c:out
-								value=" | " /><b><spring:message
-									code="fieldhdr.sizelimit" />:</b> <c:out value="${problem.fontMB}" />
-						</td>
+									code="fieldhdr.outputlimit" />:</b> <c:out value="64" /> MB<c:out
+								value=" | " /><b><spring:message code="fieldhdr.sizelimit" />:</b>
+							<c:out value="${problem.fontMB}" /></td>
 					</tr>
 					<tr>
 						<td><spring:message code="fieldhdr.enabledlanguages" /></td>
@@ -113,7 +123,9 @@
 			<h4 class="text-primary">
 				<spring:message code="fieldhdr.sampleinput" />
 			</h4>
-			<code><c:url value="${problem.inputex}" /></code>
+			<code>
+				<c:url value="${problem.inputex}" />
+			</code>
 		</div>
 	</div>
 	<div class="row">
@@ -121,7 +133,9 @@
 			<h4 class="text-primary">
 				<spring:message code="fieldhdr.sampleoutput" />
 			</h4>
-			<code><c:url value="${problem.outputex}" /></code>
+			<code>
+				<c:url value="${problem.outputex}" />
+			</code>
 		</div>
 	</div>
 	<div class="row">

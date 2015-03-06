@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import cu.uci.coj.board.dao.WbSiteDAO;
 import cu.uci.coj.board.parsing.WbParser;
 import cu.uci.coj.board.util.ConnectionErrorException;
+import cu.uci.coj.config.Config;
 import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
 
@@ -37,14 +38,15 @@ public class WbCodeforcesParser extends WbParser {
 	WbSiteDAO wbSiteDAO;
 
 	public WbCodeforcesParser() {
-		this.siteUrl = "http://codeforces.com/contests";
+		this.siteUrl = Config.getProperty("codeforces.parsing.url");
 	}
 	
     @PostConstruct
     public void init() {
-    	site = wbSiteDAO.getSiteByUrl(siteUrl);
+    	site = wbSiteDAO.getSiteByUrl(Config.getProperty("codeforces.url"));
     	if(site == null) {
-    		site = new WbSite(0, "Codeforces", siteUrl, "Codeforces", false, true, 166, "Europe/Moscow");
+    		site = new WbSite(0, Config.getProperty("codeforces.name"), Config.getProperty("codeforces.url"), Config.getProperty("codeforces.code"),
+    				false, true, Integer.parseInt(Config.getProperty("codeforces.timeanddateid")), Config.getProperty("codeforces.timeregion"));
     		int sid = wbSiteDAO.insertSite(site);
     		site.setSid(sid);
     	} 
@@ -54,7 +56,7 @@ public class WbCodeforcesParser extends WbParser {
 	public List<WbContest> parse() throws ConnectionErrorException {
 		Document doc = null;
 		String strName = "";
-		String strUrl = "http://www.codeforces.com/contests";
+		String strUrl = siteUrl;
 		String strBegin = "";
 		String[] strDuration;
 		int intDurationHours = 0;
@@ -78,11 +80,14 @@ public class WbCodeforcesParser extends WbParser {
 
 		for (int i = 1; i < entries.size(); i++) {
 			Element entry = entries.get(i);
-
-			strName = entry.child(0).text();
-			strBegin = entry.child(1).getElementsByTag("a").get(0).text();
-			strDuration = entry.child(2).text().split(":");
-
+			
+			try {
+				strName = entry.child(0).text();
+				strBegin = entry.child(1).getElementsByTag("a").get(0).text();
+				strDuration = entry.child(2).text().split(":");
+			} catch(Exception e) {
+				continue;
+			}
 			try {
 				dateBegin = format.parse(strBegin);
 

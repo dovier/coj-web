@@ -73,7 +73,7 @@ public class virtualSubmitValidator implements Validator {
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "pid", "errormsg.24");
         boolean test1 = !(submit.getCid()>=10000 && contestDAO.isProblemInVirtualContest(submit.getPid()));
-        boolean test2 = !contestDAO.isProblemInContest(submit.getPid(), submit.getCid(), problemDAO.getCurrentLevel(userDAO.integer("user.uid", submit.getUsername()), submit.getCid()));
+        boolean test2 = !contestDAO.isProblemInContest(submit.getPid(), submit.getCid(), problemDAO.getCurrentLevel(userDAO.integer("select.uid.by.username", submit.getUsername()), submit.getCid()));
         boolean test =  test1 && test2;
         if (!submit.getContest().isRunning()) {
             errors.rejectValue("cid", "errormsg.31");
@@ -81,7 +81,7 @@ public class virtualSubmitValidator implements Validator {
             errors.rejectValue("pid", "errormsg.25");
         }
 
-        if (!(submit.getContest().getRegistration() == 0 && submit.getContest().isAllow_registration()) && !contestDAO.isInContest(submit.getCid(), userDAO.integer("user.uid", submit.getUsername()))) {
+        if (!(submit.getContest().getRegistration() == 0 && submit.getContest().isAllow_registration()) && !contestDAO.isInContest(submit.getCid(), userDAO.integer("select.uid.by.username", submit.getUsername()))) {
             errors.rejectValue("username", "errormsg.30");
         }
         if (submit.getCode().length() == 0 && submit.getUploadfile().getSize() <= 0) {

@@ -91,6 +91,8 @@
 			access="hasAnyRole('ROLE_SUPER_PSETTER','ROLE_EDITOR','ROLE_PSETTER','ROLE_ADMIN')" />
 		<security:intercept-url pattern="/admin/**"
 			access="hasAnyRole('ROLE_SUPER_PSETTER','ROLE_ADMIN','ROLE_PSETTER')" />
+		<security:intercept-url pattern="/24h/translation.xhtml"
+			access="hasRole('ROLE_USER')" />
 		<security:intercept-url pattern="/24h/**"
 			access="permitAll" />
 		<security:intercept-url pattern="/mail/**"
@@ -109,18 +111,23 @@
 			access="permitAll" />
 		<security:intercept-url pattern="/schoolar/**"
 			access="hasRole('ROLE_USER')" />
-		<security:intercept-url pattern="/wboard/**"
-			access="permitAll" />
 		<security:intercept-url pattern="/**" access="permitAll" />
 	</security:filter-security-metadata-source>
 
 
 	<bean id="ds" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
-		<property name="driverClass" value="org.postgresql.Driver" />
+		
+                <property name="driverClass" value="org.postgresql.Driver" />
 		<property name="jdbcUrl" value="jdbc:postgresql://127.0.0.1:5432/coj" />
-		<property name="user" value="postgres" />
+		<property name="user" value="postgres" />                
 		<property name="password" value="postgres" />
+                
+<!--                <property name="driverClass" value="org.postgresql.Driver" />
+		<property name="jdbcUrl" value="jdbc:postgresql://10.0.0.140:5432/coj" />
+		<property name="user" value="postgres" />                
+		<property name="password" value="coj1234*-+" />                -->
+                
 		<property name="maxPoolSize" value="10" />
 		<property name="maxIdleTime" value="300" />
 		<property name="maxConnectionAge" value="600" />
@@ -134,10 +141,10 @@
 	<!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
 
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="127.0.0.1" />
+		<property name="host" value="10.0.0.85" />
 		<property name="port" value="25" />
 		<property name="username" value="coj@uci.cu" />
-		<property name="password" value="postgres" />
+		<property name="password" value="new$123...*-+" />
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.smtp.auth">true</prop>

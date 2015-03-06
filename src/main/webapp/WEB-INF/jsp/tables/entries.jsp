@@ -1,6 +1,7 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
+<authz:authentication var="principal" property="principal" />
 <display:table id="entry" name="entries" class="volume" requestURI=""
 	defaultsort="0" defaultorder="ascending">
 	<display:column titleKey="tablehdr.entry" headerClass="headrk">
@@ -43,7 +44,7 @@
 								class="fa fa-mail-forward"></i></a>
 						</authz:authorize>
 						<c:if
-							test="${not entry.voted and entry.username != principal.name}">
+							test="${not entry.voted and entry.username != principal}">
 							<authz:authorize access="isAuthenticated()">
 								<a id="thumbs-up${entry.id}" data-toggle="tooltip"
 									title="up vote entry" href="javascript:like(${entry.id});"><i
@@ -60,7 +61,7 @@
 							<b id="rating${entry.id}">${entry.rate}</b>
 						</c:if>
 						<c:if
-							test="${not entry.voted and entry.username != principal.name}">
+							test="${not entry.voted and entry.username != principal}">
 							<authz:authorize access="isAuthenticated()">
 								<a id="thumbs-down${entry.id}" data-toggle="tooltip"
 									title="down vote entry" href="javascript:dislike(${entry.id});"><i

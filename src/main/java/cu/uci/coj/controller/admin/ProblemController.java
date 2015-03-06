@@ -57,7 +57,7 @@ public class ProblemController extends BaseController {
 	@RequestMapping(value = "/adminproblems.xhtml", method = RequestMethod.GET)
 	public String listProblems(Principal principal, HttpServletRequest request, Model model, Locale locale, PagingOptions options, @RequestParam(required = false, value = "pattern") String pattern) {
 		model.addAttribute("pattern", pattern);
-		Integer uid = contestDAO.integer("user.uid", getUsername(principal));
+		Integer uid = contestDAO.integer("select.uid.by.username", getUsername(principal));
 		String role = Roles.ROLE_USER;
 		if (request.isUserInRole(Roles.ROLE_ADMIN))
 			role = Roles.ROLE_ADMIN;
@@ -72,7 +72,7 @@ public class ProblemController extends BaseController {
 	@RequestMapping(value = "/tables/adminproblems.xhtml", method = RequestMethod.GET)
 	public String tablesListProblems(Principal principal, HttpServletRequest request, Model model, Locale locale, PagingOptions options,
 			@RequestParam(required = false, value = "pattern") String pattern) {
-		Integer uid = contestDAO.integer("user.uid", getUsername(principal));
+		Integer uid = contestDAO.integer("select.uid.by.username", getUsername(principal));
 		String role = Roles.ROLE_USER;
 		if (request.isUserInRole(Roles.ROLE_ADMIN))
 			role = Roles.ROLE_ADMIN;
@@ -106,7 +106,7 @@ public class ProblemController extends BaseController {
 			problem.setCasetimelimit(problem.getTime());
 		}
 
-		Integer uid = contestDAO.integer("user.uid", getUsername(principal));
+		Integer uid = contestDAO.integer("select.uid.by.username", getUsername(principal));
 		problem.setUid(uid);
 
 		problemDAO.addProblem(problem);
@@ -130,7 +130,7 @@ public class ProblemController extends BaseController {
 
 	@RequestMapping(value = "/manageproblem.xhtml", method = RequestMethod.GET)
 	public String manageProblem(Model model, Locale locale, Principal principal, SecurityContextHolderAwareRequestWrapper requestWrapper, @RequestParam(required = false, value = "pid") Integer pid) {
-		Integer uid = contestDAO.integer("user.uid", getUsername(principal));
+		Integer uid = contestDAO.integer("select.uid.by.username", getUsername(principal));
 
 		if (!(requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || requestWrapper.isUserInRole(Roles.ROLE_SUPER_PSETTER) || (requestWrapper.isUserInRole(Roles.ROLE_PSETTER) && (pid == null || (problemDAO
 				.bool("is.psetter.problem", uid, pid))))))
@@ -165,7 +165,7 @@ public class ProblemController extends BaseController {
 		if (problem.getPid() == null || problem.getPid() == 0)
 			return addProblem(model, principal, request, problem, result);
 
-		Integer uid = contestDAO.integer("user.uid", getUsername(principal));
+		Integer uid = contestDAO.integer("select.uid.by.username", getUsername(principal));
 		if (!(requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || requestWrapper.isUserInRole(Roles.ROLE_SUPER_PSETTER) || (problemDAO.bool("is.psetter.problem", uid, problem.getPid()) && requestWrapper
 				.isUserInRole(Roles.ROLE_PSETTER))))
 			return "/admin/adminproblems";
@@ -266,7 +266,7 @@ public class ProblemController extends BaseController {
 
 	@RequestMapping(value = "/manageproblemI18N.xhtml", method = RequestMethod.GET)
 	public String manageProblemI18N(Model model, Locale locale, Principal principal, SecurityContextHolderAwareRequestWrapper requestWrapper, @RequestParam("pid") Integer pid) {
-		Integer uid = problemDAO.integer("user.uid", getUsername(principal));
+		Integer uid = problemDAO.integer("select.uid.by.username", getUsername(principal));
 
 		if (!requestWrapper.isUserInRole(Roles.ROLE_ADMIN) && !requestWrapper.isUserInRole(Roles.ROLE_SUPER_PSETTER)
 				&& !(problemDAO.bool("is.psetter.problem", uid, pid) && requestWrapper.isUserInRole(Roles.ROLE_PSETTER)))
@@ -281,7 +281,7 @@ public class ProblemController extends BaseController {
 
 	@RequestMapping(value = "/manageproblemI18N.xhtml", method = RequestMethod.POST)
 	public String manageProblemI18N(Model model, SecurityContextHolderAwareRequestWrapper requestWrapper, Principal principal, HttpServletRequest request, Problem problem, BindingResult result) {
-		Integer uid = problemDAO.integer("user.uid", getUsername(principal));
+		Integer uid = problemDAO.integer("select.uid.by.username", getUsername(principal));
 		if (!(requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || requestWrapper.isUserInRole(Roles.ROLE_SUPER_PSETTER) || (problemDAO.bool("is.psetter.problem", uid, problem.getPid()) && requestWrapper
 				.isUserInRole(Roles.ROLE_PSETTER))))
 			return "/admin/adminproblems";

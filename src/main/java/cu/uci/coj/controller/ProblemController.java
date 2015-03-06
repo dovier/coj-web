@@ -47,7 +47,7 @@ public class ProblemController extends BaseController {
 
 	@RequestMapping(value = "/24h/problem.xhtml", method = RequestMethod.GET)
 	public String Problem(HttpServletRequest request, Locale locale, Model model, Principal principal, @RequestParam Integer pid) {
-		Integer uid = problemDAO.integer("user.uid", getUsername(principal));
+		Integer uid = problemDAO.integer("select.uid.by.username", getUsername(principal));
 		Problem problem = problemDAO.getProblemByCode(
 				locale.getLanguage(),
 				pid,
@@ -78,7 +78,7 @@ public class ProblemController extends BaseController {
 		} else {
 			model.addAttribute("hasRecommend", false);
 		}
-
+		model.addAttribute("locale", locale.getLanguage());
 		return "/24h/problem";
 	}
 
@@ -111,7 +111,7 @@ public class ProblemController extends BaseController {
 		String username = getUsername(principal);
 		if (filterby == 5) {
 			Recommender recommender = new Recommender(userDAO, problemDAO, recommenderDAO);
-			List<Problem> recommendations = recommender.recommendations(username, username == null ? 0 : problemDAO.integer("user.uid", username), options.getSort(), options.getDirection());
+			List<Problem> recommendations = recommender.recommendations(username, username == null ? 0 : problemDAO.integer("select.uid.by.username", username), options.getSort(), options.getDirection());
 			int found = recommendations.size();
 			if (found != 0) {
 				model.addAttribute("problems", recommendations);
@@ -119,7 +119,7 @@ public class ProblemController extends BaseController {
 		} else {
 			int found = problemDAO.countProblem(pattern, filterby, username, idClassification, complexity);
 			if (found != 0) {
-				IPaginatedList<Problem> problems = problemDAO.findAllProblems(locale.getLanguage(), pattern, found, options, username, username == null ? 0 : problemDAO.integer("user.uid", username),
+				IPaginatedList<Problem> problems = problemDAO.findAllProblems(locale.getLanguage(), pattern, found, options, username, username == null ? 0 : problemDAO.integer("select.uid.by.username", username),
 						filterby, idClassification, complexity);
 				model.addAttribute("problems", problems);
 			}
@@ -131,7 +131,7 @@ public class ProblemController extends BaseController {
 	public String LockProblem(Model model, Principal principal, @RequestParam("pid") Integer pid) {
 		String username = getUsername(principal);
 		try {
-			int uid = problemDAO.integer("user.uid", username);
+			int uid = problemDAO.integer("select.uid.by.username", username);
 			if (problemDAO.bool("issolved.byuser", uid, pid)) {
 				problemDAO.dml("lock.problem", uid, pid);
 			}
@@ -144,7 +144,7 @@ public class ProblemController extends BaseController {
 	@RequestMapping(value = "/24h/markasfavorite.xhtml", method = RequestMethod.GET)
 	public String MarkFavorite(Model model, Principal principal, @RequestParam("pid") Integer pid) {
 		try {
-			int uid = problemDAO.integer("user.uid", getUsername(principal));
+			int uid = problemDAO.integer("select.uid.by.username", getUsername(principal));
 			if (!problemDAO.bool("problem.ismark.asfavorite.byuser", uid, pid) && problemDAO.bool("exist.problem.bypid", pid)) {
 				problemDAO.dml("problem.mark.asfavorite.byuser", uid, pid);
 			}
@@ -157,7 +157,7 @@ public class ProblemController extends BaseController {
 	@RequestMapping(value = "/24h/unmarkfavorite.xhtml", method = RequestMethod.GET)
 	public String UnMarkFavorite(Model model, Principal principal, @RequestParam("pid") Integer pid) {
 		try {
-			int uid = problemDAO.integer("user.uid", getUsername(principal));
+			int uid = problemDAO.integer("select.uid.by.username", getUsername(principal));
 			if (problemDAO.bool("problem.ismark.asfavorite.byuser", uid, pid)) {
 				problemDAO.dml("problem.unmark.favorite.byuser", uid, pid);
 			}
@@ -169,7 +169,7 @@ public class ProblemController extends BaseController {
 
 	@RequestMapping(value = "/24h/problempdf.xhtml", method = RequestMethod.GET)
 	public String ProblemPdf(Locale locale, HttpServletRequest request, HttpServletResponse response, OutputStream os, Model model, Principal principal, @RequestParam Integer pid) {
-		Integer uid = problemDAO.integer("user.uid", getUsername(principal));
+		Integer uid = problemDAO.integer("select.uid.by.username", getUsername(principal));
 		Problem problem = problemDAO.getProblemByCode(
 				locale.getLanguage(),
 				pid,
@@ -195,7 +195,7 @@ public class ProblemController extends BaseController {
 			return "/error/wproblem";
 		}
 
-		int uid = problemDAO.integer("user.uid", getUsername(principal));
+		int uid = problemDAO.integer("select.uid.by.username", getUsername(principal));
 
 		if (!problemDAO.bool("issolved.byuser", uid, problem.getPid())) {
 			return "/error/wproblem";
@@ -236,7 +236,7 @@ public class ProblemController extends BaseController {
 			@RequestParam(required = true, value = "vote5") String vote5) {
 		System.out.println("Voto = " + vote1 + " " + vote2);
 		try {
-			int uid = problemDAO.integer("user.uid", getUsername(principal));
+			int uid = problemDAO.integer("select.uid.by.username", getUsername(principal));
 
 			if (!problemDAO.bool("problem.has_voted", pid)) {
 				problemDAO.dml("problem.create.votes", pid);

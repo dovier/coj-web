@@ -27,7 +27,7 @@
 	<display:column titleKey="tablehdr.enabled">
 		<c:choose>
 			<c:when test="${contest.enabled == true}">
-				<spring:message code="fieldval.yes" />
+				<span class="label label-success"><spring:message code="fieldval.yes" /></span>
 			</c:when>
 			<c:otherwise>
 				<span class="label label-danger"><spring:message
@@ -46,13 +46,13 @@
 						code="fieldval.coming" /></span>
 			</c:when>
 			<c:when test="${contest.past == true}">
-				<spring:message code="fieldval.past" />
+				<span class="label label-default"><spring:message code="fieldval.past" /></span>
 			</c:when>
 		</c:choose>
 	</display:column>
 	<display:column titleKey="tablehdr.actions">
 		<a
-			href="<c:url value="/admin/contestrejudge.xhtml?cid=${contest.cid}"/>"><img
+			href="<c:url value="/admin/managesubmissions.xhtml?cid=${contest.cid}"/>"><img
 			src="<c:url value="/images/rejudge.png"/>"
 			alt="<spring:message code="altval.rejudge"/>"
 			title="<spring:message code="titval.rejudge"/>" /></a>

@@ -34,41 +34,11 @@ public class WbBoardController extends BaseController {
 	@Resource
 	WbSiteDAO wbSiteDAO;
 	
-	WbContestDAO wbContestDAO;
-	
-	@RequestMapping(value = "/wboard/contests.xhtml", method = RequestMethod.POST)
-	public String listContestsPost(Model model, Principal principal, PagingOptions options,
-			@RequestParam(required = false, defaultValue = "0") Integer site,
-			@RequestParam(required = false, defaultValue = "0") Integer followed) {
-		
-		return listContests(model, principal, options, site, followed);
-	}	
+	WbContestDAO wbContestDAO;	
 
 	@RequestMapping(value = "/wboard/contests.xhtml", method = RequestMethod.GET)
-	public String listContests(Model model, Principal principal, PagingOptions options,
-			@RequestParam(required = false, defaultValue = "0") Integer site,
-			@RequestParam(required = false, defaultValue = "0") Integer followed) {	
-		
-		Integer uid = null;
-		if(getUsername(principal) != null) {
-			uid = userDAO.idByUsername(getUsername(principal));
-			if(followed == 0 && site != 0) {
-				model.addAttribute("follow", wbSiteDAO.getIfFollow(uid, site));
-			}
-		} else {
-			followed = 0;
-		}
-		
-		if(followed == 0) {
-			model.addAttribute("sites", wbSiteDAO.getSiteList());
-		} else {
-			model.addAttribute("sites", wbSiteDAO.getSiteListFollowed(uid));
-		}		
-				
-		
-		model.addAttribute("site", site);
-		model.addAttribute("followed", followed);
-		
+	public String listContests(Model model) {
+		model.addAttribute("sites", wbSiteDAO.getSiteList());		
 		return "/wboard/contests";
 	}
 	
@@ -85,21 +55,11 @@ public class WbBoardController extends BaseController {
 		Integer uid = null;
 		if(getUsername(principal) != null) {
 			uid = userDAO.idByUsername(getUsername(principal));
-			if(followed == 0 && site != 0) {
-				model.addAttribute("follow", wbSiteDAO.getIfFollow(uid, site));
-			}
 		} else {
 			followed = 0;
 		}
 		
-		IPaginatedList<WbContest> contests = wbContestService.getContestList(site, options, followed, uid);
-		
-		if(followed == 0) {
-			model.addAttribute("sites", wbSiteDAO.getSiteList());
-		} else {
-			model.addAttribute("sites", wbSiteDAO.getSiteListFollowed(uid));
-		}		
-				
+		IPaginatedList<WbContest> contests = wbContestService.getContestList(site, options, followed, uid);	
 		
 		List<WbSite> list = wbSiteDAO.getSiteList();
 		HashMap<Integer, WbSite> map =  new HashMap<Integer, WbSite>();
@@ -110,8 +70,6 @@ public class WbBoardController extends BaseController {
 	
 		
 		model.addAttribute("mapsites", map);
-		model.addAttribute("site", site);
-		model.addAttribute("followed", followed);
 		model.addAttribute("contests", contests);
 		
 		return "/tables/wbcontests";
@@ -133,5 +91,25 @@ public class WbBoardController extends BaseController {
 			Integer	uid = userDAO.idByUsername(getUsername(principal));
 			wbSiteDAO.unfollowSite(uid, sid);
 		} catch (Exception e){}	
+	}
+	
+	@RequestMapping(value = "/wboard/combobox.xhtml", method = RequestMethod.GET)
+	public String loadCombobox(Model model, Principal principal, @RequestParam Integer followed) {
+		Integer	uid = userDAO.idByUsername(getUsername(principal));
+		if(followed == 0) {
+			if(uid != null) {
+				List<Integer> list = wbSiteDAO.getIdSiteListFollowed(uid);
+				HashMap<Integer, Boolean> mapIds = new HashMap<Integer, Boolean>();			
+				for(int i = 0;i<list.size();i++)
+					mapIds.put(list.get(i), true);
+				model.addAttribute("mapIds", mapIds);
+			}			
+			
+			model.addAttribute("sites", wbSiteDAO.getSiteList());
+		} else {
+			model.addAttribute("sites", wbSiteDAO.getSiteListFollowed(uid));
+		}
+		model.addAttribute("followed", followed);		
+		return "/wboard/combobox";
 	}
 }

@@ -47,10 +47,10 @@ public class ClarificationController extends BaseController {
 		String username = getUsername(principal);
 		int uid = -1;
 		if (username != null) {
-			uid = clarificationDAO.integer("user.uid", username);
+			uid = clarificationDAO.integer("select.uid.by.username", username);
 		}
 		
-		Integer judgeId = contestDAO.integer("user.uid", getUsername(principal));
+		Integer judgeId = contestDAO.integer("select.uid.by.username", getUsername(principal));
 		model.addAttribute("isContestJudge",clarificationDAO.bool("is.judge.in.contest", judgeId, cid));
 		
 		List<Clarification> clarifications;
@@ -69,7 +69,7 @@ public class ClarificationController extends BaseController {
 	public String ClarificationView(Model model, Principal principal, @RequestParam("cid") Integer cid, @RequestParam("ccid") Integer ccid) {
 		int uid = 0;
 		if (principal != null) {
-			uid = clarificationDAO.integer("user.uid", principal.getName());
+			uid = clarificationDAO.integer("select.uid.by.username", principal.getName());
 		}
 		Clarification clarification;
 		if (uid > 0) {
@@ -123,7 +123,7 @@ public class ClarificationController extends BaseController {
 			model.addAttribute(clarification);
 			return "/contest/clarification";
 		}
-		clarification.setIdteam(userDAO.integer("user.uid", principal.getName()));
+		clarification.setIdteam(userDAO.integer("select.uid.by.username", principal.getName()));
 		clarificationDAO.insertClarification(clarification);
 		return "redirect:/contest/myclarifications.xhtml?cid=" + clarification.getCid();
 	}
@@ -132,13 +132,19 @@ public class ClarificationController extends BaseController {
 	public String SendClarification(Locale locale, Model model, Principal principal, @RequestParam(required = false, defaultValue = "", value = "uid") String uid, @RequestParam("cid") Integer cid,
 			@RequestParam(defaultValue = "-1", required = false, value = "ccid") Integer ccid, @RequestParam(defaultValue = "0", required = false, value = "pid") Integer pid) {
 
-		Integer judgeId = contestDAO.integer("user.uid", getUsername(principal));
+		Integer judgeId = contestDAO.integer("select.uid.by.username", getUsername(principal));
 		if (!clarificationDAO.bool("is.judge.in.contest", judgeId, cid))
 			return "/error/accessdenied";
 
 		List<Problem> problems = new LinkedList<Problem>();
 		problems.add(new Problem(0, "General"));
 		problems.addAll(problemDAO.getContestProblems(locale.getLanguage(), cid));
+		if (contestDAO.getStyle(cid) == Contest.ACM_ICPC_STYLE) {
+			for (int i = 1; i < problems.size(); i++) {
+				problems.get(i).setLetter(i - 1);
+				problems.get(i).setTitle(problems.get(i).getLetter() + " - " + problems.get(i).getTitle());
+			}
+		}
 		model.addAttribute("problems", problems);
 		model.addAttribute("contest", contestDAO.loadContest(cid));
 		Clarification clarification = new Clarification();
@@ -196,7 +202,7 @@ public class ClarificationController extends BaseController {
 		if (clarification.getOriginalMSG() == null) {
 			clarification.setOriginalMSG("");
 		}
-		clarification.setIdteam(userDAO.integer("user.uid", getUsername(principal)));
+		clarification.setIdteam(userDAO.integer("select.uid.by.username", getUsername(principal)));
 		clarification.setDescription(clarification.getDescription() + "<br/><br/>" + clarification.getOriginalMSG());
 		clarificationDAO.insertClarification(clarification);
 		if (clarification.getId() != 0) {
@@ -218,7 +224,7 @@ public class ClarificationController extends BaseController {
 		int uid = 0;
 		for (int i = 0; i < users.size(); i++) {
 			String string = users.get(i);
-			if (!sended.containsKey(string) && (uid = userDAO.integer("user.uid", string)) != -1) {
+			if (!sended.containsKey(string) && (uid = userDAO.integer("select.uid.by.username", string)) != -1) {
 				if (clarification.getId() > 0) {
 					clarificationDAO.dml("delete.user.clarification", uid, clarification.getId());
 					clarificationDAO.dml("delete.user.clarification", uid, ccid);
@@ -232,7 +238,7 @@ public class ClarificationController extends BaseController {
 
 	@RequestMapping(value = "/markanswered.xhtml", method = RequestMethod.GET)
 	public String markAnswered(Model model, Principal principal, @RequestParam("cid") Integer cid, @RequestParam("ccid") Integer ccid) {
-		clarificationDAO.dml("update.clarification.read", ccid, clarificationDAO.integer("user.uid", getUsername(principal)));
+		clarificationDAO.dml("update.clarification.read", ccid, clarificationDAO.integer("select.uid.by.username", getUsername(principal)));
 		return "redirect:/contest/myclarifications.xhtml?cid=" + cid;
 	}
 }

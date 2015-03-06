@@ -39,7 +39,7 @@
 			&nbsp;<a
 			href="<c:url value="/admin/manageproblemI18N.xhtml?pid=${problem.pid}"/>"
 			title="<fmt:message key="messages.general.i18n"/>"> <i
-			class="fa fa-globe"></i></a>
+			class="fa fa-language"></i></a>
 			&nbsp;<a
 			href="<c:url value="/admin/manageproblem.xhtml?pid=${problem.pid}"/>"
 			title="<fmt:message key="messages.general.normalize"/>"> <i

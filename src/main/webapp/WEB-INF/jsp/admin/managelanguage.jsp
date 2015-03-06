@@ -19,13 +19,13 @@
                 
                 <tr>
                     <td style="align:right">Language<i class="fa fa-asterisk"></i></td>
-                    <td><form:input path="language" size="30" maxlength="70" readonly="true"/></td>
+                    <td><form:input path="language" size="30" maxlength="70" /></td>
                     <td><span class="label label-danger"><form:errors path="language" /></span></td>
                 </tr>
 
                 <tr>
                     <td style="align:right">Key<i class="fa fa-asterisk"></i></td>
-                    <td><form:input path="key" size="30" maxlength="30" readonly="true"/></td>
+                    <td><form:input path="key" size="30" maxlength="30" /></td>
                     <td><span class="label label-danger"><form:errors path="key" /></span></td>
                 </tr>
 

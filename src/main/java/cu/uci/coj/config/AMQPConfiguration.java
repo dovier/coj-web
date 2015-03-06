@@ -15,17 +15,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import cu.uci.coj.utils.UEngineMessageListener;
+import javax.annotation.Resource;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
 @Configuration
+@PropertySource({"classpath:cu/uci/coj/config/amqp.config.properties"})
 public class AMQPConfiguration {
 
+    @Resource
+    protected Environment env;
+        
 	@Bean
 	public CachingConnectionFactory connectionFactory() {
-		// conexion a localhost:5672, default. TODO: hacer configurable todo
-		// esto
-		CachingConnectionFactory bean = new CachingConnectionFactory("localhost", 5672);
-		bean.setUsername("guest");
-		bean.setPassword("cojrabbit123*-+");
+		CachingConnectionFactory bean = new CachingConnectionFactory(env.getProperty("rabbitmq.hostname"), Integer.parseInt(env.getProperty("rabbitmq.port")));
+		bean.setUsername(env.getProperty("rabbitmq.username"));
+		bean.setPassword(env.getProperty("rabbitmq.password"));
 		return bean;
 	}
 
@@ -40,7 +45,7 @@ public class AMQPConfiguration {
 		bean.setMessageConverter(jsonMessageConverter());
 		// para enviar, el binding del exchange se configura en el rabbitmq
 		// server a la cola correspondiente (que aqui no interesa)
-		bean.setExchange("submit.exchange");
+		bean.setExchange("test.submit.exchange");
 		return bean;
 	}
 
@@ -58,7 +63,7 @@ public class AMQPConfiguration {
 	public SimpleMessageListenerContainer listenerContainer() {
 		SimpleMessageListenerContainer bean = new SimpleMessageListenerContainer(connectionFactory());
 		bean.setMessageListener(messageListener);
-		bean.setQueueNames("submit.response.queue");
+		bean.setQueueNames("test.submit.response.queue");
 		bean.setAcknowledgeMode(AcknowledgeMode.AUTO);
 		return bean;
 	}

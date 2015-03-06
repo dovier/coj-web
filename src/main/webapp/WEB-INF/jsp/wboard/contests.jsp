@@ -13,35 +13,15 @@
 	<div class="row">
 		<div class="col-xs-12">
 			<form id="filter-form" class="form-inline">
-				<div class="form-group">
-					<select id="site-select" class="form-control" name="site">
-						<option value="0"><spring:message code="fieldhdr.all"/></option>
-						<c:forEach items="${sites}" var="current_site">
-							<option value="${current_site.sid}" <c:if test="${current_site.sid eq site}">selected</c:if>>${current_site.site}</option>
-						</c:forEach>
-					</select>
-				</div>	
-				
-				<authz:authorize ifAllGranted="ROLE_USER">
-					<c:if test="${site != 0 && followed == 0}">
-						<div class="form-group">
-							<c:choose>
-								<c:when test="${follow}">
-									<button id="follow" class="btn btn-danger"><spring:message code="button.unfollow"/></button>
-								</c:when>
-								<c:otherwise>
-									<button id="follow" class="btn btn-primary"><spring:message code="button.follow"/></button>	
-								</c:otherwise>
-							</c:choose>
-						</div>	
-					</c:if>		
-				</authz:authorize>		
+				<div class="form-group" id="combo-select">
+
+				</div>		
 				
 				<authz:authorize ifAllGranted="ROLE_USER">
 					<div class="form-group pull-right">
 						<select id="follow-select" class="form-control" name="followed">
-							<option value="0" <c:if test="${followed == 0}">selected</c:if>><spring:message code="link.all"/></option>
-							<option value="1" <c:if test="${followed == 1}">selected</c:if>><spring:message code="link.followed"/></option>
+							<option value="0"><spring:message code="link.all"/></option>
+							<option value="1"><spring:message code="link.followed"/></option>
 						</select>
 					</div>
 				</authz:authorize>
@@ -57,47 +37,71 @@
 
 
 <script>
+
 $(document).ready(function(){
-	var sid = ${site};
 	var follow_text = "<spring:message code="button.follow"/>";
 	var unfollow_text = "<spring:message code="button.unfollow"/>";
-	var server_time = ${now.time};
-	var time_access = (new Date().getTime());
+
+	function loadCombobox(followed) {
+		$.ajax({ 
+            url: "/wboard/combobox.xhtml",
+            type: "GET",
+            data:{"followed":followed},
+            success:function (datas){
+            	$("#combo-select").html(datas);     
+            	displayTableReload($('#filter-form').formSerialize());
+            }              
+        });
+		
+	}	
+
+	loadCombobox(0);
 	
-	$("#site-select, #follow-select").change(function(){
-		$("#filter-form").submit();
-	});
-	$("#follow").click(function(e){
+	$('#combo-select').on("click", ".btn-follow", function(e){
+		var elem = $(this);
 		e.preventDefault();
 		if($(this).text() == follow_text) {
 			$.ajax({
 	            url: "/wboard/follow.xhtml",
 	            type: 'POST',
-	            data:{"sid":sid},
+	            data:{"sid": elem.data("site-id")},
 	            success:function (datos){
-	            	$("#follow").toggleClass("btn-primary");
-	            	$("#follow").toggleClass("btn-danger");
-	        		$("#follow").text(unfollow_text);	        	
+	            	elem.toggleClass("btn-primary");
+	            	elem.toggleClass("btn-danger");
+	            	elem.text(unfollow_text);	        	
 	            }                  
 	        });
 		} else {
 			$.ajax({
 	            url: "/wboard/unfollow.xhtml",
 	            type: 'POST',
-	            data:{"sid":sid},
+	            data:{"sid": elem.data("site-id")},
 	            success:function (datos){
-	            	$("#follow").toggleClass("btn-primary");
-	            	$("#follow").toggleClass("btn-danger");
-	        		$("#follow").text(follow_text);
+	            	elem.toggleClass("btn-primary");
+	            	elem.toggleClass("btn-danger");
+	            	elem.text(follow_text);
 	            }                  
 	        });
 		}
+	});		
+	
+	$("#follow-select").change(function(){
+		loadCombobox($(this).val());
 	});
 	
-	displayTableReload(' ');
-	
-	Countdown(server_time, time_access).countdown2
-	setInterval(Countdown(server_time, time_access).countdown2, 1000);
+	$('#combo-select').on("change", "#site-select", function(){
+		var option = $(this);
+		displayTableReload($('#filter-form').formSerialize());
+		$("button").each(function(){
+			var elem = $(this);
+			if(elem.data("site-id") == option.val()) {
+				elem.removeClass("hide");
+			} else {
+				elem.addClass("hide");
+			}
+		});
+	});	
+
 });
 	
 </script>

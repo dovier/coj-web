@@ -200,7 +200,7 @@ public class ClassificationController extends BaseController {
 	// if (found != 0) {
 	// List<Problem> problems = problemDAO.findAllProblems(pattern, (page - 1) *
 	// 50, username, sort, direction, username == null ? 0 :
-	// problemDAO.integer("user.uid", username), filterby, idClassification,
+	// problemDAO.integer("select.uid.by.username", username), filterby, idClassification,
 	// complexity);
 	// model.addAttribute("problems",
 	// paginateListFactory.getPaginatedList(options, problems, 50, found));

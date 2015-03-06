@@ -70,10 +70,10 @@
                 </td>
                 <td>
                     <select name="modes">
+                        <option value="4">CUSTOMIZED</option>
                         <option value="1">NO COMMENTS</option>
                         <option value="2">YES</option>
                         <option value="3">NO</option>
-                        <option value="4">OTHER</option>
                     </select>
                 </td>
             </tr>

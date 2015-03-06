@@ -41,20 +41,21 @@ span.time {
 
 .toggler {
 	width: 500px;
-	height: 200px;
+	min-height: 200px;
 	z-index: 99999999;
+	background-color: #FFFFFF;
 }
 
 #effect {
+	display: none;
 	width: 240px;
 	border-radius: 4px;
-	height: 135px;
+	min-height: 135px;
 	padding: 0.4em;
 	position: fixed;
 	left:50%;
 	top:40%;
 	margin-left: -120px;
-	background-color: #FFFFFF;
 	z-index: 99999999;
 }
 
@@ -76,7 +77,7 @@ span.time {
 
 .mybtn-container {
 	text-align: center;
-	margin-bottom: 0px;
+	margin-bottom: 5px;
 	position: relative;
 }
 
@@ -99,5 +100,10 @@ span.time {
 	left: 0;
 	background: #666666;
 	z-index: 9999999;
+}
+
+
+.translation .form-group label {
+	margin-top: 0.5em;
 }
 

@@ -50,3 +50,11 @@
 		</a>
 	</display:column>
 </display:table>
+
+<script>
+	var server_time = ${now.time};
+	var time_access = (new Date().getTime());
+	
+	Countdown(server_time, time_access).countdown2
+	setInterval(Countdown(server_time, time_access).countdown2, 1000);
+</script>

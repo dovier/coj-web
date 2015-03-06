@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,7 +38,6 @@ import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.contestSubmitValidator;
 
 @Controller
-
 public class ContestSubmissionController extends BaseController {
 
 	private static final long serialVersionUID = 1557354496511457369L;
@@ -61,9 +61,9 @@ public class ContestSubmissionController extends BaseController {
 			@RequestParam(required = false, value = "refresh") Boolean refresh) {
 		String username = getUsername(principal);
 		Contest contest = contestDAO.loadContest(cid);
-		
+
 		contestDAO.unfreezeIfNecessary(contest);
-		
+
 		if (contest.isComing()) {
 			return "redirect:/contest/contestview.xhtml?cid=" + cid;
 		}
@@ -71,31 +71,9 @@ public class ContestSubmissionController extends BaseController {
 			if (contest.isShow_status() || (username != null && request.isUserInRole(Roles.ROLE_ADMIN))) {
 				contest.setShow_status(false);
 				if (contest.isShow_status_out() || (username != null && request.isUserInRole(Roles.ROLE_ADMIN))
-						|| (!contest.isShow_status_out() && request.getUserPrincipal() != null && contestDAO.isInContest(cid, userDAO.integer("user.uid", getUsername(principal))))) {
+						|| (!contest.isShow_status_out() && request.getUserPrincipal() != null && contestDAO.isInContest(cid, userDAO.integer("select.uid.by.username", getUsername(principal))))) {
 					contest.setShow_status(true);
 					String lang = submissionDAO.string("select language from language where key=?", language);
-					int found = submissionDAO.countSubmissionsContest(filter_user, lang, pid, Config.getProperty("judge.status." + status), contest);
-					if (found > 0) {
-						IPaginatedList<SubmissionJudge> submissions = submissionDAO.getContestSubmissions(
-								found,
-								filter_user,
-								lang,
-								pid,
-								Config.getProperty("judge.status." + status),
-								options,
-								getUsername(principal),
-								request.getUserPrincipal() != null,
-								request.isUserInRole(Roles.ROLE_ADMIN)
-										|| (request.isUserInRole(Roles.ROLE_JUDGE) && contestDAO.isJudgeInContest(cid, contestDAO.integer("select.uid.by.username", principal.getName()))), contest);
-						if (contest.getStyle() == 1) {
-							Map<Integer, Problem> pids = contestDAO.loadContestProblemsLetters(cid);
-							for (SubmissionJudge sub : submissions.getList()) {
-								sub.setLetter(pids.get(sub.getPid()).getLetter());
-								sub.setProblemTitle(pids.get(sub.getPid()).getTitle());
-							}
-						}
-						model.addAttribute("submissions", submissions);
-					}
 					LinkedList<Status> statuslist = new LinkedList<Status>();
 					String[] ar = Config.getProperty("judge.status").split(",");
 					for (int i = 0; i < ar.length; i++) {
@@ -107,11 +85,11 @@ public class ContestSubmissionController extends BaseController {
 						languagelist = contestDAO.getContestLanguages(contest.getCid());
 					} catch (Exception e) {
 					}
-					Filter filter = new Filter(null,null,filter_user, cid,status, language, pid, languagelist, null);
+					Filter filter = new Filter(null, null, filter_user, cid, status, language, pid, languagelist, null);
 					filter.fillFirstParam();
 					filter.fillSecondParam();
 					model.addAttribute("filter", filter);
-					model.addAttribute("statuslist",statuslist);
+					model.addAttribute("statuslist", statuslist);
 				}
 			}
 		}
@@ -120,7 +98,7 @@ public class ContestSubmissionController extends BaseController {
 		model.addAttribute("refresh", refresh != null && refresh);
 		return "/contest/cstatus";
 	}
-	
+
 	@RequestMapping(value = "/tables/cstatus.xhtml", method = RequestMethod.GET)
 	public String tableJudgements(HttpServletRequest request, Principal principal, PagingOptions options, Model model, @RequestParam("cid") Integer cid,
 			@RequestParam(required = false, value = "username") String filter_user, @RequestParam(required = false, value = "pid") Integer pid,
@@ -128,9 +106,9 @@ public class ContestSubmissionController extends BaseController {
 			@RequestParam(required = false, value = "refresh") Boolean refresh) {
 		String username = getUsername(principal);
 		Contest contest = contestDAO.loadContest(cid);
-		
+
 		contestDAO.unfreezeIfNecessary(contest);
-		
+
 		if (contest.isComing()) {
 			return "redirect:/contest/contestview.xhtml?cid=" + cid;
 		}
@@ -138,7 +116,7 @@ public class ContestSubmissionController extends BaseController {
 			if (contest.isShow_status() || (username != null && request.isUserInRole(Roles.ROLE_ADMIN))) {
 				contest.setShow_status(false);
 				if (contest.isShow_status_out() || (username != null && request.isUserInRole(Roles.ROLE_ADMIN))
-						|| (!contest.isShow_status_out() && request.getUserPrincipal() != null && contestDAO.isInContest(cid, userDAO.integer("user.uid", getUsername(principal))))) {
+						|| (!contest.isShow_status_out() && request.getUserPrincipal() != null && contestDAO.isInContest(cid, userDAO.integer("select.uid.by.username", getUsername(principal))))) {
 					contest.setShow_status(true);
 					String lang = submissionDAO.string("select language from language where key=?", language);
 					int found = submissionDAO.countSubmissionsContest(filter_user, lang, pid, Config.getProperty("judge.status." + status), contest);
@@ -157,6 +135,8 @@ public class ContestSubmissionController extends BaseController {
 						if (contest.getStyle() == 1) {
 							Map<Integer, Problem> pids = contestDAO.loadContestProblemsLetters(cid);
 							for (SubmissionJudge sub : submissions.getList()) {
+								if (!request.isUserInRole(Roles.ROLE_ADMIN) && contest.isInFrozen(sub.getDate().getTime()) && contest.isFrozen())
+									sub.froze();
 								sub.setLetter(pids.get(sub.getPid()).getLetter());
 								sub.setProblemTitle(pids.get(sub.getPid()).getTitle());
 							}
@@ -174,11 +154,11 @@ public class ContestSubmissionController extends BaseController {
 						languagelist = contestDAO.getContestLanguages(contest.getCid());
 					} catch (Exception e) {
 					}
-					Filter filter = new Filter(null,null,filter_user, cid,status, language, pid, languagelist, null);
+					Filter filter = new Filter(null, null, filter_user, cid, status, language, pid, languagelist, null);
 					filter.fillFirstParam();
 					filter.fillSecondParam();
 					model.addAttribute("filter", filter);
-					model.addAttribute("statuslist",statuslist);
+					model.addAttribute("statuslist", statuslist);
 				}
 			}
 		}
@@ -257,15 +237,15 @@ public class ContestSubmissionController extends BaseController {
 			SubmissionJudge submission = getContestSourceCode(request, principal, sid, contest);
 			submit.setCode(submission.getCode());
 		} else {
-			submit.setPid(pid == null ? 0:pid);
+			submit.setPid(pid == null ? 0 : pid);
 
 		}
-		model.addAttribute("submit",submit);
+		model.addAttribute("submit", submit);
 		return "/contest/csubmit";
 	}
 
 	@RequestMapping(value = "/contest/csubmit.xhtml", method = RequestMethod.POST)
-	public String Submit(Locale locale, Principal principal, Model model, SubmissionJudge submit, BindingResult result) {
+	public String Submit(Locale locale, Principal principal, Model model, @ModelAttribute("submit") SubmissionJudge submit, BindingResult result) {
 		submit.setUsername(getUsername(principal));
 		submit.setLanguages(contestDAO.getContestLanguages(submit.getCid()));
 		Contest contest = contestDAO.loadContest(submit.getCid());
@@ -275,12 +255,12 @@ public class ContestSubmissionController extends BaseController {
 		model.addAttribute("enableadveditor", submissionDAO.bool("is.adved.enable", getUsername(principal)));
 		validator.validate(submit, result);
 		if (result.hasErrors()) {
-			model.addAttribute("submit",submit);
+			model.addAttribute("submit", submit);
 			return "/contest/csubmit";
 		}
 
-		int iduser = userDAO.integer("user.uid", getUsername(principal));
-		if ((submit.getContest().getRegistration() == 0 && submit.getContest().isAllow_registration()) && !contestDAO.isInContest(submit.getCid(), userDAO.integer("user.uid", submit.getUsername()))) {
+		int iduser = userDAO.integer("select.uid.by.username", getUsername(principal));
+		if ((submit.getContest().getRegistration() == 0 && submit.getContest().isAllow_registration()) && !contestDAO.isInContest(submit.getCid(), userDAO.integer("select.uid.by.username", submit.getUsername()))) {
 			contestDAO.insertUserContest(iduser, submit.getCid(), "General");
 		}
 		Problem problem = problemDAO.getProblemSubmitDataByAbb(locale.getLanguage(), submit.getPid());
@@ -295,8 +275,8 @@ public class ContestSubmissionController extends BaseController {
 	@RequestMapping(value = "/contest/cuseraccount.xhtml", method = RequestMethod.GET)
 	public String UserAccount(Principal principal, HttpServletRequest request, Model model, @RequestParam("cid") Integer cid, @RequestParam("uid") String uid) {
 		String username = getUsername(principal);
-		Integer userId = userDAO.integer("user.uid", username);
-		Integer userId2 = userDAO.integer("user.uid", uid);
+		Integer userId = userDAO.integer("select.uid.by.username", username);
+		Integer userId2 = userDAO.integer("select.uid.by.username", uid);
 		Contest contest = contestDAO.loadContest(cid);
 		if (contest.isRunning() || contest.isPast()) {
 			if (contest.isShow_status() || (username != null && request.isUserInRole(Roles.ROLE_ADMIN))) {

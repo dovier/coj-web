@@ -3,7 +3,7 @@ function Countdown(server_time, time_access) {
 	function getFormatTime(timer)	{
 	    var h = parseInt(timer / 3600);
 	    var m = parseInt(timer % 3600 / 60);
-	    var s = parseInt(timer % 60);
+	    var s = parseInt((timer % 60).toFixed(0));
 	    var c = parseInt(timer % 1 * 10);
 	    var d = parseInt((h + 12) / 24);
 	    if (h < 10) h = '0' + h;

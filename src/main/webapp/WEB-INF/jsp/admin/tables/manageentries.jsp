@@ -36,3 +36,5 @@
 			class="fa fa-trash"></i></a>
 	</display:column>
 </display:table>
+
+<%@include file="/WEB-INF/jsp/general/confirmmessage.jsp"%>

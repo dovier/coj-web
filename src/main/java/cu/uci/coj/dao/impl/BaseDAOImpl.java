@@ -94,7 +94,10 @@ public class BaseDAOImpl implements BaseDAO {
 		return jdbcTemplate.queryForObject(getSql(sqlKey), Date.class, args);
 	}
 
-	@Transactional(readOnly = true)
+	// no se pone readOnly porque la consulta toggle.submit es un update
+	// returning, que no ejecuta con solo lectura. Lo ideal es usar esta dentro
+	// de un metodo de dao, y a ese metodo entonces poner readonly. Todos los
+	// demas metodos de basedao deberian ser asi.
 	public Boolean bool(String sqlKey, Object... args) {
 		return jdbcTemplate.queryForObject(getSql(sqlKey), Boolean.class, args);
 	}
@@ -165,7 +168,6 @@ public class BaseDAOImpl implements BaseDAO {
 			return 0;
 		}
 	}
-
 
 	@Transactional(readOnly = true)
 	public List<String> strings(String sqlKey, Object... args) {

@@ -33,8 +33,6 @@ public class UEngineMessageListener implements MessageListener {
 		try {
 			SubmissionJudge submit = (SubmissionJudge) jsonMessageConverter.fromMessage(message);
 
-			if (!StringUtils.isEmpty(submit.getCode()))
-				submit.setFont(String.valueOf(submit.getCode().length()));
 			if (submit.getVerdict() == Verdicts.CTLE)
 				submit.setStatus("Time Limit Exceeded");
 

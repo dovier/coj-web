@@ -3,6 +3,7 @@ package cu.uci.coj.dao.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cu.uci.coj.config.Config;
 import cu.uci.coj.controller.interfaces.IForIntegerMap;
+import cu.uci.coj.dao.ContributionDAO;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.Contest;
@@ -27,8 +29,11 @@ import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.ProblemClassification;
 import cu.uci.coj.model.ProblemSource;
 import cu.uci.coj.model.Roles;
+import cu.uci.coj.model.Translation;
 import cu.uci.coj.model.User;
 import cu.uci.coj.model.UserProfile;
+import cu.uci.coj.query.Order;
+import cu.uci.coj.query.Query;
 import cu.uci.coj.query.Where;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
@@ -39,9 +44,10 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 
 	@Resource
 	private MailNotificationService mailNotificationService;
-
+	@Resource
+	ContributionDAO contributionDAO;
 	public int getSourceLimitByPid(int pid) {
-		return integer("select fontsize from problem where pid=?",pid);
+		return integer(0,"select fontsize from problem where pid=?",pid);
 	}
 	
 	@Override
@@ -793,7 +799,7 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		int curr = 1;
 		if (username != null) {
 			try {
-				curr = getCurrentLevel(integer("user.uid", username), contest.getCid());
+				curr = getCurrentLevel(integer("select.uid.by.username", username), contest.getCid());
 			} catch (Exception e) {
 			}
 		}
@@ -1252,4 +1258,52 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		return problems;
 	}
 
+	@Override
+	public void insertTranslation(String username, Translation translation) {
+		dml("translation.insert", username, new Date(), translation.getPid(), translation.getLocale(), translation.getTitle(), translation.getDescription(), translation.getInput(), translation.getOutput(), translation.getComments());		
+	}
+
+	@Override
+	@Transactional(readOnly=true)
+	public IPaginatedList<Translation> getTranslationList(String username, Integer pid, String locale, PagingOptions options) {
+		int found = integer("translation.count");
+		locale = "all".equals(locale)?null:locale;
+		
+		Query query = new Query("translation_pending");
+		query.where(Where.eq("username", username), Where.eq("pid", pid), Where.eq("locale", locale));
+		
+		query.order(Order.desc("date"));		
+		query.paginate(options, 20);
+		
+		List<Translation> translations = objects(query.select("id", "username", "locale", "pid", "date"), Translation.class, query.arguments());		
+		
+		return getPaginatedList(options, translations, 20, found);
+	}
+	
+	@Override
+	public void deleteTranslation(Integer id) {
+		dml("translation.delete", id);		
+	}
+
+	@Override
+	public void editTranslation(Translation translation) {
+		dml("translation.update", translation.getLocale(), translation.getTitle(), translation.getDescription(), translation.getInput(),
+				translation.getOutput(), translation.getComments(), translation.getId());		
+	}
+
+	@Override
+	public void approveTranslation(Translation translation, String username) {
+		dml("translation.approve." + translation.getLocale(), translation.getTitle(), translation.getDescription(), translation.getInput(),
+				translation.getOutput(), translation.getComments(), translation.getPid());
+	
+		deleteTranslation(translation.getId());
+		
+		log(translation.getUsername() + " translated " + translation.getPid() + " (" + translation.getLocale() + ")", username);
+		contributionDAO.insertContribution(translation.getUsername(), 1);
+	}
+
+	@Override
+	public Translation getTranslation(Integer id) {
+		return object("translation.get", Translation.class, id);
+	}
 }

@@ -61,8 +61,15 @@
 			</c:if>
 		</c:if>
 	</display:column>
-	<display:column property="timeUsed" titleKey="tablehdr.time"
-		headerClass="headtime" />
+	<display:column titleKey="tablehdr.time"
+		headerClass="headtime">
+			<c:if test="${submission.timeUsed == -1}">
+				...
+			</c:if>
+			<c:if test="${submission.timeUsed != -1}">
+				${submission.timeUsed}
+			</c:if>
+		</display:column>
 	<display:column property="memoryMB" titleKey="tablehdr.mem"
 		headerClass="headmem" />
 	<display:column property="fontMB" titleKey="tablehdr.size"

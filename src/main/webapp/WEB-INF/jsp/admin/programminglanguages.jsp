@@ -7,7 +7,7 @@
 </h2>
 <div class="postcontent"> 
 
-    <a href="<c:url value="" />">Add New Programming Language</a>
+    <a href="<c:url value="managelanguage.xhtml" />">Add Programming Language</a>
 
     <table class="volume" border="1px">
         <thead class="orderby">

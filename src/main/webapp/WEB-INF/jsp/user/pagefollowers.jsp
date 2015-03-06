@@ -1,7 +1,6 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
-<authz:authentication var="principal" property="principal" />
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<b><spring:message code="count.followers" /></b>

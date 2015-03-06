@@ -20,6 +20,7 @@ import cu.uci.coj.dao.AchievementDAO;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.SubmissionDAO;
+import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Filter;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Rejudge;
@@ -65,12 +66,12 @@ public class SubmissionController extends BaseController {
 
 		return "/admin/managesubmissions";
 	}
-	
+
 	@RequestMapping(value = "/tables/managesubmissions.xhtml", method = RequestMethod.GET)
 	public String tableSubmissions(Model model, Filter filter, PagingOptions options) {
 		int found = submissionDAO.countSubmissionsAdmin(filter);
 		if (found != 0) {
-			IPaginatedList<SubmissionJudge> submissions = submissionDAO.getSubmissionsAdmin(filter, found, options,false);
+			IPaginatedList<SubmissionJudge> submissions = submissionDAO.getSubmissionsAdmin(filter, found, options, false);
 			model.addAttribute("submissions", submissions);
 		}
 		return "/admin/tables/managesubmissions";
@@ -80,7 +81,7 @@ public class SubmissionController extends BaseController {
 	public String rejudgeSubmissions(Model model, Filter filter, PagingOptions options) {
 		int found = submissionDAO.countSubmissionsAdmin(filter);
 		if (found != 0) {
-			IPaginatedList<SubmissionJudge> submissions = submissionDAO.getSubmissionsAdmin(filter, found, options,true);
+			IPaginatedList<SubmissionJudge> submissions = submissionDAO.getSubmissionsAdmin(filter, found, options, true);
 
 			model.addAttribute("submissions", submissions);
 
@@ -141,13 +142,31 @@ public class SubmissionController extends BaseController {
 
 		return utils.rejudgeSubmit(sid) != null;
 	}
-	
+
 	@RequestMapping(produces = "application/json", value = "/contest/rejudge.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
 	public @ResponseBody() boolean rejudgeContestSubmit(Model model, @RequestParam(value = "sid") int sid) {
 
 		return utils.rejudgeContestSubmit(sid) != null;
 	}
 
+	@RequestMapping(produces = "application/json", value = "/24h/togglesub.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
+	public @ResponseBody() boolean toggleSubmit(Model model, @RequestParam(value = "sid") int sid) {
+		boolean enabled = baseDAO.bool("toggle.submit", sid);
+		SubmissionJudge submit = submissionDAO.object("select.submition.sid", SubmissionJudge.class, sid);
+		if (enabled)
+			submissionDAO.applyEffects(submit,true);
+		else
+			submissionDAO.removeEffects(submit,true);
+		return enabled;
+	}
+
+	@RequestMapping(produces = "application/json", value = "/contest/togglesub.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
+	public @ResponseBody() boolean toggleContestSubmit(Model model, @RequestParam(value = "sid") int sid) {
+		boolean enabled = baseDAO.bool("toggle.contest.submit", sid);
+		//por supuesto es necesario repuntear despues de hacer esto. No se pone automatico porque cuando se marquen varios en una lista, no se puede repuntear en cada una.
+		return enabled;
+	}
+	
 	@RequestMapping(produces = "application/json", value = "/queuecount.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
 	public @ResponseBody() int rejudgeSubmit(Model model) {
 

@@ -185,14 +185,15 @@
 					<div class="col-xs-6 col-xs-offset-1">
 						<font>${user.planguage} </font>
 					</div>
-					<div class="col-xs-5">
-						<spring:message code="fieldhdr.status" />
-					</div>
-					<div class="col-xs-6 col-xs-offset-1">
-						<label class="label bg${user.status}"><c:out
-								value="${user.status}" /></label>
-					</div>
-
+					<c:if test="${user.team == false}">
+						<div class="col-xs-5">
+							<spring:message code="fieldhdr.status" />
+						</div>
+						<div class="col-xs-6 col-xs-offset-1">
+							<label class="label bg${user.status}"><c:out
+									value="${user.status}" /></label>
+						</div>
+					</c:if>
 					<div class="col-xs-5">
 						<spring:message code="fieldhdr.regdate" />
 					</div>
@@ -425,7 +426,11 @@
 						</div>
 					</div>
 					<div id="stats" class="panel-body collapse in">
-					<div class="row row-centered"><div class="col-centered col-xs-4"><canvas id="chart"></canvas></div></div>
+						<div class="row row-centered">
+							<div class="col-centered col-xs-4">
+								<canvas id="chart"></canvas>
+							</div>
+						</div>
 						<div class="col-xs-12">
 							<div class="margin-top-05">
 								<table id="wijbarcharttable"

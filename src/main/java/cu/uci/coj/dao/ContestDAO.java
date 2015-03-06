@@ -16,6 +16,12 @@ import cu.uci.coj.utils.paging.PagingOptions;
 
 public interface ContestDAO extends BaseDAO {
 
+	public int getStyle(int cid);
+	public ContestStyle loadScoringStyle(int sid);
+	public void insertLanguages(Contest contest);
+
+	public void insertLanguages(int cid, int[] languagesids);
+	
 	public IPaginatedList<SubmissionJudge> pendingBalloons(int cid, PagingOptions options, String group);
 
 	public void markBalloon(int sid);
@@ -33,6 +39,10 @@ public interface ContestDAO extends BaseDAO {
 	public void checkContestsEnded();
 
 	public void guestGroup(Contest contest);
+
+	public void insertBalloonTrackerContest(Contest contest);
+
+	public void insertBalloonTrackerContest(int uid, int cid);
 
 	public void updateAfterSubmitionContestVirtual(SubmissionJudge sub);
 
@@ -78,7 +88,7 @@ public interface ContestDAO extends BaseDAO {
 
 	public List<Contest> loadContestToImport();
 
-	public void InsertContest(Contest contest, List<Language> languages);
+	public void InsertContest(Contest contest);
 
 	public int getMaxAvailableCID();
 

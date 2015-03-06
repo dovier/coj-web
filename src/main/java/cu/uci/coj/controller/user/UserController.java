@@ -182,8 +182,8 @@ public class UserController extends BaseController {
 		boolean error = true;
 		CompareUsers cmp = new CompareUsers(user1, user2);
 		if (user1 != null && user2 != null && user1.length() > 0 && user2.length() > 0) {
-			int uid1 = userDAO.integer("user.uid", user1);
-			int uid2 = userDAO.integer("user.uid", user2);
+			int uid1 = userDAO.integer("select.uid.by.username", user1);
+			int uid2 = userDAO.integer("select.uid.by.username", user2);
 			if (uid1 != -1 && uid2 != -1) {
 				List<Problem> solved1 = userDAO.objects("problems.solved", Problem.class, user1);
 				List<Problem> solved2 = userDAO.objects("problems.solved", Problem.class, user2);
@@ -320,7 +320,7 @@ public class UserController extends BaseController {
 			return "error/accessdenied";
 		}
 
-		user.setUid(userDAO.integer("user.uid", user.getUsername()));
+		user.setUid(userDAO.integer("select.uid.by.username", user.getUsername()));
 		user.setDob(new Date(user.getYear() - 1900, user.getMonth() - 1, user.getDay()));
 		boolean is_team = !userDAO.bool("is.user", user.getUsername());
 		user.setTeam(is_team);

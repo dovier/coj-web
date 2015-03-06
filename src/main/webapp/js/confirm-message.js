@@ -1,5 +1,6 @@
 $(function() {
 	var url = "";
+	
 	$(".confirm-message").click(function(e) {
 		e.preventDefault();
 		loadAttributes(this);
@@ -10,6 +11,10 @@ $(function() {
 
 	function loadAttributes(item) {
 		url = $(item).attr('href');
+		if(url == null) {
+			url = $(item).data("redirect"); 
+		}
+		
 		$("#action-title").html($(item).attr('data-confirm-title'));
 		$("#action-message").html($(item).attr('data-confirm-message'));
 
@@ -35,16 +40,33 @@ $(function() {
 			containerClass = "label-success ui-corner-all";
 			containerIcon = "fa fa-check";
 			containerYes = "btn btn-success";
+		} else if (type == "message") {
+			containerClass = "label-success ui-corner-all";
+			containerIcon = "fa fa-check";
+			containerYes = "btn btn-success";
+			$("#action-no").addClass("hide");
+			
+			if($(item).is("input[type=submit]")) {
+				$(item).submit();
+			}
 		}
 
 		$("#action-title-container").addClass(containerClass);
 		$("#action-title-container > i").addClass(containerIcon);
 		$("#action-yes").addClass(containerYes);
 		$("#action-no").addClass("btn btn-primary");
+		
+		$("#action-yes").focus();
 	}
 
 	$("#action-yes").click(function() {
-		window.location = url;
+		if(url) {
+			window.location = url;
+		} else {
+			$("#effect").fadeOut("slow");
+			$("#background").fadeOut("slow");
+			enablescroll();
+		}
 	});
 
 	$("#action-no").click(function() {
@@ -70,6 +92,4 @@ $(function() {
 			'overflow' : 'auto'
 		});
 	}
-
-	$("#effect").hide();
 });

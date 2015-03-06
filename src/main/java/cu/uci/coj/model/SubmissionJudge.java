@@ -628,6 +628,8 @@ public class SubmissionJudge implements Serializable {
 	}
 
 	public String getMemoryMB() {
+		if (memoryUsed == -1)
+			return "...";
 		return FileUtils.byteCountToDisplaySize(memoryUsed);
 	}
 
@@ -639,12 +641,12 @@ public class SubmissionJudge implements Serializable {
 
 	public void froze() {
 		this.status = "Pending";
-		this.timeUsed = 0;
-		this.memoryUsed = 0;
-		this.font = "0";
+		this.timeUsed = -1;
+		this.memoryUsed = -1;
+		this.font = "...";
 		this.lang = "...";
 		this.statusClass = "PEN";
-		this.statusName = "PEN";
+		this.statusName = null;
 	}
 
 	public void initialize() {
@@ -668,12 +670,12 @@ public class SubmissionJudge implements Serializable {
 		}
 
 		if (status.equals("Compilation Error") || status.equals("Runtime Error") || status.equals("Invalid Function")) {
-			this.memoryUsed = 0;
-			this.timeUsed = 0;
+			this.memoryUsed = -1;
+			this.timeUsed = -1;
 		}
 		if (status.equals("Judging") || status.equals("Unqualified") || status.equals("Pending")) {
-			this.memoryUsed = 0;
-			this.timeUsed = 0;
+			this.memoryUsed = -1;
+			this.timeUsed = -1;
 			this.font = "...";
 
 		}
@@ -686,12 +688,12 @@ public class SubmissionJudge implements Serializable {
 			this.statusClass = "UQ";
 		}
 		if (status.equals("Time Limit Exceeded") || status.equals("Output Limit Exceeded")) {
-			this.timeUsed = 0;
-			this.memoryUsed = 0;	
+			this.timeUsed = -1;
+			this.memoryUsed = -1;	
 		}
 
 		if (status.equals("Memory Limit Exceeded")) {
-			this.timeUsed = 0;
+			this.timeUsed = -1;
 		}
 
 		if (!status.equals("Accepted") && !status.equals("Compilation Error") && !status.equals("Unqualified") && !status.equals("Judging") && !status.equals("Pending")) {

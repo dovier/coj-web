@@ -29,7 +29,7 @@
 	 
 	<br />
 </div>
-<%@include file="/WEB-INF/jsp/general/confirmmessage.jsp"%>
+
 <script>
 	$(function() {
 		$('#submit').click(function() {

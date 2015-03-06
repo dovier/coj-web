@@ -1,6 +1,7 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
+
 <display:table id="contest" name="contests" class="volume" requestURI=""
 	defaultsort="0" defaultorder="ascending">
 	<display:column property="name" titleKey="tablehdr.name"
@@ -54,14 +55,17 @@
 	</display:column>
 	<display:column titleKey="tablehdr.actions" headerClass="headedit">
 		<a class="details"
+			data-toggle="tooltip"
 			href="<c:url value="/admin/wboard/contest/details.xhtml?id=${contest.id}"/>"
 			title="<spring:message code="messages.general.details"/>"><i
 			class="fa fa-eye"></i></a>
 		<a class="edit"
+			data-toggle="tooltip"
 			href="<c:url value="/admin/wboard/contest/edit.xhtml?id=${contest.id}"/>"
 			title="<spring:message code="messages.general.edit"/>"><i
 			class="fa fa-edit"></i></a>
 		<a class="confirm-message"
+			data-toggle="tooltip"
 			data-confirm-title='<spring:message code="message.confirm.delete.hdr.wbcontest"/>'
 			data-confirm-message='<spring:message code="message.confirm.delete.wbcontest"/>'
 			data-confirm-type="delete"
@@ -70,3 +74,10 @@
 			class="fa fa-trash"></i> </a>
 	</display:column>
 </display:table>
+
+<%@include file="/WEB-INF/jsp/general/confirmmessage.jsp"%>
+
+<script>
+	$("[data-toggle='tooltip']").tooltip();
+</script>
+<%@include file="/WEB-INF/jsp/general/confirmmessage.jsp"%>

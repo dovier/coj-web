@@ -4,9 +4,6 @@
 <link rel="stylesheet" href="<c:url value="/css/TimeCircles.css" />" type="text/css" />
 <script type='text/javascript' src="<c:url value="/js/jquery.js" />"></script>
 <script type='text/javascript' src="<c:url value="/js/TimeCircles.js" />"></script>
-<c:if test="${contest.running}">
-	<meta content="60" http-equiv="refresh">
-</c:if>
 
 <h2 class="postheader">
 	<a class="linkheader" href="<c:url value="contestview.xhtml?cid=${contest.cid}"/>" />${contest.name}</a> <br />
@@ -53,10 +50,10 @@
 				<td><spring:message code="fieldhdr.accesstype" />:</td>
 				<td><c:choose>
 						<c:when test="${contest.registration eq 2}">
-						<a title="<spring:message code="titval.private"/>"><i class="fa fa-lock fa-lg"></i></a>
+						<spring:message code="titval.private"/>
 						</c:when>
 						<c:otherwise>
-							<a title="<spring:message code="titval.public"/>"><i class="fa fa-unlock fa-lg"></i></a>
+							<spring:message code="titval.public"/>
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
@@ -204,7 +201,7 @@
 			<tr>
 				<td><spring:message code="fieldhdr.showstatscontestants" />:</td>
 				<td><c:choose>
-						<c:when test="${contest.show_status == true}">
+						<c:when test="${contest.show_stats == true}">
 							<spring:message code="fieldval.yes" />
 						</c:when>
 						<c:otherwise>
@@ -216,7 +213,7 @@
 			<tr>
 				<td><spring:message code="fieldhdr.showstatsall" />:</td>
 				<td><c:choose>
-						<c:when test="${contest.show_status_out == true}">
+						<c:when test="${contest.show_stats_out == true}">
 							<spring:message code="fieldval.yes" />
 						</c:when>
 						<c:otherwise>

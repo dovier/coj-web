@@ -1,66 +1,75 @@
-<%@include file="/WEB-INF/jsp/include/include.jsp" %>
+<%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page buffer = "16kb" autoFlush="true" %>
+<%@page buffer="16kb" autoFlush="true"%>
 
 
 
 <h2 class="postheader">
-    <spring:message code="pagehdr.rupassword"/>
+	<spring:message code="pagehdr.rupassword" />
 </h2>
-<div class="postcontent">
-    <form:form method="post" commandName="user">
-        <table class="createnewuser">
-            <tbody>
-                <c:choose>
-                    <c:when test="${showpassword != true}">
-                        <tr>
-                            <td colspan="2">
-                                <spring:message code="text.rupassword.1"/>
-                            </td>
-                        </tr>                        
-                    </c:when>
-                    <c:otherwise>
-                    </c:otherwise>
-                </c:choose>
-                <tr>
-                    <td style="align:right"><spring:message code="fieldhdr.email"/>:</td>
-                    <td><form:input path="email" size="30" readonly="${showpassword == true}" /> <a><i class="fa fa-asterisk" title="<spring:message code="mandatory.field"/>"></i></a></td>
-                </tr>
+<div class="postcontent container">
+	<div class="row">
+		<div class="col-xs-6">
+			<form:form method="post" commandName="user"
+				cssClass="form-horizontal">
 
-                <tr>
-                    <td></td>
-                    <td><div class="error"><form:errors path="email" /></div></td>
-                </tr>
-                <c:choose>
-                    <c:when test="${showpassword == true}">
-                        <tr>
-                            <td style="align:right"><spring:message code="fieldhdr.npassword"/>:</td>
-                            <td><form:password path="password" size="30" maxlength="100"/><a><i class="fa fa-info-circle" title="<spring:message code="infomsg.8"/>"></i></a></td>
-                        </tr>
+				<c:if test="${showpassword != true}">
+					<div class="form-group">
+						<spring:message code="text.rupassword.1" />
+					</div>
+				</c:if>
 
-                        <tr>
-                            <td></td>
-                            <td><div class="error"><form:errors path="password" /></div></td>
-                        </tr>
+				<div class="form-group">
+					<spring:message code="fieldhdr.email" var="fieldhdrEmail" />
+					<div class="col-xs-7">
+						<form:input path="email" cssClass="form-control"
+						placeholder="${fieldhdrEmail}" readonly="${showpassword == true}" />
+					</div>
+					<div class="error col-xs-7">
+						<span class="label label-danger"><form:errors path="email" /></span>
+					</div>
+					<a><i data-toggle="tooltip" class="fa fa-asterisk"
+						title="<spring:message code="mandatory.field"/>"></i></a>
+				</div>
+				
+				<c:if test="${showpassword == true}">
+					<div class="form-group">
+						<spring:message code="fieldhdr.npassword" var="newPassword" />
+						<div class="col-xs-7">
+							<form:password path="password" cssClass="form-control" placeholder="${newPassword}" maxlength="100" />
+						</div>
+						<div class="error col-xs-7">
+							<span class="label label-danger"><form:errors path="password" /></span>
+						</div>
+						<a><i data-toggle="tooltip" class="fa fa-info-circle"
+								title="<spring:message code="infomsg.8"/>"></i></a>
+					</div>
+					
+					<div class="form-group">
+						<spring:message code="fieldhdr.cpassword" var="confirmPassword" />
+						<div class="col-xs-7">
+							<form:password path="confirmPassword" cssClass="form-control" placeholder="${confirmPassword}" maxlength="100" />
+						</div>
+						<div class="error col-xs-7">
+							<span class="label label-danger"><form:errors path="confirmPassword" /></span>
+						</div>
+						<a><i data-toggle="tooltip" class="fa fa-info-circle"
+								title="<spring:message code="infomsg.8"/>"></i></a>
+					</div>
 
-                        <tr>
-                            <td style="align:right"><spring:message code="fieldhdr.cpassword"/>:</td>
-                            <td><form:password path="confirmPassword" size="30" maxlength="100"/></td>
-                        </tr>
+				</c:if>
+				
+				<input type="submit" name="submit" id="submit" class="btn btn-primary"
+						value="<spring:message code="button.recover"/>" />
+				<input type="reset" class="btn btn-primary" value="<spring:message code="button.reset"/>" />
 
-                        <tr>
-                            <td></td>
-                            <td><div class="error"><form:errors path="confirmPassword" /></div></td>
-                        </tr>
-                    </c:when>
-                    <c:otherwise>
-                    </c:otherwise>
-                </c:choose>
+			</form:form>
+		</div>
+	</div>
 
-                <tr>
-                    <td><input type="submit" name="submit" id="submit" value="<spring:message code="button.recover"/>" /> <input type="reset" value="<spring:message code="button.reset"/>"/></td>
-                </tr>
-            </tbody>
-        </table>
-    </form:form>
 </div>
+<script>
+	$(function(){
+		$("[data-toggle='tooltip']").tooltip();	
+	});	
+</script>

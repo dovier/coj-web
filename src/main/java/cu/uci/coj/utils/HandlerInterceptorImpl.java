@@ -84,7 +84,7 @@ public class HandlerInterceptorImpl extends HandlerInterceptorAdapter {
 
 				if (request.getUserPrincipal() != null) {
 					String user = request.getUserPrincipal().getName();
-					int uid = baseDAO.integer("user.uid", user);
+					int uid = baseDAO.integer("select.uid.by.username", user);
 					boolean isjudge = baseDAO.bool("exist.judge.contest", uid, cid);
 
 					request.setAttribute("isjudge", isjudge);

@@ -182,7 +182,7 @@ public class VirtualContestController extends BaseController {
 					User user = it.next();
 					uidPos.put(user.getUid(), user.getRank() - 1);
 				}
-				contestDAO.buildRankingACMVirtual(problems, users, uidPos, contest, getUsername(principal), userDAO.integer("user.uid", getUsername(principal)));
+				contestDAO.buildRankingACMVirtual(problems, users, uidPos, contest, getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 
 				for (int i = 0; i < problems.size(); i++) {
 					problems.get(i).stats();

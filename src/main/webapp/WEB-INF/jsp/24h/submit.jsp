@@ -16,7 +16,7 @@
 					<form:input class="form-control" path="pid" />
 				</div>
 				<div class="error col-xs-8 col-xs-offset-3">
-					<form:errors path="pid" />
+					<span class="label label-danger"><form:errors path="pid" /></span>
 				</div>
 				<a><i class="fa fa-asterisk"
 					title="<spring:message code="mandatory.field"/>"></i></a>
@@ -31,7 +31,7 @@
 					</form:select>
 				</div>
 				<div class="error col-xs-8 col-xs-offset-3">
-					<form:errors path="key" />
+					<span class="label label-danger"><form:errors path="key" /></span>
 				</div>
 			</div>
 			<div class="form-group">

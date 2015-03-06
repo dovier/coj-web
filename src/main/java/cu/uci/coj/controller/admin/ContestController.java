@@ -1,8 +1,10 @@
 package cu.uci.coj.controller.admin;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,14 +13,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +31,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.HtmlUtils;
 
+import cu.uci.coj.config.Config;
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.ContestAwardDAO;
 import cu.uci.coj.dao.ContestDAO;
@@ -37,16 +44,15 @@ import cu.uci.coj.dao.UtilDAO;
 import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.ContestAwardsFlags;
-import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Level;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.Rejudge;
-import cu.uci.coj.model.Repoint;
 import cu.uci.coj.model.RepointUser;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.User;
 import cu.uci.coj.model.VirtualContest;
 import cu.uci.coj.service.ContestService;
+import cu.uci.coj.utils.FileUtils;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
@@ -56,6 +62,8 @@ import cu.uci.coj.validator.contestValidator;
 @RequestMapping(value = "/admin")
 public class ContestController extends BaseController {
 
+	@Resource
+	private Utils utils;
 	@Resource
 	private ContestDAO contestDAO;
 	@Resource
@@ -78,7 +86,7 @@ public class ContestController extends BaseController {
 
 		return "/admin/virtualcontests";
 	}
-	
+
 	@RequestMapping(value = "/tables/virtualcontests.xhtml", method = RequestMethod.GET)
 	public String tablesListVirtuals(Model model, PagingOptions options) {
 
@@ -98,7 +106,7 @@ public class ContestController extends BaseController {
 	public String listContests(Model model, PagingOptions options) {
 		return "/admin/admincontests";
 	}
-	
+
 	@RequestMapping(value = "/tables/admincontests.xhtml", method = RequestMethod.GET)
 	public String tablesListContests(Model model, PagingOptions options) {
 		IPaginatedList<Contest> contests = contestDAO.loadContests(options);
@@ -146,7 +154,7 @@ public class ContestController extends BaseController {
 			model.addAttribute(contest);
 			return "/admin/createcontest";
 		}
-		contestDAO.InsertContest(contest, contestDAO.objects("enabled.programming.language", Language.class));
+		contestDAO.InsertContest(contest);
 
 		if (contest.isIs_public()) {
 
@@ -160,6 +168,7 @@ public class ContestController extends BaseController {
 	@RequestMapping(value = "/globalsettings.xhtml", method = RequestMethod.GET)
 	public String globalSettings(Model model, @RequestParam("cid") Integer cid) {
 		Contest contest = contestDAO.loadContestGlobalSettings(cid);
+		model.addAttribute("style", contestDAO.loadScoringStyle(cid));
 		model.addAttribute(contest);
 		return "/admin/globalsettings";
 	}
@@ -173,6 +182,66 @@ public class ContestController extends BaseController {
 		}
 		contestDAO.updateContestGlobalSettings(contest);
 		return "redirect:/admin/globalsettings.xhtml?cid=" + contest.getCid();
+	}
+
+	@RequestMapping(produces = "application/json", value = "/removeimage.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
+	public @ResponseBody() int deleteDataset(@RequestParam(value = "cid") int cid, @RequestParam(value = "image") String image) {
+
+		utils.removeImage(cid, image);
+		return 0;
+	}
+
+	@RequestMapping(value = "/contestimg.xhtml", method = RequestMethod.GET)
+	public String contestImages(Model model, Principal principal, SecurityContextHolderAwareRequestWrapper requestWrapper, @RequestParam(value = "cid") Integer cid) {
+		return doContestImages(model, principal, requestWrapper, cid);
+	}
+
+	public String doContestImages(Model model, Principal principal, SecurityContextHolderAwareRequestWrapper requestWrapper, @RequestParam(value = "cid") Integer cid) {
+		Contest contest = new Contest();
+		contest.setCid(cid);
+		model.addAttribute("contest", contest);
+		model.addAttribute("images", utils.getContestImages(cid));
+		return "/admin/contestimg";
+	}
+
+	@RequestMapping(value = "/contestimg.xhtml", method = RequestMethod.POST)
+	public String contestImages(Model model, SecurityContextHolderAwareRequestWrapper requestWrapper, Principal principal, Contest contest, HttpServletRequest request, BindingResult result) {
+
+		handleFiles(contest.getCid(), request);
+
+		return doContestImages(model, principal, requestWrapper, contest.getCid());
+	}
+
+	private void handleFiles(Integer cid, HttpServletRequest request) {
+		Assert.state(request instanceof MultipartHttpServletRequest, "request !instanceof MultipartHttpServletRequest");
+		final MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+		final Map<String, MultipartFile> files = multiRequest.getFileMap();
+
+		boolean mkdirs = true;
+		File dir = new File(Config.getProperty("base.contest.images"), String.valueOf(cid));
+		dir.mkdirs();
+		for (MultipartFile filex : files.values()) {
+			if (filex.getOriginalFilename() != null && !filex.getOriginalFilename().equals("") && filex.getSize() > 0) {
+				String filename = filex.getOriginalFilename();
+				File file = new File(dir, filename);
+				if (file.exists() && !file.isDirectory()) {
+					file.delete();
+				}
+				if (mkdirs) {
+					file.mkdirs();
+					mkdirs = false;
+				}
+				try {
+					filex.transferTo(file);
+					String ext = filex.getOriginalFilename().substring(filex.getOriginalFilename().lastIndexOf("."));
+					if (ext.equals(".zip") || ext.equals(".rar")) {
+						FileUtils.decompressFile(file.getAbsolutePath(), dir.getAbsolutePath(), true);
+					}
+				} catch (IOException | IllegalStateException ex) {
+					Logger.getLogger(ProblemController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+				}
+			}
+		}
 	}
 
 	@RequestMapping(value = "/contestproblems.xhtml", method = RequestMethod.GET)
@@ -212,7 +281,7 @@ public class ContestController extends BaseController {
 		model.addAttribute(contest);
 		model.addAttribute("problems", problemDAO.getProblemsOffContest(locale.getLanguage(), contest.getCid()));
 		List<Integer> integers = new LinkedList<Integer>();
-		int levels = contestDAO.integer(1,"contest.level", contest.getCid());
+		int levels = contestDAO.integer(1, "contest.level", contest.getCid());
 		for (int i = 0; i < levels; i++) {
 			integers.add(i + 1);
 		}
@@ -259,7 +328,7 @@ public class ContestController extends BaseController {
 			model.addAttribute(contest);
 			model.addAttribute("problems", problemDAO.getProblemsOffContest(locale.getLanguage(), contest.getCid()));
 			List<Integer> integers = new LinkedList<Integer>();
-			int levels = contestDAO.integer(1,"contest.level", contest.getCid());
+			int levels = contestDAO.integer(1, "contest.level", contest.getCid());
 			for (int i = 0; i < levels; i++) {
 				integers.add(i + 1);
 			}
@@ -334,15 +403,14 @@ public class ContestController extends BaseController {
 			// anterior, pero se adelanta igual (ej, A y B son iguales, 1er
 			// lugar para los dos, C que viene detras, tiene el rango 3. Se
 			// brinca el 2, desierto)
-			if (maps.get(i).get("accepted").equals(0)){
+			if (maps.get(i).get("accepted").equals(0)) {
 				if (zeroRank == null)
-					zeroRank = i+1;
+					zeroRank = i + 1;
 				maps.get(i).put("rank", zeroRank);
-			}
-			else if (cMap.get("accepted").equals(maps.get(i).get("accepted")) && cMap.get("penalty").equals(maps.get(i).get("penalty")) && cMap.get("last_time").equals(maps.get(i).get("last_time")))
+			} else if (cMap.get("accepted").equals(maps.get(i).get("accepted")) && cMap.get("penalty").equals(maps.get(i).get("penalty")) && cMap.get("last_time").equals(maps.get(i).get("last_time")))
 				maps.get(i).put("rank", cMap.get("rank"));
-			else 
-			
+			else
+
 				maps.get(i).put("rank", i + 1);
 
 			cMap = maps.get(i);
@@ -353,7 +421,8 @@ public class ContestController extends BaseController {
 		String line = null;
 		while ((line = reader.readLine()) != null) {
 			int i = 0;
-			while (i < maps.size() && !(line.contains("TeamName=\"" + HtmlUtils.htmlEscape(maps.get(i).get("nick").toString()) + "\"") || line.contains("TeamName=\"" + maps.get(i).get("nick").toString() + "\"")))
+			while (i < maps.size()
+					&& !(line.contains("TeamName=\"" + HtmlUtils.htmlEscape(maps.get(i).get("nick").toString()) + "\"") || line.contains("TeamName=\"" + maps.get(i).get("nick").toString() + "\"")))
 				i++;
 
 			if (i < maps.size()) {
@@ -385,20 +454,26 @@ public class ContestController extends BaseController {
 
 	@RequestMapping(value = "/contestlanguages.xhtml", method = RequestMethod.GET)
 	public String contestLanguages(Model model, @RequestParam("cid") Integer cid) {
+
 		Contest contest = new Contest(cid);
+		contest.setStyle(contestDAO.getStyle(cid));
+		model.addAttribute(contest);
 		contest.setLanguages(contestDAO.getContestLanguages(contest.getCid()));
 		contest.initCurrlang();
 		model.addAttribute("languages", utilDAO.getEnabledProgramingLanguages());
-		model.addAttribute(contest);
+
 		return "/admin/contestlanguages";
 	}
 
 	@RequestMapping(value = "/contestlanguages.xhtml", method = RequestMethod.POST)
 	public String contestLanguages(Model model, Contest contest) {
-		contestDAO.clearProgrammingLanguages(contest.getCid());
-		for (int i = 0; i < contest.getCurrlanguages().length; i++) {
-			contestDAO.insertLanguageContest(contest.getCurrlanguages()[i], contest.getCid());
-		}
+
+		contest.setStyle(contestDAO.getStyle(contest.getCid()));
+		if (contest.isICPC())
+			contestDAO.insertLanguages(contest);
+		else
+			contestDAO.insertLanguages(contest.getCid(), contest.getCurrlanguages());
+
 		return "redirect:/admin/contestlanguages.xhtml?cid=" + contest.getCid();
 	}
 
@@ -406,6 +481,7 @@ public class ContestController extends BaseController {
 	public String contestUsers(Model model, @RequestParam("cid") Integer cid) {
 		Contest contest = contestDAO.object("contest.manage.users", Contest.class, cid);
 		contest.setUsers(userDAO.loadContestUsers(contest.getCid()));
+		contest.setBalloontrackers(userDAO.loadContestBalloonTrackers(contest.getCid()));
 		contest.setJudges(userDAO.loadContestJudges(contest.getCid()));
 		model.addAttribute(contest);
 		model.addAttribute("allusers", userDAO.loadUsersOffContest(contest));
@@ -439,6 +515,10 @@ public class ContestController extends BaseController {
 
 		if (contest.getUsersids() != null) {
 			contestDAO.insertUsersContest(contest);
+		}
+
+		if (contest.getBalloontrackerids() != null) {
+			contestDAO.insertBalloonTrackerContest(contest);
 		}
 
 		if (contest.getJudgesids() != null) {
@@ -481,7 +561,7 @@ public class ContestController extends BaseController {
 		// FIXME cuando se pase el repoint del motor al coj, analizar si esto
 		// sigue teniendo sentido
 		if (contest.getStyle() == 4) {
-			int levels = contestDAO.integer(1,"contest.level", contest.getCid());
+			int levels = contestDAO.integer(1, "contest.level", contest.getCid());
 			List<User> users = contestDAO.objects("correct.user.level", User.class, cid);
 			Set<Integer> usersFull = new HashSet<Integer>(contestDAO.integers("correct.user.top.level", cid));
 			for (int i = 0; i < users.size(); i++) {
@@ -503,18 +583,20 @@ public class ContestController extends BaseController {
 	public String unfreezeContest(Model model, SecurityContextHolderAwareRequestWrapper requestWrapper, @RequestParam("cid") Integer cid) throws IOException {
 		Contest contest = contestDAO.loadContest(cid);
 		if (requestWrapper.isUserInRole(Roles.ROLE_ADMIN) && contest.isPast()) {
-				//se cambian las banderas block y unfreeze auto del contest a valores complementarios
-			contestDAO.dml("update.freeze.blocked.contest", false, true,cid);
+			// se cambian las banderas block y unfreeze auto del contest a
+			// valores complementarios
+			contestDAO.dml("update.freeze.blocked.contest", false, true, cid);
 			contestDAO.repointContest(contest, false);
 		}
 		return "redirect:/contest/cscoreboard.xhtml?cid=" + cid;
 	}
-	
+
 	@RequestMapping(value = "/lock.xhtml", method = RequestMethod.GET)
 	public String freezeContest(Model model, SecurityContextHolderAwareRequestWrapper requestWrapper, @RequestParam("cid") Integer cid) throws IOException {
 		Contest contest = contestDAO.loadContest(cid);
 		if (requestWrapper.isUserInRole(Roles.ROLE_ADMIN) && contest.isPast()) {
-			//se cambian las banderas block y unfreeze auto del contest a valores complementarios
+			// se cambian las banderas block y unfreeze auto del contest a
+			// valores complementarios
 			contestDAO.dml("update.freeze.blocked.contest", true, false, cid);
 			contestDAO.repointContest(contest, true);
 		}

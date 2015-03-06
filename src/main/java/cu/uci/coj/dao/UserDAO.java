@@ -14,128 +14,128 @@ import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 
 public interface UserDAO extends BaseDAO {
-    
-    public UserProfile loadUserProfile(String userName);
 
-    public boolean hasProfile(String userName);
-    
-    public void updateUsersStatusOnStartUp();
+	public UserProfile loadUserProfile(String userName);
 
-    public User getUserContest(String uid, int cid);
+	public boolean hasProfile(String userName);
 
-    public Map<String, Object> getMailValues(String username);
+	public void updateUsersStatusOnStartUp();
 
-    public boolean isIn(String user);
+	public List<User> loadContestBalloonTrackers(int cid);
 
-    public boolean emailExist(String email);
+	public User getUserContest(String uid, int cid);
 
-    public boolean emailExistUpdate(String email, String username);
+	public Map<String, Object> getMailValues(String username);
 
-    public void UpdateUserProfile(Registration registration, int uid);
+	public boolean isIn(String user);
 
-    public void UpdateUser(int id, String pass, int country, int institution, boolean enabled, String nick, int locale, Registration registration);
+	public boolean emailExist(String email);
 
-    @Deprecated
-    public void insertUser(String user, String name, String lastname, String email);
+	public boolean emailExistUpdate(String email, String username);
 
-    @Deprecated
-    public void insertUserPrivate(String user);
+	public void UpdateUserProfile(Registration registration, int uid);
 
-    public String getUserRule(String username);
+	public void UpdateUser(int id, String pass, int country, int institution, boolean enabled, String nick, int locale, Registration registration);
 
-    public String getUserLocale(String username);
+	@Deprecated
+	public void insertUser(String user, String name, String lastname, String email);
 
-    public void updateUsersStatus(boolean status, String username);
+	@Deprecated
+	public void insertUserPrivate(String user);
 
-    public int countEnabledUsers(String pattern, boolean online);
-    
-    public int countEnabledUsersForScoreboard(String pattern, boolean online);
+	public String getUserRule(String username);
 
-    public int countEnabledUsersByInstitutions(String pattern, boolean online, int inst_id);
+	public String getUserLocale(String username);
 
-    public int countEnabledUsersByCountry(String pattern, boolean online, int country_id);
+	public void updateUsersStatus(boolean status, String username);
 
-    public IPaginatedList<User> getUserRanking(String pattern, int found,boolean online, PagingOptions options);
-    
-    public List<User> getUserRanking(String pattern, boolean online, PagingOptions options);
+	public int countEnabledUsers(String pattern, boolean online);
 
-    public IPaginatedList<User> getInstitutionUsersRanking(String pattern, int found,boolean online, PagingOptions options, int inst_id);
+	public int countEnabledUsersForScoreboard(String pattern, boolean online);
 
-    public IPaginatedList<User> getCountryUsersRanking(String pattern, int found,boolean online, PagingOptions options, int country_id);
+	public int countEnabledUsersByInstitutions(String pattern, boolean online, int inst_id);
 
+	public int countEnabledUsersByCountry(String pattern, boolean online, int country_id);
 
-    public boolean isUser(String username);
+	public IPaginatedList<User> getUserRanking(String pattern, int found, boolean online, PagingOptions options);
 
-    public User loadUserData(String username);
+	public List<User> getUserRanking(String pattern, boolean online, PagingOptions options);
 
-    public User loadAllUserData(String username);
+	public IPaginatedList<User> getInstitutionUsersRanking(String pattern, int found, boolean online, PagingOptions options, int inst_id);
 
-    public User loadAllTeamData(String username);
+	public IPaginatedList<User> getCountryUsersRanking(String pattern, int found, boolean online, PagingOptions options, int country_id);
 
-    public User loadContestUserData(String username);
+	public boolean isUser(String username);
 
+	public User loadUserData(String username);
 
-    public List<Problem> getProblemsTryied(String username);
+	public User loadAllUserData(String username);
 
-    public List<Problem> getProblemsTryied(int uid);
+	public User loadAllTeamData(String username);
 
-    public List<Problem> getProblemsSolvedInContest(Integer uid, Contest contest);
+	public User loadContestUserData(String username);
 
-    public List<Problem> getProblemsTriedInContest(Integer uid, Contest contest);    
+	public List<Problem> getProblemsTryied(String username);
 
-    public int getDefaultProgrammingLanguageId(String username);
+	public List<Problem> getProblemsTryied(int uid);
 
-    public boolean isJudgeInContest(int uid, int cid);
+	public List<Problem> getProblemsSolvedInContest(Integer uid, Contest contest);
 
-    public boolean isInContest(int uid, int cid);
+	public List<Problem> getProblemsTriedInContest(Integer uid, Contest contest);
 
-    public void updateUser(User user);
+	public int getDefaultProgrammingLanguageId(String username);
 
-    public void updateUserByAdmin(User user);
+	public boolean isJudgeInContest(int uid, int cid);
 
-    public void clearUserAuthorities(String username);
+	public boolean isInContest(int uid, int cid);
 
-    public String[] grantUserAuthority(String username, String authority);
+	public void updateUser(User user);
 
-    public boolean existUserByMailOffUid(String mail, int uid);
+	public void updateUserByAdmin(User user);
 
-    public void InsertUser(User user);    
+	public void clearUserAuthorities(String username);
 
-    public List<String> getUserInContest(int cid);
+	public String[] grantUserAuthority(String username, String authority);
 
-    public List<User> loadContestUsers(int cid);
+	public boolean existUserByMailOffUid(String mail, int uid);
 
-    public List<User> loadContestJudges(int cid);
+	public void InsertUser(User user);
 
-    public List<User> loadJudgesOffContest(int cid);
+	public List<String> getUserInContest(int cid);
 
-    public List<User> loadUsersOffContest(Contest contest);
+	public List<User> loadContestUsers(int cid);
 
-    public List<String> getUserAuthorities(String username);
+	public List<User> loadContestJudges(int cid);
 
-    public IPaginatedList<User> loadUsersAdmin(String pattern, PagingOptions options);
+	public List<User> loadJudgesOffContest(int cid);
 
-    public IPaginatedList<User> loadTeamsAdmin(String pattern, PagingOptions options);
+	public List<User> loadUsersOffContest(Contest contest);
 
-    public void createTeams(Team teams);
+	public List<String> getUserAuthorities(String username);
 
-    public Language getProgrammingLanguageByUsername(String username);
-    
-    public void updateLastConnectedDate(String username);    
+	public IPaginatedList<User> loadUsersAdmin(String pattern, PagingOptions options);
 
-    public void updateChangeTime(int uid);
-    
-    public List<User> loadUsersButOne(String username);
-    
-    public List<User> loadUsersForVirtualButOne(String username);
-    
-    public List<UserProfile> loadRelatedProfiles(UserProfile profile);
+	public IPaginatedList<User> loadTeamsAdmin(String pattern, PagingOptions options);
 
-    public String loadTags(String username);
-    
-    public void updateTags(String username,String tag) ;
+	public void createTeams(Team teams);
+
+	public Language getProgrammingLanguageByUsername(String username);
+
+	public void updateLastConnectedDate(String username);
+
+	public void updateChangeTime(int uid);
+
+	public List<User> loadUsersButOne(String username);
+
+	public List<User> loadUsersForVirtualButOne(String username);
+
+	public List<UserProfile> loadRelatedProfiles(UserProfile profile);
+
+	public String loadTags(String username);
+
+	public void updateTags(String username, String tag);
 
 	public void checkUserStatus();
-	
+
 	public String userByMail(String mail);
 }

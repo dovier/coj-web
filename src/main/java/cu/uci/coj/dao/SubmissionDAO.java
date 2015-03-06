@@ -15,8 +15,9 @@ import cu.uci.coj.utils.paging.PagingOptions;
 public interface SubmissionDAO extends BaseDAO {
 	
 	public List<SubmissionJudge> rejudgeSubmits(Filter filter,PagingOptions options);
+	public void applyEffects(SubmissionJudge submit,boolean isDisabling);
 	public void applyEffects(SubmissionJudge submit);
-	
+	public void removeEffects(SubmissionJudge submit, boolean isDisabling);
 	public void removeEffects(SubmissionJudge submit);
 	
     public String submitStatus(Integer submitId);

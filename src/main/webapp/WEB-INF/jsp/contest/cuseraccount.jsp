@@ -56,38 +56,39 @@
 							</tr>
 						</table>
 					</fieldset>
-							<c:if test="${(not empty user.coach and user.coach ne 'none') or
+					<c:if
+						test="${(not empty user.coach and user.coach ne 'none') or
 							(not empty user.user_1 and user.user_1 ne 'none') or
 							(not empty user.user_2 and user.user_2 ne 'none') or
 							(not empty user.user_3 and user.user_3 ne 'none') }">
-					<fieldset>
-						<legend>
-							<spring:message code="fieldhdr.members" />
-						</legend>
-						<table width="100%" class="userinfo">
-							<c:if test="${not empty user.coach and user.coach ne 'none'}">
-								<tr>
-									<td><c:out value="${user.coach}" />&nbsp;(Coach)</td>
-								</tr>
-							</c:if>
-							<c:if test="${not empty user.user_1 and user.user_1 ne 'none'}">
-								<tr>
-									<td><c:out value="${user.user_1}" /></td>
-								</tr>
-							</c:if>
-							<c:if test="${not empty user.user_2 and user.user_2 ne 'none'}">
-							<tr>
-								<td><c:out value="${user.user_2}" /></td>
-							</tr>
-							</c:if>
-							<c:if test="${not empty user.user_3 and user.user_3 ne 'none'}">
-								<tr>
-									<td><c:out value="${user.user_3}" /></td>
-								</tr>
-							</c:if>
-						</table>
-					</fieldset>
-							</c:if>
+						<fieldset>
+							<legend>
+								<spring:message code="fieldhdr.members" />
+							</legend>
+							<table width="100%" class="userinfo">
+								<c:if test="${not empty user.coach and user.coach ne 'none'}">
+									<tr>
+										<td><c:out value="${user.coach}" />&nbsp;(Coach)</td>
+									</tr>
+								</c:if>
+								<c:if test="${not empty user.user_1 and user.user_1 ne 'none'}">
+									<tr>
+										<td><c:out value="${user.user_1}" /></td>
+									</tr>
+								</c:if>
+								<c:if test="${not empty user.user_2 and user.user_2 ne 'none'}">
+									<tr>
+										<td><c:out value="${user.user_2}" /></td>
+									</tr>
+								</c:if>
+								<c:if test="${not empty user.user_3 and user.user_3 ne 'none'}">
+									<tr>
+										<td><c:out value="${user.user_3}" /></td>
+									</tr>
+								</c:if>
+							</table>
+						</fieldset>
+					</c:if>
 
 					<br />
 					<h3>
@@ -138,7 +139,8 @@
 							<td><a
 								href="/contest/cstatus.xhtml?username=<%=uid%>&cid=${contest.cid}&status=wa"><c:out
 										value="${user.wa}" /></a></td>
-							<td><a href="/contest/cstatus.xhtml?username=<%=uid%>&cid=${contest.cid}"><c:out
+							<td><a
+								href="/contest/cstatus.xhtml?username=<%=uid%>&cid=${contest.cid}"><c:out
 										value="${user.total}" /></a></td>
 						</tr>
 					</table>
@@ -149,9 +151,11 @@
 						</legend>
 						<div class="plistACC">
 							<c:forEach items="${solved}" var="problem">
-								<a
-									href="cstatus.xhtml?username=<%=uid%>&pid=${problem.pid}&cid=${contest.cid}"
-									title="${problem.title}">${problem.pid}</a>
+								<div class="col-xs-1 margin-top-05">
+									<a
+										href="cstatus.xhtml?username=<%=uid%>&pid=${problem.pid}&cid=${contest.cid}"
+										title="${problem.title}"><span class="badge alert-success">${problem.pid}</span></a>
+								</div>
 							</c:forEach>
 						</div>
 					</fieldset>
@@ -162,9 +166,11 @@
 						</legend>
 						<div class="plistWA">
 							<c:forEach items="${unsolved}" var="problem">
-								<a
-									href="cstatus.xhtml?username=<%=uid%>&pid=${problem.pid}&cid=${contest.cid}"
-									title="${problem.title}">${problem.pid}</a>
+								<div class="col-xs-1 margin-top-05">
+									<a
+										href="cstatus.xhtml?username=<%=uid%>&pid=${problem.pid}&cid=${contest.cid}"
+										title="${problem.title}"><span class="badge alert-danger">${problem.pid}</span></a>
+								</div>
 							</c:forEach>
 						</div>
 					</fieldset>

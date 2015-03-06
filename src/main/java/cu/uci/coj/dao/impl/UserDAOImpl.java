@@ -397,7 +397,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		dml("insert.user", user.getUsername(), user.getPassword(), user.getCountry_id(), user.getInstitution_id(), user.getNick(), user.getLocale(), user.getLid(), user.getGender(),
 				user.isContestNotifications(), user.isSubmissionNotifications(), user.isNewprivatemessageNotifications(), user.isWboardNotifications(), user.isProblemNotifications(),
 				user.isEntriesNotifications(), user.isShowemail());
-		int uid = integer("user.uid", user.getUsername());
+		int uid = integer("select.uid.by.username", user.getUsername());
 		dml(replaceSql("insert.user.1", "<dob>", parseDate(user.getDob())), uid, user.getEmail(), user.getName(), user.getLastname(), user.isShowdob());
 		dml("insert.user.2", uid);
 		dml("insert.user.3", user.getUsername(), Roles.ROLE_USER);
@@ -409,6 +409,11 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	@Transactional(readOnly = true)
 	public List<User> loadContestUsers(int cid) {
 		return objects("load.contest.users", User.class, cid);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<User> loadContestBalloonTrackers(int cid) {
+		return objects("load.contest.balloontrackers", User.class, cid);
 	}
 
 	@Transactional(readOnly = true)
@@ -461,7 +466,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	private void insertTeam(Team user) {
 		dml("insert.team.1", user.getUsername(), user.getPassword(), user.getCountry(), user.getInstitution(), user.getNick(), user.getLocale(), user.isUpdate_nick(), true);
 		grantUserAuthority(user.getUsername(), Roles.ROLE_TEAM);
-		int uid = integer("user.uid", user.getUsername());
+		int uid = integer("select.uid.by.username", user.getUsername());
 		user.setUid(uid);
 		dml("insert.team.2", new Object[] { uid });
 	}

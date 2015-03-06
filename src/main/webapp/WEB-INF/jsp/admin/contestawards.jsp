@@ -7,21 +7,20 @@
 	<fmt:message key="pagehdr.contest.awards" />
 </h2>
 <div class="postcontent">
-	<table class="navigating" width="100%">
-		<tr>
-			<td width="10%"><a href="<c:url value="managecontest.xhtml?cid=${contestawardsflags.cid}"/>"><fmt:message key="page.managecontest.link.mc" /></a></td>
-			<td width="10%"><a href="<c:url value="contestglobalflags.xhtml?cid=${contestawardsflags.cid}"/>"><fmt:message key="page.managecontest.link.gf" /></a></td>
-			<td width="10%"><a href="<c:url value="globalsettings.xhtml?cid=${contestawardsflags.cid}"/>"><fmt:message key="page.managecontest.link.gs" /></a></td>
-			<td width="10%"><a href="<c:url  value="contestproblems.xhtml?cid=${contestawardsflags.cid}"/>"><fmt:message key="page.managecontest.link.mp" /></a></td>
-			<td width="10%"><a href="contestproblemcolors.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.mpc" /></a></td>
-			<td width="10%"><a href="importicpcusers.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.iiu" /></a></td>
-			<td width="10%"><a href="baylorxml.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.bx" /></a></td>
-			<td width="10%"><a href="contestlanguages.xhtml?cid=<c:url value="${contestawardsflags.cid}"/>"><fmt:message key="page.managecontest.link.ml" /></a></td>
-			<td width="10%"><a href="contestusers.xhtml?cid=<c:url value="${contestawardsflags.cid}"/>"><fmt:message key="page.managecontest.link.mu" /></a></td>
-			<td width="10%"><fmt:message key="page.managecontest.link.aw" /></td>
-			<td width="10%"><a href="contestoverview.xhtml?cid=<c:url value="${contestawardsflags.cid}"/>"><fmt:message key="page.managecontest.link.ov" /></a></td>
-		</tr>
-	</table>
+	<ul class="nav nav-pills">
+			<li><a href="<c:url value="managecontest.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.mc" /></a></li>
+			<li><a href="<c:url value="contestglobalflags.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.gf" /></a></li>
+			<li><a href="<c:url value="globalsettings.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.gs" /></a></li>
+			<li><a href="<c:url value="contestproblems.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.mp" /></a></li>
+			<li><a href="<c:url value="contestproblemcolors.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.mpc" /></a></li>
+			<li><a href="<c:url value="importicpcusers.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.iiu" /></a></li>
+			<li><a href="<c:url value="baylorxml.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.bx" /></a></li>
+			<li><a href="<c:url value="contestlanguages.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.ml" /></a></li>
+			<li><a href="<c:url value="contestusers.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.mu" /></a></li>
+			<li class="active"><a href="<c:url value="contestawards.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.aw" /></a></li>
+			<li><a href="<c:url value="contestoverview.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.ov" /></a></li>
+			<li><a href="<c:url value="contestimg.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.img" /></a></li>
+	</ul>
 
 	<form:form method="post" commandName="contestawardsflags">
 		<table class="contestsetting">

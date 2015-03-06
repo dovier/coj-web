@@ -22,6 +22,14 @@
 								<i class="fa fa-eye"></i>&nbsp;<spring:message
 									code="link.overview" />
 						</a></li>
+						<c:if test="${contest.gallery}">
+							<li><a target="_blank"
+								href="<c:url value="/contest/gallery.xhtml?cid=${contest.cid}" />">
+									<span style="position: relative; top: 2px"><i
+										class="fa fa-photo"></i>&nbsp;<spring:message
+											code="link.gallery" /></span>
+							</a></li>
+						</c:if>
 						<c:choose>
 							<c:when test="${contest.running == true || contest.past == true}">
 								<li><a
@@ -65,7 +73,7 @@
 													code="link.balloontracker" /></span>
 									</a></li>
 								</c:if>
-								<c:if test="${showSaris}">
+								<c:if test="${contest.saris and showSaris}">
 									<li><a target="_blank"
 										href="<c:url value="/contest/saris.xhtml?cid=${contest.cid}" />">
 											<span style="position: relative; top: 2px"><i

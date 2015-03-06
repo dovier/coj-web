@@ -3,6 +3,8 @@
 <link rel='stylesheet' href="<c:url value="/css/spectrum.css" />" />
 <script type="text/javascript" src="<c:url value="/js/jquery.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/spectrum.js" />"></script>
+<script type="text/javascript"
+	src="<c:url value="/js/randomColor.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/coj.js" />"></script>
 
 <h2 class="postheader">
@@ -10,42 +12,80 @@
 </h2>
 <div class="postcontent">
 
-	<table class="navigating" width="100%">
-		<tr>
-			<td width="10%"><a href="<c:url value="managecontest.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.mc" /></a></td>
-			<td width="10%"><a href="<c:url value="contestglobalflags.xhtml?cid=${contest.cid}"/>"><fmt:message key="page.managecontest.link.gf" /></a></td>
-			<td width="10%"><a href="globalsettings.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.gs" /></a></td>
-			<td width="10%"><a href="contestproblems.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.mp" /></a></td>
-			<td width="10%"><fmt:message key="page.managecontest.link.mpc" /></td>
-			<td width="10%"><a href="importicpcusers.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.iiu" /></a></td>
-			<td width="10%"><a href="baylorxml.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.bx" /></a></td>
-			<td width="10%"><a href="contestlanguages.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.ml" /></a></td>
-			<td width="10%"><a href="contestusers.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.mu" /></a></td>
-			<td width="10%"><a href="contestawards.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.aw" /></a></td>
-			<td width="10%"><a href="contestoverview.xhtml?cid=<c:url value="${contest.cid}"/>"><fmt:message key="page.managecontest.link.ov" /></a></td>
-		</tr>
-	</table>
+	<ul class="nav nav-pills">
+		<li><a
+			href="<c:url value="managecontest.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.mc" /></a></li>
+		<li><a
+			href="<c:url value="contestglobalflags.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.gf" /></a></li>
+		<li><a
+			href="<c:url value="globalsettings.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.gs" /></a></li>
+		<li><a
+			href="<c:url value="contestproblems.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.mp" /></a></li>
+		<li class="active"><a
+			href="<c:url value="contestproblemcolors.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.mpc" /></a></li>
+		<li><a
+			href="<c:url value="importicpcusers.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.iiu" /></a></li>
+		<li><a href="<c:url value="baylorxml.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.bx" /></a></li>
+		<li><a
+			href="<c:url value="contestlanguages.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.ml" /></a></li>
+		<li><a
+			href="<c:url value="contestusers.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.mu" /></a></li>
+		<li><a
+			href="<c:url value="contestawards.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.aw" /></a></li>
+		<li><a
+			href="<c:url value="contestoverview.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.ov" /></a></li>
+		<li><a
+			href="<c:url value="contestimg.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.img" /></a></li>
+	</ul>
 	<form:form method="post" commandName="contest">
+		<button>Randomize</button>
 		<table>
 			<c:forEach items="${contest.problems}" var="problem">
 				<tr>
 					<td>${problem.title}</td>
 					<td>${problem.letter}</td>
-					<td><input type='text' class='colors' id='${problem.pid}' name='colors' value="${problem.balloonColor}" /></td>
+					<td><input type='text' class='colors' id='${problem.pid}'
+						name='colors' value="${problem.balloonColor}" /></td>
 				</tr>
 			</c:forEach>
 		</table>
-		<input type="submit" name="but" value="<spring:message code="button.update"/>" />
+		<input type="submit" name="but"
+			value="<spring:message code="button.update"/>" />
 	</form:form>
 </div>
 <script>
+	function randomizeColors(event) {
+
+		$(".colors").each(function() {
+			color = randomColor({
+				luminosity : 'bright',
+				hue : 'random'
+			});
+			$("#" + $(this).attr('id')).attr("value", color);
+		});
+		spectrumInit();
+		event.preventDefault();
+	};
+
 	function spectrumInit() {
 
 		$(".colors").each(
 				function() {
 					$(this).spectrum(
 							{
-								//showPalette : true,
+								showInput : true,
 								/*palette : [
 										[ '#FFFFFF', '#000000', '#Fcbd00' ],
 										[ '#FFF000', '#123456',
@@ -54,10 +94,16 @@
 								allowEmpty : true,
 								clickoutFiresChange : true,
 								change : function(color) {
-									$("#"+$(this).attr('id')).attr("value",color.toHexString()); // #ff0000
+									$("#" + $(this).attr('id')).attr("value",
+											color.toHexString()); // #ff0000
 								}
 							});
 				});
 	};
-	spectrumInit();
+
+	$(function() {
+
+		spectrumInit();
+		$("button").click(randomizeColors);
+	});
 </script>

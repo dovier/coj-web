@@ -202,19 +202,19 @@ public class MailController extends BaseController {
 
 		if (delete == 1) {
 			if (mailDAO.bool("has.mail.in", getUsername(principal))) {
-				mailDAO.dml("update.quote", getUsername(principal),getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("user.uid", getUsername(principal)));
+				mailDAO.dml("update.quote", getUsername(principal),getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 				mailDAO.dml("delete.user.mail.idto", getUsername(principal));
 			}
 			return "redirect:/mail/inbox.xhtml";
 		} else if (delete == 2) {
 			if (mailDAO.bool("has.mail.out", getUsername(principal))) {
-				mailDAO.dml("update.quote", getUsername(principal),getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("user.uid", getUsername(principal)));
+				mailDAO.dml("update.quote", getUsername(principal),getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 				mailDAO.dml("delete.send.mail.username", getUsername(principal));
 			}
 			return "redirect:/mail/outbox.xhtml";
 		} else if (delete == 3) {
 			if (mailDAO.bool("has.draft.out", getUsername(principal))) {
-				mailDAO.dml("update.quote", getUsername(principal),getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("user.uid", getUsername(principal)));
+				mailDAO.dml("update.quote", getUsername(principal),getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 				mailDAO.dml("delete.draft.mail.username", getUsername(principal));
 			}
 			return "redirect:/mail/draft.xhtml";
@@ -227,15 +227,15 @@ public class MailController extends BaseController {
 			@RequestParam(required = false, defaultValue = "0", value = "send") Integer send, @RequestParam(required = false, defaultValue = "0", value = "draft") Integer draft) {
 
 		if (idmail != 0) {
-			mailDAO.dml("update.quote", getUsername(principal), getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("user.uid", getUsername(principal)));
+			mailDAO.dml("update.quote", getUsername(principal), getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 			mailDAO.dml("delete.user.mail.idmail", idmail, getUsername(principal));
 			return "redirect:/mail/inbox.xhtml";
 		} else if (send != 0) {
-			mailDAO.dml("update.quote", getUsername(principal), getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("user.uid", getUsername(principal)));
+			mailDAO.dml("update.quote", getUsername(principal), getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 			mailDAO.dml("delete.send.mail.idmail", send, getUsername(principal));
 			return "redirect:/mail/outbox.xhtml";
 		} else if (draft != 0) {
-			mailDAO.dml("update.quote", getUsername(principal), getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("user.uid", getUsername(principal)));
+			mailDAO.dml("update.quote", getUsername(principal), getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 			mailDAO.dml("delete.draft.mail.iddraft", draft, getUsername(principal));
 			return "redirect:/mail/draft.xhtml";
 		}

@@ -13,6 +13,14 @@
 		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
 		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
 	</definition>
+	
+	<definition name="contesttemplate" template="/WEB-INF/tiles/contesttheme.jsp">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
+		<put-attribute name="sidebar" value="sidebar" />
+		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
+	</definition>
 
 	<definition name="sidebar" template="/WEB-INF/tiles/sidebar.jsp" />
 
@@ -56,7 +64,7 @@
 		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
 	</definition>
 
-	<definition name="contest" template="/WEB-INF/tiles/theme.jsp">
+	<definition name="contest" template="/WEB-INF/tiles/contesttheme.jsp">
 		<put-attribute name="title" value="pagetit.coj" />
 		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
 		<put-attribute name="sidebar" value="/WEB-INF/tiles/contestsidebar.jsp" />
@@ -114,6 +122,24 @@
 		<put-attribute name="title" value="pagetit.pcsglist" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/practice/globallist.jsp" />
+	</definition>
+	
+	<definition name="/admin/managetranslations" extends="template">
+		<put-attribute name="title" value="pagetit.admintranslation" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/managetranslations.jsp" />
+	</definition>
+	
+	<definition name="/admin/checktranslation" extends="template">
+		<put-attribute name="title" value="pagetit.checktranslation" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/checktranslation.jsp" />
+	</definition>
+
+	<definition name="/24h/translation" extends="template">
+		<put-attribute name="title" value="pagetit.24translation" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/24h/translation.jsp" />
 	</definition>
 
 	<definition name="/practice/vproblems" extends="virtualcontest">
@@ -559,6 +585,12 @@
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/contest/contestview.jsp" />
 	</definition>
+	
+	<definition name="/contest/gallery" extends="template">
+		<put-attribute name="title" value="pagetit.rcgallery" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/contest/gallery.jsp" />
+	</definition>
 
 	<definition name="/contest/cmysubmissions" extends="contest">
 		<put-attribute name="title" value="pagetit.welcomemsg" />
@@ -814,6 +846,12 @@
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/contestoverview.jsp" />
 	</definition>
+	
+	<definition name="/admin/contestimg" extends="contesttemplate">
+		<put-attribute name="title" value="Contest Images" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/admin/contestimg.jsp" />
+	</definition>
 
 	<definition name="/admin/uploadfile" extends="template">
 		<put-attribute name="title" value="Upload File" />
@@ -976,6 +1014,12 @@
 		<put-attribute name="title" value="pagetit.24huscountry" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/24h/userscountryrank.jsp" />
+	</definition>
+	
+	<definition name="/24h/translation" extends="template">
+		<put-attribute name="title" value="pagetit.24translation" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/24h/translation.jsp" />
 	</definition>
 
 	<definition name="/user/useraccount" extends="template">

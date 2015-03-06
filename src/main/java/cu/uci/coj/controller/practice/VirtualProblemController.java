@@ -48,7 +48,7 @@ public class VirtualProblemController extends BaseController {
             int found = contestDAO.integer("count.virtual.contest.problems", father);
             if (found > 0) {
                 if (contest.getStyle() == 4) {
-                    problemDAO.getCurrentLevel(problemDAO.integer("user.uid", getUsername(principal)), cid);
+                    problemDAO.getCurrentLevel(problemDAO.integer("select.uid.by.username", getUsername(principal)), cid);
                 }
                 
                 IPaginatedList<Problem> problems = problemDAO.getContestProblems(found,locale.getLanguage(),getUsername(principal), contest, options);                

@@ -4,7 +4,7 @@
 <display:table id="submit" name="submits" class="volume" requestURI=""
 	defaultsort="0" defaultorder="ascending">
 	<display:column titleKey="tablehdr.prob" headerClass="headid">
-		<span class="fa-stack fa-2x"> <span
+		<span id="${submit.sid}" class="fa-stack fa-2x"> <span
 			style="color:${submit.color}"> <i
 				class="fa fa-circle fa-stack-2x"></i>
 		</span> <small class="fa fa-stack-1x white shadow">${submit.letter} </small>
@@ -18,4 +18,9 @@
 	<display:column property="ddate" titleKey="tablehdr.date"
 		headerClass="headdate">
 	</display:column>
+	<c:if test="${showBalloonMark}">
+		<display:column titleKey="tablehdr.actions" headerClass="headdate">
+			<a href="javascript:mark(${submit.sid});" title="Mark Balloon"><i class="fa fa-check-circle"></i></a>
+		</display:column>
+	</c:if>
 </display:table>

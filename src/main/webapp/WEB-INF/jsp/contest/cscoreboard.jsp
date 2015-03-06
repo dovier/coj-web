@@ -25,7 +25,7 @@
 		<c:if test="${contest.running}">
 			<c:choose>
 				<c:when test="${refresh}">
-						<div class="label label-danger">
+						<div class="label label-info"><i class="fa fa-info-circle"></i>
 							<spring:message code="text.vcstandings.3" />
 						</div>
 					<br />

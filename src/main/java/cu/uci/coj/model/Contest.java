@@ -10,8 +10,18 @@ public class Contest {
 	public static final int ACM_ICPC_STYLE = 1;
 	public static final int PROGRESSIVE_STYLE = 4;
     //General
+	private boolean saris;
 	private boolean balloon;
-    private String even;
+	private boolean gallery;
+    public boolean isGallery() {
+		return gallery;
+	}
+
+	public void setGallery(boolean gallery) {
+		this.gallery = gallery;
+	}
+
+	private String even;
     //Create Contest
     private boolean serial;
     private int uid;
@@ -45,10 +55,12 @@ public class Contest {
     private int acbylevels;
     private int aclimit;
     //Contest Flags
+    private boolean show_stats;
     private boolean show_status;
     private boolean show_scoreboard;
     private boolean allow_registration;
     private boolean unfreeze_auto;
+    private boolean show_stats_out;
     private boolean show_status_out;
     private boolean show_scoreboard_out;
     private boolean show_problem_out;
@@ -60,6 +72,7 @@ public class Contest {
     private List<Level> plevels;
     //Contest users
     private List<User> users;
+    private List<User> balloontrackers;
     private List<User> judges;
     //Import Data
     private String[] imports;
@@ -86,6 +99,7 @@ public class Contest {
     private int[] problemids;
     private String[] problemcolors;
 	private Object[] usersids;
+	private Object[] balloontrackerids;
     private int[] judgesids;
     private int ryear, rmonth, rday;
     private int rhour, rminutes, rseconds;
@@ -102,8 +116,52 @@ public class Contest {
     private int template;
     
     
-    
-    public int getUid() {
+    public List<User> getBalloontrackers() {
+		return balloontrackers;
+	}
+
+	public void setBalloontrackers(List<User> balloontrackers) {
+		this.balloontrackers = balloontrackers;
+	}
+
+	public Object[] getBalloontrackerids() {
+		return balloontrackerids;
+	}
+
+	public void setBalloontrackerids(Object[] balloontrackerids) {
+		this.balloontrackerids = balloontrackerids;
+	}
+
+	public boolean isICPC() {
+		return ACM_ICPC_STYLE == this.style;
+	}
+	
+	public boolean isShow_stats() {
+		return show_stats;
+	}
+
+	public void setShow_stats(boolean show_stats) {
+		this.show_stats = show_stats;
+	}
+
+	
+	public boolean isSaris() {
+		return saris;
+	}
+
+	public void setSaris(boolean saris) {
+		this.saris = saris;
+	}
+
+	public boolean isShow_stats_out() {
+		return show_stats_out;
+	}
+
+	public void setShow_stats_out(boolean show_stats_out) {
+		this.show_stats_out = show_stats_out;
+	}
+
+	public int getUid() {
 		return uid;
 	}
 

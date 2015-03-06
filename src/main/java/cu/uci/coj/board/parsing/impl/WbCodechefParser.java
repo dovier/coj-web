@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import cu.uci.coj.board.dao.WbSiteDAO;
 import cu.uci.coj.board.parsing.WbParser;
 import cu.uci.coj.board.util.ConnectionErrorException;
+import cu.uci.coj.config.Config;
 import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
 
@@ -36,14 +37,15 @@ public class WbCodechefParser extends WbParser {
 	WbSiteDAO wbSiteDAO;
 
     public WbCodechefParser() {
-        this.siteUrl = "http://www.codechef.com/contests";
+        this.siteUrl = Config.getProperty("codechef.parsing.url");
     }
     
     @PostConstruct
     public void init() {
-     	site = wbSiteDAO.getSiteByUrl(siteUrl);
+     	site = wbSiteDAO.getSiteByUrl(Config.getProperty("codechef.url"));
     	if(site == null) {
-    		site = new WbSite(0, "Codechef", siteUrl, "Codechef", false, true, 44, "Asia/Calcutta");
+    		site = new WbSite(0, Config.getProperty("codechef.name"), Config.getProperty("codechef.url"), Config.getProperty("codechef.code"),
+    				false, true, Integer.parseInt(Config.getProperty("codechef.timeanddateid")), Config.getProperty("codechef.timeregion"));
     		int sid = wbSiteDAO.insertSite(site);
     		site.setSid(sid);
     	}    	
@@ -70,28 +72,30 @@ public class WbCodechefParser extends WbParser {
             throw new ConnectionErrorException(site.getSite());
         }       
         
-        Element content = doc.getElementById("statusdiv");          
+        Elements tables = doc.getElementsByClass("table-questions");   
                
-        Elements entries = content.getElementsByTag("tr");        
-                
-        for(int i = 1;i<entries.size();i++) {
-            Element entry = entries.get(i); 
-            
-            strName = entry.child(1).getElementsByTag("a").get(0).text();
-            strUrl = siteUrl + entry.child(1).getElementsByTag("a").get(0).attr("href");
-            strBegin = entry.child(2).text();
-            strEnd = entry.child(3).text();
-
-            try {
-                dateBegin = format.parse(strBegin);
-                dateEnd = format.parse(strEnd);
-            } catch (ParseException ex) {
-                return null;
-            }                   
-            
-            
-            WbContest contest = new WbContest(strUrl, strName, site.getSid(), dateBegin, dateEnd);
-            contests.add(contest);
+        for(int k = 0;k<2;k++) {        
+	        Elements entries = tables.get(k).getElementsByTag("tr");        
+	                
+	        for(int i = 1;i<entries.size();i++) {
+	            Element entry = entries.get(i); 
+	            
+	            strName = entry.child(1).getElementsByTag("a").get(0).text();
+	            strUrl = siteUrl + entry.child(1).getElementsByTag("a").get(0).attr("href");
+	            strBegin = entry.child(2).text();
+	            strEnd = entry.child(3).text();
+	
+	            try {
+	                dateBegin = format.parse(strBegin);
+	                dateEnd = format.parse(strEnd);
+	            } catch (ParseException ex) {
+	                return null;
+	            }                   
+	            
+	            
+	            WbContest contest = new WbContest(strUrl, strName, site.getSid(), dateBegin, dateEnd);
+	            contests.add(contest);
+	        }
         }
         
         return contests;
