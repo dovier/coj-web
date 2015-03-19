@@ -90,8 +90,9 @@ public class WbCodechefParser extends WbParser {
 	                dateEnd = format.parse(strEnd);
 	            } catch (ParseException ex) {
 	                return null;
-	            }                   
+	            }
 	            
+	            if(dateEnd.getTime() < new Date().getTime()) continue;	            
 	            
 	            WbContest contest = new WbContest(strUrl, strName, site.getSid(), dateBegin, dateEnd);
 	            contests.add(contest);
