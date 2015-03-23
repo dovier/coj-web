@@ -3,15 +3,22 @@ package cu.uci.coj.board.dao.impl;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import cu.uci.coj.board.dao.WbContestDAO;
+import cu.uci.coj.board.dao.WbSiteDAO;
 import cu.uci.coj.dao.impl.BaseDAOImpl;
 import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
+import cu.uci.coj.query.Order;
+import cu.uci.coj.query.Query;
+import cu.uci.coj.query.Where;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 
@@ -24,6 +31,9 @@ import cu.uci.coj.utils.paging.PagingOptions;
 @Transactional
 public class WbContestDAOImpl extends BaseDAOImpl implements WbContestDAO {
 
+	@Resource
+	WbSiteDAO wbSiteDAO;
+	
 	@Override
 	@Transactional(readOnly=true)
 	public WbContest getContestById(Integer id) {
@@ -74,36 +84,106 @@ public class WbContestDAOImpl extends BaseDAOImpl implements WbContestDAO {
 	@Override
 	@Transactional(readOnly=true)
 	public IPaginatedList<WbContest> getContestList(Integer sid, PagingOptions options) {
-		if(sid == 0) {
-			return paginated("wbcontest.list.without.site." + options.getDirection(), WbContest.class, 50, options);				
-		} else {			
-			return paginated("wbcontest.list.with.site." + options.getDirection(), WbContest.class, 50, options, sid);	
-		}	
+		Query query = new Query("wboard_contest");
+		sid = sid == 0?null:sid;
+		
+		query.where(Where.eq("sid", sid));
+		
+		if(options.getDirection().equals("asc")) {
+			query.order(Order.asc(options.getSort()));
+		} else {
+			query.order(Order.desc(options.getSort()));
+		}
+		
+		List<WbContest> list = objects(query.select("id", "url", "name", "sid", "startdate", "enddate"), WbContest.class, query.arguments());		
+		
+		List<WbSite> sitelist = wbSiteDAO.getSiteList();
+		HashMap<Integer, WbSite> map =  new HashMap<Integer, WbSite>();
+		
+		for(int i = 0;i<sitelist.size();i++) {
+			map.put(sitelist.get(i).getSid(), sitelist.get(i));
+		}		
+		
+		List<WbContest> result = new ArrayList<WbContest>();
+		long now = new Date().getTime();
+		for(int i = 0;i<list.size();i++) {
+			if(list.get(i).getEndDate().getTime() - map.get(list.get(i).getSid()).getOffset() >= now) {
+				result.add(list.get(i));
+			}				
+		}
+		
+		list.clear();
+		
+		int cant = 50;
+		for(int i = 50 * (options.getPage() - 1);i<result.size() && cant > 0;i++, cant--) {
+			list.add(result.get(i));
+		}
+		
+		return getPaginatedList(options, list, 50, result.size());			
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public IPaginatedList<WbContest> getContestListFavorites(Integer sid, PagingOptions options, Integer uid) {
-		if(sid == 0) {
-			return paginated("wbcontest.list.followed.without.site." + options.getDirection(), WbContest.class, 50,  options, uid);				
+		Query query = new Query("wboard_contest join wboard_user_site using(sid)");
+		sid = sid == 0?null:sid;
+		
+		query.where(Where.eq("sid", sid), Where.eq("uid", uid));
+		
+		if(options.getDirection().equals("asc")) {
+			query.order(Order.asc(options.getSort()));
 		} else {
-			return paginated("wbcontest.list.followed.with.site." + options.getDirection(), WbContest.class, 50, options, uid ,sid);	
-		}	
+			query.order(Order.desc(options.getSort()));
+		}
+		
+		List<WbContest> list = objects(query.select("id", "url", "name", "sid", "startdate", "enddate"), WbContest.class, query.arguments());		
+		
+		List<WbSite> sitelist = wbSiteDAO.getSiteList();
+		HashMap<Integer, WbSite> map =  new HashMap<Integer, WbSite>();
+		
+		for(int i = 0;i<sitelist.size();i++) {
+			map.put(sitelist.get(i).getSid(), sitelist.get(i));
+		}		
+		
+		List<WbContest> result = new ArrayList<WbContest>();
+		long now = new Date().getTime();
+		for(int i = 0;i<list.size();i++) {
+			if(list.get(i).getEndDate().getTime() - map.get(list.get(i).getSid()).getOffset() >= now) {
+				result.add(list.get(i));
+			}				
+		}
+		
+		list.clear();
+		
+		int cant = 50;
+		for(int i = 50 * (options.getPage() - 1);i<result.size() && cant > 0;i++, cant--) {
+			list.add(result.get(i));
+		}
+		
+		return getPaginatedList(options, list, 50, result.size());	
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public IPaginatedList<WbContest> getPaginatedContestList(PagingOptions options) {
-		String sql = getSql("wbcontest.list");
 		int found = integer("count.wbcontest.list");
-		List<WbContest> list = new ArrayList<WbContest>();
-		if(found > 0) {			
-			sql += " ORDER BY " + options.getSort() + " " + options.getDirection();
-			list = objects(sql, WbContest.class);
+
+		Query query = new Query("wboard_contest");
+		if(options.getDirection().equals("asc")) {
+			query.order(Order.asc(options.getSort()));
+		} else {
+			query.order(Order.desc(options.getSort()));
 		}
+		
+		query.paginate(options, 50);
+		
+		List<WbContest> list = objects(query.select("id", "url", "name", "sid", "startdate", "enddate"), WbContest.class, query.arguments());
+		
 		return getPaginatedList(options, list, 50, found);
 	}
 	
 	@Override
+	@Transactional(readOnly=true)
 	public List<WbContest> getNearContestsNotification() {
 		Calendar calendar = Calendar.getInstance();
 		

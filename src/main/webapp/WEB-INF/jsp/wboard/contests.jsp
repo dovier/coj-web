@@ -49,7 +49,7 @@ $(document).ready(function(){
             data:{"followed":followed},
             success:function (datas){
             	$("#combo-select").html(datas);     
-            	displayTableReload($("#filter-form :input[value]").serialize());
+            	displayTableReload($("#filter-form").serialize());
             }              
         });
 		
@@ -91,7 +91,7 @@ $(document).ready(function(){
 	
 	$('#combo-select').on("change", "#site-select", function(){
 		var option = $(this);
-		displayTableReload($("#filter-form :input[value]").serialize());
+		displayTableReload($("#filter-form").serialize());
 		$("button").each(function(){
 			var elem = $(this);
 			if(elem.data("site-id") == option.val()) {

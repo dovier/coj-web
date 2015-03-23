@@ -97,7 +97,7 @@
 			$("#ajax-loader" + sid).toggleClass("hide");
 			
 			$.ajax({
-				url : "/admin/manageparsers/parse.xhtml",
+				url : "/admin/manageparsers/parse.json",
 				type : 'POST',
 				data : {
 					"sid" : sid
