@@ -37,7 +37,7 @@ public class UEngineMessageListener implements MessageListener {
 			SubmissionJudge submit = (SubmissionJudge) jsonMessageConverter
 					.fromMessage(message);
 			
-			if (submit.getSid() == 0) {
+			if (submit.getSid() < 0) {
 				testSubmit.add(submit);
 				return;
 			}

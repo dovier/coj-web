@@ -369,6 +369,7 @@ public class SubmissionController extends BaseController {
 					problem.getCasetimelimit(), problem.getMemory(),
 					submit.getLanguageByLid());
 			submission.setSpecialJudge(problem.isSpecial_judge());
+			submission.setSid(testSubmit.getNextSid());
 			try {
 
 				utils.startAndWaitForCalification(submission);

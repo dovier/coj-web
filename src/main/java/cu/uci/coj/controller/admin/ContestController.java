@@ -187,6 +187,7 @@ public class ContestController extends BaseController {
 			model.addAttribute(contest);
 			return "/admin/globalsettings";
 		}
+		
 		contestDAO.updateContestGlobalSettings(contest);
 		return "redirect:/admin/globalsettings.xhtml?cid=" + contest.getCid();
 	}
@@ -576,8 +577,8 @@ public class ContestController extends BaseController {
 	public String contestAwards(Model model,
 			ContestAwardsFlags contestawardsflags) {
 		contestAwardDAO.insertContestAwardsFlags(contestawardsflags);
-		model.addAttribute("contestawardsflags", contestawardsflags);
-		return "/admin/contestawards";
+		
+		return contestAwards(model, contestawardsflags.getCid());
 	}
 
 	@RequestMapping(value = "/contestusers.xhtml", method = RequestMethod.POST)

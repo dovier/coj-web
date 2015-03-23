@@ -813,6 +813,7 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
 	public void updateContestGlobalSettings(Contest contest) {
 		updateContestFlags(contest);
+		contest.setStyle(loadScoringStyle(contest.getCid()).getSid());
 		switch (contest.getStyle()) {
 		case 1:
 			if (contest.getRegistration() == 1) {

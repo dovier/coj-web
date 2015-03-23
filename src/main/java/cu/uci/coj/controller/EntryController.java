@@ -203,7 +203,7 @@ public class EntryController extends BaseController {
 
 		int uid = userDAO.idByUsername(username);
 
-		IPaginatedList<Entry> entries = entryDAO.paginated("enabled.entries.list.by.user", Entry.class, 10, options, uid);
+		IPaginatedList<Entry> entries = entryDAO.paginated("enabled.entries.list.by.user", Entry.class, 10, options, uid,uid);
 		model.addAttribute("entries", entries);
 		model.addAttribute("found", entries.getFullListSize());
 
@@ -226,12 +226,12 @@ public class EntryController extends BaseController {
 		IPaginatedList<Entry> entries;
 		if (principal != null) {
 			if ("all".equals(entryFilter))
-				entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options);
+				entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options,userDAO.idByUsername(principal.getName()));
 			else
 				entries = entryDAO.paginated("select.followed.entries", Entry.class, 10, options, userDAO.idByUsername(principal.getName()));
 
 		} else {
-			entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options);
+			entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options,0);
 		}
 		model.addAttribute("entries", entries);
 
