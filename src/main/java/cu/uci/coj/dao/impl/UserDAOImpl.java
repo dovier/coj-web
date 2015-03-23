@@ -454,7 +454,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
 		if (!StringUtils.isEmpty(user.getPassword())
 				&& user.getPassword().length() > 0) {
-			dml("update.user.by.admin", user.getRole(), user.getNick(),
+			dml("update.user.by.admin", user.getNick(),
 					user.getCountry_id(), user.getInstitution_id(),
 					user.getLid(), user.getLocale(), user.getPassword(),
 					user.isContestNotifications(),
@@ -466,7 +466,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 					user.getGender(), user.getAccess_rule(), user.isEnabled(),
 					user.isUpdate_nick(), user.getUsername());
 		} else {
-			dml("update.user.by.admin.1", user.getRole(), user.getNick(),
+			dml("update.user.by.admin.1", user.getNick(),
 					user.getCountry_id(), user.getInstitution_id(),
 					user.getLid(), user.getLocale(),
 					user.isContestNotifications(),
@@ -736,8 +736,10 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	@Override
 	public UserClassificationStats getUserClassifications(Integer uid) {
 		List<Map<String,Object>> maps = maps("select.user.classif",uid);
+		List<Map<String,Object>> probs = maps("select.prob.classif");
+		
 		List<Map<String,Object>> timeline = maps("select.user.timeline",uid,uid);
-		return new UserClassificationStats(maps,timeline);
+		return new UserClassificationStats(maps,probs,timeline);
 	}
 
 }

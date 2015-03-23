@@ -363,7 +363,7 @@ public class SubmissionController extends BaseController {
 				problem.getPid())
 				&& problemDAO.isLocked(iduser, problem.getPid());
 
-		if (submit.isTest()) {
+		if (submit.isHaspriviligeForProblem() && submit.isTest()) {
 			SubmissionJudge submission = new SubmissionJudge(0, iduser,
 					submit.getCode(), problem.getPid(), problem.getTime(),
 					problem.getCasetimelimit(), problem.getMemory(),

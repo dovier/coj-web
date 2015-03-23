@@ -428,30 +428,37 @@
 					<div id="stats" class="panel-body collapse in">
 						<div class="row row-centered no-gutters">
 							<div class="col-xs-12">
-								<canvas id="top-chart"></canvas>
-								<canvas id="chart"></canvas>
+								<c:if test="${userclassif.count > 0}">
+									<canvas id="top-chart" width="500" height="500"></canvas>
+								</c:if>
 							</div>
-							<div class="col-centered col-xs-11 no-gutters">
-								<c:forEach var="loop" begin="0" end="${userclassif.count-1}">
-									<div class="col-xs-4">
-										<div class="col-padded">
-											<center>
-												<small><label id="classif-label-${loop}"
-													class="text-sm text-muted"></label></small>
-											</center>
-											<div>
-												<canvas id="classif-chart-${loop}"></canvas>
+
+							<c:if test="${userclassif.count > 0}">
+								<div class="col-centered col-xs-11 no-gutters">
+									<c:forEach var="loop" begin="0" end="${userclassif.count-1}">
+										<div class="col-xs-4">
+											<div class="col-padded">
+												<center>
+													<small><label id="classif-label-${loop}"
+														class="text-sm text-muted"></label></small>
+												</center>
+												<div>
+													<canvas id="classif-chart-${loop}"></canvas>
+												</div>
 											</div>
 										</div>
-									</div>
-								</c:forEach>
-							</div>
+									</c:forEach>
+								</div>
+							</c:if>
 							<div class="col-xs-12">
 								<canvas id="timeline-chart"></canvas>
 							</div>
 						</div>
 						<div class="row row-centered">
-							<div class="col-xs-12">
+							<div class="col-xs-6">
+								<canvas id="chart"></canvas>
+							</div>
+							<div class="col-xs-6">
 								<table class="table table-bordered table-condensed">
 									<thead>
 										<tr>
@@ -469,13 +476,7 @@
 									<tr>
 										<td><a
 											href="/24h/status.xhtml?username=${user.username}&status=ac"><c:out
-													value="${user.acc}" /></a> <authz:authorize
-												ifNotGranted="ROLE_ANONYMOUS">
-												<c:if test="${currentUsername}">
-													<a href="/24h/downloadsourcezip.xhtml?status=1">&nbsp;<i
-														class="fa fa-save"></i></a>
-												</c:if>
-											</authz:authorize>
+													value="${user.acc}" /></a>
 										<td><a
 											href="/24h/status.xhtml?username=${user.username}&status=ce"><c:out
 													value="${user.ce}" /></a>
@@ -497,74 +498,94 @@
 										<td><a
 											href="/24h/status.xhtml?username=${user.username}&status=wa"><c:out
 													value="${user.wa}" /></a>
-										<td><c:out value="${user.total}" /> <authz:authorize
-												ifNotGranted="ROLE_ANONYMOUS">
-												<c:if test="${currentUsername}">
-													<a href="/24h/downloadsourcezip.xhtml">&nbsp;<i
-														class="fa fa-save"></i></a>
-												</c:if>
-											</authz:authorize></td>
+										<td><a href="/24h/status.xhtml?username=${user.username}"><c:out
+													value="${user.total}" /></a></td>
 									</tr>
 								</table>
+								<authz:authorize ifNotGranted="ROLE_ANONYMOUS">
+									<c:if test="${currentUsername}">
+										<div class="col-xs-12">
+											<a href="/24h/downloadsourcezip.xhtml?status=1">
+												<div class="col-xs-offset-1 col-xs-5 panel">
+													<div class="col-xs-12 label label-success">
+														<spring:message code="tablehdr.ac" />
+													</div>
+													<div class="label-success">
+														<i class="fa fa-download white fa-3x"></i>
+													</div>
+												</div>
+											</a> <a href="/24h/downloadsourcezip.xhtml">
+												<div class="col-xs-offset-1 col-xs-5 panel">
+													<div class="col-xs-12 label label-primary">
+														<spring:message code="tablehdr.total" />
+													</div>
+													<div class="label-primary">
+														<i class="fa fa-download white fa-3x"></i>
+													</div>
+												</div>
+											</a>
+										</div>
 							</div>
-						</div>
+	</c:if>
+	</authz:authorize>
+</div>
+</div>
+</div>
+</div>
+</div>
+<c:if test="${solved ne null}">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="panel panel-primary">
+
+				<div class="panel-heading">
+					<spring:message code="fieldhdr.solvedprob" />
+					<span class="badge">${user.solved}</span>
+					<div class="badge pull-right">
+						<a data-toggle="collapse" href="#probsACC"><i
+							class="fa fa-chevron-up"></i></a>
 					</div>
+				</div>
+				<div id="probsACC" class="panel-body collapse in">
+					<c:forEach items="${solved}" var="problem">
+						<div class="col-xs-1 margin-top-05">
+							<a
+								href="/24h/status.xhtml?username=<c:out value="${user.username}"/>&pid=${problem.pid}"
+								title="${problem.title}"><span class="badge alert-success">${problem.pid}</span></a>
+						</div>
+					</c:forEach>
 				</div>
 			</div>
 		</div>
-		<c:if test="${solved ne null}">
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="panel panel-primary">
+	</div>
+</c:if>
+<c:if test="${unsolved ne null}">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="panel panel-primary">
 
-						<div class="panel-heading">
-							<spring:message code="fieldhdr.solvedprob" />
-							<span class="badge">${user.solved}</span>
-							<div class="badge pull-right">
-								<a data-toggle="collapse" href="#probsACC"><i
-									class="fa fa-chevron-up"></i></a>
-							</div>
-						</div>
-						<div id="probsACC" class="panel-body collapse in">
-							<c:forEach items="${solved}" var="problem">
-								<div class="col-xs-1 margin-top-05">
-									<a
-										href="/24h/status.xhtml?username=<c:out value="${user.username}"/>&pid=${problem.pid}"
-										title="${problem.title}"><span class="badge alert-success">${problem.pid}</span></a>
-								</div>
-							</c:forEach>
-						</div>
+				<div class="panel-heading">
+					<spring:message code="fieldhdr.triedunsolvedprob" />
+					<span class="badge">${user.unsolved}</span>
+					<div class="badge pull-right">
+						<a data-toggle="collapse" href="#probsWA"><i
+							class="fa fa-chevron-up"></i></a>
 					</div>
 				</div>
-			</div>
-		</c:if>
-		<c:if test="${unsolved ne null}">
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="panel panel-primary">
-
-						<div class="panel-heading">
-							<spring:message code="fieldhdr.triedunsolvedprob" />
-							<span class="badge">${user.unsolved}</span>
-							<div class="badge pull-right">
-								<a data-toggle="collapse" href="#probsWA"><i
-									class="fa fa-chevron-up"></i></a>
-							</div>
+				<div id="probsWA" class="panel-body collapse in">
+					<c:forEach items="${unsolved}" var="problem">
+						<div class="col-xs-1 margin-top-05">
+							<a
+								href="/24h/status.xhtml?username=${user.username}&pid=${problem.pid}"
+								title="${problem.title}"><span class="badge alert-danger">${problem.pid}</span></a>
 						</div>
-						<div id="probsWA" class="panel-body collapse in">
-							<c:forEach items="${unsolved}" var="problem">
-								<div class="col-xs-1 margin-top-05">
-									<a
-										href="/24h/status.xhtml?username=${user.username}&pid=${problem.pid}"
-										title="${problem.title}"><span class="badge alert-danger">${problem.pid}</span></a>
-								</div>
-							</c:forEach>
-						</div>
-					</div>
+					</c:forEach>
 				</div>
 			</div>
-		</c:if>
-	</c:if>
+		</div>
+	</div>
+</c:if>
+</c:if>
 </div>
 
 <script type="text/javascript" src="<c:url value="/js/Chart.min.js"/>"></script>
@@ -624,17 +645,25 @@ $(function() {
 			    labels: ${userclassif.labels},
 			    datasets: [
 			        {
-			            fillColor: "rgba(151,187,205,0.5)",
-			            strokeColor: "#4c83c3",
-			            pointColor: "#4c83c3",
+			            fillColor: "rgba(0,150,0,0.8)",
+			            strokeColor: "rgba(0,150,0,0.8)",
+			            pointColor: "rgba(0,150,0,0.8)",
 			            pointStrokeColor: "#fff",
 			            pointHighlightFill: "#fff",
-			            pointHighlightStroke: "rgba(220,220,220,1)",
+			            pointHighlightStroke: "rgba(0,150,0,0.8)",
 			            data: ${userclassif.top}
+			        },
+			        {
+			            fillColor: "rgba(151,187,205,0.4)",
+			            strokeColor: "rgba(151,187,205,0.4)",
+			            pointColor: "rgba(151,187,205,0.4)",
+			            pointStrokeColor: "#fff",
+			            
+			            data: ${userclassif.probTop}
 			        }
 			    ]
 			};
-		var topChart = new Chart($("#top-chart").get(0).getContext("2d")).Radar(data,{scaleOverride: false,scaleIntegersOnly: true,scaleSteps: 1,scaleStepWidth: 1,scaleStartValue: 0});
+		var topChart = new Chart($("#top-chart").get(0).getContext("2d")).Radar(data,{pointDot : false,scaleOverride: false,scaleIntegersOnly: true,scaleSteps: 1,scaleStepWidth: 1,scaleStartValue: 0});
 	};
 	
 	
@@ -647,7 +676,7 @@ $(function() {
 					    datasets: [
 					        {
 					            label: labels[i],
-					            fillColor: "#4c83c3",
+					            fillColor: "rgba(0,150,0,0.6)",
 					            data: ${userclassif.classifications}[i]
 					        }
 					    ]
@@ -664,12 +693,12 @@ $(function() {
 				    datasets: [
 				        {
 				            label: 'AC',
-				            fillColor: "rgba(0,0,150,0.4)",
-				            strokeColor: "rgba(0,0,150,1)",
-				            pointColor: "rgba(0,0,150,1)",
+				            fillColor: "rgba(0,150,0,0.4)",
+				            strokeColor: "rgba(0,150,0,1)",
+				            pointColor: "rgba(0,150,01)",
 				            pointStrokeColor: "#fff",
 				            pointHighlightFill: "#fff",
-				            pointHighlightStroke: "rgba(0,0,150,1)",
+				            pointHighlightStroke: "rgba(0,150,0,1)",
 				            data: ${userclassif.acStatus}
 				        },
 				        {

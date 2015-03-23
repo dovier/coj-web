@@ -1,8 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cu.uci.coj.config;
+
+import javax.annotation.Resource;
 
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -13,11 +11,10 @@ import org.springframework.amqp.support.converter.JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import cu.uci.coj.utils.UEngineMessageListener;
-import javax.annotation.Resource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+
+import cu.uci.coj.utils.UEngineMessageListener;
 
 @Configuration
 @PropertySource({"classpath:cu/uci/coj/config/amqp.config.properties"})

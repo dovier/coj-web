@@ -13,9 +13,9 @@
 				<thead>
 					<tr>
 						<th><spring:message code="tablehdr.judgment" /></th>
+						<th><spring:message code="tablehdr.time" /></th>
 						<th><spring:message code="tablehdr.mem" /></th>
 						<th><spring:message code="tablehdr.size" /></th>
-						<th><spring:message code="tablehdr.lang" /></th>
 					</tr>
 				</thead>
 				<tr>
