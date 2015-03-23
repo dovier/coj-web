@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -57,15 +59,6 @@ public class ProblemController extends BaseController {
 	@RequestMapping(value = "/adminproblems.xhtml", method = RequestMethod.GET)
 	public String listProblems(Principal principal, HttpServletRequest request, Model model, Locale locale, PagingOptions options, @RequestParam(required = false, value = "pattern") String pattern) {
 		model.addAttribute("pattern", pattern);
-		Integer uid = contestDAO.integer("select.uid.by.username", getUsername(principal));
-		String role = Roles.ROLE_USER;
-		if (request.isUserInRole(Roles.ROLE_ADMIN))
-			role = Roles.ROLE_ADMIN;
-		else if (request.isUserInRole(Roles.ROLE_SUPER_PSETTER))
-			role = Roles.ROLE_SUPER_PSETTER;
-		else if (request.isUserInRole(Roles.ROLE_PSETTER))
-			role = Roles.ROLE_PSETTER;
-
 		return "/admin/adminproblems";
 	}
 
@@ -297,10 +290,16 @@ public class ProblemController extends BaseController {
 		return "redirect:/24h/problem.xhtml?pid=" + problem.getPid();
 	}
 
-	@RequestMapping(produces = "application/json", value = "/removedataset.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
-	public @ResponseBody() int deleteDataset(@RequestParam(value = "pid") int pid, @RequestParam(value = "dataset") String dataset) {
+	@RequestMapping(produces = "application/json", value = "/removealldatasets.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
+	@ResponseStatus(value=HttpStatus.NO_CONTENT)
+	public void deleteDatasets(@RequestParam(value = "pid") int pid) {
 
+		utils.removeDatasets(pid);
+	}
+	
+	@RequestMapping(produces = "application/json", value = "/removedataset.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
+	@ResponseStatus(value=HttpStatus.NO_CONTENT)
+	public void deleteDataset(@RequestParam(value = "pid") int pid, @RequestParam(value = "dataset") String dataset) {
 		utils.removeDataset(pid, dataset);
-		return 0;
 	}
 }

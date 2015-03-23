@@ -239,7 +239,7 @@ public class EntryController extends BaseController {
 	}
 
 	@RequestMapping(produces = "application/json", value = "/user/like.json", method = RequestMethod.POST, headers = { "Accept=application/json" })
-	public @ResponseBody() String like(Principal principal, @RequestParam Integer id, Model model, PagingOptions options) {
+	public @ResponseBody String like(Principal principal, @RequestParam Integer id, Model model, PagingOptions options) {
 
 		int userId = userDAO.idByUsername(principal.getName());
 		boolean canRate = entryDAO.bool("check.entries.already.rated", userId, id,userId, id);
@@ -251,7 +251,7 @@ public class EntryController extends BaseController {
 	}
 
 	@RequestMapping(produces = "application/json", value = "/user/dislike.json", method = RequestMethod.POST, headers = { "Accept=application/json" })
-	public @ResponseBody() String dislike(Principal principal, @RequestParam Integer id, Model model, PagingOptions options) {
+	public @ResponseBody String dislike(Principal principal, @RequestParam Integer id, Model model, PagingOptions options) {
 
 		int userId = userDAO.idByUsername(principal.getName());
 		boolean canRate = entryDAO.bool("check.entries.already.rated", userId, id,userId, id);
@@ -277,15 +277,15 @@ public class EntryController extends BaseController {
 		return "redirect:/admin/manageentries.xhtml";
 	}
 
-	@RequestMapping(produces = "application/json", value = "/admin/disableentry.xhtml", method = RequestMethod.POST, headers = { "Accept=application/json" })
-	public @ResponseBody() String disableEntry(HttpServletRequest request, Locale locale, Principal principal, @RequestParam Integer id) {
+	@RequestMapping(produces = "application/json", value = "/admin/disableentry.json", method = RequestMethod.POST, headers = { "Accept=application/json" })
+	public @ResponseBody Entry disableEntry(HttpServletRequest request, Locale locale, Principal principal, @RequestParam Integer id) {
 		if (request.isUserInRole(Roles.ROLE_ADMIN)) {
 			entryDAO.disableEntry(id);
 		}
 		Entry entry = new Entry();
 		entry.setText(getMessageSource().getMessage("entry.pending.approval", null, locale));
 		entry.setId(id);
-		return JSONObject.fromObject(entry).toString();
+		return entry;
 	}
 
 	@RequestMapping(value = "/admin/manageentries.xhtml", method = RequestMethod.GET)

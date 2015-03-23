@@ -5,7 +5,7 @@
 	
 </script>
 
-<link rel="stylesheet" href="<c:url value="/css/wboard.css"/>"
+<link rel="stylesheet" href="<c:url value="/css/confirm-message.css"/>"
 	type="text/css" media="screen" />
 
 <h2 class="postheader">

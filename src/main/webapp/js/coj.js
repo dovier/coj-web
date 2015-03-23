@@ -51,9 +51,10 @@ function voting(id,url){
 }
 
 function disableEntry(id){
+	alert(id);
 	$.ajax({
         type: "POST",
-        url: "/admin/disableentry.xhtml",
+        url: "/admin/disableentry.json",
         data: "id=" + id,
         dataType: 'json',
         success: function(data) {
@@ -75,7 +76,7 @@ function updateBoard(last, course_id) {
     var board = document.getElementById("schoolarright");
     $.ajax({
         type: "POST",
-        url: "/schoolar/updateboard.xhtml",
+        url: "/schoolar/updateboard.json",
         data: "last=" + last + "&course_id=" + course_id,
         dataType: 'json',
         success: function(data) {
@@ -144,7 +145,7 @@ function changeCourse(course_id) {
 
     $.ajax({
         type: "POST",
-        url: "/schoolar/getchapterinfo.xhtml",
+        url: "/schoolar/getchapterinfo.json",
         data: "chapter=" + id + "&course_id=" + course_id,
         dataType: 'json',
         success: function(data) {
@@ -214,7 +215,7 @@ function removeMaterial(courseid, chapter, id) {
     var mat_tbody = document.getElementById("all_materials");
     $.ajax({
         type: "POST",
-        url: "/schoolar/removematerial.xhtml",
+        url: "/schoolar/removematerial.json",
         data: "chapter=" + chapter + "&course_id=" + courseid + "&content_id=" + id,
         dataType: 'json',
         success: function(data) {
@@ -229,7 +230,7 @@ function getVirtualTemplates(style) {
     contests.length = 0;
     $.ajax({
         type: "GET",
-        url: "/practice/getvirtualtemplates.xhtml?style=" + style,
+        url: "/practice/getvirtualtemplates.json?style=" + style,
         data: "style=" + style,
         dataType: 'json',
         success: function(data) {
@@ -661,7 +662,6 @@ function unmarkfavorite(pid) {
         url: "/24h/unmarkfavorite.xhtml",
         data: "pid=" + pid,
         success: function(msg) {
-            alert("Problem succesfuly marked as non favorite");
         }
     });
 }
@@ -672,7 +672,6 @@ function markfavorite(pid) {
         url: "/24h/markasfavorite.xhtml",
         data: "pid=" + pid,
         success: function(msg) {
-            alert("Problem succesfuly marked as favorite");
         }
     });
 }

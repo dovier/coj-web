@@ -33,6 +33,7 @@ public class AchievementDAOImpl extends BaseDAOImpl implements AchievementDAO {
 
 				checkAndAwardByUser("check.sniper.achievement", submit, AchievementType.SNIPER);
 				checkAndAwardByUser("check.polyglot.achievement", submit, AchievementType.POLYGLOT);
+				checkAndAwardByUser("check.inflate.balloon.achievement", submit, AchievementType.INFLATE_THE_BALLOON);
 
 				List<Integer> aids = integers("achievements.by.classification.pid", submit.getPid());
 				for (Integer id : aids)

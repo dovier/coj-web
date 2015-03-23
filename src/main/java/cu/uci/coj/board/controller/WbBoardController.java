@@ -75,7 +75,7 @@ public class WbBoardController extends BaseController {
 		return "/tables/wbcontests";
 	}
 	
-	@RequestMapping(value = "/wboard/follow.xhtml", method = RequestMethod.POST)
+	@RequestMapping(value = "/wboard/follow.json", method = RequestMethod.POST)
 	@ResponseStatus(value=HttpStatus.NO_CONTENT)
 	public void followSite(Principal principal, @RequestParam Integer sid) {
 		try {
@@ -84,7 +84,7 @@ public class WbBoardController extends BaseController {
 		} catch (Exception e){}	
 	}
 	
-	@RequestMapping(value = "/wboard/unfollow.xhtml", method = RequestMethod.POST)
+	@RequestMapping(value = "/wboard/unfollow.json", method = RequestMethod.POST)
 	@ResponseStatus(value=HttpStatus.NO_CONTENT)
 	public void unfollowSite(Principal principal, @RequestParam Integer sid) {
 		try {

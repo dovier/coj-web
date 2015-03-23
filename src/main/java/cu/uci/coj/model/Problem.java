@@ -106,7 +106,6 @@ public class Problem {
 	private String outputPt;
 	private String commentsPt;
 
-	
 	public String getMemoryMB() {
 		return FileUtils.byteCountToDisplaySize(memory);
 	}
@@ -140,7 +139,17 @@ public class Problem {
 	}
 
 	public String getTitleEs() {
+
 		return titleEs;
+	}
+
+	public String getDefaultTitleEs() {
+
+		return defaultIfEmpty(titleEs, title);
+	}
+
+	private String defaultIfEmpty(String lang, String defaultOpt) {
+		return StringUtils.isEmpty(lang) ? defaultOpt : lang;
 	}
 
 	public void setTitleEs(String titleEs) {
@@ -151,8 +160,16 @@ public class Problem {
 		return descriptionEs;
 	}
 
+	public String getDefaultDescriptionEs() {
+		return defaultIfEmpty(descriptionEs, description);
+	}
+
 	public void setDescriptionEs(String descriptionEs) {
 		this.descriptionEs = descriptionEs;
+	}
+
+	public String getDefaultInputEs() {
+		return defaultIfEmpty(inputEs, input);
 	}
 
 	public String getInputEs() {
@@ -163,12 +180,20 @@ public class Problem {
 		this.inputEs = inputEs;
 	}
 
+	public String getDefaultOutputEs() {
+		return defaultIfEmpty(outputEs, output);
+	}
+
 	public String getOutputEs() {
 		return outputEs;
 	}
 
 	public void setOutputEs(String outputEs) {
 		this.outputEs = outputEs;
+	}
+
+	public String getDefaultCommentsEs() {
+		return defaultIfEmpty(commentsEs, comments);
 	}
 
 	public String getCommentsEs() {
@@ -219,6 +244,10 @@ public class Problem {
 		this.comments = commentsEN;
 	}
 
+	public String getDefaultTitlePt() {
+		return defaultIfEmpty(titlePt, title);
+	}
+
 	public String getTitlePt() {
 		return titlePt;
 	}
@@ -231,8 +260,16 @@ public class Problem {
 		return descriptionPt;
 	}
 
+	public String getDefaultDescriptionPt() {
+		return defaultIfEmpty(descriptionPt, description);
+	}
+
 	public void setDescriptionPt(String descriptionPt) {
 		this.descriptionPt = descriptionPt;
+	}
+
+	public String getDefaultInputPt() {
+		return defaultIfEmpty(inputPt, input);
 	}
 
 	public String getInputPt() {
@@ -247,6 +284,10 @@ public class Problem {
 		return outputPt;
 	}
 
+	public String getDefaultOutputPt() {
+		return defaultIfEmpty(outputPt, input);
+	}
+
 	public void setOutputPt(String outputPt) {
 		this.outputPt = outputPt;
 	}
@@ -254,6 +295,11 @@ public class Problem {
 	public String getCommentsPt() {
 
 		return commentsPt;
+	}
+
+	public String getDefaultCommentsPt() {
+
+		return defaultIfEmpty(commentsPt, comments);
 	}
 
 	public void setCommentsPt(String commentsPt) {
@@ -599,7 +645,7 @@ public class Problem {
 	}
 
 	public String getTitle() {
-	//	title = selectByLanguage(titleEs, title, titlePt, userLanguage);
+		title = selectByLanguage(titleEs, title, titlePt, userLanguage);
 		return title;
 	}
 
@@ -1160,19 +1206,16 @@ public class Problem {
 			languageids[i++] = language.getLid();
 		}
 	}
-	
+
 	public boolean isAvailableInEn() {
-		if(title == null || description == null || input == null || output == null) return false;		
-		return !title.equals("") && !description.equals("") && !input.equals("") && !output.equals("");
+		return !(StringUtils.isEmpty(title) || StringUtils.isEmpty(description) || StringUtils.isEmpty(input) || StringUtils.isEmpty(output));
 	}
-	
+
 	public boolean isAvailableInEs() {
-		if(titleEs == null || descriptionEs == null || inputEs == null || outputEs == null) return false;
-		return !titleEs.equals("") && !descriptionEs.equals("") && !inputEs.equals("") && !outputEs.equals("");
+		return !(StringUtils.isEmpty(titleEs) || StringUtils.isEmpty(descriptionEs) || StringUtils.isEmpty(inputEs) || StringUtils.isEmpty(outputEs));
 	}
-	
+
 	public boolean isAvailableInPt() {
-		if(titlePt == null || descriptionPt == null || inputPt == null || outputPt == null) return false;
-		return !titlePt.equals("") && !descriptionPt.equals("") && !inputPt.equals("") && !outputPt.equals("");
+		return !(StringUtils.isEmpty(titlePt) || StringUtils.isEmpty(descriptionPt) || StringUtils.isEmpty(inputPt) || StringUtils.isEmpty(outputPt));
 	}
 }

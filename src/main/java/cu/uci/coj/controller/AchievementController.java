@@ -29,10 +29,6 @@ public class AchievementController extends BaseController {
             int uid = userDAO.integer("select.uid.by.username", username);
             trophies = userDAO.objects("achievements.by.user",Achievement.class,uid);
         }
-        else{
-        	//FIXME Esta consulta no existe!
-            trophies = userDAO.objects("achievements.all",Achievement.class);
-        }
         
         model.addAttribute("achievements",trophies);
         return "/general/achievements";

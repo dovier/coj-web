@@ -429,8 +429,8 @@ public class PlagiCojController extends BaseController implements PlagiCOJClient
         return "/plagicoj/sourcecodedetectorresult";
     }
     
-    @RequestMapping(produces = "application/json",value = "/plagicoj/saverevision.xhtml", method = RequestMethod.POST,headers = {"Accept=application/json"})
-    public  @ResponseBody() String saveRevision(SecurityContextHolderAwareRequestWrapper requestWrapper, Model model,@RequestParam(required = false, value = "ssid") Integer sourceSubmission, @RequestParam(required = false, value = "didd") Integer destinationSubmission, @RequestParam(required = false, defaultValue = "0", value = "eval") Integer evaluation, @RequestParam(required = false, value = "comment") String comment, Principal principal) throws Exception {        
+    @RequestMapping(produces = "application/json",value = "/plagicoj/saverevision.json", method = RequestMethod.POST,headers = {"Accept=application/json"})
+    public  @ResponseBody String saveRevision(SecurityContextHolderAwareRequestWrapper requestWrapper, Model model,@RequestParam(required = false, value = "ssid") Integer sourceSubmission, @RequestParam(required = false, value = "didd") Integer destinationSubmission, @RequestParam(required = false, defaultValue = "0", value = "eval") Integer evaluation, @RequestParam(required = false, value = "comment") String comment, Principal principal) throws Exception {        
        
         return "{\"state\":\"success\"}";
     }

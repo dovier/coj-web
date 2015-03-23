@@ -17,13 +17,14 @@ import cu.uci.coj.controller.BaseController;
 @Controller
 @RequestMapping(value = "/json/contests")
 @Scope("session")
+@Deprecated
 public class JsonContestController extends BaseController {
 
     @Resource
     private JsonContestDAO jsonContestDAO;
    
     @RequestMapping(produces = "application/json",value = "/current.json", method = RequestMethod.GET,headers = {"Accept=application/json"})
-    public @ResponseBody() List<JsonContest> runningAndComingContests() {
+    public @ResponseBody List<JsonContest> runningAndComingContests() {
         return jsonContestDAO.runningAndComingContest();
     }
 

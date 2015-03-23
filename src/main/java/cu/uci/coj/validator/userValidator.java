@@ -91,7 +91,7 @@ public class userValidator implements Validator {
 		User user = (User) o;
 
 		if (!user.isTeam())
-			ValidationUtils.rejectIfEmpty(errors, "role", "mandatory.field");
+			ValidationUtils.rejectIfEmpty(errors, "authorities", "mandatory.field");
 
 		user.setDob(new Date(user.getYear() - 1900, user.getMonth() - 1, user.getDay()));
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nick", "errormsg.10");

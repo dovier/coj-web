@@ -75,7 +75,7 @@ public class WbBoardController extends BaseController {
 		wbSiteDAO.setSiteEnabled(sid, enabled ^ true);		
 	}
 	
-	@RequestMapping(value = "/manageparsers/parse.xhtml", method = RequestMethod.POST)
+	@RequestMapping(value = "/manageparsers/parse.json", method = RequestMethod.POST)
 	@ResponseBody
 	public boolean parseParsers(@RequestParam Integer sid){
 		return wbParserManager.parseSite(sid);

@@ -52,8 +52,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
 	public IPaginatedList<SubmissionJudge> pendingBalloons(int cid, PagingOptions options, String group) {
 		if (StringUtils.hasText(group))
-			return paginated("pending.balloons.grouped", SubmissionJudge.class, 10, options, cid, group);
-		return paginated("pending.balloons", SubmissionJudge.class, 10, options, cid);
+			return paginated("pending.balloons.grouped", SubmissionJudge.class, 10, options, cid, group,cid);
+		return paginated("pending.balloons", SubmissionJudge.class, 10, options, cid,cid);
 	}
 
 	public void markBalloon(int sid) {

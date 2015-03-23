@@ -20,6 +20,12 @@
 						<option value="true"><spring:message code="link.logged" /></option>
 					</select>
 				</div>
+				<div class="form-group">
+					<select name="following" class="form-control">
+						<option value="false"><spring:message code="link.all" /></option>
+						<option value="true"><spring:message code="link.followed" /></option>
+					</select>
+				</div>
 			<div class="form-group">	
 			<input id="filter-button" type="submit" class="btn btn-primary"
 				value="<spring:message code="button.filter"/>">
@@ -43,12 +49,5 @@
 	<!-- /content -->
 </div>
 <script>
-	$(function() {
-		$('#filter-button').click(function(event) {
-			displayTableReload($('#filter-form').formSerialize());
-			event.preventDefault();
-		});
-	});
-
-	$(document).ready(displayTableReload($('#filter-form').formSerialize()));
+$(initStandardFilterForm);
 </script>

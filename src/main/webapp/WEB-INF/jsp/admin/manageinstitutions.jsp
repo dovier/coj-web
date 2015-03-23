@@ -31,3 +31,6 @@
 
     <div id="display-table-container" data-reload-url="/admin/tables/manageinstitutions.xhtml"></div>
 </div>
+<script>
+$(initStandardFilterForm);
+</script>

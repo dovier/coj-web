@@ -26,7 +26,6 @@ import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.Lexer;
 import org.antlr.runtime.Token;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -42,8 +41,6 @@ import cu.uci.coj.exceptions.PlagiCOJUnsupportedLanguageException;
 import cu.uci.coj.model.DatagenDataset;
 import cu.uci.coj.model.Filter;
 import cu.uci.coj.model.Language;
-import cu.uci.coj.model.Rejudge;
-import cu.uci.coj.model.RepointUser;
 import cu.uci.coj.model.Stats;
 import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.plagicoj.lexers.PlagiCOJCLexer;
@@ -61,7 +58,6 @@ public class Utils {
 	private static RabbitTemplate submitTemplate;
 	@Autowired
 	private RabbitAdmin rabbitAdmin;
-
 	@Resource
 	private SubmissionDAO submissionDAO;
 	@Resource
@@ -73,7 +69,8 @@ public class Utils {
 	}
 
 	public boolean supportExtension(String filename) {
-		String[] extensions = ".c,.cpp,.java,.py,.cs,.pl,.pas,.php,.rb,.txt".split(",");
+		String[] extensions = ".c,.cpp,.java,.py,.cs,.pl,.pas,.php,.rb,.txt,.js"
+				.split(",");
 		for (int i = 0; i < extensions.length; i++) {
 			String string = extensions[i];
 			if (filename.endsWith(string)) {
@@ -92,7 +89,8 @@ public class Utils {
 	public void rejudgeSubmits(Filter filter) {
 
 		PagingOptions options = new PagingOptions();
-		List<SubmissionJudge> submissions = submissionDAO.rejudgeSubmits(filter, options);
+		List<SubmissionJudge> submissions = submissionDAO.rejudgeSubmits(
+				filter, options);
 		while (!CollectionUtils.isEmpty(submissions)) {
 			for (SubmissionJudge submission : submissions) {
 				if (filter.getCid() != null && filter.getCid() != 0)
@@ -107,7 +105,9 @@ public class Utils {
 	}
 
 	public SubmissionJudge rejudgeContestSubmit(int sid) {
-		SubmissionJudge submit = submissionDAO.object("select.contest.submit.for.removal", SubmissionJudge.class, sid);
+		SubmissionJudge submit = submissionDAO
+				.object("select.contest.submit.for.removal",
+						SubmissionJudge.class, sid);
 		if (submit != null) {
 			startCalification(submit);
 		}
@@ -115,7 +115,8 @@ public class Utils {
 	}
 
 	public SubmissionJudge rejudgeSubmit(int sid) {
-		SubmissionJudge submit = submissionDAO.object("select.submit.for.removal", SubmissionJudge.class, sid);
+		SubmissionJudge submit = submissionDAO.object(
+				"select.submit.for.removal", SubmissionJudge.class, sid);
 		if (submit != null) {
 			submissionDAO.removeEffects(submit);
 			startCalification(submit);
@@ -123,7 +124,9 @@ public class Utils {
 		return submit;
 	}
 
-	public static final String[] colorPerDictum = { "#00FF00", "#00FF55", "#00FFAA", "#00FFFF", "#0080FF", "#0000FF", "#8000FF", "#FF00FF", "#FF0080", "#FF0000" };
+	public static final String[] colorPerDictum = { "#00FF00", "#00FF55",
+			"#00FFAA", "#00FFFF", "#0080FF", "#0000FF", "#8000FF", "#FF00FF",
+			"#FF0080", "#FF0000" };
 	private static HashMap<String, LinkedList<String>> charge;
 	private String registerMSG = "Dear <user> ";
 	public static HashMap<String, Float> statistics;
@@ -195,17 +198,13 @@ public class Utils {
 		submitTemplate.convertAndSend(submit);
 	}
 
+	public void startAndWaitForCalification(SubmissionJudge submit) {
+		submitTemplate.convertSendAndReceive(submit);
+	}
+
 	public void startCalification(List<SubmissionJudge> submits) {
 		for (SubmissionJudge submit : submits)
 			submitTemplate.convertAndSend(submit);
-	}
-
-	public static void startRejudge(Rejudge rejudge) {
-		cojEvalImpl.startRejudge(rejudge);
-	}
-
-	public static void startUserRepoint(RepointUser repoint) {
-		cojEvalImpl.startUserRepoint(repoint);
 	}
 
 	public static boolean isONline(String username) {
@@ -226,7 +225,8 @@ public class Utils {
 	 *         el problema
 	 */
 	public List<String> getDatasetsNames(int pid) {
-		File problemFile = new File(Config.getProperty("problems.directory"), String.valueOf(pid));
+		File problemFile = new File(Config.getProperty("problems.directory"),
+				String.valueOf(pid));
 
 		List<String> result = new ArrayList<>();
 		File[] list = problemFile.listFiles(new FilenameFilter() {
@@ -241,7 +241,8 @@ public class Utils {
 			File file = list[i];
 			name = file.getName().split(".in$")[0];
 			Path pathIn = problemFile.toPath().resolve(Paths.get(name + ".in"));
-			Path pathOut = problemFile.toPath().resolve(Paths.get(name + ".out"));
+			Path pathOut = problemFile.toPath().resolve(
+					Paths.get(name + ".out"));
 			if (Files.exists(pathIn) && Files.exists(pathOut)) {
 				result.add(name);
 			}
@@ -257,50 +258,77 @@ public class Utils {
 	 * @return una lista ordenada de fotos del contest
 	 */
 	public List<String> getContestImages(int cid) {
-		File contestFile = new File(Config.getProperty("base.contest.images"), String.valueOf(cid));
+		File contestFile = new File(Config.getProperty("base.contest.images"),
+				String.valueOf(cid));
 
 		List<String> result = new ArrayList<>();
 		File[] list = contestFile.listFiles(new FilenameFilter() {
 
 			@Override
 			public boolean accept(File arg0, String arg1) {
-				return arg1.toLowerCase().endsWith(".png") || arg1.toLowerCase().endsWith(".jpg");
+				return arg1.toLowerCase().endsWith(".png")
+						|| arg1.toLowerCase().endsWith(".jpg");
 			}
 		});
-		
+
 		if (!ArrayUtils.isEmpty(list))
-		for (int i = 0; i < list.length; i++) {
-			result.add(list[i].getName());
-		}
+			for (int i = 0; i < list.length; i++) {
+				result.add(list[i].getName());
+			}
 		return result;
 	}
 
 	public Set<String> getDatasets(int pid) {
-		File problemFile = new File(Config.getProperty("problems.directory"), String.valueOf(pid));
+		File problemFile = new File(Config.getProperty("problems.directory"),
+				String.valueOf(pid));
 
 		Set<String> result = new HashSet<>();
 		File[] list = problemFile.listFiles();
 		for (int i = 0; i < list.length; i++) {
 			File file = list[i];
-			if (file.isFile() && (file.getName().endsWith(".out") || file.getName().endsWith(".in")))
+			if (file.isFile()
+					&& (file.getName().endsWith(".out") || file.getName()
+							.endsWith(".in")))
 				result.add(file.getName());
 		}
 
 		return result;
 	}
 
-	public void removeDataset(int pid, String dataset) {
+	public void removeDatasets(int pid) {
 		try {
-			Files.deleteIfExists(Paths.get(Config.getProperty("problems.directory"), String.valueOf(pid)).resolve(dataset + ".in"));
-			Files.deleteIfExists(Paths.get(Config.getProperty("problems.directory"), String.valueOf(pid)).resolve(dataset + ".out"));
+			Set<String> datasets = getDatasets(pid);
+			for (String dataset : datasets) {
+				Files.deleteIfExists(Paths.get(
+						Config.getProperty("problems.directory"),
+						String.valueOf(pid)).resolve(dataset + ".in"));
+				Files.deleteIfExists(Paths.get(
+						Config.getProperty("problems.directory"),
+						String.valueOf(pid)).resolve(dataset + ".out"));
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void removeDataset(int pid, String dataset) {
+		try {
+			Files.deleteIfExists(Paths.get(
+					Config.getProperty("problems.directory"),
+					String.valueOf(pid)).resolve(dataset + ".in"));
+			Files.deleteIfExists(Paths.get(
+					Config.getProperty("problems.directory"),
+					String.valueOf(pid)).resolve(dataset + ".out"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void removeImage(int cid, String image) {
 		try {
-			Files.deleteIfExists(Paths.get(Config.getProperty("base.contest.images"), String.valueOf(cid)).resolve(image));
+			Files.deleteIfExists(Paths.get(
+					Config.getProperty("base.contest.images"),
+					String.valueOf(cid)).resolve(image));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -316,7 +344,8 @@ public class Utils {
 	 * @param problem
 	 */
 	public void normalizeProblem(int pid) {
-		File problemFile = new File(Config.getProperty("problems.directory"), String.valueOf(pid));
+		File problemFile = new File(Config.getProperty("problems.directory"),
+				String.valueOf(pid));
 
 		Set<String> datasets = getDatasets(pid);
 
@@ -334,7 +363,8 @@ public class Utils {
 					e.printStackTrace();
 				}
 			} else
-				dos2Unix(problemFile.toPath().resolve(fullname).toAbsolutePath());
+				dos2Unix(problemFile.toPath().resolve(fullname)
+						.toAbsolutePath());
 		}
 
 		if (needReload)
@@ -342,7 +372,8 @@ public class Utils {
 		// para los datasets restantes, se le quitan los espacios en blanco y se
 		// sustituyen por .
 		for (String dataset : datasets) {
-			new File(problemFile, dataset).renameTo(new File(problemFile, dataset.replace(" ", ".")));
+			new File(problemFile, dataset).renameTo(new File(problemFile,
+					dataset.replace(" ", ".")));
 		}
 	}
 
@@ -370,7 +401,8 @@ public class Utils {
 
 	public static void removeUser(String sessionID) {
 		if (sessionIdUsers != null && onlineusers != null) {
-			if (sessionIdUsers.containsKey(sessionID) && onlineusers.containsKey(sessionIdUsers.get(sessionID))) {
+			if (sessionIdUsers.containsKey(sessionID)
+					&& onlineusers.containsKey(sessionIdUsers.get(sessionID))) {
 				onlineusers.remove(sessionIdUsers.get(sessionID));
 				sessionIdUsers.remove(sessionID);
 			}
@@ -386,7 +418,8 @@ public class Utils {
 			} else {
 				// ip_url.put(request.getRequestedSessionId(),
 				// request.getRequestURI() + "?" + request.getQueryString());
-				request.setAttribute("rurl", request.getRequestURI() + "?" + request.getQueryString());
+				request.setAttribute("rurl", request.getRequestURI() + "?"
+						+ request.getQueryString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -522,10 +555,12 @@ public class Utils {
 	}
 
 	public static double formula(int ac) {
-		return (double) Integer.valueOf(Config.getProperty("formula.value")) / (double) (40 + ac);
+		return (double) Integer.valueOf(Config.getProperty("formula.value"))
+				/ (double) (40 + ac);
 	}
 
-	public static List<Token> getTokens(String sourceCode, String language) throws Exception {
+	public static List<Token> getTokens(String sourceCode, String language)
+			throws Exception {
 		Lexer lexer = null;
 		if (language.compareTo("C++") == 0) {
 			lexer = new PlagiCOJCppLexer(new ANTLRStringStream(sourceCode));

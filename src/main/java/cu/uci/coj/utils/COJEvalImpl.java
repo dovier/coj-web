@@ -28,30 +28,6 @@ public class COJEvalImpl {
         }*/
     }
 
-    public void startRejudge(Rejudge rejudge) {
-    /*    try {
-            Socket cx = new Socket(InetAddress.getByName(Config.getProperty("server.listener")), new Integer(Config.getProperty("server.listener.port")));
-            ObjectOutputStream output = new ObjectOutputStream(cx.getOutputStream());
-            output.writeObject(rejudge);
-            output.close();
-            cx.close();
-        } catch (IOException ex) {
-            Logger.getLogger(COJEvalImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-    }
-
-    public void startUserRepoint(RepointUser repoint) {
-   /*     try {
-            Socket cx = new Socket(InetAddress.getByName(Config.getProperty("server.listener")), new Integer(Config.getProperty("server.listener.port")));
-            ObjectOutputStream output = new ObjectOutputStream(cx.getOutputStream());
-            output.writeObject(repoint);
-            output.close();
-            cx.close();
-        } catch (IOException ex) {
-            Logger.getLogger(COJEvalImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-    }
-
     volatile Semaphore semaphore = new Semaphore(1, true);
 
     public String generateOutput(DatagenDataset dataset) {

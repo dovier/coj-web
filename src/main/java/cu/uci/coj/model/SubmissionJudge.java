@@ -22,6 +22,7 @@ public class SubmissionJudge implements Serializable {
 	private int uid;
 	private Date date;
 	private Verdicts verdict;
+	private boolean test;
 
 	private int sid;
 	private int timeLimit;
@@ -30,7 +31,6 @@ public class SubmissionJudge implements Serializable {
 	private String lang;
 	private String source;
 	private boolean specialJudge;
-
 	// response attributes
 	private int timeUsed;
 	private int cpuTimeUsed;
@@ -91,6 +91,17 @@ public class SubmissionJudge implements Serializable {
 	private boolean haspriviligeForProblem;
 	private int course_id = 0;
 	
+	
+	
+
+	public boolean isTest() {
+		return test;
+	}
+
+	public void setTest(boolean test) {
+		this.test = test;
+	}
+
 	//FIXME:parche debido a que submit_id(bd) no es igual a sid(objeto). Los select * no sirven.
 	//La base de datos esta mal, debemos cambiarla.
 	public void setSubmitId(int sid) {

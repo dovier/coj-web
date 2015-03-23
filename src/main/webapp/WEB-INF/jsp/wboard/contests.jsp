@@ -49,7 +49,7 @@ $(document).ready(function(){
             data:{"followed":followed},
             success:function (datas){
             	$("#combo-select").html(datas);     
-            	displayTableReload($('#filter-form').formSerialize());
+            	displayTableReload($("#filter-form :input[value]").serialize());
             }              
         });
 		
@@ -62,7 +62,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		if($(this).text() == follow_text) {
 			$.ajax({
-	            url: "/wboard/follow.xhtml",
+	            url: "/wboard/follow.json",
 	            type: 'POST',
 	            data:{"sid": elem.data("site-id")},
 	            success:function (datos){
@@ -73,7 +73,7 @@ $(document).ready(function(){
 	        });
 		} else {
 			$.ajax({
-	            url: "/wboard/unfollow.xhtml",
+	            url: "/wboard/unfollow.json",
 	            type: 'POST',
 	            data:{"sid": elem.data("site-id")},
 	            success:function (datos){
@@ -91,7 +91,7 @@ $(document).ready(function(){
 	
 	$('#combo-select').on("change", "#site-select", function(){
 		var option = $(this);
-		displayTableReload($('#filter-form').formSerialize());
+		displayTableReload($("#filter-form :input[value]").serialize());
 		$("button").each(function(){
 			var elem = $(this);
 			if(elem.data("site-id") == option.val()) {

@@ -40,7 +40,7 @@ public class AMQPConfiguration {
 	}
 
 	@Bean
-	public RabbitTemplate rabbitTemplate() {
+	public RabbitTemplate submitTemplate() {
 		RabbitTemplate bean = new RabbitTemplate(connectionFactory());
 		bean.setMessageConverter(jsonMessageConverter());
 		// para enviar, el binding del exchange se configura en el rabbitmq
@@ -48,7 +48,7 @@ public class AMQPConfiguration {
 		bean.setExchange(env.getProperty("submit.exchange"));
 		return bean;
 	}
-
+	
 	@Autowired
 	private UEngineMessageListener messageListener;
 

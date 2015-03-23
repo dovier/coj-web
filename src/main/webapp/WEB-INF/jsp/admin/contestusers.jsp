@@ -254,11 +254,7 @@
 
 				<td>${user.group}</td>
 				<td>
-				<a
-					href="repointuser.xhtml?username=${user.username}&cid=${contest.cid}"><img
-			src="<c:url value="/images/repoint.png"/>"
-			alt="<spring:message code="altval.repoint"/>"
-			title="<spring:message code="titval.repoint"/>" /></a>
+				
 &nbsp;
 <a href="deleteusercontest.xhtml?uid=${user.uid}&cid=${contest.cid}"><i class="fa fa-trash"></i></a>
 			</td>

@@ -21,6 +21,7 @@ import cu.uci.coj.model.Registration;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.Team;
 import cu.uci.coj.model.User;
+import cu.uci.coj.model.UserClassificationStats;
 import cu.uci.coj.model.UserProfile;
 import cu.uci.coj.query.DmlPart;
 import cu.uci.coj.query.Order;
@@ -36,6 +37,16 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
 	private int number;
 
+	public void unbanUser(int uid) {
+		dml("update users set ban_reason=null,status='inactive',enabled=true,ban_date=null where uid=?",
+				uid);
+	}
+
+	public void banUser(int uid, String description) {
+		dml("update users set ban_reason=?,status='banned',enabled=false,ban_date=now() where uid=?",
+				description, uid);
+	}
+
 	@Resource
 	private MailNotificationService mailNotificationService;
 
@@ -48,21 +59,38 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		return strings("get.user.in.contest", cid);
 	}
 
-	public void UpdateUser(int id, String pass, int country, int institution, boolean enabled, String nick, int locale, Registration registration) {
-		dml.update("users", Where.eq("uid", id), DmlPart.check("password", pass), DmlPart.check("access_rule", registration.getAccess_rule()), DmlPart.check("country_id", country),
-				DmlPart.check("nick", nick), DmlPart.check("locale", locale), DmlPart.check("inst_id", institution), DmlPart.check("enabled", enabled),
-				DmlPart.check("lid", registration.getPlanguage()), DmlPart.check("gender", registration.getGender()),
-				DmlPart.check("contest_notifications", Boolean.valueOf(registration.isContestNotifications())),
-				DmlPart.check("submition_notifications", Boolean.valueOf(registration.isSubmissionNotifications())),
-				DmlPart.check("entries_notifications", Boolean.valueOf(registration.isEntriesNotifications())));
+	public void UpdateUser(int id, String pass, int country, int institution,
+			boolean enabled, String nick, int locale, Registration registration) {
+		dml.update("users", Where.eq("uid", id), DmlPart
+				.check("password", pass), DmlPart.check("access_rule",
+				registration.getAccess_rule()), DmlPart.check("country_id",
+				country), DmlPart.check("nick", nick), DmlPart.check("locale",
+				locale), DmlPart.check("inst_id", institution), DmlPart.check(
+				"enabled", enabled), DmlPart.check("lid",
+				registration.getPlanguage()), DmlPart.check("gender",
+				registration.getGender()), DmlPart.check(
+				"contest_notifications",
+				Boolean.valueOf(registration.isContestNotifications())),
+				DmlPart.check("submition_notifications", Boolean
+						.valueOf(registration.isSubmissionNotifications())),
+				DmlPart.check("entries_notifications",
+						Boolean.valueOf(registration.isEntriesNotifications())));
 	}
 
 	public void UpdateUserProfile(Registration registration, int uid) {
-		dml.update("user_profile", Where.eq("uid", uid), DmlPart.check("fullname", registration.getName()), DmlPart.check("fullname", registration.getName()),
-				DmlPart.check("lastname", registration.getLastname()), DmlPart.check("fullname", registration.getName()),
-				DmlPart.check("email", (registration.getEmail() != null && registration.isUpdateemail()) ? registration.getEmail() : null),
-				DmlPart.check("mail_quote", (registration.isUpdateemail()) ? registration.getMail_quote() : null), DmlPart.check("dob", registration.getDob().toString()),
-				DmlPart.check("show_dob", Boolean.valueOf(registration.isShowdob())));
+		dml.update("user_profile", Where.eq("uid", uid), DmlPart.check(
+				"fullname", registration.getName()), DmlPart.check("fullname",
+				registration.getName()), DmlPart.check("lastname",
+				registration.getLastname()), DmlPart.check("fullname",
+				registration.getName()), DmlPart.check("email",
+				(registration.getEmail() != null && registration
+						.isUpdateemail()) ? registration.getEmail() : null),
+				DmlPart.check(
+						"mail_quote",
+						(registration.isUpdateemail()) ? registration
+								.getMail_quote() : null), DmlPart.check("dob",
+						registration.getDob().toString()), DmlPart.check(
+						"show_dob", Boolean.valueOf(registration.isShowdob())));
 	}
 
 	@Transactional(readOnly = true)
@@ -96,10 +124,19 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public int countEnabledUsersForScoreboard(String pattern, boolean online) {
+	public int countEnabledUsersForScoreboard(String pattern, boolean online,
+			Integer uid) {
+		
+		String sql = "user_profile join users on user_profile.uid= users.uid join country on country.country_id = users.country_id join user_stats on user_stats.uid = users.uid join institution on institution.inst_id = users.inst_id";
+		if (uid != null)
+			sql += " join followers on followers.uid = users.uid and followers.fid="+uid;
 		Query query = new Query(
-				"user_profile join users on user_profile.uid= users.uid join country on country.country_id = users.country_id join user_stats on user_stats.uid = users.uid join institution on institution.inst_id = users.inst_id");
-		query.where(Where.yes("users.enabled"), Where.yes(online ? "online" : null), Where.or(Where.ilike("username", pattern), Where.ilike("nick", pattern)));
+				sql);
+		query.where(
+				Where.yes("users.enabled"),
+				Where.yes(online ? "online" : null),
+				Where.or(Where.ilike("username", pattern),
+						Where.ilike("nick", pattern)));
 		return integer(query.count(), query.arguments());
 	}
 
@@ -118,24 +155,34 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
 			query.order(asc ? Order.asc(ord) : Order.desc(ord));
 		} else {
-			query.order(Order.desc("points"), Order.desc("ac"), Order.asc("total"), Order.asc("user_stats.last_accepted"), Order.asc("users.registration_date"));
+			query.order(Order.desc("points"), Order.desc("ac"),
+					Order.asc("total"), Order.asc("user_stats.last_accepted"),
+					Order.asc("users.registration_date"));
 		}
 	}
 
-	@Transactional(readOnly=true)
-	public String userByMail(String mail) {
-		return string("user.by.mail",mail);
-	}
-	
 	@Transactional(readOnly = true)
-	public IPaginatedList<User> getUserRanking(String pattern, int found, boolean online, PagingOptions options) {
+	public String userByMail(String mail) {
+		return string("user.by.mail", mail);
+	}
 
-		Query query = new Query(
-				"public.users join country on public.users.country_id=country.country_id join institution on public.users.inst_id= institution.inst_id join user_stats on user_stats.uid= public.users.uid join user_profile on user_profile.uid= users.uid");
-		query.where(Where.yes("users.enabled"), Where.or(Where.ilike("users.username", pattern), Where.ilike("nick", pattern)), Where.yes(online ? "online" : null));
+	@Transactional(readOnly = true)
+	public IPaginatedList<User> getUserRanking(String pattern, int found,
+			boolean online, Integer uid, PagingOptions options) {
+
+		String sql = "public.users join country on public.users.country_id=country.country_id join institution on public.users.inst_id= institution.inst_id join user_stats on user_stats.uid= public.users.uid join user_profile on user_profile.uid= users.uid";
+		if (uid != null)
+			sql += " join followers on followers.uid = users.uid and followers.fid="+uid;
+		Query query = new Query(sql);
+		query.where(
+				Where.yes("users.enabled"),
+				Where.or(Where.ilike("users.username", pattern),
+						Where.ilike("nick", pattern)),
+				Where.yes(online ? "online" : null));
 
 		query.paginate(options, 30);
-		userOrder(query, options.getSort(), "asc".equals(options.getDirection()));
+		userOrder(query, options.getSort(),
+				"asc".equals(options.getDirection()));
 		List<User> users = objects(
 				query.select("status,country.zip as country,country.name as country_desc,institution.zip as institution,institution.name as institution_desc,username,nick,(ac+fle+rte+ce+wa+mle+tle+ole+pe) as total,ac as acc,uaccu as accu,points,online,case when (ac+wa+pe+ce+rte+tle+fle+mle+fle+ole) > 0 then (cast(ac as double precision)/(ac+wa+pe+ce+rte+tle+fle+mle+fle+ole))*100 else 0 end as percent"),
 				User.class, query.arguments());
@@ -149,34 +196,22 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public List<User> getUserRanking(String pattern, boolean online, PagingOptions options) {
+	public int countEnabledUsersByInstitutions(String pattern, boolean online,
+			int inst_id) {
 		Query query = new Query(
-				"public.users join country on public.users.country_id=country.country_id join institution on public.users.inst_id = institution.inst_id join user_stats on user_stats.uid = public.users.uid join user_profile on user_profile.uid = users.uid");
-		query.where(Where.yes("enabled"), Where.or(Where.ilike("users.username", pattern), Where.ilike("nick", pattern)), Where.yes(online ? "online" : null));
-		userOrder(query, null, false);
-		query.paginate(options, 30);
-		List<User> users = objects(query.select("country.zip as country,country.name as country_desc,institution.zip as institution,institution.name as institution_desc,username,nick,"
-				+ "(ac+fle+rte+ce+wa+mle+tle+ole+pe) as total," + "ac as acc,ac as accu,points,online,"
-				+ "case when (ac+wa+pe+ce+rte+tle+fle+mle+fle+ole) > 0 then (cast(ac as double precision)/(ac+wa+pe+ce+rte+tle+fle+mle+fle+ole))*100 else 0 end as percent"), User.class,
-				query.arguments());
-
-		number = options.getOffset(30);
-		for (int i = 0; i < users.size(); i++) {
-			users.get(i).setRank(number + i + 1);
-		}
-
-		return users;
+				"user_profile join users on user_profile.uid= users.uid");
+		query.where(
+				Where.yes("enabled"),
+				Where.eq("inst_id", inst_id),
+				online ? Where.yes("online") : Where.noop(),
+				Where.or(Where.ilike("username", pattern),
+						Where.ilike("nick", pattern)));
+		return integer(query.count(), query.arguments());
 	}
 
 	@Transactional(readOnly = true)
-	public int countEnabledUsersByInstitutions(String pattern, boolean online, int inst_id) {
-		Query query = new Query("user_profile join users on user_profile.uid= users.uid");
-		query.where(Where.yes("enabled"),Where.eq("inst_id",inst_id),online?Where.yes("online"):Where.noop(),Where.or(Where.ilike("username", pattern),Where.ilike("nick", pattern)));
-		return integer(query.count(),query.arguments());
-	}
-
-	@Transactional(readOnly = true)
-	public int countEnabledUsersByCountry(String pattern, boolean online, int country_id) {
+	public int countEnabledUsersByCountry(String pattern, boolean online,
+			int country_id) {
 		String sql = getSql("count.enabled.users.bycountry");
 		List<Object> list = new LinkedList<Object>();
 		list.add(country_id);
@@ -192,17 +227,25 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<User> getInstitutionUsersRanking(String pattern, int found, boolean online, PagingOptions options, int inst_id) {
+	public IPaginatedList<User> getInstitutionUsersRanking(String pattern,
+			int found, boolean online, PagingOptions options, int inst_id) {
 		Query query = new Query(
 				"public.users join country on public.users.country_id=country.country_id join institution on public.users.inst_id= institution.inst_id join user_stats on user_stats.uid= public.users.uid join user_profile on user_profile.uid= users.uid");
-		query.where(Where.yes("users.enabled"), Where.eq("users.inst_id", inst_id), Where.or(Where.ilike("users.username", pattern), Where.ilike("nick", pattern)),
+		query.where(
+				Where.yes("users.enabled"),
+				Where.eq("users.inst_id", inst_id),
+				Where.or(Where.ilike("users.username", pattern),
+						Where.ilike("nick", pattern)),
 				Where.yes(online ? "online" : null, online));
-		userOrder(query, options.getSort(), "asc".equals(options.getDirection()));
+		userOrder(query, options.getSort(),
+				"asc".equals(options.getDirection()));
 		query.paginate(options, 30);
-		List<User> users = objects(query.select("status,country.zip as country,country.name as country_desc,institution.zip as institution,institution.name as institution_desc,username,nick,"
-				+ "(ac+fle+rte+ce+wa+mle+tle+ole+pe) as total," + "ac as acc,ac as accu,points,online,"
-				+ "case when (ac+wa+pe+ce+rte+tle+fle+mle+fle+ole) > 0 then (cast(ac as double precision)/(ac+wa+pe+ce+rte+tle+fle+mle+fle+ole))*100 else 0 end as percent"), User.class,
-				query.arguments());
+		List<User> users = objects(
+				query.select("status,country.zip as country,country.name as country_desc,institution.zip as institution,institution.name as institution_desc,username,nick,"
+						+ "(ac+fle+rte+ce+wa+mle+tle+ole+pe) as total,"
+						+ "ac as acc,ac as accu,points,online,"
+						+ "case when (ac+wa+pe+ce+rte+tle+fle+mle+fle+ole) > 0 then (cast(ac as double precision)/(ac+wa+pe+ce+rte+tle+fle+mle+fle+ole))*100 else 0 end as percent"),
+				User.class, query.arguments());
 
 		number = options.getOffset(30);
 		for (int i = 0; i < users.size(); i++) {
@@ -212,17 +255,35 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<User> getCountryUsersRanking(String pattern, int found, boolean online, PagingOptions options, int country_id) {
+	public IPaginatedList<User> getCountryUsersRanking(String pattern,
+			int found, boolean online, PagingOptions options, int country_id) {
 		Query query = new Query(
 				"public.users join country on public.users.country_id=country.country_id join institution on public.users.inst_id= institution.inst_id join user_stats on user_stats.uid= public.users.uid join user_profile on user_profile.uid= users.uid");
-		query.where(Where.yes("users.enabled"), Where.eq("users.country_id", country_id), Where.or(Where.ilike("users.username", pattern), Where.ilike("nick", pattern)),
+		query.where(
+				Where.yes("users.enabled"),
+				Where.eq("users.country_id", country_id),
+				Where.or(Where.ilike("users.username", pattern),
+						Where.ilike("nick", pattern)),
 				Where.yes(online ? "online" : null));
-		userOrder(query, options.getSort(), "asc".equals(options.getDirection()));
+		userOrder(query, options.getSort(),
+				"asc".equals(options.getDirection()));
 		query.paginate(options, 30);
-		List<User> users = objects(query.select("status", "country.zip as country", "country.name as country_desc", "institution.zip as institution", "institution.name as institution_desc",
-				"username", "nick", "(ac+fle+rte+ce+wa+mle+tle+ole+pe) as total", "ac as acc", "ac as accu", "points", "online",
-				"case when (ac+wa+pe+ce+rte+tle+fle+mle+fle+ole) > 0 then (cast(ac as double precision)/(ac+wa+pe+ce+rte+tle+fle+mle+fle+ole))*100 else 0 end as percent"), User.class,
-				query.arguments());
+		List<User> users = objects(
+				query.select(
+						"status",
+						"country.zip as country",
+						"country.name as country_desc",
+						"institution.zip as institution",
+						"institution.name as institution_desc",
+						"username",
+						"nick",
+						"(ac+fle+rte+ce+wa+mle+tle+ole+pe) as total",
+						"ac as acc",
+						"ac as accu",
+						"points",
+						"online",
+						"case when (ac+wa+pe+ce+rte+tle+fle+mle+fle+ole) > 0 then (cast(ac as double precision)/(ac+wa+pe+ce+rte+tle+fle+mle+fle+ole))*100 else 0 end as percent"),
+				User.class, query.arguments());
 		number = options.getOffset(30);
 		for (int i = 0; i < users.size(); i++) {
 			users.get(i).setRank(number + i + 1);
@@ -291,15 +352,18 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	@Transactional(readOnly = true)
 	public List<Problem> getProblemsSolvedInContest(Integer uid, Contest contest) {
 		if (contest.isFrozen()) {
-			return objects("problems.solved.in.contest.frozen", Problem.class, uid, contest.getCid(), contest.getCid());
+			return objects("problems.solved.in.contest.frozen", Problem.class,
+					uid, contest.getCid(), contest.getCid());
 		}
-		return objects("problems.solved.in.contest", Problem.class, uid, contest.getCid());
+		return objects("problems.solved.in.contest", Problem.class, uid,
+				contest.getCid());
 	}
 
 	@Transactional(readOnly = true)
 	public List<Problem> getProblemsTriedInContest(Integer uid, Contest contest) {
 
-		return objects("get.problem.tried.in.contest", Problem.class, uid, contest.getCid(), uid, contest.getCid());
+		return objects("get.problem.tried.in.contest", Problem.class, uid,
+				contest.getCid(), uid, contest.getCid());
 	}
 
 	@Transactional(readOnly = true)
@@ -322,32 +386,63 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
 	public void updateUser(User user) {
 		if (user.isTeam()) {
-			if (!StringUtils.isEmpty(user.getPassword()) && user.getPassword().length() > 7) {
-				dml("update.user", user.getNick(), user.getCountry_id(), user.getInstitution_id(), user.getLid(), user.getLocale(), user.getPassword(), user.isEnableadveditor(), user.getUid());
-				dml("update.user.by.admin.3", user.getCoach(), user.getUser_1(), user.getUser_2(), user.getUser_3(), user.getUid());
+			if (!StringUtils.isEmpty(user.getPassword())
+					&& user.getPassword().length() > 7) {
+				dml("update.user", user.getNick(), user.getCountry_id(),
+						user.getInstitution_id(), user.getLid(),
+						user.getLocale(), user.getPassword(),
+						user.isEnableadveditor(), user.getUid());
+				dml("update.user.by.admin.3", user.getCoach(),
+						user.getUser_1(), user.getUser_2(), user.getUser_3(),
+						user.getUid());
 			} else {
-				dml("update.user.1", user.getNick(), user.getCountry_id(), user.getInstitution_id(), user.getLid(), user.getLocale(), user.isEnableadveditor(), user.getUid());
-				dml("update.user.by.admin.3", user.getCoach(), user.getUser_1(), user.getUser_2(), user.getUser_3(), user.getUid());
+				dml("update.user.1", user.getNick(), user.getCountry_id(),
+						user.getInstitution_id(), user.getLid(),
+						user.getLocale(), user.isEnableadveditor(),
+						user.getUid());
+				dml("update.user.by.admin.3", user.getCoach(),
+						user.getUser_1(), user.getUser_2(), user.getUser_3(),
+						user.getUid());
 			}
 		} else {
 			if (bool("email.changed", user.getEmail(), user.getUid())) {
 				dml("enable.user", false, user.getUsername());
 				Md5PasswordEncoder md5 = new Md5PasswordEncoder();
-				String token = md5.encodePassword(user.getUsername(), new Date().toString());
-				dml("insert.account.activation", user.getUsername(), token, false);
+				String token = md5.encodePassword(user.getUsername(),
+						new Date().toString());
+				dml("insert.account.activation", user.getUsername(), token,
+						false);
 				mailNotificationService.sendEmailChanged(user, token);
 			}
 
-			if (!StringUtils.isEmpty(user.getPassword()) && user.getPassword().length() > 7) {
-				dml("update.user.2", user.getNick(), user.getCountry_id(), user.getInstitution_id(), user.getLid(), user.getLocale(), user.getPassword(), user.isProblemNotifications(),
-						user.isContestNotifications(), user.isSubmissionNotifications(), user.isNewprivatemessageNotifications(), user.isWboardNotifications(), user.isEntriesNotifications(),
-						user.isShowemail(), user.getGender(), user.isSee_solutions(), user.isEnableadveditor(), user.getUsername());
+			if (!StringUtils.isEmpty(user.getPassword())
+					&& user.getPassword().length() > 7) {
+				dml("update.user.2", user.getNick(), user.getCountry_id(),
+						user.getInstitution_id(), user.getLid(),
+						user.getLocale(), user.getPassword(),
+						user.isProblemNotifications(),
+						user.isContestNotifications(),
+						user.isSubmissionNotifications(),
+						user.isNewprivatemessageNotifications(),
+						user.isWboardNotifications(),
+						user.isEntriesNotifications(), user.isShowemail(),
+						user.getGender(), user.isSee_solutions(),
+						user.isEnableadveditor(), user.getUsername());
 			} else {
-				dml("update.user.3", user.getNick(), user.getCountry_id(), user.getInstitution_id(), user.getLid(), user.getLocale(), user.isProblemNotifications(), user.isContestNotifications(),
-						user.isSubmissionNotifications(), user.isNewprivatemessageNotifications(), user.isWboardNotifications(), user.isEntriesNotifications(), user.isShowemail(), user.getGender(),
-						user.isSee_solutions(), user.isEnableadveditor(), user.getUsername());
+				dml("update.user.3", user.getNick(), user.getCountry_id(),
+						user.getInstitution_id(), user.getLid(),
+						user.getLocale(), user.isProblemNotifications(),
+						user.isContestNotifications(),
+						user.isSubmissionNotifications(),
+						user.isNewprivatemessageNotifications(),
+						user.isWboardNotifications(),
+						user.isEntriesNotifications(), user.isShowemail(),
+						user.getGender(), user.isSee_solutions(),
+						user.isEnableadveditor(), user.getUsername());
 			}
-			dml(replaceSql("update.user.4", "<dob>", parseDate(user.getDob())), user.getEmail(), user.getName(), user.getLastname(), user.isShowdob(), user.isView_problem_info(), user.getUid());
+			dml(replaceSql("update.user.4", "<dob>", parseDate(user.getDob())),
+					user.getEmail(), user.getName(), user.getLastname(),
+					user.isShowdob(), user.isView_problem_info(), user.getUid());
 
 		}
 	}
@@ -357,35 +452,60 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		if (user.isTeam())
 			user.setRole(Roles.ROLE_TEAM);
 
-		if (!StringUtils.isEmpty(user.getPassword()) && user.getPassword().length() > 0) {
-			dml("update.user.by.admin", user.getRole(), user.getNick(), user.getCountry_id(), user.getInstitution_id(), user.getLid(), user.getLocale(), user.getPassword(),
-					user.isContestNotifications(), user.isSubmissionNotifications(), user.isNewprivatemessageNotifications(), user.isWboardNotifications(), user.isProblemNotifications(),
-					user.isEntriesNotifications(), user.isShowemail(), user.getGender(), user.getAccess_rule(), user.isEnabled(), user.isUpdate_nick(), user.getUsername());
+		if (!StringUtils.isEmpty(user.getPassword())
+				&& user.getPassword().length() > 0) {
+			dml("update.user.by.admin", user.getRole(), user.getNick(),
+					user.getCountry_id(), user.getInstitution_id(),
+					user.getLid(), user.getLocale(), user.getPassword(),
+					user.isContestNotifications(),
+					user.isSubmissionNotifications(),
+					user.isNewprivatemessageNotifications(),
+					user.isWboardNotifications(),
+					user.isProblemNotifications(),
+					user.isEntriesNotifications(), user.isShowemail(),
+					user.getGender(), user.getAccess_rule(), user.isEnabled(),
+					user.isUpdate_nick(), user.getUsername());
 		} else {
-			dml("update.user.by.admin.1", user.getRole(), user.getNick(), user.getCountry_id(), user.getInstitution_id(), user.getLid(), user.getLocale(), user.isContestNotifications(),
-					user.isSubmissionNotifications(), user.isNewprivatemessageNotifications(), user.isWboardNotifications(), user.isProblemNotifications(), user.isEntriesNotifications(),
-					user.isShowemail(), user.getGender(), user.getAccess_rule(), user.isEnabled(), user.isUpdate_nick(), user.getUsername());
+			dml("update.user.by.admin.1", user.getRole(), user.getNick(),
+					user.getCountry_id(), user.getInstitution_id(),
+					user.getLid(), user.getLocale(),
+					user.isContestNotifications(),
+					user.isSubmissionNotifications(),
+					user.isNewprivatemessageNotifications(),
+					user.isWboardNotifications(),
+					user.isProblemNotifications(),
+					user.isEntriesNotifications(), user.isShowemail(),
+					user.getGender(), user.getAccess_rule(), user.isEnabled(),
+					user.isUpdate_nick(), user.getUsername());
 		}
 		if (!user.isTeam()) {
-			dml(replaceSql("update.user.by.admin.2", "<dob>", user.getDob().toString()), user.getName(), user.getLastname(), user.isShowdob(), user.getEmail(), user.getMail_quote(), user.getUid());
+			dml(replaceSql("update.user.by.admin.2", "<dob>", user.getDob()
+					.toString()), user.getName(), user.getLastname(),
+					user.isShowdob(), user.getEmail(), user.getMail_quote(),
+					user.getUid());
 		}
 		if (user.isTeam()) {
-			dml("update.user.by.admin.3", user.getCoach(), user.getUser_1(), user.getUser_2(), user.getUser_3(), user.getUid());
+			dml("update.user.by.admin.3", user.getCoach(), user.getUser_1(),
+					user.getUser_2(), user.getUser_3(), user.getUid());
 		}
+
+		// TODO esto no esta metido en los updates anteriores para mantenerlos
+		// en metodos separados. De esta manera puede ser posible, en un futuro,
+		// lograr que se activen mediante llamadas AJAX separadas y que no sea
+		// necesario editar para banear. Ahora (17/03/2015) no es prioridad.
+		if (user.isEnabled())
+			unbanUser(user.getUid());
+		else
+			banUser(user.getUid(), user.getBanReason());
 	}
 
 	public void clearUserAuthorities(String username) {
 		dml("clear.user.authorities", username);
 	}
 
-	public String[] grantUserAuthority(String username, String authority) {
-
-		String[] realAuthorities = Roles.authoritiesByRole(authority);
-
-		for (String realAuthority : realAuthorities)
-			dml("grant.user.authorities", username, realAuthority);
-
-		return realAuthorities;
+	public void grantUserAuthority(User user) {
+		for (String realAuthority : user.getAuthorities())
+			dml("grant.user.authorities", user.getUsername(), realAuthority);
 	}
 
 	@Transactional(readOnly = true)
@@ -394,11 +514,18 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	}
 
 	public void InsertUser(User user) {
-		dml("insert.user", user.getUsername(), user.getPassword(), user.getCountry_id(), user.getInstitution_id(), user.getNick(), user.getLocale(), user.getLid(), user.getGender(),
-				user.isContestNotifications(), user.isSubmissionNotifications(), user.isNewprivatemessageNotifications(), user.isWboardNotifications(), user.isProblemNotifications(),
+		dml("insert.user", user.getUsername(), user.getPassword(),
+				user.getCountry_id(), user.getInstitution_id(), user.getNick(),
+				user.getLocale(), user.getLid(), user.getGender(),
+				user.isContestNotifications(),
+				user.isSubmissionNotifications(),
+				user.isNewprivatemessageNotifications(),
+				user.isWboardNotifications(), user.isProblemNotifications(),
 				user.isEntriesNotifications(), user.isShowemail());
 		int uid = integer("select.uid.by.username", user.getUsername());
-		dml(replaceSql("insert.user.1", "<dob>", parseDate(user.getDob())), uid, user.getEmail(), user.getName(), user.getLastname(), user.isShowdob());
+		dml(replaceSql("insert.user.1", "<dob>", parseDate(user.getDob())),
+				uid, user.getEmail(), user.getName(), user.getLastname(),
+				user.isShowdob());
 		dml("insert.user.2", uid);
 		dml("insert.user.3", user.getUsername(), Roles.ROLE_USER);
 		// es necesario que el usuario se autosiga para que salgan sus propios
@@ -410,7 +537,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	public List<User> loadContestUsers(int cid) {
 		return objects("load.contest.users", User.class, cid);
 	}
-	
+
 	@Transactional(readOnly = true)
 	public List<User> loadContestBalloonTrackers(int cid) {
 		return objects("load.contest.balloontrackers", User.class, cid);
@@ -430,13 +557,16 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	public List<User> loadUsersOffContest(Contest contest) {
 		switch (contest.getContestant()) {
 		case 1: {
-			return objects("load.users.off.contest", User.class, contest.getCid());
+			return objects("load.users.off.contest", User.class,
+					contest.getCid());
 		}
 		case 2: {
-			return objects("load.users.off.contest.2", User.class, contest.getCid());
+			return objects("load.users.off.contest.2", User.class,
+					contest.getCid());
 		}
 		case 3: {
-			return objects("load.users.off.contest.3", User.class, contest.getCid());
+			return objects("load.users.off.contest.3", User.class,
+					contest.getCid());
 		}
 		}
 		return null;
@@ -448,24 +578,31 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<User> loadUsersAdmin(String pattern, PagingOptions options) {
+	public IPaginatedList<User> loadUsersAdmin(String pattern,
+			PagingOptions options) {
 		if (pattern != null) {
-			return paginated("users.admin.pattern", User.class, 30, options, "%" + pattern + "%", "%" + pattern + "%", "%" + pattern + "%");
+			return paginated("users.admin.pattern", User.class, 30, options,
+					"%" + pattern + "%", "%" + pattern + "%", "%" + pattern
+							+ "%");
 		}
 		return paginated("users.admin", User.class, 30, options);
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<User> loadTeamsAdmin(String pattern, PagingOptions options) {
+	public IPaginatedList<User> loadTeamsAdmin(String pattern,
+			PagingOptions options) {
 		if (pattern != null) {
-			return paginated("teams.admin.pattern", User.class, 30, options, "%" + pattern + "%", "%" + pattern + "%");
+			return paginated("teams.admin.pattern", User.class, 30, options,
+					"%" + pattern + "%", "%" + pattern + "%");
 		}
 		return paginated("teams.admin", User.class, 30, options);
 	}
 
 	private void insertTeam(Team user) {
-		dml("insert.team.1", user.getUsername(), user.getPassword(), user.getCountry(), user.getInstitution(), user.getNick(), user.getLocale(), user.isUpdate_nick(), true);
-		grantUserAuthority(user.getUsername(), Roles.ROLE_TEAM);
+		dml("insert.team.1", user.getUsername(), user.getPassword(),
+				user.getCountry(), user.getInstitution(), user.getNick(),
+				user.getLocale(), user.isUpdate_nick(), true);
+		dml("grant.user.authorities", user.getUsername(), Roles.ROLE_TEAM);
 		int uid = integer("select.uid.by.username", user.getUsername());
 		user.setUid(uid);
 		dml("insert.team.2", new Object[] { uid });
@@ -480,14 +617,19 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
 	public void createTeams(Team team) {
 		for (int i = 0; i < team.getTotal(); i++) {
-			String username = buildteamUsername(team.getUsername(), team.getTotal(), i + 1);
-			String nick = buildteamUsername(team.getNick(), team.getTotal(), i + 1);
+			String username = buildteamUsername(team.getUsername(),
+					team.getTotal(), i + 1);
+			String nick = buildteamUsername(team.getNick(), team.getTotal(),
+					i + 1);
 			Md5PasswordEncoder md5 = new Md5PasswordEncoder();
-			Team add = new Team(username, md5.encodePassword(team.getPassword(), "ABC123XYZ789"), nick, team.getCountry(), team.getInstitution(), team.getLocale());
+			Team add = new Team(username, md5.encodePassword(
+					team.getPassword(), "ABC123XYZ789"), nick,
+					team.getCountry(), team.getInstitution(), team.getLocale());
 			add.setUpdate_nick(team.isUpdate_nick());
 			insertTeam(add);
 			if (team.getContest() > 0) {
-				insertUserContest(add.getUid(), team.getContest(), team.getGroup());
+				insertUserContest(add.getUid(), team.getContest(),
+						team.getGroup());
 			}
 		}
 	}
@@ -506,18 +648,16 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	@Transactional(readOnly = true)
 	public Language getProgrammingLanguageByUsername(String username) {
 
-		return object("get.programming.language.by.username", Language.class, username);
-	}
-
-	public void updateLastConnectedDate(String username) {
-		dml("update.last.connected.date", username);
+		return object("get.programming.language.by.username", Language.class,
+				username);
 	}
 
 	public void updateChangeTime(int uid) {
 		dml("update.change.time", uid);
 	}
 
-	public void insertUser(String user, String name, String lastname, String email) {
+	public void insertUser(String user, String name, String lastname,
+			String email) {
 		dml("insert.user.x", user, email, user, name, lastname);
 	}
 
@@ -560,24 +700,28 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	public boolean hasProfile(String username) {
 		// si hay al menos un 1 en el perfil del usuario significa que no
 		// tenemos que utilizar el algoritmo de cold start, sino el estandard
-		return !objects("load.users.recommender.hasprofile", String.class, username).isEmpty();
+		return !objects("load.users.recommender.hasprofile", String.class,
+				username).isEmpty();
 	}
 
 	@Transactional(readOnly = true)
 	public UserProfile loadUserProfile(String username) {
-		return object("load.users.recommender.loaduserprofile", UserProfile.class, username);
+		return object("load.users.recommender.loaduserprofile",
+				UserProfile.class, username);
 	}
 
 	@Transactional(readOnly = true)
 	public List<UserProfile> loadRelatedProfiles(UserProfile profile) {
 
 		String tags = loadTags(profile.getUsername());
-		return objects("load.users.recommender.loadrelatedprofile", UserProfile.class, profile.getUsername(), tags);
+		return objects("load.users.recommender.loadrelatedprofile",
+				UserProfile.class, profile.getUsername(), tags);
 	}
 
 	@Transactional(readOnly = true)
 	public String loadTags(String username) {
-		return defaultedString(StringUtils.EMPTY, "load.users.recommender.loadtags", username);
+		return defaultedString(StringUtils.EMPTY,
+				"load.users.recommender.loadtags", username);
 	}
 
 	public void updateTags(String username, String tag) {
@@ -587,6 +731,13 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	@Override
 	public void checkUserStatus() {
 		dml("update.users.status");
+	}
+
+	@Override
+	public UserClassificationStats getUserClassifications(Integer uid) {
+		List<Map<String,Object>> maps = maps("select.user.classif",uid);
+		List<Map<String,Object>> timeline = maps("select.user.timeline",uid,uid);
+		return new UserClassificationStats(maps,timeline);
 	}
 
 }

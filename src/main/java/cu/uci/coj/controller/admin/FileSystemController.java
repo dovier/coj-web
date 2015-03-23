@@ -11,12 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import cu.uci.coj.config.Config;
@@ -80,11 +82,13 @@ public class FileSystemController extends BaseController {
 	}
 
 	@RequestMapping(value = "/share.xhtml", method = RequestMethod.GET)
+	@ResponseStatus(value=HttpStatus.NO_CONTENT)
 	public void share(HttpServletResponse response, @RequestParam("file") String file) throws Exception {
 		baseDAO.dml("insert.shared.file", file,current(file).getAbsolutePath().substring(publicDir.getAbsolutePath().length()+1));
 	}
 
 	@RequestMapping(value = "/unshare.xhtml", method = RequestMethod.GET)
+	@ResponseStatus(value=HttpStatus.NO_CONTENT)
 	public void unshare(HttpServletResponse response, @RequestParam("file") String file) throws Exception {
 		baseDAO.dml("delete.shared.file", current(file).getAbsolutePath().substring(publicDir.getAbsolutePath().length()+1));
 	}

@@ -36,12 +36,5 @@
 	<!-- /content -->
 </div>
 <script>
-	$(function() {
-		$('#filter-button').click(function(event) {
-			displayTableReload($('#filter-form').formSerialize());
-			event.preventDefault();
-		});
-	});
-
-	$(document).ready(displayTableReload("?country_id=${country_id}"));
+$(initStandardFilterForm);
 </script>

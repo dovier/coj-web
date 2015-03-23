@@ -6,29 +6,33 @@
 </h2>
 <div class="postcontent">
 	<!-- article-content -->
-	
+
 	<div class="row">
 		<div class="col-xs-12">
-			<form action="/tables/status.xhtml" method="get" id="filter-form" class="form-inline">
-				<div class="form-group">						
-						<c:choose>
-							<c:when test="${not empty filter.username}">
-								<input class="form-control" placeholder="<spring:message code="fieldhdr.user" />"
-								 	type="text" name="username" value="${filter.username}" size="10" />
-							</c:when>
-							<c:otherwise>
-								<input class="form-control" placeholder="<spring:message code="fieldhdr.user" />"
-								 	type="text" name="username" value="${username}" size="10" />
-							</c:otherwise>
+			<form action="/tables/status.xhtml" method="get" id="filter-form"
+				class="form-inline">
+				<div class="form-group">
+					<c:choose>
+						<c:when test="${not empty filter.username}">
+							<input class="form-control"
+								placeholder="<spring:message code="fieldhdr.user" />"
+								type="text" name="username" value="${filter.username}" size="10" />
+						</c:when>
+						<c:otherwise>
+							<input class="form-control"
+								placeholder="<spring:message code="fieldhdr.user" />"
+								type="text" name="username" value="${username}" size="10" />
+						</c:otherwise>
 					</c:choose>
 				</div>
-				
-				
+
+
 				<div class="form-group">
-					<input class="form-control" placeholder="<spring:message code="fieldhdr.prob" />"
-						 type="text" name="pid" value="${filter.pid}"	size="8" />
+					<input class="form-control"
+						placeholder="<spring:message code="fieldhdr.prob" />" type="text" pattern="/\d*/"
+						name="pid" value="${filter.pid}" size="8" />
 				</div>
-				
+
 				<div class="form-group">
 					<select class="form-control" name="status">
 						<option value="All"><spring:message code="fieldhdr.all" /></option>
@@ -44,7 +48,7 @@
 						</c:forEach>
 					</select>
 				</div>
-				
+
 				<div class="form-group">
 					<select class="form-control" name="planguage">
 						<option value="All"><spring:message code="fieldhdr.all" /></option>
@@ -62,26 +66,20 @@
 						</c:forEach>
 					</select>
 				</div>
-				
+
 				<div class="form-group">
-					<input class="btn btn-primary" type="submit" id ="filter-button"
-					value="<spring:message code="button.filter"/>" />
+					<input class="btn btn-primary" type="submit" id="filter-button"
+						value="<spring:message code="button.filter"/>" />
 				</div>
 			</form>
 		</div>
-	</div>	
+	</div>
 
-	<div id="display-table-container" data-reload-url="/tables/status.xhtml"></div>
+	<div id="display-table-container"
+		data-reload-url="/tables/status.xhtml"></div>
 	<!-- /article-content -->
 </div>
 
 <script>
-$(function() {
-	$('#filter-button').click(function(event) {
-		displayTableReload($('#filter-form').formSerialize());
-		event.preventDefault();
-	});
-});
-
-$(document).ready(displayTableReload($('#filter-form').formSerialize()));
+	$(initStandardFilterForm);
 </script>

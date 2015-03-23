@@ -67,8 +67,6 @@
 			access="hasAnyRole('ROLE_ADMIN','ROLE_ENTRIES_MANAGER','ROLE_PSETTER','ROLE_SUPER_PSETTER','ROLE_FILE_MANAGER')" />
 		<security:intercept-url pattern="/admin/files/**"
 			access="hasAnyRole('ROLE_ADMIN','ROLE_FILE_MANAGER')" />
-		<security:intercept-url pattern="/admin/rejudge.xhtml"
-			access="hasRole('ROLE_ADMIN')" />
 		<security:intercept-url pattern="/admin/manageuser.xhtml"
 			access="hasRole('ROLE_ADMIN')" />
 		<security:intercept-url pattern="/admin/addproblem.xhtml"
@@ -118,15 +116,10 @@
 	<bean id="ds" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
 		
-                <property name="driverClass" value="org.postgresql.Driver" />
-		<property name="jdbcUrl" value="jdbc:postgresql://127.0.0.1:5432/coj" />
+        <property name="driverClass" value="org.postgresql.Driver" />
+		<property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/coj" />
 		<property name="user" value="postgres" />                
-		<property name="password" value="postgres" />
-                
-<!--                <property name="driverClass" value="org.postgresql.Driver" />
-		<property name="jdbcUrl" value="jdbc:postgresql://10.0.0.140:5432/coj" />
-		<property name="user" value="postgres" />                
-		<property name="password" value="coj1234*-+" />                -->
+		<property name="password" value="coj1234*-+" />                
                 
 		<property name="maxPoolSize" value="10" />
 		<property name="maxIdleTime" value="300" />

@@ -52,7 +52,7 @@ public class ContestController extends BaseController {
 	}
 	
 	@RequestMapping(produces = "application/json", value = "/contest/markballoon.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
-	public @ResponseBody() int markBalloon(Model model, @RequestParam(value = "sid") int sid) {
+	public @ResponseBody int markBalloon(Model model, @RequestParam(value = "sid") int sid) {
 		contestDAO.markBalloon(sid);
 		return sid;
 	}

@@ -33,9 +33,9 @@ public class TranslationController extends BaseController {
 	}
 	
 	@RequestMapping(value="/tables/managetranslations.xhtml", method=RequestMethod.GET)
-	String manageTranslationsTable(Model model, PagingOptions options, @RequestParam(required=false) String username, @RequestParam(required=false) Integer pid,
+	String manageTranslationsTable(Model model, PagingOptions options, @RequestParam(required=false) String username, @RequestParam(required=false,defaultValue="0",value="pid") Integer pid,
 			@RequestParam(required=false) String locale) {
-		
+		if (pid == 0) pid = null;
 		IPaginatedList<Translation> translations = problemDAO.getTranslationList(username, pid, locale, options);	
 		model.addAttribute("translations", translations);
 		

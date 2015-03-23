@@ -24,6 +24,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import atg.taglib.json.util.JSONArray;
@@ -47,6 +48,7 @@ import cu.uci.coj.model.Locale;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.User;
+import cu.uci.coj.model.UserClassificationStats;
 import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
 import cu.uci.coj.utils.FileUtils;
@@ -87,6 +89,14 @@ public class UserController extends BaseController {
 
 	private String passcode = null;
 
+	
+	
+	@RequestMapping(value="/classif.json", method = RequestMethod.GET, produces="application/json")
+	public @ResponseBody UserClassificationStats getUserClassifications(@RequestParam Integer uid) {
+		return userDAO.getUserClassifications(uid);
+	}
+	
+	
 	@RequestMapping(value = "/accountactivation.xhtml", method = RequestMethod.GET)
 	public String accountActivation(HttpServletRequest request, Model model, @RequestParam("key") String key) {
 		boolean ok = false;
@@ -174,6 +184,7 @@ public class UserController extends BaseController {
 		// restar uno porque todos los usuarios se siguen a si mismos.
 		model.addAttribute("followers", userDAO.integer(0, "count.followers", uid));
 		model.addAttribute("following", userDAO.integer(0, "count.following", uid));
+		model.addAttribute("userclassif",userDAO.getUserClassifications(uid));
 		return "/user/useraccount";
 	}
 

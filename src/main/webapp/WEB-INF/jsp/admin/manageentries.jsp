@@ -2,7 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
 
-<link rel="stylesheet" href="<c:url value="/css/wboard.css"/>" type="text/css" media="screen" />
+<link rel="stylesheet" href="<c:url value="/css/confirm-message.css"/>" type="text/css" media="screen" />
 
 <h2 class="postheader">
 	<fmt:message key="page.general.admin.header" />

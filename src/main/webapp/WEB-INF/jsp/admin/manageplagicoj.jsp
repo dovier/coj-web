@@ -143,12 +143,5 @@
 </div>
 <div id="checkerror" hidden="" title="<fmt:message key="admin.plagicoj.error"/>"><p><fmt:message key="admin.plagicoj.check"/></p></div>
 <script>
-	$(function() {
-		$('#filter-button').click(function(event) {
-			displayTableReload($('#filter-form').formSerialize());
-			event.preventDefault();
-		});
-	});
-
-	$(document).ready(displayTableReload($('#filter-form').formSerialize()));
+$(initStandardFilterForm);
 </script>

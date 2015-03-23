@@ -352,21 +352,7 @@ public enum AchievementType {
 		}
 
 	},
-	
-	COMMITTER {
-
-		@Override
-		public int[] levels() {
-			return LEVELSx10;
-		}
-
-		@Override
-		public int id() {
-			return 28;
-		}
-
-	},
-	LOUD_MOUTH {
+	PROLOG_MASTER {
 
 		@Override
 		public int[] levels() {
@@ -375,15 +361,28 @@ public enum AchievementType {
 
 		@Override
 		public int id() {
+			return 28;
+		}
+
+	},
+	INFLATE_THE_BALLOON {
+
+		@Override
+		public int[] levels() {
+			return new int[] {UNASSIGNED,1,100,500,1000};
+		}
+
+		@Override
+		public int id() {
 			return 29;
 		}
 
 	},
-	VOTER {
+	RHINO_JS_MASTER {
 
 		@Override
 		public int[] levels() {
-			return LEVELSx10;
+			return LEVELS;
 		}
 
 		@Override
@@ -392,8 +391,7 @@ public enum AchievementType {
 		}
 
 	},
-	
-	PARROT {
+	NODE_JS_MASTER {
 
 		@Override
 		public int[] levels() {
@@ -405,25 +403,12 @@ public enum AchievementType {
 			return 31;
 		}
 
-	},
-	BACKTALKER {
-
-		@Override
-		public int[] levels() {
-			return LEVELS;
-		}
-
-		@Override
-		public int id() {
-			return 32;
-		}
-
 	};
 
 	// la posicion es igual al id(), que es igual al id en la tabla achievement
 	public static final AchievementType[] achievements = new AchievementType[] { null, CSHARP_MASTER, JAVA_MASTER, CPLUSPLUS_MASTER, C_MASTER, SNIPER, RUBY_MASTER, BASH_MASTER, PHP_MASTER,
 			PYTHON_MASTER, PERL_MASTER, PASCAL_MASTER, POLYGLOT, CPLUSPLUS11_MASTER, HASKELL_MASTER, BRUTE_FORCE, MATH_WIZ, COMBINATION_MASTER, DATA_STRUCTURER, DYNAMIC, GAME_THEORIST,
-			DRAWING_MASTER, GREEDY_GECKO, NUMBER_THEORIST, SEARCHER, GRAPH_THEORIST, STRING_THEORIST, ODDBALL,COMMITTER,LOUD_MOUTH,VOTER,PARROT,BACKTALKER};
+			DRAWING_MASTER, GREEDY_GECKO, NUMBER_THEORIST, SEARCHER, GRAPH_THEORIST, STRING_THEORIST, ODDBALL,PROLOG_MASTER,INFLATE_THE_BALLOON,RHINO_JS_MASTER,NODE_JS_MASTER};
 	public int UNASSIGNED = 0;
 	public int BEGINNER = 10;
 	public int BRONZE = 20;

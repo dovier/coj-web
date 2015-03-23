@@ -1,7 +1,7 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<link rel="stylesheet" href="<c:url value="/css/wboard.css"/>"
+<link rel="stylesheet" href="<c:url value="/css/confirm-message.css"/>"
 	type="text/css" media="screen" />
 
 <h2 class="postheader">
@@ -426,15 +426,33 @@
 						</div>
 					</div>
 					<div id="stats" class="panel-body collapse in">
-						<div class="row row-centered">
-							<div class="col-centered col-xs-4">
+						<div class="row row-centered no-gutters">
+							<div class="col-xs-12">
+								<canvas id="top-chart"></canvas>
 								<canvas id="chart"></canvas>
 							</div>
+							<div class="col-centered col-xs-11 no-gutters">
+								<c:forEach var="loop" begin="0" end="${userclassif.count-1}">
+									<div class="col-xs-4">
+										<div class="col-padded">
+											<center>
+												<small><label id="classif-label-${loop}"
+													class="text-sm text-muted"></label></small>
+											</center>
+											<div>
+												<canvas id="classif-chart-${loop}"></canvas>
+											</div>
+										</div>
+									</div>
+								</c:forEach>
+							</div>
+							<div class="col-xs-12">
+								<canvas id="timeline-chart"></canvas>
+							</div>
 						</div>
-						<div class="col-xs-12">
-							<div class="margin-top-05">
-								<table id="wijbarcharttable"
-									class="table table-bordered table-condensed">
+						<div class="row row-centered">
+							<div class="col-xs-12">
+								<table class="table table-bordered table-condensed">
 									<thead>
 										<tr>
 											<th><spring:message code="tablehdr.ac" /></th>
@@ -568,9 +586,11 @@ $(function() {
 		$("[data-toggle='tooltip']").tooltip();
 	});
 	
-		var chart = null;
 	$(document).ready(function() {
 		callback();
+		topCallback();
+		classifCallback();
+		timelineCallback();
 	});
 
 	function callback() {
@@ -596,6 +616,91 @@ $(function() {
 					        }
 					    ]
 					};				
-					chart = new Chart($("#chart").get(0).getContext("2d")).Bar(data);
-	}
+					var chart = new Chart($("#chart").get(0).getContext("2d")).Bar(data,{scaleShowVerticalLines: false,});
+	};
+	
+	function topCallback() {
+		var data = {
+			    labels: ${userclassif.labels},
+			    datasets: [
+			        {
+			            fillColor: "rgba(151,187,205,0.5)",
+			            strokeColor: "#4c83c3",
+			            pointColor: "#4c83c3",
+			            pointStrokeColor: "#fff",
+			            pointHighlightFill: "#fff",
+			            pointHighlightStroke: "rgba(220,220,220,1)",
+			            data: ${userclassif.top}
+			        }
+			    ]
+			};
+		var topChart = new Chart($("#top-chart").get(0).getContext("2d")).Radar(data,{scaleOverride: false,scaleIntegersOnly: true,scaleSteps: 1,scaleStepWidth: 1,scaleStartValue: 0});
+	};
+	
+	
+	function classifCallback(){
+		
+			var labels = ${userclassif.labels};
+			for(var i=0;i < ${userclassif.count};i++){
+				var data = {
+					    labels: ["1","2","3","4","5"],
+					    datasets: [
+					        {
+					            label: labels[i],
+					            fillColor: "#4c83c3",
+					            data: ${userclassif.classifications}[i]
+					        }
+					    ]
+					};
+				$("#classif-label-"+i).html(labels[i]);
+				var chart = new Chart($("#classif-chart-"+i).get(0).getContext("2d")).Bar(data,{scaleShowVerticalLines: false,animation:false,responsive:true});
+			}
+	};
+	
+	function timelineCallback(){
+		
+			var data = {
+				    labels: ${userclassif.dates},
+				    datasets: [
+				        {
+				            label: 'AC',
+				            fillColor: "rgba(0,0,150,0.4)",
+				            strokeColor: "rgba(0,0,150,1)",
+				            pointColor: "rgba(0,0,150,1)",
+				            pointStrokeColor: "#fff",
+				            pointHighlightFill: "#fff",
+				            pointHighlightStroke: "rgba(0,0,150,1)",
+				            data: ${userclassif.acStatus}
+				        },
+				        {
+				            label: 'Error',
+				            fillColor: "rgba(150,0,0,0.4)",
+				            strokeColor: "rgba(150,0,0,1)",
+				            pointColor: "rgba(150,0,0,1)",
+				            pointStrokeColor: "#fff",
+				            pointHighlightFill: "#fff",
+				            pointHighlightStroke: "rgba(200,0,0,1)",
+				            data: ${userclassif.errorStatus}
+				        }
+				    ]
+		};
+			
+			Chart.types.Line.extend({
+			     name : "AltLine",
+
+			     initialize : function(data) {
+			        Chart.types.Line.prototype.initialize.apply(this, arguments);
+			        this.scale.draw = function() {
+			           if (this.display && true) {
+			              this.endPoint = this.height - 5;
+			           }
+			           Chart.Scale.prototype.draw.apply(this, arguments);
+			        };
+			     }
+			  });
+
+			var chart = new Chart($("#timeline-chart").get(0).getContext("2d")).AltLine(data,{ scaleShowVerticalLines: true,pointDotRadius : 2, scaleShowLabels: true,pointHitDetectionRadius : 5,animation:false,responsive:true});
+			chart.draw();
+	};
+
 </script>

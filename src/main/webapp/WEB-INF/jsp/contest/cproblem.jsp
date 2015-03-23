@@ -123,9 +123,7 @@
 			<h4 class="text-primary">
 				<spring:message code="fieldhdr.sampleinput" />
 			</h4>
-			<code>
-				<c:url value="${problem.inputex}" />
-			</code>
+			<code>${problem.inputex}</code>
 		</div>
 	</div>
 	<div class="row">
@@ -133,9 +131,7 @@
 			<h4 class="text-primary">
 				<spring:message code="fieldhdr.sampleoutput" />
 			</h4>
-			<code>
-				<c:url value="${problem.outputex}" />
-			</code>
+			<code>${problem.outputex}</code>
 		</div>
 	</div>
 	<div class="row">

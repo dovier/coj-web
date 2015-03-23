@@ -44,10 +44,10 @@
 <script>
 	$(function() {
 		$('#filter-button').click(function(event) {
-			displayTableReload($('#filter-form').formSerialize());
+			displayTableReload();
 			event.preventDefault();
 		});
-	});
 
-	$(document).ready(displayTableReload("country_id=${country_id}"));
+		displayTableReload("country_id=${country_id}");
+	});
 </script>

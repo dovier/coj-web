@@ -1,4 +1,8 @@
 /* begin Page */
+.col-padded {
+  padding-right:10px;
+  padding-left:10px;
+}
 
 .img-problem {
 	max-width: 99%;
@@ -1346,8 +1350,8 @@ img.grayed {
 	color: #f0ad4e;
 }
 
-.usernot {
-	color: #d9534f;
+.userbanned {
+	color: #000000;
 }
 
 .userdisabled {
@@ -1366,8 +1370,8 @@ img.grayed {
 	background-color: #f0ad4e;
 }
 
-.bgnot {
-	background-color: #d9534f;
+.bgbanned {
+	background-color: #000000;
 }
 
 .bgdisabled {

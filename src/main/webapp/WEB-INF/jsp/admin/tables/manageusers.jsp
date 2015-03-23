@@ -23,21 +23,14 @@
 	</display:column>
 	<display:column property="lastip" titleKey="tablehdr.ip" />
 	<display:column titleKey="tablehdr.enabled">
-		<c:choose>
-			<c:when test="${user.enabled == true}">
-				<span class="label label-success"><fmt:message
-						key="page.general.yes" /></span>
-			</c:when>
-			<c:otherwise>
-				<span class="label label-danger"><fmt:message
-						key="page.general.no" /></span>
-			</c:otherwise>
-		</c:choose>
+			<label class="label bg${user.status}">${user.status}</label>
 	</display:column>
 	<display:column titleKey="tablehdr.edit">
-		<a
-			href="<c:url value="/admin/manageuser.xhtml?username=${user.username}" />"
-			title="<fmt:message key="messages.general.go"/>"><i
-			class="fa fa-edit"></i></a>
+		<ul class="list-inline">
+			<li><a
+				href="<c:url value="/admin/manageuser.xhtml?username=${user.username}" />"
+				title="<fmt:message key="messages.general.go"/>"><i
+					class="fa fa-edit"></i></a></li>
+		</ul>
 	</display:column>
 </display:table>

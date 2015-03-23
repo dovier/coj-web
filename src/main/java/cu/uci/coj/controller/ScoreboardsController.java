@@ -1,5 +1,6 @@
 package cu.uci.coj.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -35,18 +36,22 @@ public class ScoreboardsController  extends BaseController{
     
 
     @RequestMapping(value = "/24h/usersrank.xhtml", method = RequestMethod.GET)
-    public String UsersRank(Model model, PagingOptions options, @RequestParam(required = false, value = "pattern") String pattern, @RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
-        model.addAttribute("pattern", pattern);        
+    public String UsersRank(Model model, PagingOptions options, @RequestParam(required = false, value = "pattern") String pattern,@RequestParam(required = false, defaultValue = "false", value = "following") Boolean following, @RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
+        model.addAttribute("pattern", pattern);
+        model.addAttribute("following", following);
         model.addAttribute("logged", userDAO.integer("count.logged.users"));
         model.addAttribute("online", online);
         return "/24h/usersrank";
     }
     
     @RequestMapping(value = "/tables/usersrank.xhtml", method = RequestMethod.GET)
-    public String tablesUsersRank(Model model, PagingOptions options, @RequestParam(required = false, value = "pattern") String pattern, @RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
-        int found = userDAO.countEnabledUsersForScoreboard(pattern, online);
+    public String tablesUsersRank(Model model, Principal principal,PagingOptions options, @RequestParam(required = false, value = "pattern") String pattern, @RequestParam(required = false, defaultValue = "false", value = "following") Boolean following, @RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
+    	Integer uid = null;
+    	if (following)
+    		uid = getUid(principal);
+        int found = userDAO.countEnabledUsersForScoreboard(pattern, online,uid);
         if (found != 0) {
-            IPaginatedList<User> users = userDAO.getUserRanking(pattern, found,online, options);
+            IPaginatedList<User> users = userDAO.getUserRanking(pattern, found,online,uid, options);
             if (options.getPage() == 1) {
                 assigMedals(users.getList());
             }

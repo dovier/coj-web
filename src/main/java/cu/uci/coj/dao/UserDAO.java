@@ -9,12 +9,17 @@ import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.Registration;
 import cu.uci.coj.model.Team;
 import cu.uci.coj.model.User;
+import cu.uci.coj.model.UserClassificationStats;
 import cu.uci.coj.model.UserProfile;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 
 public interface UserDAO extends BaseDAO {
 
+	public void unbanUser(int uid);
+
+	public void banUser(int uid,String description);
+	
 	public UserProfile loadUserProfile(String userName);
 
 	public boolean hasProfile(String userName);
@@ -51,15 +56,13 @@ public interface UserDAO extends BaseDAO {
 
 	public int countEnabledUsers(String pattern, boolean online);
 
-	public int countEnabledUsersForScoreboard(String pattern, boolean online);
+	public int countEnabledUsersForScoreboard(String pattern, boolean online,Integer uid);
 
 	public int countEnabledUsersByInstitutions(String pattern, boolean online, int inst_id);
 
 	public int countEnabledUsersByCountry(String pattern, boolean online, int country_id);
 
-	public IPaginatedList<User> getUserRanking(String pattern, int found, boolean online, PagingOptions options);
-
-	public List<User> getUserRanking(String pattern, boolean online, PagingOptions options);
+	public IPaginatedList<User> getUserRanking(String pattern, int found, boolean online, Integer uid,PagingOptions options);
 
 	public IPaginatedList<User> getInstitutionUsersRanking(String pattern, int found, boolean online, PagingOptions options, int inst_id);
 
@@ -95,7 +98,7 @@ public interface UserDAO extends BaseDAO {
 
 	public void clearUserAuthorities(String username);
 
-	public String[] grantUserAuthority(String username, String authority);
+	public void grantUserAuthority(User user);
 
 	public boolean existUserByMailOffUid(String mail, int uid);
 
@@ -121,8 +124,6 @@ public interface UserDAO extends BaseDAO {
 
 	public Language getProgrammingLanguageByUsername(String username);
 
-	public void updateLastConnectedDate(String username);
-
 	public void updateChangeTime(int uid);
 
 	public List<User> loadUsersButOne(String username);
@@ -138,4 +139,6 @@ public interface UserDAO extends BaseDAO {
 	public void checkUserStatus();
 
 	public String userByMail(String mail);
+
+	public UserClassificationStats getUserClassifications(Integer uid);
 }

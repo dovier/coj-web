@@ -1,7 +1,7 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<link rel="stylesheet" href="<c:url value="/css/wboard.css"/>" type="text/css" media="screen" />
+<link rel="stylesheet" href="<c:url value="/css/confirm-message.css"/>" type="text/css" media="screen" />
 
 <h2 class="postheader">
 	<fmt:message key="page.general.admin.header" />
@@ -45,12 +45,5 @@
 </div>
 
 <script>
-$(function() {
-	$('#filter-button').click(function(event) {
-		displayTableReload($('#filter-form').formSerialize());
-		event.preventDefault();
-	});
-});
-
-$(document).ready(displayTableReload($('#filter-form').formSerialize()));
+$(initStandardFilterForm);
 </script>

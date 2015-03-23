@@ -101,9 +101,10 @@ public class ContestSubmissionController extends BaseController {
 
 	@RequestMapping(value = "/tables/cstatus.xhtml", method = RequestMethod.GET)
 	public String tableJudgements(HttpServletRequest request, Principal principal, PagingOptions options, Model model, @RequestParam("cid") Integer cid,
-			@RequestParam(required = false, value = "username") String filter_user, @RequestParam(required = false, value = "pid") Integer pid,
+			@RequestParam(required = false, value = "username") String filter_user, @RequestParam(required = false, value = "pid",defaultValue="0") Integer pid,
 			@RequestParam(required = false, value = "status") String status, @RequestParam(required = false, value = "planguage") String language,
 			@RequestParam(required = false, value = "refresh") Boolean refresh) {
+		if (pid==0) pid = null;
 		String username = getUsername(principal);
 		Contest contest = contestDAO.loadContest(cid);
 

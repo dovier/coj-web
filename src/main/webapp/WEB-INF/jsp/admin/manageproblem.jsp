@@ -1,6 +1,10 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+
+<link rel="stylesheet" href="<c:url value="/css/confirm-message.css"/>"
+	type="text/css" media="screen" />
+	
 <h2 class="postheader">
 	<fmt:message key="addproblem.title" />
 </h2>
@@ -10,7 +14,8 @@
 		<div class="form-group col-xs-12">
 			<label class="control-label col-xs-3">PID</label>
 			<div class="col-xs-8">
-				<form:input cssClass="form-control" path="pid" readonly="true"></form:input>
+				<form:input id="pid" cssClass="form-control" path="pid"
+					readonly="true"></form:input>
 				<span class="label label-danger"><form:errors path="pid" /></span>
 			</div>
 			<a><i class="fa fa-asterisk"></i></a>
@@ -166,16 +171,14 @@
 			<label class="control-label col-xs-3"><fmt:message
 					key="addproblem.inputgen" /></label>
 			<div class="col-xs-8">
-				<input type="file" name="inputgen" class="file"
-					data-show-upload="false" />
+				<input type="file" name="inputgen" class="file" />
 			</div>
 		</div>
 		<div class="form-group col-xs-12">
 			<label class="control-label col-xs-3"><fmt:message
 					key="addproblem.modelsol" /></label>
 			<div class="col-xs-8">
-				<input type="file" name="modelsol" class="file"
-					data-show-upload="false" />
+				<input type="file" name="modelsol" class="file" />
 			</div>
 		</div>
 
@@ -191,10 +194,12 @@
 				<div id="gDatasets" class="panel-body collapse in">
 					<div class="form-group">
 						<div class="margin-top-05 col-xs-12">
-							<label class="control-label col-xs-3">Existing Datasets</label>
-							<div class="col-xs-8">
+							<label class="control-label col-xs-3"><fmt:message
+									key="addproblem.existing.datasets" /></label>
+							<div id="datasets-container" class="col-xs-8">
 								<c:forEach items="${datasets}" varStatus="loop">
-									<div id="${datasets[loop.index]}-container" class="margin-top-05 	col-xs-4">
+									<div id="${datasets[loop.index]}-container"
+										class="margin-top-05 col-xs-4">
 										<div class="input-group">
 											<input readonly="readonly" name="${datasets[loop.index]}"
 												class="form-control" value="${datasets[loop.index]}" /><span
@@ -207,6 +212,17 @@
 										</div>
 									</div>
 								</c:forEach>
+							</div>
+							<div class="form-group col-xs-12">
+								<div class="margin-top-05 pull-right form-actions">
+									<input class="btn btn-primary confirm-message" type="button"
+										id="deleteall"
+										value='<fmt:message key="addproblem.deleteall" />'
+										data-confirm-title='<spring:message code="message.title"/>'
+										data-confirm-message='Delete all datasets'
+										data-confirm-type="delete"
+										data-redirect="#" />
+								</div>
 							</div>
 						</div>
 					</div>
@@ -255,9 +271,9 @@
 		<c:if test="${showpsetters == true}">
 			<div class="form-group col-xs-12">
 				<label class="control-label col-xs-3"> <fmt:message
-						key="page.advancedcfg.psetters" />
-						<a><i data-toggle="tooltip" class="fa fa-info-circle"
-					title="<spring:message code="text.psetters"/>"></i></a>
+						key="page.advancedcfg.psetters" /> <a><i
+						data-toggle="tooltip" class="fa fa-info-circle"
+						title="<spring:message code="text.psetters"/>"></i></a>
 				</label>
 				<div class="col-xs-9 contestlanguages">
 					<div class="col-xs-3">
@@ -283,13 +299,14 @@
 		</div>
 	</form:form>
 </div>
+<%@include file="/WEB-INF/jsp/general/confirmmessage.jsp"%>
 <script type="text/javascript"
 	src="<c:url value="/js/WYSIWYG/source.js" />"></script>
 
 <script type="text/javascript">
 	function addInput() {
 		var idx = $(".model-dataset").length;
-var string = (idx >1)?"":"New Datasets";
+		var string = (idx >1)?"":"New Datasets";
 		var html = "<div class=\"model-dataset margin-top-05 col-xs-12\">"
 				+ "<label class=\"control-label col-xs-3\">"
 				+ string
@@ -315,7 +332,7 @@ var string = (idx >1)?"":"New Datasets";
 			   alert("Error in file name: " + file.name + "; must be in the form 001.in, 002.out, etc.");
 		   	   $(this).fileinput('reset');
 		   }
-	    });;
+	    });
 	};
 
 	$(function() {
@@ -325,6 +342,7 @@ var string = (idx >1)?"":"New Datasets";
 			removeClass : "btn btn-default",
 			removeLabel : "Delete",
 			previewFileType : 'text',
+			showPreview : 0,
 			msgProgress : 'Loading {percent}%',
 			browseClass : "btn btn-primary",
 			browseLabel : "Pick",
@@ -336,27 +354,41 @@ var string = (idx >1)?"":"New Datasets";
 			maxFileSize : 50000000,
 			allowedFileTypes : [ 'object' ],
 			removeClass : "btn btn-default",
-			removeLabel : "Delete",
-			showPreview: false,
 			msgProgress : 'Loading {percent}%',
-			browseClass : "btn btn-primary",
+			browseClass : "btn btn-danger",
 			browseLabel : "Pick",
 			browseIcon : '<i class="fa fa-file-o"></i>&nbsp;',
 			removeIcon : '<i class="fa fa-trash"></i>'
 		});
-		addInput();
-	});
-	$("[data-toggle='tooltip']").tooltip();
+	
 
-	$(function() {
 		$('.fa-chevron-up').click(function() {
 			$(this).toggleClass('fa-chevron-up');
 			$(this).toggleClass('fa-chevron-down');
 		});
 
+		addInput();
 		$("[data-toggle='tooltip']").tooltip();
+		
+		$("#deleteall").click(deleteall);
 	});
 
+	function deleteall() {
+		var pid = $("#pid").val();  
+		$.ajax({
+			type : "GET",
+			url : "/admin/removealldatasets.json",
+			data: {
+				"pid":pid
+			},
+			dataType : 'text',
+			success : function(data) {
+				$('#datasets-container').empty();
+			}
+		});
+
+	};
+	
 	function removedataset(pid,dataset) {
 		$.ajax({
 			type : "GET",

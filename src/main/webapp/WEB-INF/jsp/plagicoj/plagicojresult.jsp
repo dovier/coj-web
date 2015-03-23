@@ -46,7 +46,7 @@
     }  
     function saveRevision(){
         $.ajax({
-            url: "/plagicoj/saverevision.xhtml",
+            url: "/plagicoj/saverevision.json",
             type: "POST",
             data: {ssid: ${sourcesubmission.sid},
                    didd: ${destinationsubmission.sid},

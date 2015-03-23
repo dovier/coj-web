@@ -27,6 +27,9 @@ public class CorrectionDAOImpl extends BaseDAOImpl implements CorrectionDAO {
 
 		dml("delete.achievements", AchievementType.POLYGLOT.id());
 		dml("calculate.polyglot", AchievementType.POLYGLOT.id());
+		
+		dml("delete.achievements", AchievementType.INFLATE_THE_BALLOON.id());
+		dml("calculate.inflate.balloon", AchievementType.INFLATE_THE_BALLOON.id());
 
 		List<Integer> classifications = integers("select aid from classifications");
 		for (Integer classif : classifications)

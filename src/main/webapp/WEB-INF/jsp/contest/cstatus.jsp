@@ -112,12 +112,5 @@
 	</c:choose>
 </div>
 <script>
-	$(function() {
-		$('#filter-button').click(function(event) {
-			displayTableReload($('#filter-form').formSerialize());
-			event.preventDefault();
-		});
-	});
-
-	$(document).ready(displayTableReload($('#filter-form').formSerialize()));
+$(initStandardFilterForm);
 </script>

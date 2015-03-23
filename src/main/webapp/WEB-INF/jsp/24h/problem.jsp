@@ -19,9 +19,8 @@
 							&nbsp;&nbsp;<a
 						href="problempdf.xhtml?pid=<c:url value="${problem.pid}"/>">PDF</a>
 					<c:if test="${not empty problem.forumLink}">
-							&nbsp;&nbsp;<a
-						href="${problem.forumLink}"><spring:message
-							code="link.discussion" /></a>
+							&nbsp;&nbsp;<a href="${problem.forumLink}"><spring:message
+								code="link.discussion" /></a>
 					</c:if>
 				</authz:authorize>
 				<authz:authorize ifNotGranted="ROLE_ANONYMOUS">
@@ -52,21 +51,21 @@
 								code="link.discussion" /></a>
 					</c:if>
 			&nbsp;<a href="/24h/translation.xhtml?pid=${problem.pid}"><spring:message
-								code="link.translation" /></a>
+							code="link.translation" /></a>
 				</authz:authorize>
 			</div>
 		</div>
 	</div>
 	<div class="col-xs-12">
 		<h3 class="text-center">
-			<b class="text" data-language="en"><c:out value=" ${problem.pid}" /> - <c:out
-					value="${problem.titleEN}" /></b>
-			<b class="text" data-language="es"><c:out value=" ${problem.pid}" /> - <c:out
-					value="${problem.titleEs}" /></b>
-			<b class="text" data-language="pt"><c:out value=" ${problem.pid}" /> - <c:out
-					value="${problem.titlePt}" /></b>
-			
-			
+			<b class="text" data-language="en"><c:out value=" ${problem.pid}" />
+				- <c:out value="${problem.titleEN}" /></b> <b class="text"
+				data-language="es"><c:out value=" ${problem.pid}" /> - <c:out
+					value="${problem.defaultTitleEs}" /></b> <b class="text"
+				data-language="pt"><c:out value=" ${problem.pid}" /> - <c:out
+					value="${problem.defaultTitlePt}" /></b>
+
+
 			<c:if test="${problem.special_judge}">
 				<a data-toggle="tooltip"
 					title="<spring:message code="titval.special.judge"/>"><span
@@ -106,8 +105,7 @@
 								value="${problem.time}" /> MS <c:choose>
 								<c:when test="${problem.multidata}">
 									<c:out value="|" />
-									<b><spring:message
-											code="fieldhdr.testlimit" />:</b>
+									<b><spring:message code="fieldhdr.testlimit" />:</b>
 									<c:out value="${problem.casetimelimit}" /> MS
 					</c:when>
 							</c:choose> <c:out value="|" /><b><spring:message
@@ -150,23 +148,22 @@
 					</c:if>
 					<tr>
 						<td><spring:message code="fieldhdr.availablein" /></td>
-						<td>
-							<c:if test="${problem.availableInEn}">
-								<a href=""><img data-toggle="tooltip" data-placement="bottom" class="image change-language" data-language="en"
-									 title="<spring:message code="titval.en"/>"
-									 src="/images/i18n/en.png"/></a>
-							</c:if>
-							<c:if test="${problem.availableInEs}">
-								<a href=""><img data-toggle="tooltip" data-placement="bottom" class="image change-language" data-language="es"
-									 title="<spring:message code="titval.es"/>"
-									 src="/images/i18n/es.png"/></a>
-							</c:if>
-							<c:if test="${problem.availableInPt}">
-								<a><img data-toggle="tooltip" data-placement="bottom" class="image change-language" data-language="pt"
-									 title="<spring:message code="titval.pt"/>"
-									 src="/images/i18n/pt.png"/></a>
-							</c:if>
-						</td>
+						<td><c:if test="${problem.availableInEn}">
+								<a href="#"><img data-toggle="tooltip"
+									data-placement="bottom" class="image change-language"
+									data-language="en" title="<spring:message code="titval.en"/>"
+									src="/images/i18n/en.png" /></a>
+							</c:if> <c:if test="${problem.availableInEs}">
+								<a href="#"><img data-toggle="tooltip"
+									data-placement="bottom" class="image change-language"
+									data-language="es" title="<spring:message code="titval.es"/>"
+									src="/images/i18n/es.png" /></a>
+							</c:if> <c:if test="${problem.availableInPt}">
+								<a href="#"><img data-toggle="tooltip"
+									data-placement="bottom" class="image change-language"
+									data-language="pt" title="<spring:message code="titval.pt"/>"
+									src="/images/i18n/pt.png" /></a>
+							</c:if></td>
 					</tr>
 				</tbody>
 			</table>
@@ -182,10 +179,10 @@
 					<c:url value="${problem.descriptionEN}" />
 				</div>
 				<div class="col-xs-12 text" data-language="es">
-					<c:url value="${problem.descriptionEs}" />
+					<c:url value="${problem.defaultDescriptionEs}" />
 				</div>
 				<div class="col-xs-12 text" data-language="pt">
-					<c:url value="${problem.descriptionPt}" />
+					<c:url value="${problem.defaultDescriptionPt}" />
 				</div>
 			</div>
 		</div>
@@ -200,10 +197,10 @@
 					<c:url value="${problem.inputEN}" />
 				</div>
 				<div class="col-xs-12 text" data-language="es">
-					<c:url value="${problem.inputEs}" />
+					<c:url value="${problem.defaultInputEs}" />
 				</div>
 				<div class="col-xs-12 text" data-language="pt">
-					<c:url value="${problem.inputPt}" />
+					<c:url value="${problem.defaultInputPt}" />
 				</div>
 			</div>
 		</div>
@@ -218,10 +215,10 @@
 					<c:url value="${problem.outputEN}" />
 				</div>
 				<div class="col-xs-12 text" data-language="es">
-					<c:url value="${problem.outputEs}" />
+					<c:url value="${problem.defaultOutputEs}" />
 				</div>
 				<div class="col-xs-12 text" data-language="pt">
-					<c:url value="${problem.outputPt}" />
+					<c:url value="${problem.defaultOutputPt}" />
 				</div>
 			</div>
 		</div>
@@ -231,9 +228,7 @@
 			<h4 class="text-primary">
 				<spring:message code="fieldhdr.sampleinput" />
 			</h4>
-			<code>
-				<c:url value="${problem.inputex}" />
-			</code>
+			<code>${problem.inputex}</code>
 		</div>
 	</div>
 	<div class="row">
@@ -241,25 +236,23 @@
 			<h4 class="text-primary">
 				<spring:message code="fieldhdr.sampleoutput" />
 			</h4>
-			<code>
-				<c:url value="${problem.outputex}" />
-			</code>
+			<code>${problem.outputex}</code>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
 			<h4 class="text-primary">
-				<spring:message code="fieldhdr.hint" />e
+				<spring:message code="fieldhdr.hint" />
 			</h4>
 			<div class="ex row">
 				<div class="col-xs-12 text" data-language="en">
 					<c:url value="${problem.commentsEN}" />
 				</div>
 				<div class="col-xs-12 text" data-language="es">
-					<c:url value="${problem.commentsEs}" />
+					<c:url value="${problem.defaultCommentsEs}" />
 				</div>
 				<div class="col-xs-12 text" data-language="pt">
-					<c:url value="${problem.commentsPt}" />
+					<c:url value="${problem.defaultCommentsPt}" />
 				</div>
 			</div>
 		</div>
@@ -292,25 +285,25 @@
 
 <script>
 	$(function() {
-		$("[data-toggle='tooltip']").tooltip();		
-		
-		$(".text").each(function(){
-			if("${locale}" == $(this).data("language")) {
+		$("[data-toggle='tooltip']").tooltip();
+
+		$(".text").each(function() {
+			if ("${locale}" == $(this).data("language")) {
 				$(this).removeClass("hide");
 			} else {
 				$(this).addClass("hide");
-			}			
+			}
 		});
-		
+
 		$(".change-language").click(function() {
 			lang = $(this).data("language");
-			$(".text").each(function(){
-				if(lang == $(this).data("language")) {
+			$(".text").each(function() {
+				if (lang == $(this).data("language")) {
 					$(this).removeClass("hide");
 				} else {
 					$(this).addClass("hide");
-				}			
+				}
 			});
-		});		
+		});
 	});
 </script>

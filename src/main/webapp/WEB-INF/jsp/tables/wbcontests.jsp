@@ -15,8 +15,8 @@
 	</display:column>
 	<display:column titleKey="tablehdr.timeremaining">
 		<div class="countdown2"
-			data-start-date="${contest.startDate.time + mapsites.get(contest.sid).offset}"
-			data-end-date="${contest.endDate.time + mapsites.get(contest.sid).offset}"></div>
+			data-start-date="${contest.startDate.time - mapsites.get(contest.sid).offset}"
+			data-end-date="${contest.endDate.time - mapsites.get(contest.sid).offset}"></div>
 	</display:column>
 	<display:column titleKey="tablehdr.status">
 		<c:choose>

@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class User implements CommonScoreboardInterface {
 
+	private String banReason;
 	private static final String NOT_ACTIVE = "not active";
 	private static final String ACTIVE = "active";
 	private static final String DORMANT = "dormant";
@@ -156,6 +157,16 @@ public class User implements CommonScoreboardInterface {
 
 	public String getStatus() {
 		return status;
+	}
+	
+	
+
+	public String getBanReason() {
+		return banReason;
+	}
+
+	public void setBanReason(String banReason) {
+		this.banReason = banReason;
 	}
 
 	public void setStatus(String status) {

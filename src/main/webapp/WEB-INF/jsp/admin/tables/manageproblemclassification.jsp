@@ -10,6 +10,9 @@
 	<display:column titleKey="tablehdr.title" style="text-transform:none">
 		<a href="/24h/problem.xhtml?pid=${problem.pid}">${problem.title}</a>
 	</display:column>
+	<display:column titleKey="pagehdr.problemsetter">
+		${problem.username}
+	</display:column>
 	<display:column property="submitions" titleKey="tablehdr.sub"
 		sortable="true" sortProperty="submitions" sortName="total"
 		autolink="true" headerClass="headsub" href="status.xhtml"
