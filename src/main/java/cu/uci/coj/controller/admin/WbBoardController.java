@@ -78,6 +78,7 @@ public class WbBoardController extends BaseController {
 	@RequestMapping(value = "/manageparsers/parse.json", method = RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public boolean parseParsers(@RequestParam Integer sid){
+		System.out.println("Beinign parsing for: " + sid);
 		return wbParserManager.parseSite(sid);
 	}
 	

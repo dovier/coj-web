@@ -67,8 +67,8 @@ public class MailNotificationsServiceImpl extends MailServiceImpl implements Mai
 		String to = user.getEmail();
 		String subject = "COJ - User Account Validation.";
 		String msg = Config.getProperty("register.msg.act");
-		msg = msg.replaceFirst("<token>", token);
-		msg = msg.replaceAll("<user>", user.getName() + " " + user.getLastname());
+		msg = msg.replaceAll("<token>", token);
+		msg = msg.replaceFirst("<user>", user.getName() + " " + user.getLastname());
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("text", msg);		

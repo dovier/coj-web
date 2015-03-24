@@ -67,7 +67,7 @@ public class WbEmailNotificationService implements WbNotificationService {
 					
 			//List<String> mails = wbSiteDAO.strings("users.wboard.notifications");
 			//mailService.sendBulkMessage(mails.toArray(new String[0]), "COJ - WebBoard Contest Notification", message, true);
-			mailService.sendMessage("emoralesp@estudiantes.uci.cu", "COJ - WebBoard Contest Notification", message, true);	
+			mailService.sendMessage("emoralesp@estudiantes.uci.cu", "COJ - COJboard Contest Notification", message, true);	
 		}
 	}
 }

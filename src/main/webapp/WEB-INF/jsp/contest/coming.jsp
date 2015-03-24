@@ -8,7 +8,7 @@
 <div class="postcontent">
 	<div>
 		<spring:message code="pagehdr.wboardlink"/>
-		<a href="<c:url value="/wboard/contests.xhtml" />">Web board</a>
+		<a href="<c:url value="/wboard/contests.xhtml" />">COJboard</a>
 	</div>	
     <div id="display-table-container" data-reload-url="/tables/coming.xhtml"></div>
 </div>

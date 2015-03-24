@@ -18,7 +18,7 @@
             <a href="/services/specification.xhtml"><spring:message code="text.tools.2"/></a>
         </li>
         <li>
-            <a href="<c:url value="/wboard/contests.xhtml"/>">Web board</a>
+            <a href="<c:url value="/wboard/contests.xhtml"/>">COJboard</a>
         </li>
     </ul>
     <!-- /article-content -->

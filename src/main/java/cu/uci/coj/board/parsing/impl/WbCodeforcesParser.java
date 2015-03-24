@@ -71,6 +71,7 @@ public class WbCodeforcesParser extends WbParser {
 		try {
 			doc = Jsoup.connect(siteUrl).timeout(20*1000).get();
 		} catch (IOException ex) {
+			System.out.println("Connection timeout for site" + siteUrl);
 			throw new ConnectionErrorException(site.getSite());
 		}
 
@@ -102,6 +103,7 @@ public class WbCodeforcesParser extends WbParser {
 				dateEnd = new Date(cal.getTimeInMillis());
 
 			} catch (ParseException ex) {
+				System.out.println("Error in DOM page");
 				return null;
 			}
 

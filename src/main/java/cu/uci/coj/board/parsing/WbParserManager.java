@@ -101,6 +101,9 @@ public class WbParserManager {
 		for(int i = 0;i<parserList.size();i++) {
 			if(parserList.get(i).getSite().getSid() == sid) {
 				try {
+					
+					System.out.println("Parsing " +  parserList.get(i).getSite().getSite());
+					
 					List<WbContest> contests = parserList.get(i).parse();				
 					
 					parserList.get(i).getSite().setCompleted(true);
@@ -111,7 +114,8 @@ public class WbParserManager {
 					}
 					return true;
 				} catch(ConnectionErrorException e) {
-					//e.printStackTrace();	
+					System.out.println("Error in parsing " + parserList.get(i).getSite().getSite());
+					e.printStackTrace();	
 				}
 				break;
 			}
