@@ -47,20 +47,8 @@ public class StatisticsController extends BaseController  {
     @Resource
     private ContestDAO contestDAO;
 
-    private CategoryDataset createDataset(String query) {
-        DefaultCategoryDataset defaultcategorydataset = new DefaultCategoryDataset();
-        Map<String, ?> map = baseDAO.map(query);
-        Set<String> set = map.keySet();
-        for (String key : set) {
-            if (!key.equals("total")) {
-                double val = (Long) map.get(key);
-                val /= (Long) map.get("total");
-                val *= 100;
-                val = (double) Math.round(val * 100) / 100;
-                defaultcategorydataset.addValue(val, "status", key.toLowerCase());
-            }
-        }
-        return defaultcategorydataset;
+    private Stats createDataset(String query) {
+       return baseDAO.object(query,Stats.class);
     }
 
     private CategoryDataset createDataset(int cid) {
@@ -79,38 +67,13 @@ public class StatisticsController extends BaseController  {
         return defaultcategorydataset;
     }
 
-    private JFreeChart createChart(CategoryDataset categorydataset) {
-        JFreeChart jfreechart = ChartFactory.createBarChart3D("", "judgments", "percent - %", categorydataset, PlotOrientation.VERTICAL, false, true, false);
-        CategoryPlot categoryplot = (CategoryPlot) jfreechart.getPlot();
-        BarRenderer3D custombarrenderer3d = new BarRenderer3D();
-        custombarrenderer3d.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
-        custombarrenderer3d.setBaseItemLabelsVisible(true);
-        custombarrenderer3d.setItemLabelAnchorOffset(10D);
-        custombarrenderer3d.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        categoryplot.setRenderer(custombarrenderer3d);
-        custombarrenderer3d.setBaseItemLabelsVisible(true);
-        custombarrenderer3d.setMaximumBarWidth(0.050000000000000003D);
-        NumberAxis numberaxis = (NumberAxis) categoryplot.getRangeAxis();
-        numberaxis.setNumberFormatOverride(NumberFormat.getIntegerInstance());
-        numberaxis.setUpperMargin(0.10000000000000001D);
-        ChartUtilities.applyCurrentTheme(jfreechart);
-        return jfreechart;
-    }
-
     @RequestMapping(value = "/24h/statistics.xhtml", method = RequestMethod.GET)
     public String TrainingModuleStatistics(Model model) {
         model.addAttribute("stat", baseDAO.object("statistics.total.status", Stats.class));
         model.addAttribute("statistics", baseDAO.objects("training.statistics", Language.class));
+        model.addAttribute("graph",createDataset("statistics.status"));
+        model.addAttribute("classif",userDAO.getTotalClassifications());
         return "/24h/statistics";
-    }
-
-    @RequestMapping(value = "/graph/24h/statistics.xhtml", method = RequestMethod.GET)
-    public String TrainingModuleStatisticsGraph(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        response.setContentType("image/png");
-        CategoryDataset categoryDataset = createDataset("statistics.status");
-        JFreeChart chart = createChart(categoryDataset);
-        ChartUtilities.writeChartAsPNG(response.getOutputStream(), chart, 660, 400);
-        return null;
     }
 
     @RequestMapping(value = "/contest/cstatistics.xhtml", method = RequestMethod.GET)
@@ -123,52 +86,25 @@ public class StatisticsController extends BaseController  {
         model.addAttribute("stat", baseDAO.object("statistics.contest.total.status", Stats.class, contest.getCid()));
         model.addAttribute("statistics", baseDAO.objects("statistics.contest", Language.class, contest.getCid()));
         contest.setUsers(userDAO.loadContestUsers(contest.getCid()));
+        CategoryDataset categoryDataset = createDataset(cid);
         model.addAttribute("contest", contest);
         return "/contest/cstatistics";
-    }
-
-    @Deprecated
-    //sustituida o a sustituir por el Chart.js
-    @RequestMapping(value = "/graph/contest/cstatistics.xhtml", method = RequestMethod.GET)
-    public String ContestStatisticsGraph(Model model, HttpServletRequest request, HttpServletResponse response, @RequestParam("cid") Integer cid) throws Exception {
-        response.setContentType("image/png");
-        CategoryDataset categoryDataset = createDataset(cid);
-        JFreeChart chart = createChart(categoryDataset);
-        ChartUtilities.writeChartAsPNG(response.getOutputStream(), chart, 660, 400);
-        return null;
     }
 
     @RequestMapping(value = "/contest/globalstatistics.xhtml", method = RequestMethod.GET)
     public String GlobalContestStatistics(Model model) {
         model.addAttribute("stat", baseDAO.object("statistics.global.total.status", Stats.class));
         model.addAttribute("statistics", baseDAO.objects("statistics.global", Language.class));
+        model.addAttribute("graph",createDataset("statistics.global.total.status"));
         return "/contest/globalstatistics";
-    }
-
-    @Deprecated
-    //sustituida o a sustituir por el Chart.js
-    @RequestMapping(value = "/graph/contest/globalstatistics.xhtml", method = RequestMethod.GET)
-    public String GlobalContestStatisticsGraph(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        response.setContentType("image/png");
-        CategoryDataset categoryDataset = createDataset("statistics.global.status");
-        JFreeChart chart = createChart(categoryDataset);
-        ChartUtilities.writeChartAsPNG(response.getOutputStream(), chart, 660, 400);
-        return null;
     }
 
     @RequestMapping(value = "/practice/virtualstatistics.xhtml", method = RequestMethod.GET)
     public String VirtualStatistics(Model model) {
         model.addAttribute("stat", baseDAO.object("statistics.virtual.total.status", Stats.class));
         model.addAttribute("statistics", baseDAO.objects("statistics.virtual", Language.class));
+        model.addAttribute("graph",createDataset("statistics.virtual.status"));
         return "/practice/virtualstatistics";
     }
 
-    @RequestMapping(value = "/graph/practice/statistics.xhtml", method = RequestMethod.GET)
-    public String VirtualStatisticsGraph(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        response.setContentType("image/png");
-        CategoryDataset categoryDataset = createDataset("statistics.virtual.status");
-        JFreeChart chart = createChart(categoryDataset);
-        ChartUtilities.writeChartAsPNG(response.getOutputStream(), chart, 660, 400);
-        return null;
-    }
 }

@@ -141,4 +141,6 @@ public interface UserDAO extends BaseDAO {
 	public String userByMail(String mail);
 
 	public UserClassificationStats getUserClassifications(Integer uid);
+
+	UserClassificationStats getTotalClassifications();
 }

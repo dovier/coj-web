@@ -194,7 +194,7 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 				break;
 			dml("update user_contest set lastacc = (select date from contest_submition where submit_id = ?) where uid = ? and cid = ?", sub.getSid(), sub.getUid(), contest.getCid());
 			dml("update problem_contest set accu = accu + 1 where pid = ? and cid = ?", sub.getPid(), contest.getCid());
-			Map<String, Object> map = map("select (ac+wa+rte+ce+pe+uq+mle+ole+fle+tle) as total,accu from problem_contest where pid = ? and cid = ?", sub.getPid(), contest.getCid());
+			Map<String, Object> map = map("select (ac+wa+rte+ce+pe+uq+mle+ole+tle) as total,accu from problem_contest where pid = ? and cid = ?", sub.getPid(), contest.getCid());
 			int ac = (Integer) map.get("accu");
 			double totbefore = Utils.formulaFreeContest(ac - 1, contest.getPpoints());
 			double totAfter = Utils.formulaFreeContest(ac, contest.getPpoints());

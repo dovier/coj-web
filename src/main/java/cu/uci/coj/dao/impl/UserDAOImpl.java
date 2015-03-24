@@ -184,7 +184,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		userOrder(query, options.getSort(),
 				"asc".equals(options.getDirection()));
 		List<User> users = objects(
-				query.select("status,country.zip as country,country.name as country_desc,institution.zip as institution,institution.name as institution_desc,username,nick,(ac+fle+rte+ce+wa+mle+tle+ole+pe) as total,ac as acc,uaccu as accu,points,online,case when (ac+wa+pe+ce+rte+tle+fle+mle+fle+ole) > 0 then (cast(ac as double precision)/(ac+wa+pe+ce+rte+tle+fle+mle+fle+ole))*100 else 0 end as percent"),
+				query.select("status,country.zip as country,country.name as country_desc,institution.zip as institution,institution.name as institution_desc,username,nick,(ac+rte+ce+wa+mle+tle+ole+pe) as total,ac as acc,uaccu as accu,points,online,case when (ac+wa+pe+ce+rte+tle+mle+ole) > 0 then (cast(ac as double precision)/(ac+wa+pe+ce+rte+tle+mle+ole))*100 else 0 end as percent"),
 				User.class, query.arguments());
 
 		number = options.getOffset(30);
@@ -242,9 +242,9 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		query.paginate(options, 30);
 		List<User> users = objects(
 				query.select("status,country.zip as country,country.name as country_desc,institution.zip as institution,institution.name as institution_desc,username,nick,"
-						+ "(ac+fle+rte+ce+wa+mle+tle+ole+pe) as total,"
+						+ "(ac+rte+ce+wa+mle+tle+ole+pe) as total,"
 						+ "ac as acc,ac as accu,points,online,"
-						+ "case when (ac+wa+pe+ce+rte+tle+fle+mle+fle+ole) > 0 then (cast(ac as double precision)/(ac+wa+pe+ce+rte+tle+fle+mle+fle+ole))*100 else 0 end as percent"),
+						+ "case when (ac+wa+pe+ce+rte+tle+mle+ole) > 0 then (cast(ac as double precision)/(ac+wa+pe+ce+rte+tle+mle+ole))*100 else 0 end as percent"),
 				User.class, query.arguments());
 
 		number = options.getOffset(30);
@@ -277,12 +277,12 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 						"institution.name as institution_desc",
 						"username",
 						"nick",
-						"(ac+fle+rte+ce+wa+mle+tle+ole+pe) as total",
+						"(ac+rte+ce+wa+mle+tle+ole+pe) as total",
 						"ac as acc",
 						"ac as accu",
 						"points",
 						"online",
-						"case when (ac+wa+pe+ce+rte+tle+fle+mle+fle+ole) > 0 then (cast(ac as double precision)/(ac+wa+pe+ce+rte+tle+fle+mle+fle+ole))*100 else 0 end as percent"),
+						"case when (ac+wa+pe+ce+rte+tle+mle+ole) > 0 then (cast(ac as double precision)/(ac+wa+pe+ce+rte+tle+mle+ole))*100 else 0 end as percent"),
 				User.class, query.arguments());
 		number = options.getOffset(30);
 		for (int i = 0; i < users.size(); i++) {
@@ -740,6 +740,12 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		
 		List<Map<String,Object>> timeline = maps("select.user.timeline",uid,uid);
 		return new UserClassificationStats(maps,probs,timeline);
+	}
+	
+	@Override
+	public UserClassificationStats getTotalClassifications() {
+		List<Map<String,Object>> probs = maps("select.prob.classif");
+		return new UserClassificationStats(probs);
 	}
 
 }

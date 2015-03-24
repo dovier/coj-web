@@ -429,6 +429,8 @@
 						<div class="row row-centered no-gutters">
 							<div class="col-xs-12">
 								<c:if test="${userclassif.count > 0}">
+									<label> <spring:message code="user.percent.stats" />
+									</label>
 									<canvas id="top-chart" width="500" height="500"></canvas>
 								</c:if>
 							</div>
@@ -651,7 +653,7 @@ $(function() {
 			            pointStrokeColor: "#fff",
 			            pointHighlightFill: "#fff",
 			            pointHighlightStroke: "rgba(0,150,0,0.8)",
-			            data: ${userclassif.top}
+			            data: ${userclassif.percentTop}
 			        },
 			        {
 			            fillColor: "rgba(151,187,205,0.4)",
@@ -659,7 +661,7 @@ $(function() {
 			            pointColor: "rgba(151,187,205,0.4)",
 			            pointStrokeColor: "#fff",
 			            
-			            data: ${userclassif.probTop}
+			            data: ${userclassif.percentTotal}
 			        }
 			    ]
 			};
@@ -695,7 +697,7 @@ $(function() {
 				            label: 'AC',
 				            fillColor: "rgba(0,150,0,0.4)",
 				            strokeColor: "rgba(0,150,0,1)",
-				            pointColor: "rgba(0,150,01)",
+				            pointColor: "rgba(0,150,0,1)",
 				            pointStrokeColor: "#fff",
 				            pointHighlightFill: "#fff",
 				            pointHighlightStroke: "rgba(0,150,0,1)",

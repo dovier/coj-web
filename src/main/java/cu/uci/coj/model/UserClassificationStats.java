@@ -11,17 +11,48 @@ public class UserClassificationStats {
 	private String classifications;
 	private int count;
 	
-	private String probLabels;
+	private String percentTop;
+	private String percentTotal;
+	
 	private String probTop;
-	private String probClassifications;
-	private int probCount;
 	
 	private String dates;
 	private String acStatus;
 	private String errorStatus;
 	private int dateCount;
 	
+	private int[] initProbs(List<Map<String,Object>> probs) {
+		String[] labels = new String[probs.size()];
+		int[] probTop = new int[probs.size()];
+		for(int i = 0;i < probs.size();i++) {
+			Map<String,Object> row = probs.get(i);
+			labels[i] = "'" + String.valueOf(row.get("name"))+"'";
+			probTop[i] = Integer.valueOf(String.valueOf(row.get("top")));
+			
+		}
+		this.labels = Arrays.toString(labels);
+		this.probTop = Arrays.toString(probTop);
+		return probTop;
+	}
+	
+	private void initPercent(int[] top,int[] probTop) {
+		int[] percent = new int[top.length];
+		int[] percentTotal = new int[top.length];
+		for(int i =0 ;i < top.length;i++) {
+			percent[i] = top[i]*100/Math.max(probTop[i],1); 
+			percentTotal[i] = 100;
+		}
+		this.percentTop = Arrays.toString(percent);
+		this.percentTotal = Arrays.toString(percentTotal);
+	}
+	
+	public UserClassificationStats(List<Map<String,Object>> probs) {
+		initProbs(probs);
+	}
+	
 	public UserClassificationStats(List<Map<String,Object>> raw,List<Map<String,Object>> probs,List<Map<String,Object>> timeline) {
+		
+		
 		String[] labels = new String[raw.size()];
 		int[][] classifications = new int[raw.size()][5];
 		int[] top = new int[raw.size()];
@@ -48,30 +79,9 @@ public class UserClassificationStats {
 	
 		
 		
-		String[] probLabels = new String[probs.size()];
-		int[][] probClassifications = new int[probs.size()][5];
-		int[] probTop = new int[probs.size()];
-		for(int i = 0;i < probs.size();i++) {
-			Map<String,Object> row = probs.get(i);
-			probLabels[i] = "'" + String.valueOf(row.get("name"))+"'";
-			probClassifications[i][0] = Integer.valueOf(String.valueOf(row.get("1")));
-			probClassifications[i][1] = Integer.valueOf(String.valueOf(row.get("2")));
-			probClassifications[i][2] = Integer.valueOf(String.valueOf(row.get("3")));
-			probClassifications[i][3] = Integer.valueOf(String.valueOf(row.get("4")));
-			probClassifications[i][4] = Integer.valueOf(String.valueOf(row.get("5")));
-			probTop[i] = Integer.valueOf(String.valueOf(row.get("top")));
-			
-		}
+		int[] probTop = initProbs(probs);
 		
-		String[] probArray = new String[probClassifications.length];
-		for(int i=0;i < probClassifications.length;i++) {
-			probArray[i] = Arrays.toString(probClassifications[i]);
-		}
-		this.probClassifications = Arrays.toString(probArray);
-		this.probTop = Arrays.toString(probTop);
-		this.probLabels = Arrays.toString(probLabels);
-		this.probCount = probLabels.length;
-	
+		initPercent(top,probTop);
 		
 		//0 es AC, 1 es error
 		String[][] status = new String[2][timeline.size()];
@@ -84,9 +94,18 @@ public class UserClassificationStats {
 			status[0][i] = String.valueOf(row.get("ac"));
 			status[1][i] = String.valueOf(row.get("error"));
 		}
-		this.dates = Arrays.toString(dates);
+		this.dates = Arrays.toString(dates);	
 		this.acStatus = Arrays.toString(status[0]);
 		this.errorStatus = Arrays.toString(status[1]);
+	}
+
+	
+	public String getPercentTotal() {
+		return percentTotal;
+	}
+
+	public String getPercentTop() {
+		return percentTop;
 	}
 
 	public int getDateCount() {
@@ -121,20 +140,8 @@ public class UserClassificationStats {
 		return errorStatus;
 	}
 
-	public String getProbLabels() {
-		return probLabels;
-	}
-
 	public String getProbTop() {
 		return probTop;
-	}
-
-	public String getProbClassifications() {
-		return probClassifications;
-	}
-
-	public int getProbCount() {
-		return probCount;
 	}
 
 }

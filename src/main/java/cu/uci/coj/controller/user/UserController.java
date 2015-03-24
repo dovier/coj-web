@@ -89,14 +89,6 @@ public class UserController extends BaseController {
 
 	private String passcode = null;
 
-	
-	
-	@RequestMapping(value="/classif.json", method = RequestMethod.GET, produces="application/json")
-	public @ResponseBody UserClassificationStats getUserClassifications(@RequestParam Integer uid) {
-		return userDAO.getUserClassifications(uid);
-	}
-	
-	
 	@RequestMapping(value = "/accountactivation.xhtml", method = RequestMethod.GET)
 	public String accountActivation(HttpServletRequest request, Model model, @RequestParam("key") String key) {
 		boolean ok = false;
