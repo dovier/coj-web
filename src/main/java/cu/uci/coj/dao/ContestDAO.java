@@ -138,7 +138,7 @@ public interface ContestDAO extends BaseDAO {
 
 	public int countContest();
 
-	public IPaginatedList<Contest> loadContests(PagingOptions options);
+	public IPaginatedList<Contest> loadContests(PagingOptions options, String access, String enabled, String status);
 
 	public Contest loadContestGlobalSettings(int cid);
 

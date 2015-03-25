@@ -112,8 +112,9 @@ public class ContestController extends BaseController {
 	}
 
 	@RequestMapping(value = "/tables/admincontests.xhtml", method = RequestMethod.GET)
-	public String tablesListContests(Model model, PagingOptions options) {
-		IPaginatedList<Contest> contests = contestDAO.loadContests(options);
+	public String tablesListContests(Model model, PagingOptions options, @RequestParam(required=false) String access,
+			@RequestParam(required=false) String enabled, @RequestParam(required=false, defaultValue="all") String status) {
+		IPaginatedList<Contest> contests = contestDAO.loadContests(options, access, enabled, status);
 		model.addAttribute("contests", contests);
 		return "/admin/tables/admincontests";
 	}

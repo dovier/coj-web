@@ -17,7 +17,7 @@ public interface ProblemDAO extends BaseDAO {
 	public void checkProblemCreated();
 	public void updateProblemI18N(Problem problem);
 	public String generateModelSolutionFrom(int problemId);
-
+	public String creatorUsernameByPid(int pid);
 	public List<ProblemClassification> getProblemClassifications(int pid);
 
 	public List<Problem> searchProblems(String language, String pattern, boolean admin, String username);

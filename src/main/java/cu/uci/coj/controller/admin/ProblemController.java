@@ -138,7 +138,7 @@ public class ProblemController extends BaseController {
 			model.addAttribute("pid", pid);
 			model.addAttribute("psetters", utilDAO.objects("select.psetters.pid", User.class, pid));
 			model.addAttribute("datasets", utils.getDatasetsNames(pid));
-			model.addAttribute("showpsetters", (requestWrapper.isUserInRole(Roles.ROLE_ADMIN) && requestWrapper.isUserInRole(Roles.ROLE_ADMIN)) || principal.getName().equals(problem.getUsername()));
+			model.addAttribute("showpsetters", requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || principal.getName().equals(problem.getUsername()));
 			model.addAttribute(problem);
 		} else {
 			model.addAttribute("psetters", utilDAO.objects("select.psetters.pid", User.class, 0));
@@ -186,8 +186,8 @@ public class ProblemController extends BaseController {
 				problemDAO.insertProblemLanguage(problem.getPid(), problem.getLanguageids()[i]);
 			}
 		}
-		// solo los admins pueden asignar nuevos problemsetters
-		if (requestWrapper.isUserInRole(Roles.ROLE_ADMIN)) {
+		// solo los admins y creadores de problemas pueden asignar nuevos problemsetters
+		if (requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || principal.getName().equals(problemDAO.creatorUsernameByPid(problem.getPid()))) {
 			problemDAO.clearPsetters(problem.getPid());
 			if (problem.getPsettersids() != null) {
 				for (int i = 0; i < problem.getPsettersids().length; i++) {
