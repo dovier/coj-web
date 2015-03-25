@@ -78,12 +78,6 @@ public class SubmissionJudge implements Serializable {
 	private String key;
 	private Character letter;
 
-	// xtats
-	private int y;// contador para envios en el coj
-	private int yp;// contador para envios por problemas
-	private int yu;// contador para envios por usuarios
-	private String sdate;
-	
 	private List<Language> languages;
 	private int ppid;
 	private MultipartFile uploadfile;
@@ -250,38 +244,6 @@ public class SubmissionJudge implements Serializable {
 
 	public void setLetter(Character letter) {
 		this.letter = letter;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public int getYp() {
-		return yp;
-	}
-
-	public void setYp(int yp) {
-		this.yp = yp;
-	}
-
-	public int getYu() {
-		return yu;
-	}
-
-	public void setYu(int yu) {
-		this.yu = yu;
-	}
-
-	public String getSdate() {
-		return sdate;
-	}
-
-	public void setSdate(String sdate) {
-		this.sdate = sdate;
 	}
 
 	public int getRank() {

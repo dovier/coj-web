@@ -68,7 +68,7 @@ public class Interceptor implements WebRequestInterceptor {
                         if (isjudge) {
                             model.addAttribute("isjudge", isjudge);
                         }
-                        if ((request.isUserInRole(Roles.ROLE_ADMIN) || request.isUserInRole(Roles.ROLE_JUDGE) || request.isUserInRole(Roles.ROLE_SUPER_PSETTER) || request.isUserInRole(Roles.ROLE_PSETTER)) && isjudge) {
+                        if ((request.isUserInRole(Roles.ROLE_ADMIN)  || request.isUserInRole(Roles.ROLE_SUPER_PSETTER) || request.isUserInRole(Roles.ROLE_PSETTER)) && isjudge) {
                             total = clarificationDAO.integer("count.judges.clarification", contest.getCid());
                             unreply = clarificationDAO.integer("count.judges.unreply.clarifications", contest.getCid());
                         }

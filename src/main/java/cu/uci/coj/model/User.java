@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class User implements CommonScoreboardInterface {
 
 	private String banReason;
-	private static final String NOT_ACTIVE = "not active";
 	private static final String ACTIVE = "active";
 	private static final String DORMANT = "dormant";
 	private static final String DISABLED = "disabled";
@@ -109,7 +108,6 @@ public class User implements CommonScoreboardInterface {
     private String captcha;
     private HttpServletRequest request;
     private List<String> authorities;
-    private String last_connected_date;
     private boolean see_solutions;
     private Date update_time;
     private int contests;
@@ -291,14 +289,6 @@ public class User implements CommonScoreboardInterface {
 
     public void setLevel(int level) {
         this.level = level;
-    }
-
-    public String getLast_connected_date() {
-        return last_connected_date;
-    }
-
-    public void setLast_connected_date(String last_connected_date) {
-        this.last_connected_date = last_connected_date;
     }
 
     public List<String> getAuthorities() {

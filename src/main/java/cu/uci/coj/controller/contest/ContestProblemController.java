@@ -71,7 +71,7 @@ public class ContestProblemController extends BaseController {
         model.addAttribute("contest", contest);
         if (contest.isRunning() || contest.isPast()) {
             contest.setShow_status(false);
-            if (contest.isShow_problem_out() || (username != null && request.isUserInRole(Roles.ROLE_ADMIN)) || (!contest.isShow_problem_out() && username != null && contestDAO.isInContest(cid, contestDAO.integer("select.uid.by.username", username))) || (request.isUserInRole(Roles.ROLE_JUDGE) && contestDAO.isJudgeInContest(cid, userDAO.integer("select.uid.by.username", principal.getName())))) {
+            if (contest.isShow_problem_out() || (username != null && request.isUserInRole(Roles.ROLE_ADMIN)) || (!contest.isShow_problem_out() && username != null && contestDAO.isInContest(cid, contestDAO.integer("select.uid.by.username", username))) || contestDAO.isJudgeInContest(cid, userDAO.integer("select.uid.by.username", principal.getName()))) {
                 contest.setShow_status(true);
                 Problem problem = problemDAO.getContestProblem(locale.getLanguage(),pid, contest);
                 problem.setDate(problem.getDate().split("\\.")[0]);

@@ -282,7 +282,7 @@ break;
 	@RequestMapping(value = "/contest/saris.xhtml", method = RequestMethod.GET)
 	public String sarisGenerator(Principal principal, SecurityContextHolderAwareRequestWrapper requestWrapper, Locale locale, Model model, HttpServletResponse response,
 			@RequestParam("cid") Integer cid, @RequestParam(required = false, value = "group") String group) throws JSONException, IOException {
-		if (!(requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || (requestWrapper.isUserInRole(Roles.ROLE_JUDGE) && contestDAO.isJudgeInContest(cid, userDAO.idByUsername(getUsername(principal)))))) {
+		if (!(requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || ( contestDAO.isJudgeInContest(cid, userDAO.idByUsername(getUsername(principal)))))) {
 			return "/error/accessdenied";
 		}
 		Contest contest = contestDAO.object("get.contest.forsaris", Contest.class, cid);

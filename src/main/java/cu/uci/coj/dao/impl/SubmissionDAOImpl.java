@@ -184,7 +184,7 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 
 	@Override
 	public List<SubmissionJudge> submissions(Integer uid) {
-		return objects(getSql("xtats.submission.users.all"),
+		return objects(getSql("select.submission.users.all"),
 				SubmissionJudge.class, uid);
 	}
 

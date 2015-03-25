@@ -45,16 +45,8 @@
 	</ul>
 	<form:form method="post" onsubmit="return SeleccionarRangosContest();"
 		commandName="contest">
-		<fieldset style="width: 400px;">
-			<legend>
-				<fmt:message key="page.managecontest.style" />
-			</legend>
-		</fieldset>
 		<c:if test="${contest.grouped eq true}">
 			<fieldset style="width: 400px;">
-				<legend>
-					<fmt:message key="page.managecontest.style" />
-				</legend>
 				<table class="contestlanguages">
 					<tr>
 						<td colspan="2"><fmt:message

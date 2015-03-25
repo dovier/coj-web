@@ -927,7 +927,7 @@
 		<put-attribute name="content" value="/WEB-INF/jsp/24h/scriptsubmit.jsp" />
 	</definition>
 	<definition name="/lsb/index" extends="template2">
-		<put-attribute name="title" value="pagetit.xtats.compareusers" />
+		<put-attribute name="title" value="pagetit.compareusers" />
 		<put-attribute name="content" value="/WEB-INF/jsp/lsb/index.jsp" />
 	</definition>
 
@@ -1228,91 +1228,6 @@
 			value="/WEB-INF/jsp/schoolar/mycourses.jsp" />
 	</definition>
 
-	<definition name="/xtats/records" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.records" />
-		<put-attribute name="content" value="/WEB-INF/jsp/xtats/records.jsp" />
-	</definition>
-
-	<definition name="/xtats/offrecords" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.offrecords" />
-		<put-attribute name="content" value="/WEB-INF/jsp/xtats/offrecords.jsp" />
-	</definition>
-
-	<definition name="/xtats/problems" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.problems" />
-		<put-attribute name="content" value="/WEB-INF/jsp/xtats/problems.jsp" />
-	</definition>
-
-	<definition name="/xtats/distsubmitions" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.distsubmitions" />
-		<put-attribute name="content"
-			value="/WEB-INF/jsp/xtats/distsubmitions.jsp" />
-	</definition>
-
-	<definition name="/xtats/distsubuser" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.distsubuser" />
-		<put-attribute name="content" value="/WEB-INF/jsp/xtats/distsubuser.jsp" />
-	</definition>
-
-	<definition name="/xtats/veredictstl" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.veredictstl" />
-		<put-attribute name="content" value="/WEB-INF/jsp/xtats/veredictstl.jsp" />
-	</definition>
-
-	<definition name="/xtats/problemsubmitions" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.problemsubmitions" />
-		<put-attribute name="content"
-			value="/WEB-INF/jsp/xtats/problemsubmitions.jsp" />
-	</definition>
-
-	<definition name="/xtats/compareproblems" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.compareproblems" />
-		<put-attribute name="content"
-			value="/WEB-INF/jsp/xtats/compareproblems.jsp" />
-	</definition>
-
-	<definition name="/xtats/veredictsproblems" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.veredictsproblems" />
-		<put-attribute name="content"
-			value="/WEB-INF/jsp/xtats/veredictsproblems.jsp" />
-	</definition>
-
-	<definition name="/xtats/contestsubmitions" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.contestsubmitions" />
-		<put-attribute name="content"
-			value="/WEB-INF/jsp/xtats/contestsubmitions.jsp" />
-	</definition>
-
-	<definition name="/xtats/subaftercontest" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.subaftercontest" />
-		<put-attribute name="content"
-			value="/WEB-INF/jsp/xtats/subaftercontest.jsp" />
-	</definition>
-
-	<definition name="/xtats/veredictscontest" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.veredictscontest" />
-		<put-attribute name="content"
-			value="/WEB-INF/jsp/xtats/veredictscontest.jsp" />
-	</definition>
-
-	<definition name="/xtats/developmentincontest" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.developmentincontest" />
-		<put-attribute name="content"
-			value="/WEB-INF/jsp/xtats/developmentincontest.jsp" />
-	</definition>
-
-	<definition name="/xtats/problemscontest" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.problemscontest" />
-		<put-attribute name="content"
-			value="/WEB-INF/jsp/xtats/problemscontest.jsp" />
-	</definition>
-
-	<definition name="/xtats/compareusers" extends="template">
-		<put-attribute name="title" value="pagetit.xtats.compareusers" />
-		<put-attribute name="content"
-			value="/WEB-INF/jsp/xtats/compareusers.jsp" />
-	</definition>
-	
 	<definition name="/wboard/contests" extends="template">
 		<put-attribute name="title" value="pagetit.wboard" />
 		<put-attribute name="content"

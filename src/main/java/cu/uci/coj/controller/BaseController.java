@@ -53,7 +53,7 @@ public class BaseController implements ServletContextAware, Serializable{
     }
     
     public boolean hasAnyPrivileges(HttpServletRequest request){
-        return request.isUserInRole(Roles.ROLE_ADMIN) || request.isUserInRole(Roles.ROLE_SUPER_PSETTER) || request.isUserInRole(Roles.ROLE_JUDGE) || request.isUserInRole(Roles.ROLE_PSETTER);
+        return request.isUserInRole(Roles.ROLE_ADMIN) || request.isUserInRole(Roles.ROLE_SUPER_PSETTER) || request.isUserInRole(Roles.ROLE_PSETTER);
     }
     
     public boolean hasAnyPrivileges(HttpServletRequest request,String... roles){

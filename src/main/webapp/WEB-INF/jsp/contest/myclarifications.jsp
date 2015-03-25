@@ -43,7 +43,7 @@
 		</c:if>
 	</authz:authorize>
 	<authz:authorize
-		ifAnyGranted="ROLE_ADMIN,ROLE_SUPER_PSETTER,ROLE_PSETTER,ROLE_JUDGE">
+		ifAnyGranted="ROLE_ADMIN,ROLE_SUPER_PSETTER,ROLE_PSETTER">
 
 		<c:if test="${contest.running}">
 			<a href="<c:url value="sendclarification.xhtml?cid=${contest.cid}"/>"><i
@@ -97,7 +97,7 @@
 					<td class="date">${clarification.date}</td>
 
 					<td><authz:authorize
-							ifAnyGranted="ROLE_ADMIN,ROLE_JUDGE,ROLE_SUPER_PSETTER,ROLE_PSETTER">
+							ifAnyGranted="ROLE_ADMIN,ROLE_SUPER_PSETTER,ROLE_PSETTER">
 							<c:if test="${isContestJudge and contest.running}">
 								<a
 									href="<c:url value="sendclarification.xhtml?cid=${contest.cid}&ccid=${clarification.id}&uid=${clarification.username}&pid=${clarification.pid}"/>">
