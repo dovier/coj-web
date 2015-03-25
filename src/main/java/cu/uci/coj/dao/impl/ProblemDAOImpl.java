@@ -1266,11 +1266,12 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	@Override
 	@Transactional(readOnly=true)
 	public IPaginatedList<Translation> getTranslationList(String username, Integer pid, String locale, PagingOptions options) {
-		int found = integer("translation.count");
 		locale = "all".equals(locale)?null:locale;
 		
 		Query query = new Query("translation_pending");
 		query.where(Where.eq("username", username), Where.eq("pid", pid), Where.eq("locale", locale));
+		
+		int found = integer(query.count(), query.arguments());
 		
 		query.order(Order.desc("date"));		
 		query.paginate(options, 20);

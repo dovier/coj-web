@@ -28,6 +28,9 @@ import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.model.User;
 import cu.uci.coj.model.VirtualContest;
+import cu.uci.coj.query.Order;
+import cu.uci.coj.query.Query;
+import cu.uci.coj.query.Where;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
@@ -50,10 +53,13 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	@Resource
 	private MailNotificationService mailNotificationService;
 
-	public IPaginatedList<SubmissionJudge> pendingBalloons(int cid, PagingOptions options, String group) {
+	public IPaginatedList<SubmissionJudge> pendingBalloons(int cid,
+			PagingOptions options, String group) {
 		if (StringUtils.hasText(group))
-			return paginated("pending.balloons.grouped", SubmissionJudge.class, 10, options, cid, group,cid);
-		return paginated("pending.balloons", SubmissionJudge.class, 10, options, cid,cid);
+			return paginated("pending.balloons.grouped", SubmissionJudge.class,
+					10, options, cid, group, cid);
+		return paginated("pending.balloons", SubmissionJudge.class, 10,
+				options, cid, cid);
 	}
 
 	public void markBalloon(int sid) {
@@ -65,13 +71,17 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		return maps;
 	}
 
-	public void insertData(String site, String[] teams, String teamCoach, String[] teamUsers, String[] user, Integer cid, Integer warmupCid) {
+	public void insertData(String site, String[] teams, String teamCoach,
+			String[] teamUsers, String[] user, Integer cid, Integer warmupCid) {
 		// eliminar las participaciones en los contest para volver a
 		// adicionarlos
-		dml("insert.contest.data.1", user[0], user[1], user[2], user[3], user[4]);
+		dml("insert.contest.data.1", user[0], user[1], user[2], user[3],
+				user[4]);
 		int uid = integer("select.uid.by.username", user[0]);
 
-		dml("insert.contest.data.2", uid, teamCoach == null ? "none" : teamCoach, teamUsers[0] == null ? "none" : teamUsers[0], teamUsers[1] == null ? "none" : teamUsers[1],
+		dml("insert.contest.data.2", uid, teamCoach == null ? "none"
+				: teamCoach, teamUsers[0] == null ? "none" : teamUsers[0],
+				teamUsers[1] == null ? "none" : teamUsers[1],
 				teamUsers[2] == null ? "none" : teamUsers[2]);
 
 		dml("insert.contest.data.3", uid, cid, site);
@@ -140,7 +150,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
 	public void repointContest(Contest contest, boolean frozen) {
 		resetContest(contest);
-		List<SubmissionJudge> subsJudge = objects("repoint.contest.2", SubmissionJudge.class, contest.getCid());
+		List<SubmissionJudge> subsJudge = objects("repoint.contest.2",
+				SubmissionJudge.class, contest.getCid());
 		contest.setFrozen(frozen);
 		for (SubmissionJudge subJudge : subsJudge) {
 			applyEffects(subJudge, contest);
@@ -149,83 +160,135 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	@Deprecated
-	public void updateAfterSubmitionContestRepoint(SubmissionJudge sub, Contest contest) {
+	public void updateAfterSubmitionContestRepoint(SubmissionJudge sub,
+			Contest contest) {
 		boolean slv;
 		switch (contest.getStyle()) {
 		case 1: {
 			if (!(contest.isFrozen() && (!contest.isFrozen() || sub.isFrozen()))) {
-				slv = this.SolvedProblemContestBEF(sub.getUid(), sub.getPid(), contest.getCid(), sub.getSid());
-				int off = this.getProblemContestOffset(contest.getCid(), sub.getPid());
+				slv = this.SolvedProblemContestBEF(sub.getUid(), sub.getPid(),
+						contest.getCid(), sub.getSid());
+				int off = this.getProblemContestOffset(contest.getCid(),
+						sub.getPid());
 				char c = 'a';
 				if (slv) {
 					c = (char) (c + (off - 1));
-					dml("update user_contest set " + c + "_afterac = " + c + "_afterac + 1 where uid = ? and cid = ?", sub.getUid(), contest.getCid());
+					dml("update user_contest set " + c + "_afterac = " + c
+							+ "_afterac + 1 where uid = ? and cid = ?",
+							sub.getUid(), contest.getCid());
 				}
-				if (sub.getStatus().contains((CharSequence) Config.getProperty("judge.status.ac"))) {
+				if (sub.getStatus().contains(
+						(CharSequence) Config.getProperty("judge.status.ac"))) {
 					if (slv)
 						break;
-					dml("update user_contest set lastacc = (select date from contest_submition where submit_id = ?) where uid = ? " + "and cid = ?", sub.getSid(), sub.getUid(), contest.getCid());
-					dml("update problem_contest set accu = accu + 1 where pid = ? and cid = ?", sub.getPid(), contest.getCid());
+					dml("update user_contest set lastacc = (select date from contest_submition where submit_id = ?) where uid = ? "
+							+ "and cid = ?", sub.getSid(), sub.getUid(),
+							contest.getCid());
+					dml("update problem_contest set accu = accu + 1 where pid = ? and cid = ?",
+							sub.getPid(), contest.getCid());
 					c = (char) (c + (off - 1));
-					int total_bef = this.countBeforeSubmissionsContest(sub.getUid(), sub.getPid(), contest.getCid(), sub.getSid());
-					int penalty = total_bef * contest.getPenalty() + (int) (sub.getDate().getTime() - contest.getInitdate().getTime()) / 60000;
-					dml("update user_contest set penalty = penalty + ?,accepted = accepted + 1, " + c + "_time = ? from user_contest join contest using(cid) "
-							+ "where uid = ? and cid = ?) where uid = ? and cid = ?", penalty, sub.getUid(), contest.getCid(), sub.getUid(), contest.getCid());
+					int total_bef = this.countBeforeSubmissionsContest(
+							sub.getUid(), sub.getPid(), contest.getCid(),
+							sub.getSid());
+					int penalty = total_bef
+							* contest.getPenalty()
+							+ (int) (sub.getDate().getTime() - contest
+									.getInitdate().getTime()) / 60000;
+					dml("update user_contest set penalty = penalty + ?,accepted = accepted + 1, "
+							+ c
+							+ "_time = ? from user_contest join contest using(cid) "
+							+ "where uid = ? and cid = ?) where uid = ? and cid = ?",
+							penalty, sub.getUid(), contest.getCid(),
+							sub.getUid(), contest.getCid());
 					break;
 				}
 				if (slv)
 					break;
 				c = (char) (c + (off - 1));
-				dml("update user_contest set " + c + "_beforeac = " + c + "_beforeac + 1 where uid = ? and cid = ?", sub.getUid(), contest.getCid());
+				dml("update user_contest set " + c + "_beforeac = " + c
+						+ "_beforeac + 1 where uid = ? and cid = ?",
+						sub.getUid(), contest.getCid());
 				break;
 			}
-			int off = this.getProblemContestOffset(contest.getCid(), sub.getPid());
+			int off = this.getProblemContestOffset(contest.getCid(),
+					sub.getPid());
 			char c = 'a';
 			c = (char) (c + (off - 1));
-			dml("update user_contest set " + c + "_pending = " + c + "_pending + 1 where uid = ? and cid = ?", sub.getUid(), contest.getCid());
+			dml("update user_contest set " + c + "_pending = " + c
+					+ "_pending + 1 where uid = ? and cid = ?", sub.getUid(),
+					contest.getCid());
 			break;
 		}
 		case 2: {
 			break;
 		}
 		case 3: {
-			slv = this.SolvedProblemContestBEF(sub.getUid(), sub.getPid(), contest.getCid(), sub.getSid());
-			if (slv || !sub.getStatus().contains((CharSequence) Config.getProperty("judge.status.ac")))
+			slv = this.SolvedProblemContestBEF(sub.getUid(), sub.getPid(),
+					contest.getCid(), sub.getSid());
+			if (slv
+					|| !sub.getStatus().contains(
+							(CharSequence) Config
+									.getProperty("judge.status.ac")))
 				break;
-			dml("update user_contest set lastacc = (select date from contest_submition where submit_id = ?) where uid = ? and cid = ?", sub.getSid(), sub.getUid(), contest.getCid());
-			dml("update problem_contest set accu = accu + 1 where pid = ? and cid = ?", sub.getPid(), contest.getCid());
-			Map<String, Object> map = map("select (ac+wa+rte+ce+pe+uq+mle+ole+tle) as total,accu from problem_contest where pid = ? and cid = ?", sub.getPid(), contest.getCid());
+			dml("update user_contest set lastacc = (select date from contest_submition where submit_id = ?) where uid = ? and cid = ?",
+					sub.getSid(), sub.getUid(), contest.getCid());
+			dml("update problem_contest set accu = accu + 1 where pid = ? and cid = ?",
+					sub.getPid(), contest.getCid());
+			Map<String, Object> map = map(
+					"select (ac+wa+rte+ce+pe+uq+mle+ole+tle) as total,accu from problem_contest where pid = ? and cid = ?",
+					sub.getPid(), contest.getCid());
 			int ac = (Integer) map.get("accu");
-			double totbefore = Utils.formulaFreeContest(ac - 1, contest.getPpoints());
-			double totAfter = Utils.formulaFreeContest(ac, contest.getPpoints());
+			double totbefore = Utils.formulaFreeContest(ac - 1,
+					contest.getPpoints());
+			double totAfter = Utils
+					.formulaFreeContest(ac, contest.getPpoints());
 			double dif = totbefore - totAfter;
 			dml("UPDATE user_contest set points = points - ? where uid in (select uid from contest_submition where pid = ? and "
-					+ "status = 'Accepted' and cid = ? and contest_submition.date < (select contest_submition.date from contest_submition where submit_id = ?)) " + "and (points - ?) > 0 and cid = ?",
-					dif, sub.getPid(), contest.getCid(), sub.getSid(), dif, contest.getCid());
-			dml("update user_contest set points = points + ?,accepted = accepted + 1 where uid = ? and cid = ?", totAfter, sub.getUid(), contest.getCid());
+					+ "status = 'Accepted' and cid = ? and contest_submition.date < (select contest_submition.date from contest_submition where submit_id = ?)) "
+					+ "and (points - ?) > 0 and cid = ?", dif, sub.getPid(),
+					contest.getCid(), sub.getSid(), dif, contest.getCid());
+			dml("update user_contest set points = points + ?,accepted = accepted + 1 where uid = ? and cid = ?",
+					totAfter, sub.getUid(), contest.getCid());
 		}
 		case 4: {
-			slv = this.SolvedProblemContestBEF(sub.getUid(), sub.getPid(), contest.getCid(), sub.getSid());
-			if (slv || !sub.getStatus().contains((CharSequence) Config.getProperty("judge.status.ac")))
+			slv = this.SolvedProblemContestBEF(sub.getUid(), sub.getPid(),
+					contest.getCid(), sub.getSid());
+			if (slv
+					|| !sub.getStatus().contains(
+							(CharSequence) Config
+									.getProperty("judge.status.ac")))
 				break;
-			dml("update user_contest set lastacc = (select date from contest_submition where submit_id = ?) where uid = ? and cid = ?", sub.getSid(), sub.getUid(), contest.getCid());
+			dml("update user_contest set lastacc = (select date from contest_submition where submit_id = ?) where uid = ? and cid = ?",
+					sub.getSid(), sub.getUid(), contest.getCid());
 
-			dml("update user_contest set points = points + ?, accepted = accepted + 1 where uid = ? and cid = ?", contest.getPpoints(), sub.getUid(), contest.getCid());
-			dml("update problem_contest set accu = accu + 1 where pid = ? and cid = ?", sub.getPid(), contest.getCid());
-			this.updateLevel(sub.getUid(), contest.getCid(), this.getProblemLevel(sub.getPid(), contest.getCid()), this.getAcceptedInContest(sub.getUid(), contest.getCid()), contest.getAcbylevels(),
-					contest.getAclimit(), sub.getSid());
+			dml("update user_contest set points = points + ?, accepted = accepted + 1 where uid = ? and cid = ?",
+					contest.getPpoints(), sub.getUid(), contest.getCid());
+			dml("update problem_contest set accu = accu + 1 where pid = ? and cid = ?",
+					sub.getPid(), contest.getCid());
+			this.updateLevel(sub.getUid(), contest.getCid(),
+					this.getProblemLevel(sub.getPid(), contest.getCid()),
+					this.getAcceptedInContest(sub.getUid(), contest.getCid()),
+					contest.getAcbylevels(), contest.getAclimit(), sub.getSid());
 		}
 		}
 		if (!contest.isFrozen()) {
-			String key = Config.getProperty(sub.getStatus().replaceAll(" ", "."));
-			dml(replaceSql("upsert.user.stats.contest.key", "<key>", key), sub.getUid(), contest.getCid(), sub.getUid(), contest.getCid());
-			dml(replaceSql("upsert.problem.contest.contest.key", "<key>", key), sub.getPid(), contest.getCid(), sub.getPid(), contest.getCid());
-			dml(replaceSql("upsert.language.stats.contest.key", "<key>", key), sub.getLang(), contest.getCid(), sub.getLang(), contest.getCid());
+			String key = Config.getProperty(sub.getStatus()
+					.replaceAll(" ", "."));
+			dml(replaceSql("upsert.user.stats.contest.key", "<key>", key),
+					sub.getUid(), contest.getCid(), sub.getUid(),
+					contest.getCid());
+			dml(replaceSql("upsert.problem.contest.contest.key", "<key>", key),
+					sub.getPid(), contest.getCid(), sub.getPid(),
+					contest.getCid());
+			dml(replaceSql("upsert.language.stats.contest.key", "<key>", key),
+					sub.getLang(), contest.getCid(), sub.getLang(),
+					contest.getCid());
 		}
 	}
 
 	@Transactional(readOnly = true)
-	public boolean SolvedProblemContestBEF(int uid, int pid, int cid, int submit_id) {
+	public boolean SolvedProblemContestBEF(int uid, int pid, int cid,
+			int submit_id) {
 		return bool("solved.contest.problem.bef", uid, pid, cid, submit_id);
 	}
 
@@ -236,11 +299,14 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public int countBeforeSubmissionsContest(int uid, int pid, int cid, int submit_id) {
-		return integer(0, "count.before.submissions.contest", uid, pid, cid, submit_id);
+	public int countBeforeSubmissionsContest(int uid, int pid, int cid,
+			int submit_id) {
+		return integer(0, "count.before.submissions.contest", uid, pid, cid,
+				submit_id);
 	}
 
-	private void updateLevel(int uid, int cid, int level, int pac, int levellimit, int aclimit, int sid) {
+	private void updateLevel(int uid, int cid, int level, int pac,
+			int levellimit, int aclimit, int sid) {
 		if (pac >= aclimit) {
 			dml("update.level", cid, cid, uid);
 		} else {
@@ -263,37 +329,62 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
 	public void applyEffects(SubmissionJudge submit, Contest contest) {
 
-		dml("update.contest.submit", submit.isAccepted(), submit.getStatus(), submit.getTimeUsed(), submit.getMemoryUsed(), submit.getFirstWaCase(), submit.getMaxTimeUsed(), submit.getMinTimeUsed(),
-				submit.getAvgTimeUsed(), submit.getSid());
-		
+		dml("update.contest.submit", submit.isAccepted(), submit.getStatus(),
+				submit.getTimeUsed(), submit.getMemoryUsed(),
+				submit.getFirstWaCase(), submit.getMaxTimeUsed(),
+				submit.getMinTimeUsed(), submit.getAvgTimeUsed(),
+				submit.getSid());
+
 		boolean alreadySolved = false;
-		alreadySolved = bool("solved.contest.problem.bef", submit.getUid(), submit.getPid(), contest.getCid(), submit.getSid());
+		alreadySolved = bool("solved.contest.problem.bef", submit.getUid(),
+				submit.getPid(), contest.getCid(), submit.getSid());
 		switch (contest.getStyle()) {
 		case Contest.ACM_ICPC_STYLE: {
 			int off = getProblemContestOffset(submit.getCid(), submit.getPid());
 			char c = 'a';
 			c += off - 1;
-			if (!contest.isFrozen() || !contest.isInFrozen(submit.getDate().getTime())) {
+			if (!contest.isFrozen()
+					|| !contest.isInFrozen(submit.getDate().getTime())) {
 
 				if (alreadySolved) {
-					dml("update user_contest set " + c + "_afterac = " + c + "_afterac + 1 where uid = ? and cid = ?", submit.getUid(), contest.getCid());
+					dml("update user_contest set " + c + "_afterac = " + c
+							+ "_afterac + 1 where uid = ? and cid = ?",
+							submit.getUid(), contest.getCid());
 				}
 				if (submit.isAccepted()) {
-					dml("update.problem.contest.accu", submit.getPid(), submit.getCid(), submit.getPid(), submit.getCid());
-					dml("update.user.contest.last.acc", submit.getCid(), submit.getCid(), submit.getUid(), submit.getUid(), submit.getCid());
+					dml("update.problem.contest.accu", submit.getPid(),
+							submit.getCid(), submit.getPid(), submit.getCid());
+					dml("update.user.contest.last.acc", submit.getCid(),
+							submit.getCid(), submit.getUid(), submit.getUid(),
+							submit.getCid());
 
 					if (!alreadySolved) {
-						int total_bef = countBeforeSubmissionsContest(submit.getUid(), submit.getPid(), submit.getCid(), submit.getSid());
-						int penalty = total_bef * contest.getPenalty() + (int) (submit.getDate().getTime() - contest.getInitdate().getTime()) / 60000;
+						int total_bef = countBeforeSubmissionsContest(
+								submit.getUid(), submit.getPid(),
+								submit.getCid(), submit.getSid());
+						int penalty = total_bef
+								* contest.getPenalty()
+								+ (int) (submit.getDate().getTime() - contest
+										.getInitdate().getTime()) / 60000;
 
-						dml("update user_contest set penalty = penalty + ?,accepted = accepted + 1,lastacc = '" + submit.getDate().toString() + "', " + c + "_time = ? where uid = ? and cid = ?",
-								penalty, (submit.getDate().getTime() - contest.getInitdate().getTime()), submit.getUid(), submit.getCid());
+						dml("update user_contest set penalty = penalty + ?,accepted = accepted + 1,lastacc = '"
+								+ submit.getDate().toString()
+								+ "', "
+								+ c
+								+ "_time = ? where uid = ? and cid = ?",
+								penalty, (submit.getDate().getTime() - contest
+										.getInitdate().getTime()),
+								submit.getUid(), submit.getCid());
 					}
 				} else if (!alreadySolved) {
-					dml("update user_contest set " + c + "_beforeac = " + c + "_beforeac + 1 where uid = ? and cid = ?", submit.getUid(), submit.getCid());
+					dml("update user_contest set " + c + "_beforeac = " + c
+							+ "_beforeac + 1 where uid = ? and cid = ?",
+							submit.getUid(), submit.getCid());
 				}
 			} else {
-				dml("update user_contest set " + c + "_pending = " + c + "_pending + 1 where uid = ? and cid = ?", submit.getUid(), submit.getCid());
+				dml("update user_contest set " + c + "_pending = " + c
+						+ "_pending + 1 where uid = ? and cid = ?",
+						submit.getUid(), submit.getCid());
 			}
 			break;
 		}
@@ -302,31 +393,49 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 			break;
 		}
 		case 3: {
-			dml("update.problem.contest.accu", submit.getPid(), submit.getCid(), submit.getPid(), submit.getCid());
-			dml("update.user.contest.last.acc", submit.getCid(), submit.getCid(), submit.getUid(), submit.getUid(), submit.getCid());
-			dml("update.user.contest.accepted", submit.getCid(), submit.getUid(), submit.getUid(), submit.getCid());
-			dml("update.user.points.free.contest", submit.getCid(), submit.getCid(), submit.getCid());
+			dml("update.problem.contest.accu", submit.getPid(),
+					submit.getCid(), submit.getPid(), submit.getCid());
+			dml("update.user.contest.last.acc", submit.getCid(),
+					submit.getCid(), submit.getUid(), submit.getUid(),
+					submit.getCid());
+			dml("update.user.contest.accepted", submit.getCid(),
+					submit.getUid(), submit.getUid(), submit.getCid());
+			dml("update.user.points.free.contest", submit.getCid(),
+					submit.getCid(), submit.getCid());
 			break;
 		}
 		case Contest.PROGRESSIVE_STYLE: {
 			if (!alreadySolved && submit.isAccepted()) {
-				dml("update.after.submit.contest.4", submit.getPid(), submit.getCid());
-				dml("update.problem.contest.accu", submit.getPid(), submit.getCid(), submit.getPid(), submit.getCid());
-				dml("update.user.points.free.contest", submit.getCid(), submit.getCid(), submit.getCid());
+				dml("update.after.submit.contest.4", submit.getPid(),
+						submit.getCid());
+				dml("update.problem.contest.accu", submit.getPid(),
+						submit.getCid(), submit.getPid(), submit.getCid());
+				dml("update.user.points.free.contest", submit.getCid(),
+						submit.getCid(), submit.getCid());
 
 			}
-			updateLevel(submit.getUid(), submit.getCid(), getProblemLevel(submit.getPid(), submit.getCid()), getAcceptedInContest(submit.getUid(), submit.getCid()), contest.getAcbylevels(),
-					contest.getAclimit(), submit.getSid());
+			updateLevel(submit.getUid(), submit.getCid(),
+					getProblemLevel(submit.getPid(), submit.getCid()),
+					getAcceptedInContest(submit.getUid(), submit.getCid()),
+					contest.getAcbylevels(), contest.getAclimit(),
+					submit.getSid());
 			break;
 		}
 		}
 
 		if (!contest.isFrozen()) {
-			String key = Config.getProperty(submit.getStatus().replaceAll(" ", "."));
+			String key = Config.getProperty(submit.getStatus().replaceAll(" ",
+					"."));
 			if (key != null && !"sie".equals(key) && !"jdg".equals(key)) {
-				dml(replaceSql("upsert.user.stats.contest.key", "<key>", key), submit.getUid(), submit.getCid(), submit.getUid(), submit.getCid());
-				dml(replaceSql("upsert.problem.contest.contest.key", "<key>", key), submit.getPid(), submit.getCid(), submit.getPid(), submit.getCid());
-				dml(replaceSql("upsert.language.stats.contest.key", "<key>", key), submit.getLang(), submit.getCid(), submit.getLang(), submit.getCid());
+				dml(replaceSql("upsert.user.stats.contest.key", "<key>", key),
+						submit.getUid(), submit.getCid(), submit.getUid(),
+						submit.getCid());
+				dml(replaceSql("upsert.problem.contest.contest.key", "<key>",
+						key), submit.getPid(), submit.getCid(),
+						submit.getPid(), submit.getCid());
+				dml(replaceSql("upsert.language.stats.contest.key", "<key>",
+						key), submit.getLang(), submit.getCid(),
+						submit.getLang(), submit.getCid());
 			} else
 				System.out.println(submit.getStatus());
 		}
@@ -377,7 +486,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		List<Language> langs = objects("contest.languages", Language.class, cid);
 
 		for (Language lang : langs) {
-			lang.setDescripcion(lang.getLanguage() + " (" + lang.getDescripcion() + ")");
+			lang.setDescripcion(lang.getLanguage() + " ("
+					+ lang.getDescripcion() + ")");
 		}
 		return langs;
 	}
@@ -385,10 +495,12 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	@Transactional(readOnly = true)
 	public List<Language> getContestLanguagesVirtual(int cid) {
 
-		List<Language> langs = objects("contest.languages.virtual", Language.class, cid);
+		List<Language> langs = objects("contest.languages.virtual",
+				Language.class, cid);
 
 		for (Language lang : langs) {
-			lang.setDescripcion(lang.getLanguage() + " (" + lang.getDescripcion() + ")");
+			lang.setDescripcion(lang.getLanguage() + " ("
+					+ lang.getDescripcion() + ")");
 		}
 		return langs;
 	}
@@ -421,16 +533,16 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	public List<ContestStyle> loadEnabledScoringStyles() {
 		return objects("contest.style.enabled", ContestStyle.class);
 	}
-	
+
 	@Transactional(readOnly = true)
 	public ContestStyle loadScoringStyle(int cid) {
-		return object("contest.style.enabled.id", ContestStyle.class,cid);
+		return object("contest.style.enabled.id", ContestStyle.class, cid);
 	}
-
 
 	@Transactional(readOnly = true)
 	public Contest loadContestFull(int cid) {
-		Contest contest1 = object(getSql("load.contest.full"), Contest.class, cid);
+		Contest contest1 = object(getSql("load.contest.full"), Contest.class,
+				cid);
 		contest1.setElapsed(contest1.getElapsed().split("\\.")[0]);
 		contest1.setRemaining(contest1.getRemaining().split("\\.")[0]);
 		contest1.setTostart(contest1.getTostart().split("\\.")[0]);
@@ -465,7 +577,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 				return minimums;
 			}
 		};
-		return (int[]) jdbcTemplate.queryForObject(getSql("ranking.acm.minimum"), rowMapper, cid);
+		return (int[]) jdbcTemplate.queryForObject(
+				getSql("ranking.acm.minimum"), rowMapper, cid);
 	}
 
 	@Transactional(readOnly = true)
@@ -500,27 +613,34 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 			}
 		}
 		if (rest.isEmpty()) {
-			return (int[]) jdbcTemplate.queryForObject(getSql("global.ranking.acm.minimum"), rowMapper);
+			return (int[]) jdbcTemplate.queryForObject(
+					getSql("global.ranking.acm.minimum"), rowMapper);
 		} else {
-			return (int[]) jdbcTemplate.queryForObject(replaceSql("global.ranking.acm.minimum.cids", "<cids>", rest), rowMapper);
+			return (int[]) jdbcTemplate.queryForObject(
+					replaceSql("global.ranking.acm.minimum.cids", "<cids>",
+							rest), rowMapper);
 		}
 	}
 
 	@Transactional(readOnly = true)
-	public IACMScoreboard getRankingAcm(int cid, String selGroup, boolean groupby, List<Problem> prbls) {
+	public IACMScoreboard getRankingAcm(int cid, String selGroup,
+			boolean groupby, List<Problem> prbls) {
 
 		IACMScoreboard aCMScoreboard = new IACMScoreboard();
-		aCMScoreboard.init(groupby, string("get.contest.guestgroup", cid), prbls, getRankingAcmMinimun(cid));
+		aCMScoreboard.init(groupby, string("get.contest.guestgroup", cid),
+				prbls, getRankingAcmMinimun(cid));
 
 		if (StringUtils.hasText(selGroup))
-			jdbcTemplate.query(getSql("ranking.acm.selected.group"), aCMScoreboard, cid, selGroup);
+			jdbcTemplate.query(getSql("ranking.acm.selected.group"),
+					aCMScoreboard, cid, selGroup);
 		else
 			jdbcTemplate.query(getSql("ranking.acm"), aCMScoreboard, cid);
 		return aCMScoreboard;
 	}
 
 	@Transactional(readOnly = true)
-	public IACMScoreboard getGlobalRankingAcm(List<Integer> cids, boolean groupby, List<Problem> prbls) {
+	public IACMScoreboard getGlobalRankingAcm(List<Integer> cids,
+			boolean groupby, List<Problem> prbls) {
 		IACMScoreboard aCMScoreboard = new IACMScoreboard();
 		aCMScoreboard.init2(groupby, prbls, getGlobalRankingAcmMinimun(cids));
 		boolean first = true;
@@ -548,9 +668,11 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<User> getFreeContestRanking(int cid, PagingOptions options) {
+	public IPaginatedList<User> getFreeContestRanking(int cid,
+			PagingOptions options) {
 
-		IPaginatedList<User> users = paginated("free.contest.ranking", User.class, 30, options, cid, cid);
+		IPaginatedList<User> users = paginated("free.contest.ranking",
+				User.class, 30, options, cid, cid);
 		int i = 0;
 		for (User user : users.getList()) {
 			user.setRank(options.getOffset(30) + i + 1);
@@ -565,18 +687,21 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	public void InsertContest(Contest contest) {
-		dml("insert.contest", contest.getCid(), contest.getCid(), contest.getCid() + "_Default");
+		dml("insert.contest", contest.getCid(), contest.getCid(),
+				contest.getCid() + "_Default");
 
 		insertLanguages(contest);
 	}
-	
+
 	public int getStyle(int cid) {
-		return integer("select style from contest where cid=?",cid);
+		return integer("select style from contest where cid=?", cid);
 	}
 
 	public void insertLanguages(Contest contest) {
 		clearProgrammingLanguages(contest.getCid());
-		List<Language> languages = objects(contest.isICPC() ? "enabled.icpc.language" : "enabled.programming.language", Language.class);
+		List<Language> languages = objects(
+				contest.isICPC() ? "enabled.icpc.language"
+						: "enabled.programming.language", Language.class);
 		for (int i = 0; i < languages.size(); i++) {
 			insertLanguageContest(languages.get(i).getLid(), contest.getCid());
 		}
@@ -588,7 +713,7 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 			insertLanguageContest(languagesids[i], cid);
 		}
 	}
-	
+
 	private void insertVirtualLanguages(int cid, List<Language> languages) {
 		for (int i = 0; i < languages.size(); i++) {
 			insertLanguageContest(languages.get(i).getLid(), cid);
@@ -626,14 +751,22 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	public void updateContestFlags(Contest contest) {
-		dml("update.contest.flags", contest.isGallery(), contest.isBalloon(), contest.isSaris(), contest.isShow_stats(), contest.isShow_stats_out(), contest.isShow_status(), contest.isShow_status_out(),
-				contest.isShow_scoreboard(), contest.isShow_scoreboard_out(), contest.isAllow_registration(), contest.isUnfreeze_auto(), contest.isShow_problem_out(), contest.isShow_ontest(),
+		dml("update.contest.flags", contest.isGallery(), contest.isBalloon(),
+				contest.isSaris(), contest.isShow_stats(),
+				contest.isShow_stats_out(), contest.isShow_status(),
+				contest.isShow_status_out(), contest.isShow_scoreboard(),
+				contest.isShow_scoreboard_out(),
+				contest.isAllow_registration(), contest.isUnfreeze_auto(),
+				contest.isShow_problem_out(), contest.isShow_ontest(),
 				contest.getCid());
 	}
 
 	private void importGeneralFromContest(int cidto, Contest from) {
-		dml("update.import.general.from.contest", from.getStyle(), from.getRegistration(), from.getTotal_users(), from.getDeadtime(), from.getFrtime(), from.getPenalty(), from.getIoimark(),
-				from.getPpoints(), from.getUnfreeze_time(), cidto);
+		dml("update.import.general.from.contest", from.getStyle(),
+				from.getRegistration(), from.getTotal_users(),
+				from.getDeadtime(), from.getFrtime(), from.getPenalty(),
+				from.getIoimark(), from.getPpoints(), from.getUnfreeze_time(),
+				cidto);
 	}
 
 	@Transactional(readOnly = true)
@@ -646,7 +779,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		int pOrder = 1;
 		for (Iterator<Problem> it = problems.iterator(); it.hasNext();) {
 			Problem problem = it.next();
-			insertProblemContest(problem.getPid(), cidto, problem.getLevel(), pOrder++);
+			insertProblemContest(problem.getPid(), cidto, problem.getLevel(),
+					pOrder++);
 		}
 	}
 
@@ -727,7 +861,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	public void guestGroup(Contest contest) {
-		dml("update.contest.guest.group", contest.getGuestGroup(), contest.getCid());
+		dml("update.contest.guest.group", contest.getGuestGroup(),
+				contest.getCid());
 	}
 
 	public void clearContestJudges(int cid) {
@@ -741,14 +876,17 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
 	public void insertUsersContest(Contest contest) {
 		for (int i = 0; i < contest.getUsersids().length; i++) {
-			insertUserContest(new Integer(contest.getUsersids()[i].toString()), contest.getCid(), contest.getGroupd());
+			insertUserContest(new Integer(contest.getUsersids()[i].toString()),
+					contest.getCid(), contest.getGroupd());
 		}
 	}
 
 	public void insertBalloonTrackerContest(Contest contest) {
 		dml("clear.balloontracker.contest", contest.getCid());
 		for (int i = 0; i < contest.getBalloontrackerids().length; i++) {
-			insertBalloonTrackerContest(new Integer(contest.getBalloontrackerids()[i].toString()), contest.getCid());
+			insertBalloonTrackerContest(
+					new Integer(contest.getBalloontrackerids()[i].toString()),
+					contest.getCid());
 		}
 	}
 
@@ -778,11 +916,13 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<Contest> getPastContests(PagingOptions options, String pattern) {
+	public IPaginatedList<Contest> getPastContests(PagingOptions options,
+			String pattern) {
 		if (pattern == null) {
 			return paginated("past.contests", Contest.class, 50, options);
 		} else {
-			return paginated("past.contests.pattern", Contest.class, 50, options, "%" + pattern + "%", "%" + pattern + "%");
+			return paginated("past.contests.pattern", Contest.class, 50,
+					options, "%" + pattern + "%", "%" + pattern + "%");
 		}
 	}
 
@@ -791,18 +931,47 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		return integer("count.contest");
 	}
 
+	// load.contests=select cid,name,registration,enabled,initdate > now() as
+	// coming,now() between initdate and enddate as running,
+	// block as blocked, initdate, enddate from contest order by running
+	// desc,coming desc,enddate asc limit 50 offset ?
 	@Transactional(readOnly = true)
-	public IPaginatedList<Contest> loadContests(PagingOptions options) {
-		int found = integer("count.contest");
+	public IPaginatedList<Contest> loadContests(PagingOptions options,
+			String access, String enabled, String status) {
 
-		List<Contest> contests = objects("load.contests", Contest.class, options.getOffset(50));
+		Query query = new Query("contest");
+		Integer iAccess = "all".equals(access) ? null : Integer
+				.parseInt(access);
+		Boolean bEnabled = "all".equals(enabled) ? null : Boolean
+				.parseBoolean(enabled);
+		status = "all".equals(status) ? null : status;
 
-		for (Contest cont : contests) {
-			if (!cont.isRunning() && !cont.isComing()) {
-				cont.setPast(true);
+		if(status != null ) {
+			Where wStatus = Where.noop();
+			
+			if (status.equals("running")) {
+				wStatus = Where.and(Where.le("initdate", new Date()),
+						Where.ge("enddate", new Date()));
+			} else if (status.equals("coming")) {
+				wStatus = Where.and(Where.gt("initdate", new Date()));
+			} else {
+				wStatus = Where.and(Where.lt("enddate", new Date()));
 			}
+		
+			query.where(Where.eq("enabled", bEnabled),
+				Where.ne("registration", iAccess), wStatus);
+		}		
 
-		}
+		int found = integer(query.count(), query.arguments());		
+		
+		query.order(Order.desc("running"), Order.desc("coming"),
+				Order.desc("enddate"));
+		query.paginate(options, 50);
+
+		List<Contest> contests = objects(
+				query.select("cid,name,registration,enabled,initdate > now() as coming,now() between initdate and enddate as running,enddate < now() as past,block as blocked, initdate, enddate"),
+				Contest.class, query.arguments());
+
 		return getPaginatedList(options, contests, 50, found);
 	}
 
@@ -817,36 +986,67 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		switch (contest.getStyle()) {
 		case 1:
 			if (contest.getRegistration() == 1) {
-				dml("update.contest.global.settings.tusers", contest.isGallery(),contest.isBalloon(), contest.getPenalty(), contest.getFrtime(), contest.getDeadtime(), contest.getUnfreeze_time(),
-						contest.getTotal_users(), contest.getGold(), contest.getSilver(), contest.getBronze(), contest.getCid());
+				dml("update.contest.global.settings.tusers",
+						contest.isGallery(), contest.isBalloon(),
+						contest.getPenalty(), contest.getFrtime(),
+						contest.getDeadtime(), contest.getUnfreeze_time(),
+						contest.getTotal_users(), contest.getGold(),
+						contest.getSilver(), contest.getBronze(),
+						contest.getCid());
 			} else {
-				dml("update.contest.global.settings", contest.isGallery(),contest.isBalloon(), contest.getPenalty(), contest.getFrtime(), contest.getDeadtime(), contest.getUnfreeze_time(), contest.getGold(),
-						contest.getSilver(), contest.getBronze(), contest.getCid());
+				dml("update.contest.global.settings", contest.isGallery(),
+						contest.isBalloon(), contest.getPenalty(),
+						contest.getFrtime(), contest.getDeadtime(),
+						contest.getUnfreeze_time(), contest.getGold(),
+						contest.getSilver(), contest.getBronze(),
+						contest.getCid());
 			}
 			break;
 		case 2:
 			if (contest.getRegistration() == 1) {
-				dml("update.contest.global.settings.tusers.ioi", contest.isGallery(),contest.isBalloon(), contest.getIoimark(), contest.getTotal_users(), contest.getGold(), contest.getSilver(), contest.getBronze(),
-						contest.getCid());
+				dml("update.contest.global.settings.tusers.ioi",
+						contest.isGallery(), contest.isBalloon(),
+						contest.getIoimark(), contest.getTotal_users(),
+						contest.getGold(), contest.getSilver(),
+						contest.getBronze(), contest.getCid());
 			} else {
-				dml("update.contest.global.settings.ioi", contest.isGallery(),contest.isBalloon(), contest.getIoimark(), contest.getGold(), contest.getSilver(), contest.getBronze(), contest.getCid());
+				dml("update.contest.global.settings.ioi", contest.isGallery(),
+						contest.isBalloon(), contest.getIoimark(),
+						contest.getGold(), contest.getSilver(),
+						contest.getBronze(), contest.getCid());
 			}
 			break;
 		case 3:
 			if (contest.getRegistration() == 1) {
-				dml("update.contest.global.settings.tusers.points", contest.isGallery(),contest.isBalloon(), contest.getPpoints(), contest.getTotal_users(), contest.getGold(), contest.getSilver(), contest.getBronze(),
-						contest.getCid());
+				dml("update.contest.global.settings.tusers.points",
+						contest.isGallery(), contest.isBalloon(),
+						contest.getPpoints(), contest.getTotal_users(),
+						contest.getGold(), contest.getSilver(),
+						contest.getBronze(), contest.getCid());
 			} else {
-				dml("update.contest.global.settings.points", contest.isGallery(),contest.isBalloon(), contest.getPpoints(), contest.getGold(), contest.getSilver(), contest.getBronze(), contest.getCid());
+				dml("update.contest.global.settings.points",
+						contest.isGallery(), contest.isBalloon(),
+						contest.getPpoints(), contest.getGold(),
+						contest.getSilver(), contest.getBronze(),
+						contest.getCid());
 			}
 			break;
 		case 4:
 			if (contest.getRegistration() == 1) {
-				dml("update.contest.global.settings.tusers.4", contest.isGallery(),contest.isBalloon(), contest.getTotal_users(), contest.getLevels(), contest.getAcbylevels(), contest.getAclimit(), contest.getPpoints(),
-						contest.getGold(), contest.getSilver(), contest.getBronze(), contest.getCid());
+				dml("update.contest.global.settings.tusers.4",
+						contest.isGallery(), contest.isBalloon(),
+						contest.getTotal_users(), contest.getLevels(),
+						contest.getAcbylevels(), contest.getAclimit(),
+						contest.getPpoints(), contest.getGold(),
+						contest.getSilver(), contest.getBronze(),
+						contest.getCid());
 			} else {
-				dml("update.contest.global.settings.4", contest.isGallery(),contest.isBalloon(), contest.getLevels(), contest.getAcbylevels(), contest.getAclimit(), contest.getPpoints(), contest.getGold(),
-						contest.getSilver(), contest.getBronze(), contest.getCid());
+				dml("update.contest.global.settings.4", contest.isGallery(),
+						contest.isBalloon(), contest.getLevels(),
+						contest.getAcbylevels(), contest.getAclimit(),
+						contest.getPpoints(), contest.getGold(),
+						contest.getSilver(), contest.getBronze(),
+						contest.getCid());
 			}
 			break;
 		}
@@ -858,8 +1058,11 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	public void updateContestManage(Contest contest) {
-		dml("update.contest.manage", contest.getName(), contest.getInitdate(), contest.getEnddate(), contest.getRglimit(), contest.getStyle(), contest.getRegistration(), contest.isEnabled(),
-				contest.getContestant(), contest.isVtemplate(), contest.isBlocked(), contest.isGrouped(), contest.getCid());
+		dml("update.contest.manage", contest.getName(), contest.getInitdate(),
+				contest.getEnddate(), contest.getRglimit(), contest.getStyle(),
+				contest.getRegistration(), contest.isEnabled(),
+				contest.getContestant(), contest.isVtemplate(),
+				contest.isBlocked(), contest.isGrouped(), contest.getCid());
 		if (contest.isICPC()) {
 			insertLanguages(contest);
 		}
@@ -885,7 +1088,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
 	public void deleteVirtualContest(int uid) {
 
-		Integer cid = integer("select cid from contest where virtual = true and uid = ?", uid);
+		Integer cid = integer(
+				"select cid from contest where virtual = true and uid = ?", uid);
 		if (cid != null) {
 			deleteVirtualContestCid(cid);
 		}
@@ -900,7 +1104,9 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
 	public int createVirtualContest(Contest contest, int uid, String username) {
 		Contest template = loadContestFull(contest.getTemplate());
-		Date endDate = new Date(contest.getInitdate().getTime() + (template.getEnddate().getTime() - template.getInitdate().getTime()));
+		Date endDate = new Date(contest.getInitdate().getTime()
+				+ (template.getEnddate().getTime() - template.getInitdate()
+						.getTime()));
 		template.setCid(contest.getCid());
 		template.setTemplate(contest.getTemplate());
 		template.setEnddate(endDate);
@@ -915,13 +1121,26 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
 		insertVirtualLanguages(template.getCid(), langs);
 
-		dml("insert.contest.full", template.getCid(), template.getName(), template.getInitdate(), template.getEnddate(), !template.isIs_public(), template.getTotal_users(), template.getStyle(),
-				template.getDeadtime(), template.getFrtime(), template.isBlocked(), template.getPenalty(), template.isEnabled(), new Date(), template.getRglimit(), template.getRegistration(),
-				template.getIoimark(), template.getPpoints(), template.getUnfreeze_time(), template.getContestant(), template.getGold(), template.getSilver(), template.getBronze(), false,
-				template.getLevels(), template.getAcbylevels(), template.getAclimit(), template.isRepointing(), template.getGuestGroup(), template.isGrouped(), template.isBalloon(),
-				contest.getTemplate(), template.getUid(), true, template.isShow_scoreboard(), contest.isSaris(), contest.isShow_stats(), contest.isShow_stats_out(), contest.isShow_status_out(),
-				contest.isAllow_registration(), contest.isUnfreeze_auto(), contest.isShow_scoreboard_out(), template.isShow_status(), contest.isShow_problem_out(), contest.isShow_ontest(),
-				template.getOverview());
+		dml("insert.contest.full", template.getCid(), template.getName(),
+				template.getInitdate(), template.getEnddate(),
+				!template.isIs_public(), template.getTotal_users(),
+				template.getStyle(), template.getDeadtime(),
+				template.getFrtime(), template.isBlocked(),
+				template.getPenalty(), template.isEnabled(), new Date(),
+				template.getRglimit(), template.getRegistration(),
+				template.getIoimark(), template.getPpoints(),
+				template.getUnfreeze_time(), template.getContestant(),
+				template.getGold(), template.getSilver(), template.getBronze(),
+				false, template.getLevels(), template.getAcbylevels(),
+				template.getAclimit(), template.isRepointing(),
+				template.getGuestGroup(), template.isGrouped(),
+				template.isBalloon(), contest.getTemplate(), template.getUid(),
+				true, template.isShow_scoreboard(), contest.isSaris(),
+				contest.isShow_stats(), contest.isShow_stats_out(),
+				contest.isShow_status_out(), contest.isAllow_registration(),
+				contest.isUnfreeze_auto(), contest.isShow_scoreboard_out(),
+				template.isShow_status(), contest.isShow_problem_out(),
+				contest.isShow_ontest(), template.getOverview());
 		return contest.getCid();
 	}
 
@@ -935,12 +1154,15 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
 	@Transactional(readOnly = true)
 	public boolean overlapsContest(Contest contest) {
-		return bool(replaceSql("overlaps.contest", "<initdate>", contest.getInitdate().toString()));
+		return bool(replaceSql("overlaps.contest", "<initdate>", contest
+				.getInitdate().toString()));
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<Contest> loadUserVirtualContests(int uid, PagingOptions options) {
-		IPaginatedList<Contest> contests = paginated("users.vcont", Contest.class, 50, options, uid);
+	public IPaginatedList<Contest> loadUserVirtualContests(int uid,
+			PagingOptions options) {
+		IPaginatedList<Contest> contests = paginated("users.vcont",
+				Contest.class, 50, options, uid);
 		for (Contest cont : contests.getList()) {
 			if (!cont.isRunning() && !cont.isComing()) {
 				cont.setPast(true);
@@ -955,7 +1177,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public int countVirtualGlobalList(String cid, String username, int access, int status) {
+	public int countVirtualGlobalList(String cid, String username, int access,
+			int status) {
 		List<Object> list = new LinkedList<Object>();
 		String sql = "select count(*) from individual_virtual_contest join contest on contest.cid = individual_virtual_contest.cid where father = vid";
 		if (cid != null && !cid.isEmpty()) {
@@ -993,7 +1216,9 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		return integer(sql, list.toArray());
 	}
 
-	public IPaginatedList<Contest> loadGlobalVirtualContests(PagingOptions options, String cid, String username, int access, int status) {
+	public IPaginatedList<Contest> loadGlobalVirtualContests(
+			PagingOptions options, String cid, String username, int access,
+			int status) {
 
 		Integer found = countVirtualGlobalList(cid, username, access, status);
 
@@ -1002,7 +1227,10 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 				Contest contest = new Contest();
 				contest.setCid(result.getInt("CID"));
 				contest.setVid(result.getInt("VID"));
-				contest.setEnddate(new Date(result.getInt("SYEAR") - 1900, result.getInt("SMONTH") - 1, result.getInt("SDAY"), result.getInt("SHOUR"), result.getInt("SMIN"), result.getInt("SSEC")));
+				contest.setEnddate(new Date(result.getInt("SYEAR") - 1900,
+						result.getInt("SMONTH") - 1, result.getInt("SDAY"),
+						result.getInt("SHOUR"), result.getInt("SMIN"), result
+								.getInt("SSEC")));
 				contest.setName(result.getString("name"));
 				contest.setIdate(result.getString("initdate"));
 				contest.setDuration(result.getString("duration"));
@@ -1054,7 +1282,9 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		sql += " order by start_time desc limit 50 offset ?";
 		list.add(options.getOffset(50));
 
-		IPaginatedList<Contest> contests = getPaginatedList(options, jdbcTemplate.query(sql, list.toArray(), rowMapper), 50, found == null ? 0 : found);
+		IPaginatedList<Contest> contests = getPaginatedList(options,
+				jdbcTemplate.query(sql, list.toArray(), rowMapper), 50,
+				found == null ? 0 : found);
 
 		return contests;
 	}
@@ -1065,11 +1295,15 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public List<User> getRankingACMVirtual(int cid, String username, List<Problem> problemsO) {
+	public List<User> getRankingACMVirtual(int cid, String username,
+			List<Problem> problemsO) {
 		this.problems = problemsO;
 		RowMapper<User> rowMapper = new RowMapper<User>() {
 			public User mapRow(ResultSet result, int i) throws SQLException {
-				User user = new User(result.getString(2), result.getString(3), result.getInt(4), result.getInt(5), result.getString(6), result.getString(7), result.getString(8), result.getString(9),
+				User user = new User(result.getString(2), result.getString(3),
+						result.getInt(4), result.getInt(5),
+						result.getString(6), result.getString(7),
+						result.getString(8), result.getString(9),
 						result.getString(10), problems);
 				user.setVirtual(result.getBoolean("virtual"));
 				user.setRank(++i);
@@ -1078,11 +1312,14 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 				return user;
 			}
 		};
-		return jdbcTemplate.query(getSql("get.ranking.acm.virtual"), rowMapper, cid, username, username, username);
+		return jdbcTemplate.query(getSql("get.ranking.acm.virtual"), rowMapper,
+				cid, username, username, username);
 	}
 
 	@Transactional(readOnly = true)
-	public void buildRankingACMVirtual(List<Problem> problemsO, List<User> usersO, Map<Integer, Integer> uidPosO, Contest contestO, String username, int uid) {
+	public void buildRankingACMVirtual(List<Problem> problemsO,
+			List<User> usersO, Map<Integer, Integer> uidPosO, Contest contestO,
+			String username, int uid) {
 		this.problems = problemsO;
 		this.users = usersO;
 		this.uidPos = uidPosO;
@@ -1094,7 +1331,10 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 					String status = result.getString(1);
 					int pid = result.getInt(2);
 					int uid = result.getInt(3);
-					Date sub_date = new Date(result.getInt(4) - 1900, result.getInt(5) - 1, result.getInt(6), result.getInt(7), result.getInt(8), result.getInt(9));
+					Date sub_date = new Date(result.getInt(4) - 1900,
+							result.getInt(5) - 1, result.getInt(6),
+							result.getInt(7), result.getInt(8),
+							result.getInt(9));
 					int pos = uidPos.get(uid);
 					int pPos = users.get(pos).getProblemPosition(pid);
 					problems.get(pPos).incrementSubmissions();
@@ -1105,37 +1345,61 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 						return null;
 					}
 					if (users.get(pos).getProblems().get(pPos).isAccepted()) {
-						users.get(pos).getProblems().get(pPos).increaseAfterAc(1);
+						users.get(pos).getProblems().get(pPos)
+								.increaseAfterAc(1);
 					} else {
 						if (status.equals("Accepted")) {
-							if (!users.get(pos).getProblems().get(pPos).isAccepted()) {
-								users.get(pos).setAcc(users.get(pos).getAcc() + 1);
-								long subtotal = sub_date.getTime() / 60000 - contest.getRinitdate().getTime() / 60000;
-								users.get(pos).setPenalty(users.get(pos).getPenalty() + users.get(pos).getProblems().get(pPos).getBeforeac() * contest.getPenalty() + (int) subtotal);
+							if (!users.get(pos).getProblems().get(pPos)
+									.isAccepted()) {
+								users.get(pos).setAcc(
+										users.get(pos).getAcc() + 1);
+								long subtotal = sub_date.getTime() / 60000
+										- contest.getRinitdate().getTime()
+										/ 60000;
+								users.get(pos).setPenalty(
+										users.get(pos).getPenalty()
+												+ users.get(pos).getProblems()
+														.get(pPos)
+														.getBeforeac()
+												* contest.getPenalty()
+												+ (int) subtotal);
 								problems.get(pPos).incrementteamSolved();
-								problems.get(pPos).setBeforeac(users.get(pos).getProblems().get(pPos).getBeforeac() + 1);
+								problems.get(pPos).setBeforeac(
+										users.get(pos).getProblems().get(pPos)
+												.getBeforeac() + 1);
 							}
 
-							users.get(pos).getProblems().get(pPos).setScoreClass("ACC");
-							users.get(pos).getProblems().get(pPos).setAccepted(true);
-							if (problems.get(pPos).getPid() == users.get(pos).getProblems().get(pPos).getPid()) {
+							users.get(pos).getProblems().get(pPos)
+									.setScoreClass("ACC");
+							users.get(pos).getProblems().get(pPos)
+									.setAccepted(true);
+							if (problems.get(pPos).getPid() == users.get(pos)
+									.getProblems().get(pPos).getPid()) {
 								if (!problems.get(pPos).isAccepted()) {
-									users.get(pos).getProblems().get(pPos).setFsolved(true);
+									users.get(pos).getProblems().get(pPos)
+											.setFsolved(true);
 									problems.get(pPos).setAccepted(true);
-									users.get(pos).getProblems().get(pPos).setScoreClass("FS");
+									users.get(pos).getProblems().get(pPos)
+											.setScoreClass("FS");
 								}
 							}
 							if (!solved) {
-								users.get(pos).getProblems().get(pPos).setScoreClass("FPS");
+								users.get(pos).getProblems().get(pPos)
+										.setScoreClass("FPS");
 								solved = true;
 							}
-							users.get(pos).getProblems().get(pPos).setAc_time(sub_date.toString());
-							long min = (sub_date.getTime() - contest.getRinitdate().getTime()) / 60000;
-							users.get(pos).getProblems().get(pPos).setAcmin(min + "");
+							users.get(pos).getProblems().get(pPos)
+									.setAc_time(sub_date.toString());
+							long min = (sub_date.getTime() - contest
+									.getRinitdate().getTime()) / 60000;
+							users.get(pos).getProblems().get(pPos)
+									.setAcmin(min + "");
 
 						} else {
-							users.get(pos).getProblems().get(pPos).increaseBeforeAc(1);
-							users.get(pos).getProblems().get(pPos).setScoreClass("WA");
+							users.get(pos).getProblems().get(pPos)
+									.increaseBeforeAc(1);
+							users.get(pos).getProblems().get(pPos)
+									.setScoreClass("WA");
 						}
 
 					}
@@ -1144,7 +1408,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 				return null;
 			}
 		};
-		jdbcTemplate.query(getSql("build.ranking.acm.virtual.2"), rowMapper, contestO.getCid(), contestO.getCid(), username, uid, uid, uid);
+		jdbcTemplate.query(getSql("build.ranking.acm.virtual.2"), rowMapper,
+				contestO.getCid(), contestO.getCid(), username, uid, uid, uid);
 	}
 
 	@Transactional(readOnly = true)
@@ -1153,8 +1418,10 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<VirtualContest> loadVirtualContests(PagingOptions options) {
-		IPaginatedList<VirtualContest> vcontests = paginated("load.vcont.2", VirtualContest.class, 50, options);
+	public IPaginatedList<VirtualContest> loadVirtualContests(
+			PagingOptions options) {
+		IPaginatedList<VirtualContest> vcontests = paginated("load.vcont.2",
+				VirtualContest.class, 50, options);
 
 		for (VirtualContest vcontest : vcontests.getList()) {
 			if (!vcontest.isRunning() && !vcontest.isComing()) {
@@ -1169,7 +1436,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		if (pattern == null || pattern.isEmpty()) {
 			return integer("count.contest.general.scoreboard");
 		} else {
-			return integer("count.contest.general.scoreboard.pattern", "%" + pattern + "%");
+			return integer("count.contest.general.scoreboard.pattern", "%"
+					+ pattern + "%");
 		}
 	}
 
@@ -1189,7 +1457,9 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
 	public void updateAfterSubmitionContestVirtual(SubmissionJudge sub) {
 		dml("change.status.contest", sub.getStatus(), sub.getSid());
-		dml(replaceSql("update.contest.virtual.after.submition", "<key>", Config.getProperty(sub.getStatus().replaceAll(" ", "."))), sub.getLang());
+		dml(replaceSql("update.contest.virtual.after.submition", "<key>",
+				Config.getProperty(sub.getStatus().replaceAll(" ", "."))),
+				sub.getLang());
 	}
 
 	@Deprecated
@@ -1217,7 +1487,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	@Transactional(readOnly = true)
 	public Map<Integer, Problem> loadContestProblemsLetters(int cid) {
 
-		List<Problem> pids = objects("load.problem.contestsetters", Problem.class, cid);
+		List<Problem> pids = objects("load.problem.contestsetters",
+				Problem.class, cid);
 		Map<Integer, Problem> map = new HashMap<Integer, Problem>();
 		for (int i = 0; i < pids.size(); i++) {
 			Problem p = pids.get(i);
@@ -1227,12 +1498,18 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		return map;
 	}
 
-	public void updateAfterSubmitionCourse(int pid, int uid, String status, String language, int submit_id, int course_id) {
-		dml("insert.course.log.uid", uid, "Status: " + status + " ; Problem " + pid, course_id);
-		if (status.contains((CharSequence) Config.getProperty("judge.status.ac"))) {
+	public void updateAfterSubmitionCourse(int pid, int uid, String status,
+			String language, int submit_id, int course_id) {
+		dml("insert.course.log.uid", uid, "Status: " + status + " ; Problem "
+				+ pid, course_id);
+		if (status.contains((CharSequence) Config
+				.getProperty("judge.status.ac"))) {
 			// para ver si es primera vez que se acepta
-			int firstUid = integer(0, "select uid from submition where status = ? and uid = ? and pid = ? and course_id = ? and submit_id < ?", Config.getProperty("judge.status.ac"), uid, pid,
-					course_id, submit_id);
+			int firstUid = integer(
+					0,
+					"select uid from submition where status = ? and uid = ? and pid = ? and course_id = ? and submit_id < ?",
+					Config.getProperty("judge.status.ac"), uid, pid, course_id,
+					submit_id);
 			if (firstUid == 0) {
 				dml("update course_users set points = points + (select problem_points from course where course_id = ?) where username = (select username from users where uid = ?) and course_id = ?",
 						course_id, uid, course_id);
@@ -1241,34 +1518,43 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<User> getContestGeneralScoreboard(int found, String pattern, PagingOptions options) {
+	public IPaginatedList<User> getContestGeneralScoreboard(int found,
+			String pattern, PagingOptions options) {
 		List<User> users;
 		String sql;
 		if (pattern == null || pattern.isEmpty()) {
 			if (options.getSort() != null && !options.getSort().isEmpty()) {
 				if (options.getSort().equals("contests")) {
 					if (options.getDirection().equals("asc")) {
-						sql = replaceSql("load.contest.global.scoreboard", "<orderby>", "contests asc");
+						sql = replaceSql("load.contest.global.scoreboard",
+								"<orderby>", "contests asc");
 					} else {
-						sql = replaceSql("load.contest.global.scoreboard", "<orderby>", "contests desc");
+						sql = replaceSql("load.contest.global.scoreboard",
+								"<orderby>", "contests desc");
 					}
 				} else if (options.getSort().equals("sub")) {
 					if (options.getDirection().equals("asc")) {
-						sql = replaceSql("load.contest.global.scoreboard", "<orderby>", "total asc");
+						sql = replaceSql("load.contest.global.scoreboard",
+								"<orderby>", "total asc");
 					} else {
-						sql = replaceSql("load.contest.global.scoreboard", "<orderby>", "total desc");
+						sql = replaceSql("load.contest.global.scoreboard",
+								"<orderby>", "total desc");
 					}
 				} else if (options.getSort().equals("acc")) {
 					if (options.getDirection().equals("asc")) {
-						sql = replaceSql("load.contest.global.scoreboard", "<orderby>", "accu asc");
+						sql = replaceSql("load.contest.global.scoreboard",
+								"<orderby>", "accu asc");
 					} else {
-						sql = replaceSql("load.contest.global.scoreboard", "<orderby>", "accu desc");
+						sql = replaceSql("load.contest.global.scoreboard",
+								"<orderby>", "accu desc");
 					}
 				} else {
-					sql = replaceSql("load.contest.global.scoreboard", "<orderby>", "accu desc,total asc, contests desc");
+					sql = replaceSql("load.contest.global.scoreboard",
+							"<orderby>", "accu desc,total asc, contests desc");
 				}
 			} else {
-				sql = replaceSql("load.contest.global.scoreboard", "<orderby>", "accu desc,total asc, contests desc");
+				sql = replaceSql("load.contest.global.scoreboard", "<orderby>",
+						"accu desc,total asc, contests desc");
 			}
 			users = objects(sql, User.class, options.getOffset(30));
 		} else {
@@ -1293,16 +1579,20 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 						sql = replaceSql(sql, "<orderby>", "accu desc");
 					}
 				} else {
-					sql = replaceSql(sql, "<orderby>", "accu desc,total asc, contests desc");
+					sql = replaceSql(sql, "<orderby>",
+							"accu desc,total asc, contests desc");
 				}
 			} else {
-				sql = replaceSql(sql, "<orderby>", "accu desc,total asc, contests desc");
+				sql = replaceSql(sql, "<orderby>",
+						"accu desc,total asc, contests desc");
 			}
-			users = objects(sql, User.class, "%" + pattern + "%", options.getOffset(30));
+			users = objects(sql, User.class, "%" + pattern + "%",
+					options.getOffset(30));
 		}
 		int i = 0;
 		for (User user : users) {
-			double round = (double) (user.getAccu() * 100) / (double) user.getTotal();
+			double round = (double) (user.getAccu() * 100)
+					/ (double) user.getTotal();
 			round *= 1000;
 			round = Math.round(round);
 			round /= 1000;
