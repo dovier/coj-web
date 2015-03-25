@@ -5,6 +5,16 @@ public class ContestAwards extends BaseBean {
 	private String username;
 	private String nick;
 	private Integer cid;
+	private String description;
+
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public String getUsername() {
 		return username;

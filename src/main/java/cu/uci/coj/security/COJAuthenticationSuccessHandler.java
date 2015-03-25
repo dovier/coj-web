@@ -42,7 +42,6 @@ public class COJAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
         SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
         sessionLocaleResolver.setLocale(request, response, new Locale(locale));
         setDefaultTargetUrl(determineTargetUrl(request));
-        
         userDAO.dml("insert.log", "user logged in",username);
         super.onAuthenticationSuccess(request, response, authentication);
     }

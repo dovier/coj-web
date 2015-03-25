@@ -132,7 +132,7 @@ public class ContestSubmissionController extends BaseController {
 								getUsername(principal),
 								request.getUserPrincipal() != null,
 								request.isUserInRole(Roles.ROLE_ADMIN)
-										|| (request.isUserInRole(Roles.ROLE_JUDGE) && contestDAO.isJudgeInContest(cid, contestDAO.integer("select.uid.by.username", principal.getName()))), contest);
+										|| (contestDAO.isJudgeInContest(cid, contestDAO.integer("select.uid.by.username", principal.getName()))), contest);
 						if (contest.getStyle() == 1) {
 							Map<Integer, Problem> pids = contestDAO.loadContestProblemsLetters(cid);
 							for (SubmissionJudge sub : submissions.getList()) {
@@ -192,7 +192,7 @@ public class ContestSubmissionController extends BaseController {
 	private SubmissionJudge getContestSourceCode(HttpServletRequest request, Principal principal, int submit_id, Contest contest) {
 
 		SubmissionJudge submission = null;
-		if (!(request.isUserInRole(Roles.ROLE_ADMIN) || (request.isUserInRole(Roles.ROLE_JUDGE) && contestDAO.isJudgeInContest(contest.getCid(),
+		if (!(request.isUserInRole(Roles.ROLE_ADMIN) || (contestDAO.isJudgeInContest(contest.getCid(),
 				contestDAO.integer("select.uid.by.username", principal.getName()))))) {
 			submission = submissionDAO.object("get.contest.source.code", SubmissionJudge.class, contest.getCid(), submit_id, contest.getCid(), getUsername(principal));
 		} else {

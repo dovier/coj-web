@@ -141,7 +141,7 @@
 		var nat = $('#username').val();
 		
 		$.ajax({
-			url : "/json/xtats/contestsubmits.json",
+			url : "/contest/contestsubmits.json",
 			type : 'GET',
 			data : {
 				"cid" : ${contest.cid},
@@ -162,7 +162,7 @@
 					};
 				
 				
-					chart = new Chart($("#chart").get(0).getContext("2d")).Bar(data,{animationEasing : "easeOutQuart",barShowStroke:false})}
+					chart = new Chart($("#chart").get(0).getContext("2d")).Bar(data,{animation : false,barShowStroke:false})}
 				else{
 					while(chart.datasets[0].bars.length > 0) {
 						chart.removeData();

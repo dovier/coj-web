@@ -32,10 +32,11 @@
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-xs-12">
-							<img src="/images/<c:url value="fast.png"/>">
-							<spring:message code="contest.award.fast" />
+							<img src="/images/<c:url value="fast.png"/>" title="<spring:message code="contest.award.fast" />">
+							
 							<a
 								href="<c:url value="/contest/cuseraccount.xhtml?uid=${fastAward.uid}&cid=${fastAward.cid}" />">${fastAward.nick}</a>
+								&nbsp;${fastAward.description}
 						</div>
 					</div>
 				</div>
@@ -50,10 +51,11 @@
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-xs-12">
-							<img src="/images/<c:url value="exclusive.png"/>">
-							<spring:message code="contest.award.exclusive" />
+							<img src="/images/<c:url value="exclusive.png"/>"
+							title="<spring:message code="contest.award.exclusive" />" >
 							<a
 								href="<c:url value="/contest/cuseraccount.xhtml?uid=${exclusiveAward.uid}&cid=${exclusiveAward.cid}" />">${exclusiveAward.nick}</a>
+								&nbsp;${exclusiveAward.description}
 						</div>
 					</div>
 				</div>
@@ -68,10 +70,11 @@
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-xs-12">
-							<img src="/images/<c:url value="accurate.png"/>">
-							<spring:message code="contest.award.accurate" />
+							<img src="/images/<c:url value="accurate.png"/>"
+							title="<spring:message code="contest.award.accurate" />" >
 							<a
 								href="<c:url value="/contest/cuseraccount.xhtml?uid=${accurateAward.uid}&cid=${accurateAward.cid}" />">${accurateAward.nick}</a>
+								&nbsp;${accurateAward.description}
 						</div>
 					</div>
 				</div>

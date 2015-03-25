@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.AccountActivationDAO;
+import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.AccountActivation;
 import cu.uci.coj.model.User;
@@ -37,7 +38,7 @@ public class AccountActivationController extends BaseController {
 	
 	@RequestMapping(value = "/admin/resendactivations.xhtml", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public String resend(Model model, @RequestParam(required=false) Integer act_id){
+	public void resend(Model model, @RequestParam(required=false) Integer act_id){
 		
 		if (act_id == null)
 		mailNotificationService.sendBulkAccountVerificationReminder();
@@ -46,7 +47,6 @@ public class AccountActivationController extends BaseController {
 			mailNotificationService.sendAccountVerificationReminder(activation);
 		}
 		
-		return "redirect:/admin/manageactivations.xhtml";
 	}
 	
 	@RequestMapping(value = "/admin/manageactivations.xhtml", method = RequestMethod.GET)
@@ -69,11 +69,15 @@ public class AccountActivationController extends BaseController {
 		return "/admin/tables/manageactivations";
 	}
 
+	@Resource
+	private UserDAO userDAO;
+	
 	@RequestMapping(value = "/admin/deleteactivation.xhtml", method = RequestMethod.GET)
 	public String delete( @RequestParam("key") String key) {
 
 		try {
 			User user = baseDAO.object("select.user.activation.key", User.class, key);
+			baseDAO.dml("delete.user.following", user.getUid(),user.getUid());
 			baseDAO.dml("delete.user.3", user.getUsername());
 			baseDAO.dml("delete.user.2", user.getUid());
 			baseDAO.dml("delete.user.1", user.getUid());

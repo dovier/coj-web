@@ -11,7 +11,7 @@
     <c:choose>
         <c:when test="${available == true}">
             <c:if test="${contest.running == true}">
-                <authz:authorize ifAnyGranted="ROLE_ADMIN,ROLE_JUDGE,ROLE_SUPER_PSETTER,ROLE_PSETTER">
+                <authz:authorize ifAnyGranted="ROLE_ADMIN,ROLE_SUPER_PSETTER,ROLE_PSETTER">
                     <a href="<c:url value="sendclarification.xhtml?cid=${contest.cid}&ccid=${clarification.id}&uid=${clarification.username}&pid=${clarification.pid}"/>"><i
 										class="fa fa-mail-reply"></i>&nbsp;<spring:message code="link.reply" /></a>
                     </authz:authorize>

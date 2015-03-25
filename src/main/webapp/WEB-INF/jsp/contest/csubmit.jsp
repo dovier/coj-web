@@ -14,6 +14,9 @@
 		<form:form method="post" enctype="multipart/form-data"
 			cssClass="form-horizontal" commandName="submit">
 			<div class="form-group">
+				<div class="error col-xs-8 col-xs-offset-3">
+					<span class="label label-danger"><form:errors path="username" /></span>
+				</div>
 				<label class="control-label col-xs-3"><spring:message
 						code="fieldhdr.problemid" /></label>
 				<div class="col-xs-8">

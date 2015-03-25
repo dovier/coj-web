@@ -21,7 +21,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
     "classpath:cu/uci/coj/config/sql/entries.properties",
     "classpath:cu/uci/coj/config/sql/json.api.properties",
     "classpath:cu/uci/coj/config/sql/achievements.properties",
-    "classpath:cu/uci/coj/config/sql/xtats.properties",
     "classpath:cu/uci/coj/config/sql/events.properties",
     "classpath:cu/uci/coj/config/sql/corrections.properties",
     "classpath:cu/uci/coj/config/sql/recommender.properties",

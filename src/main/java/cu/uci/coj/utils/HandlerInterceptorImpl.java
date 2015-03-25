@@ -88,12 +88,11 @@ public class HandlerInterceptorImpl extends HandlerInterceptorAdapter {
 					boolean isjudge = baseDAO.bool("exist.judge.contest", uid, cid);
 
 					request.setAttribute("isjudge", isjudge);
-					showSaris = showSaris || request.isUserInRole(Roles.ROLE_ADMIN) || (request.isUserInRole(Roles.ROLE_JUDGE) && isjudge);
+					showSaris = showSaris || request.isUserInRole(Roles.ROLE_ADMIN) || isjudge;
 
 					if (isjudge || baseDAO.bool("exist.user.in.contest", cid, uid)) {
 
 						// if ((hsr.isUserInRole(Roles.ROLE_ADMIN) ||
-						// hsr.isUserInRole(Roles.ROLE_JUDGE) ||
 						// hsr.isUserInRole(Roles.ROLE_SUPER_PSETTER) ||
 						// hsr.isUserInRole(Roles.ROLE_PSETTER)) && isjudge) {
 						// unreply =
