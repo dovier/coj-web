@@ -21,7 +21,6 @@ import cu.uci.coj.config.Config;
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.model.Contest;
-import cu.uci.coj.model.JsonContest;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
