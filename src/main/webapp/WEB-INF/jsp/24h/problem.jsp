@@ -101,30 +101,38 @@
 					</tr>
 					<tr>
 						<td><spring:message code="fieldhdr.limits" /></td>
-						<td><b><spring:message code="fieldhdr.timelimit" />:</b> <c:out
-								value="${problem.time}" /> MS <c:choose>
-								<c:when test="${problem.multidata}">
-									<c:out value="|" />
-									<b><spring:message code="fieldhdr.testlimit" />:</b>
-									<c:out value="${problem.casetimelimit}" /> MS
-					</c:when>
-							</c:choose> <c:out value="|" /><b><spring:message
-									code="fieldhdr.memorylimit" />:</b> <c:out
-								value="${problem.memoryMB}" /> <c:out value=" | " /> <span
-							style="font-weight: bold;"><spring:message
-									code="fieldhdr.outputlimit" />:</span> <c:out value="64" /> MB<c:out
-								value=" | " /><b><spring:message code="fieldhdr.sizelimit" />:</b>
-							<c:out value="${problem.fontMB}" /></td>
+						<td><c:forEach items="${problem.limits}"
+                                                           var="limit" varStatus="status">
+                                                        <div class="limit lang${limit.languageId} <c:if test="${(userLanguage == null && limit.languageId != 2 )||(userLanguage != null && limit.languageId != userLanguage.lid)}">hidden</c:if>">
+                                                        <b><spring:message code="fieldhdr.timelimit" />:</b> <c:out
+                                                            value="${limit.maxTotalExecutionTime}" /> MS <c:choose>
+                                                            <c:when test="${problem.multidata}">
+                                                                <c:out value="|" />
+                                                                <b><spring:message
+                                                                        code="fieldhdr.testlimit" />:</b>
+                                                                <c:out value="${limit.maxCaseExecutionTime}" /> MS
+                                                            </c:when>
+                                                        </c:choose> <c:out value="|" /><b><spring:message
+                                                                code="fieldhdr.memorylimit" />:</b> <c:out
+                                                            value="${limit.maxMemory}" /> <c:out value=" | " /> <span
+                                                            style="font-weight: bold;"><spring:message
+                                                                code="fieldhdr.outputlimit" />:</span> <c:out value="64" /> MB<c:out
+                                                            value=" | " /><b><spring:message code="fieldhdr.sizelimit" />:</b>
+                                                        <c:out value="${limit.maxSourceCodeLenght}" />
+                                                        </div>
+                                                    </c:forEach>
+                                                </td>
 					</tr>
 					<tr>
 						<td><spring:message code="fieldhdr.enabledlanguages" /></td>
-						<td><c:forEach items="${problem.languages}" var="language"
-								varStatus="status">
-								<c:if test="${status.count ne 1}">
-									<c:out value="|" />
-								</c:if>
-                        ${language.language}
-                    </c:forEach></td>
+                                                <td>
+                                                    <select style="height: auto;padding: 0" id="language-select" class="form-control">
+                                                        <c:forEach items="${problem.languages}" var="language"
+                                                                   varStatus="status">
+                                                            <option  <c:if test="${language.lid == userLanguage.lid || (userLanguage == null && language.lid == 2)}">selected</c:if> value="${language.lid}">${language.language}</option>
+                                                        </c:forEach>
+                                                    </select>
+                                                </td>
 					</tr>
 					<c:if test="${view_pinfo}">
 						<authz:authorize ifAllGranted="ROLE_USER">
@@ -306,4 +314,9 @@
 			});
 		});
 	});
+          
+        $("#language-select").change(function(){
+            $(".limit").addClass("hidden");
+            $(".limit.lang"+$(this).val()).removeClass("hidden");
+        });
 </script>

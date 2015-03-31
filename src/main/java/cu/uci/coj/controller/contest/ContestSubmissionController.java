@@ -264,7 +264,9 @@ public class ContestSubmissionController extends BaseController {
 		if ((submit.getContest().getRegistration() == 0 && submit.getContest().isAllow_registration()) && !contestDAO.isInContest(submit.getCid(), userDAO.integer("select.uid.by.username", submit.getUsername()))) {
 			contestDAO.insertUserContest(iduser, submit.getCid(), "General");
 		}
-		Problem problem = problemDAO.getProblemSubmitDataByAbb(locale.getLanguage(), submit.getPid());
+		Problem problem = problemDAO.getProblemSubmitDataByAbb(submit.getPid(),submit.getLid());
+                problem.setUserLanguage(locale.getLanguage());
+                
 		int sid = submissionDAO.insertContestSubmission(iduser, getUsername(principal), problem.getPid(), submit.getCode(), submit.getLanguageByLid(), submit.getCid(), false);
 		SubmissionJudge submission = new SubmissionJudge(sid, iduser, submit.getCode(), problem.getPid(), problem.getTime(), problem.getCasetimelimit(), problem.getMemory(), submit.getLanguageByLid());
 		submission.setCid(submit.getCid());

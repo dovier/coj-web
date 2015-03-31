@@ -1,9 +1,8 @@
 package cu.uci.coj.dao;
 
-import java.util.List;
-
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
+import cu.uci.coj.model.Limits;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.ProblemClassification;
 import cu.uci.coj.model.ProblemSource;
@@ -11,6 +10,7 @@ import cu.uci.coj.model.Translation;
 import cu.uci.coj.model.UserProfile;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
+import java.util.List;
 
 public interface ProblemDAO extends BaseDAO {
 	public int getSourceLimitByPid(int pid);
@@ -38,7 +38,7 @@ public interface ProblemDAO extends BaseDAO {
 
 	public boolean hasLanguageAvailable(Integer pid, int lid);
 
-	public Problem getProblemSubmitDataByAbb(String language, Integer pid);
+        public Problem getProblemSubmitDataByAbb(Integer pid, int lid);
 
 	public boolean exists(Integer pid);
 
@@ -152,5 +152,11 @@ public interface ProblemDAO extends BaseDAO {
 	public void approveTranslation(Translation translation, String username);	
 	
 	public Translation getTranslation(Integer id);
+        
+        public void insertLimit(Limits limit);
+
+        public void clearLimits(int problemId);
+
+        public void fillProblemLimits(Problem problem);
 	
 }

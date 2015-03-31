@@ -1,15 +1,74 @@
 package cu.uci.coj.model;
 
 public enum Verdicts {
-    AC,//Accepted
-    WA,//Wrong Answer
-    RTE,//RunTime Error
-    TLE,//Time Limit Exceeded
-    MLE,//Memory Limit Exceeded
-    OLE,//Output Limit Exceeded
-    CE,//Compilation Error
-    IVF,//Invalid Function
-    PE,//Presentation Error 
-    SIE, //Server Internal Error
-    CTLE//Case Time Limit Exceeded
+
+    AC {
+                @Override
+                public String associatedMessage() {
+                    return "Accepted";
+                }
+            },
+    WA {
+                @Override
+                public String associatedMessage() {
+                    return "Wrong Answer";
+                }
+            },
+    RTE {
+                @Override
+                public String associatedMessage() {
+                    return "Runtime Error";
+                }
+            },
+    TLE {
+                @Override
+                public String associatedMessage() {
+                    return "Time Limit Exceeded";
+                }
+            },
+    MLE {
+                @Override
+                public String associatedMessage() {
+                    return "Memory Limit Exceeded";
+                }
+            },
+    OLE {
+                @Override
+                public String associatedMessage() {
+                    return "Output Limit Exceeded";
+                }
+            },
+    CE {
+                @Override
+                public String associatedMessage() {
+                    return "Compilation Error";
+                }
+            },
+    IVF {
+                @Override
+                public String associatedMessage() {
+                    return "Invalid Function";
+                }
+            },
+    PE {
+                @Override
+                public String associatedMessage() {
+                    return "Presentation Error";
+                }
+            },
+    SIE {
+                @Override
+                public String associatedMessage() {
+                    return "Internal Error";
+                }
+            },
+    CTLE {
+                @Override
+                public String associatedMessage() {
+                    return "Case Time Limit Exceeded";
+                }
+            };
+
+    public abstract String associatedMessage();
+
 }

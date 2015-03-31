@@ -1,18 +1,18 @@
 package cu.uci.coj.utils;
 
-import javax.annotation.Resource;
-
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageListener;
-import org.springframework.amqp.support.converter.JsonMessageConverter;
-import org.springframework.stereotype.Component;
-
+import cu.uci.coj.adapters.VerdictDTOToSubmissionJudgeAdapter;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.SubmissionDAO;
 import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.model.Verdicts;
+import cu.uci.coj.model.dto.VerdictDTO;
+import javax.annotation.Resource;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageListener;
+import org.springframework.amqp.support.converter.JsonMessageConverter;
+import org.springframework.stereotype.Component;
 
 @Component
 public class UEngineMessageListener implements MessageListener {
@@ -34,9 +34,9 @@ public class UEngineMessageListener implements MessageListener {
 	public void onMessage(Message message) {
 
 		try {
-			SubmissionJudge submit = (SubmissionJudge) jsonMessageConverter
-					.fromMessage(message);
-			
+                        VerdictDTO verdict = (VerdictDTO) jsonMessageConverter.fromMessage(message);
+                        SubmissionJudge submit = new VerdictDTOToSubmissionJudgeAdapter(verdict);
+
 			if (submit.getSid() < 0) {
 				testSubmit.add(submit);
 				return;

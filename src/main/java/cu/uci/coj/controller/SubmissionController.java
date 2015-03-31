@@ -357,8 +357,9 @@ public class SubmissionController extends BaseController {
 		}
 		int iduser = userDAO.integer("select.uid.by.username",
 				getUsername(principal));
-		Problem problem = problemDAO.getProblemSubmitDataByAbb(
-				locale.getLanguage(), submit.getPid());
+		Problem problem = problemDAO.getProblemSubmitDataByAbb(submit.getPid(),submit.getLid());
+                problem.setUserLanguage(locale.getLanguage());
+                
 		boolean locked = problemDAO.bool("issolved.byuser", iduser,
 				problem.getPid())
 				&& problemDAO.isLocked(iduser, problem.getPid());

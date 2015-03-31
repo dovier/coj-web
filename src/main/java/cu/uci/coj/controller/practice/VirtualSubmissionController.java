@@ -192,7 +192,8 @@ public class VirtualSubmissionController extends BaseController {
             return "/practice/vsubmit";
         }
         int iduser = userDAO.integer("select.uid.by.username", getUsername(principal));
-        Problem problem = problemDAO.getProblemSubmitDataByAbb(locale.getLanguage(),submit.getPid());
+        Problem problem = problemDAO.getProblemSubmitDataByAbb(submit.getPid(),submit.getLid());
+        problem.setUserLanguage(locale.getLanguage());
         int sid = submissionDAO.insertVirtualSubmission(iduser, getUsername(principal), problem.getPid(), submit.getCode(), submit.getLanguageByLid(), submit.getCid(), true, submit.getContest());
         SubmissionJudge submission = new SubmissionJudge(sid, iduser, submit.getCode(), problem.getPid(), problem.getTime(), problem.getCasetimelimit(), problem.getMemory(), submit.getLanguageByLid());
         
