@@ -1,6 +1,6 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<jsp:useBean id="FileUtils" class="org.apache.commons.io.FileUtils" />
 
 <h2 class="postheader">
 	<spring:message code="pagehdr.24hproblem" />
@@ -103,6 +103,8 @@
 						<td><spring:message code="fieldhdr.limits" /></td>
 						<td><c:forEach items="${problem.limits}"
                                                            var="limit" varStatus="status">
+                                                        
+                                                        
                                                         <div class="limit lang${limit.languageId} <c:if test="${(userLanguage == null && limit.languageId != 2 )||(userLanguage != null && limit.languageId != userLanguage.lid)}">hidden</c:if>">
                                                         <b><spring:message code="fieldhdr.timelimit" />:</b> <c:out
                                                             value="${limit.maxTotalExecutionTime}" /> MS <c:choose>
@@ -114,11 +116,11 @@
                                                             </c:when>
                                                         </c:choose> <c:out value="|" /><b><spring:message
                                                                 code="fieldhdr.memorylimit" />:</b> <c:out
-                                                            value="${limit.maxMemory}" /> <c:out value=" | " /> <span
+                                                            value="${FileUtils.byteCountToDisplaySize(limit.maxMemory)}" /> <c:out value=" | " /> <span
                                                             style="font-weight: bold;"><spring:message
                                                                 code="fieldhdr.outputlimit" />:</span> <c:out value="64" /> MB<c:out
                                                             value=" | " /><b><spring:message code="fieldhdr.sizelimit" />:</b>
-                                                        <c:out value="${limit.maxSourceCodeLenght}" />
+                                                        <c:out value="${FileUtils.byteCountToDisplaySize(limit.maxSourceCodeLenght)}" />
                                                         </div>
                                                     </c:forEach>
                                                 </td>

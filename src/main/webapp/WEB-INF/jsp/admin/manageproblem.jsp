@@ -150,9 +150,9 @@
                                             </div> 
                                         </div>
                                         <div class="col-lg-3">
-                                            <label for="maxSourceCodeLenght">Source Code Lenght (B)</label>
+                                            <label for="maxSourceCodeLenght">Source Code Length (B)</label>
                                             <div class="input-group">
-                                                <input type="text" id="maxSourceCodeLenght" placeholder="Max Source Code Lenght" class="form-control">
+                                                <input type="text" id="maxSourceCodeLenght" placeholder="Max Source Code Length" class="form-control">
                                                 <span class="input-group-btn">
                                                     <button id="btn-max-source-code-lenght" class="btn btn-default"  type="button" onclick="applyLimit(this,'.max-source-code-lenght')">Apply</button>
                                                 </span>                                            
@@ -180,7 +180,7 @@
                                             <label for="maxTotalExecutionTime1">Total Execution Time (MS)</label>
                                         </div>
                                         <div class="col-lg-3">
-                                            <label for="maxSourceCodeLenght1">Source Code Lenght (B)</label>
+                                            <label for="maxSourceCodeLenght1">Source Code Length (B)</label>
                                         </div>                                                                                
                                     </div>
                                     <c:forEach items="${languages}" var="language" varStatus="loop">
@@ -221,7 +221,7 @@
                                             <label for="maxTotalExecutionTime1">Total Execution Time</label>
                                         </div>
                                         <div class="col-lg-3">
-                                            <label for="maxSourceCodeLenght1">Source Code Lenght</label>
+                                            <label for="maxSourceCodeLenght1">Source Code Length</label>
                                         </div>                                                                                
                                     </div>
                                     <c:forEach items="${multipliers.entrySet()}" var="multiplier" varStatus="loop">

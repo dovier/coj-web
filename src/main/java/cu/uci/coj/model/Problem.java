@@ -106,10 +106,22 @@ public class Problem {
 	private String outputPt;
 	private String commentsPt;
 
+        /**
+         *
+         * @deprecated This is a matter of presentation and should be implemented in
+         * the implementation flow, see example in memory limit(problem.jsp)
+         */
+        @Deprecated
 	public String getMemoryMB() {
 		return FileUtils.byteCountToDisplaySize(memory);
 	}
 
+        /**
+        *
+        * @deprecated This is a matter of presentation and should be implemented in
+        * the implementation flow, see example in memory limit(problem.jsp)
+        */
+        @Deprecated
 	public String getFontMB() {
 		return FileUtils.byteCountToDisplaySize(fontsize);
 	}
