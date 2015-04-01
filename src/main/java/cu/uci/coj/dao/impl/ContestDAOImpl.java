@@ -946,9 +946,9 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 				.parseBoolean(enabled);
 		status = "all".equals(status) ? null : status;
 
-		if(status != null ) {
+		if (status != null) {
 			Where wStatus = Where.noop();
-			
+
 			if (status.equals("running")) {
 				wStatus = Where.and(Where.le("initdate", new Date()),
 						Where.ge("enddate", new Date()));
@@ -957,13 +957,13 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 			} else {
 				wStatus = Where.and(Where.lt("enddate", new Date()));
 			}
-		
-			query.where(Where.eq("enabled", bEnabled),
-				Where.ne("registration", iAccess), wStatus);
-		}		
 
-		int found = integer(query.count(), query.arguments());		
-		
+			query.where(Where.eq("enabled", bEnabled),
+					Where.ne("registration", iAccess), wStatus);
+		}
+
+		int found = integer(query.count(), query.arguments());
+
 		query.order(Order.desc("running"), Order.desc("coming"),
 				Order.desc("enddate"));
 		query.paginate(options, 50);
@@ -1609,11 +1609,29 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	@Override
+	public void freezeContest(Contest contest) {
+		dml("update.freeze.blocked.contest", true, false, contest.getCid());
+		dml("update problem set disable_24h=? where pid in (select pid from problem_contest where cid=?)",true,contest.getCid());
+		repointContest(contest, true);
+	}
+	@Override
 	public void unfreezeIfNecessary(Contest contest) {
 		if (contest.mustUnfreeze(new Date())) {
 			dml("update.blocked.contest", false, contest.getCid());
+			dml("update problem set disable_24h=? where pid in (select pid from problem_contest where cid=?)",false,contest.getCid());
 			repointContest(contest, false);
 		}
 	}
 
+	@Override
+	public void updateDate(SubmissionJudge submit) {
+		submit.setDate(date(
+				"select date from contest_submition where submit_id=?",
+				submit.getSid()));
+	}
+
+	@Override
+	public List<Problem> getAllContestProblems(int cid) {
+		return objects("select.contest.problem.letters", Problem.class, cid);
+	}
 }

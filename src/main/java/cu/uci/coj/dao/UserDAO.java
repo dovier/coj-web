@@ -20,6 +20,8 @@ public interface UserDAO extends BaseDAO {
 
 	public void banUser(int uid,String description);
 	
+	public List<User> loadBalloonUsersOffContest(Contest contest);
+	
 	public UserProfile loadUserProfile(String userName);
 
 	public boolean hasProfile(String userName);

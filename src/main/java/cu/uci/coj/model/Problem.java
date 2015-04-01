@@ -1,11 +1,10 @@
 package cu.uci.coj.model;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.validation.constraints.Size;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -32,12 +31,13 @@ public class Problem {
 	private String outputex;
 	@NotEmpty
 	private String author;
+	private int id_source;
 	private String comments;
 	@NotEmpty
-	private int time;
-	private int casetimelimit;
+	private long time;
+	private long casetimelimit;
 	@NotEmpty
-	private int memory;
+	private long memory;
 	@NotEmpty
 	private int fontsize;
 	private String date;
@@ -69,6 +69,7 @@ public class Problem {
 	private double points;
 	private String orderby;
 	private boolean favorite;
+        private List<Limits> limits;
 	// ACM RANK PARAMS
 	private String ac_time;
 	private int submissions;
@@ -106,10 +107,22 @@ public class Problem {
 	private String outputPt;
 	private String commentsPt;
 
+        /**
+         *
+         * @deprecated This is a matter of presentation and should be implemented in
+         * the implementation flow, see example in memory limit(problem.jsp)
+         */
+        @Deprecated
 	public String getMemoryMB() {
 		return FileUtils.byteCountToDisplaySize(memory);
 	}
 
+        /**
+        *
+        * @deprecated This is a matter of presentation and should be implemented in
+        * the implementation flow, see example in memory limit(problem.jsp)
+        */
+        @Deprecated
 	public String getFontMB() {
 		return FileUtils.byteCountToDisplaySize(fontsize);
 	}
@@ -139,8 +152,15 @@ public class Problem {
 	}
 
 	public String getTitleEs() {
-
 		return titleEs;
+	}
+	
+	public int getId_source() {
+		return id_source;
+	}
+
+	public void setId_source(int id_source) {
+		this.id_source = id_source;
 	}
 
 	public String getDefaultTitleEs() {
@@ -734,11 +754,11 @@ public class Problem {
 		this.inputex = inputex;
 	}
 
-	public int getMemory() {
+	public long getMemory() {
 		return memory;
 	}
 
-	public void setMemory(int memory) {
+	public void setMemory(long memory) {
 		this.memory = memory;
 	}
 
@@ -759,11 +779,11 @@ public class Problem {
 		this.outputex = outputex;
 	}
 
-	public int getTime() {
+	public long getTime() {
 		return time;
 	}
 
-	public void setTime(int time) {
+	public void setTime(long time) {
 		this.time = time;
 	}
 
@@ -823,11 +843,11 @@ public class Problem {
 		this.enabled = enabled;
 	}
 
-	public int getCasetimelimit() {
+	public long getCasetimelimit() {
 		return casetimelimit;
 	}
 
-	public void setCasetimelimit(int casetimelimit) {
+	public void setCasetimelimit(long casetimelimit) {
 		this.casetimelimit = casetimelimit;
 	}
 
@@ -1218,4 +1238,48 @@ public class Problem {
 	public boolean isAvailableInPt() {
 		return !(StringUtils.isEmpty(titlePt) || StringUtils.isEmpty(descriptionPt) || StringUtils.isEmpty(inputPt) || StringUtils.isEmpty(outputPt));
 	}
+        
+    /**
+     * @return the limits
+     */
+    public List<Limits> getLimits() {
+        return limits;
+    }
+
+    /**
+     * @param limits the limits to set
+     */
+    public void setLimits(List<Limits> limits) {
+        this.limits = limits;
+    }
+
+    public void initLimits(List<Language> languages) {
+        this.limits = new ArrayList<>();
+
+        for (Language language : languages) {
+            limits.add(new Limits(language.getLid(), this.getPid()));
+        }
+    }
+        
+    /**
+     * @return the limits
+     */
+    public List<Limits> getLimits() {
+        return limits;
+    }
+
+    /**
+     * @param limits the limits to set
+     */
+    public void setLimits(List<Limits> limits) {
+        this.limits = limits;
+    }
+
+    public void initLimits(List<Language> languages) {
+        this.limits = new ArrayList<>();
+
+        for (Language language : languages) {
+            limits.add(new Limits(language.getLid(), this.getPid()));
+        }
+    }
 }

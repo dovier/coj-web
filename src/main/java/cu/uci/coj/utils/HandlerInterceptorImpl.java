@@ -74,21 +74,25 @@ public class HandlerInterceptorImpl extends HandlerInterceptorAdapter {
 				int unread = 0;
 				int unreply = 0;
 				boolean showSaris = false;
+				boolean showBalloons = false;
 				Contest contest = null;
 				Integer cid = new Integer(request.getParameter("cid").toString());
 				if (cid != null) {
 					contest = contestDAO.loadContest(cid);
 					//si el contest no esta bloqueado y no es de estilo progresivo
 					showSaris = contest.getStyle()== 1 && !contest.isBlocked();
+					showBalloons = contest.isBalloon();
 				}
 
 				if (request.getUserPrincipal() != null) {
 					String user = request.getUserPrincipal().getName();
 					int uid = baseDAO.integer("select.uid.by.username", user);
 					boolean isjudge = baseDAO.bool("exist.judge.contest", uid, cid);
+					boolean isballoontracker = baseDAO.bool("exist.bt.contest", uid, cid);
 
 					request.setAttribute("isjudge", isjudge);
 					showSaris = showSaris || request.isUserInRole(Roles.ROLE_ADMIN) || isjudge;
+					showBalloons = showBalloons && isballoontracker;
 
 					if (isjudge || baseDAO.bool("exist.user.in.contest", cid, uid)) {
 
@@ -118,6 +122,7 @@ public class HandlerInterceptorImpl extends HandlerInterceptorAdapter {
 				request.setAttribute("totalmsg", total);
 
 				request.setAttribute("showSaris", contest.getStyle() == Contest.ACM_ICPC_STYLE?showSaris:false);
+				request.setAttribute("showBalloons", showBalloons);
 			} else {
 				List<String> ann = baseDAO.strings("load.announcements");
 				if (ann.size() > 0) {

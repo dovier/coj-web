@@ -77,7 +77,7 @@ public class SubmissionController extends BaseController {
 					.replaceAll(" ", "."))));
 		}
 		List<Language> languagelist = submissionDAO.getEnabledLanguages();
-		Filter filter = new Filter(null, null, filter_user, null, status,
+		Filter filter = new Filter(null, null, filter_user, null, status, 
 				language, pid, languagelist, null);
 		model.addAttribute("statuslist", statuslist);
 		model.addAttribute("filter", filter);
@@ -357,8 +357,9 @@ public class SubmissionController extends BaseController {
 		}
 		int iduser = userDAO.integer("select.uid.by.username",
 				getUsername(principal));
-		Problem problem = problemDAO.getProblemSubmitDataByAbb(
-				locale.getLanguage(), submit.getPid());
+		Problem problem = problemDAO.getProblemSubmitDataByAbb(submit.getPid(),submit.getLid());
+                problem.setUserLanguage(locale.getLanguage());
+                
 		boolean locked = problemDAO.bool("issolved.byuser", iduser,
 				problem.getPid())
 				&& problemDAO.isLocked(iduser, problem.getPid());

@@ -79,6 +79,7 @@ public class SubmissionJudge implements Serializable {
 	private Character letter;
 
 	private List<Language> languages;
+        private List<DatasetVerdict> datasetVerdicts;
 	private int ppid;
 	private MultipartFile uploadfile;
 	private Contest contest;
@@ -705,4 +706,18 @@ public class SubmissionJudge implements Serializable {
 			lid = 1;
 		}
 	}
+        
+            /**
+     * @return the datasetVerdicts
+     */
+    public List<DatasetVerdict> getDatasetVerdicts() {
+        return datasetVerdicts;
+    }
+
+    /**
+     * @param datasetVerdicts the datasetVerdicts to set
+     */
+    public void setDatasetVerdicts(List<DatasetVerdict> datasetVerdicts) {
+        this.datasetVerdicts = datasetVerdicts;
+    }
 }

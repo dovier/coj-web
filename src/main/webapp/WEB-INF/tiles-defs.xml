@@ -586,7 +586,7 @@
 			value="/WEB-INF/jsp/contest/contestview.jsp" />
 	</definition>
 	
-	<definition name="/contest/gallery" extends="template">
+	<definition name="/contest/gallery" extends="contest">
 		<put-attribute name="title" value="pagetit.rcgallery" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/contest/gallery.jsp" />

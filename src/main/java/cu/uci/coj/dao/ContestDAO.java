@@ -19,11 +19,12 @@ public interface ContestDAO extends BaseDAO {
 	public int getStyle(int cid);
 	public ContestStyle loadScoringStyle(int sid);
 	public void insertLanguages(Contest contest);
+	public void updateDate(SubmissionJudge submit);
 
 	public void insertLanguages(int cid, int[] languagesids);
-	
+	public void freezeContest(Contest contest);
 	public IPaginatedList<SubmissionJudge> pendingBalloons(int cid, PagingOptions options, String group);
-
+	public List<Problem> getAllContestProblems(int cid);
 	public void markBalloon(int sid);
 
 	public List<Map<String, Object>> baylorXMLData(Integer cid);

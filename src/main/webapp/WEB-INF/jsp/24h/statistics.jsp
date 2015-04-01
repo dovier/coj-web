@@ -140,7 +140,7 @@ function callback() {
 
 function topCallback() {
 	var data = {
-		    labels: ${classif.probLabels},
+		    labels: ${classif.labels},
 		    datasets: [
 		        {
 		            fillColor: "rgba(151,187,205,0.4)",

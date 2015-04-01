@@ -86,7 +86,6 @@ public class StatisticsController extends BaseController  {
         model.addAttribute("stat", baseDAO.object("statistics.contest.total.status", Stats.class, contest.getCid()));
         model.addAttribute("statistics", baseDAO.objects("statistics.contest", Language.class, contest.getCid()));
         contest.setUsers(userDAO.loadContestUsers(contest.getCid()));
-        CategoryDataset categoryDataset = createDataset(cid);
         model.addAttribute("contest", contest);
         return "/contest/cstatistics";
     }

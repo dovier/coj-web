@@ -1,5 +1,22 @@
 package cu.uci.coj.utils;
 
+import cu.uci.coj.adapters.SubmissionJudgeToSubmissionDTOAdapter;
+import cu.uci.coj.config.Config;
+import cu.uci.coj.dao.ContestDAO;
+import cu.uci.coj.dao.SubmissionDAO;
+import cu.uci.coj.exceptions.PlagiCOJUnsupportedLanguageException;
+import cu.uci.coj.model.DatagenDataset;
+import cu.uci.coj.model.Filter;
+import cu.uci.coj.model.Language;
+import cu.uci.coj.model.Stats;
+import cu.uci.coj.model.SubmissionJudge;
+import cu.uci.coj.plagicoj.lexers.PlagiCOJCLexer;
+import cu.uci.coj.plagicoj.lexers.PlagiCOJCSharpLexer;
+import cu.uci.coj.plagicoj.lexers.PlagiCOJCppLexer;
+import cu.uci.coj.plagicoj.lexers.PlagiCOJJavaLexer;
+import cu.uci.coj.plagicoj.lexers.PlagiCOJPascalLexer;
+import cu.uci.coj.plagicoj.lexers.PlagiCOJPythonLexer;
+import cu.uci.coj.utils.paging.PagingOptions;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -18,10 +35,8 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.Lexer;
@@ -33,23 +48,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-
-import cu.uci.coj.config.Config;
-import cu.uci.coj.dao.ContestDAO;
-import cu.uci.coj.dao.SubmissionDAO;
-import cu.uci.coj.exceptions.PlagiCOJUnsupportedLanguageException;
-import cu.uci.coj.model.DatagenDataset;
-import cu.uci.coj.model.Filter;
-import cu.uci.coj.model.Language;
-import cu.uci.coj.model.Stats;
-import cu.uci.coj.model.SubmissionJudge;
-import cu.uci.coj.plagicoj.lexers.PlagiCOJCLexer;
-import cu.uci.coj.plagicoj.lexers.PlagiCOJCSharpLexer;
-import cu.uci.coj.plagicoj.lexers.PlagiCOJCppLexer;
-import cu.uci.coj.plagicoj.lexers.PlagiCOJJavaLexer;
-import cu.uci.coj.plagicoj.lexers.PlagiCOJPascalLexer;
-import cu.uci.coj.plagicoj.lexers.PlagiCOJPythonLexer;
-import cu.uci.coj.utils.paging.PagingOptions;
 
 @Component
 public class Utils {
@@ -194,18 +192,24 @@ public class Utils {
 		return points / (double) (mxlevel - prbmlevel + 1);
 	}
 
-	public void startCalification(SubmissionJudge submit) {
-		submitTemplate.convertAndSend(submit);
-	}
+	
+        public void startCalification(SubmissionJudge submit) {
+            SubmissionJudgeToSubmissionDTOAdapter submission = new SubmissionJudgeToSubmissionDTOAdapter(submit);
+            submitTemplate.convertAndSend(submission);
+        }
 
-	public void startAndWaitForCalification(SubmissionJudge submit) {
-		submitTemplate.convertSendAndReceive(submit);
-	}
+        public void startCalification(List<SubmissionJudge> submits) {
+            for (SubmissionJudge submit : submits) {
+                SubmissionJudgeToSubmissionDTOAdapter submission = new SubmissionJudgeToSubmissionDTOAdapter(submit);
+                submitTemplate.convertAndSend(submission);
+            }
+        }
 
-	public void startCalification(List<SubmissionJudge> submits) {
-		for (SubmissionJudge submit : submits)
-			submitTemplate.convertAndSend(submit);
-	}
+        public void startAndWaitForCalification(SubmissionJudge submit) {
+            SubmissionJudgeToSubmissionDTOAdapter submission = new SubmissionJudgeToSubmissionDTOAdapter(submit);
+            submitTemplate.convertSendAndReceive(submission);
+        }
+
 
 	public static boolean isONline(String username) {
 		if (onlineusers != null) {

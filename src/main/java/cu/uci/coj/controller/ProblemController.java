@@ -1,30 +1,10 @@
 package cu.uci.coj.controller;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.OutputStream;
-import java.security.Principal;
-import java.util.List;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import cu.uci.coj.config.Config;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.RecommenderDAO;
 import cu.uci.coj.dao.UserDAO;
+import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.ProblemClassification;
 import cu.uci.coj.model.Roles;
@@ -33,6 +13,24 @@ import cu.uci.coj.recommender.Recommender;
 import cu.uci.coj.utils.FileUtils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
+import java.security.Principal;
+import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ProblemController extends BaseController {
@@ -58,6 +56,9 @@ public class ProblemController extends BaseController {
 		}
 		problem.setDate(problem.getDate().split(" ")[0]);
 		problemDAO.fillProblemLanguages(problem);
+                problemDAO.fillProblemLimits(problem);
+                Language language = userDAO.getProgrammingLanguageByUsername(getUsername(principal));
+                model.addAttribute("userLanguage", language);
 		model.addAttribute("problem", problem);
 		Recommender recommender = new Recommender(userDAO, problemDAO, recommenderDAO);
 		List<Problem> recommendations;

@@ -27,6 +27,7 @@ public interface MailNotificationService extends MailService {
 	public void sendAccountVerificationReminder(AccountActivation activation);
 
 	public void sendBulkAccountVerificationReminder();
+	public void sendBulkWakeup(String status);
 	
 	public void sendEmailChanged(User user, String token);
 	

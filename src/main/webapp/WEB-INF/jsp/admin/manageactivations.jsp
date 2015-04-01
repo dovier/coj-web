@@ -26,12 +26,24 @@
 	</div>
 	<label><spring:message code="fieldhdr.totalfound" />: ${found}</label>
 	<div>
-		<a href="/admin/resendactivations.xhtml"><spring:message
-				code="fieldhdr.resendactivations" /></a>
+		<button id="resend" class="mybutton btn btn-primary " type="button">
+			<fmt:message key="fieldhdr.resendactivations" />
+		</button>
+		<span id="resendgood" class="hide label label-success notif"><spring:message
+				code="text.good" /></span>
 	</div>
 	<div id="display-table-container"
 		data-reload-url="/admin/tables/manageactivations.xhtml"></div>
 </div>
 <script>
-$(initStandardFilterForm);
+	$(function() {
+		$("#resend").click(function(event) {
+			$.post("/admin/resendactivations.json", function(event) {
+				$("#resendgood").toggleClass("hide");
+			});
+			event.preventDefault();
+		});
+	});
+	
+	$(initStandardFilterForm);
 </script>

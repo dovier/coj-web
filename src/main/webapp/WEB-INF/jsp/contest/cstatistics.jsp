@@ -9,122 +9,140 @@
 	<spring:message code="pagehdr.statistics" />
 </h2>
 <div class="postcontent">
-	<c:if test="${showStats}">
-		<table class="table table-condensed table-striped">
-			<thead>
-				<tr>
-					<th><spring:message code="tablehdr.lang" /></th>
-					<th><spring:message code="tablehdr.ac" /></th>
-					<th><spring:message code="tablehdr.ce" /></th>
-					<th><spring:message code="tablehdr.sle" /></th>
-					<th><spring:message code="tablehdr.ivf" /></th>
-					<th><spring:message code="tablehdr.mle" /></th>
-					<th><spring:message code="tablehdr.ole" /></th>
-					<th><spring:message code="tablehdr.pe" /></th>
-					<th><spring:message code="tablehdr.rte" /></th>
-					<th><spring:message code="tablehdr.tle" /></th>
-					<th><spring:message code="tablehdr.wa" /></th>
-					<th><spring:message code="tablehdr.total" /></th>
-				</tr>
-			</thead>
-			<c:forEach items="${statistics}" var="stats">
-				<tr>
-					<td><c:out value="${stats.language}" /></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ac&planguage=${stats.key}"/>"><c:out
-								value="${stats.acc}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ce&planguage=${stats.key}"/>"><c:out
-								value="${stats.ce}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=sle&planguage=${stats.key}"/>"><c:out
-								value="${stats.fle}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ivf&planguage=${stats.key}"/>"><c:out
-								value="${stats.ivf}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=mle&planguage=${stats.key}"/>"><c:out
-								value="${stats.mle}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ole&planguage=${stats.key}"/>"><c:out
-								value="${stats.ole}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=pe&planguage=${stats.key}"/>"><c:out
-								value="${stats.pe}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=rte&planguage=${stats.key}"/>"><c:out
-								value="${stats.rte}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=tle&planguage=${stats.key}"/>"><c:out
-								value="${stats.tle}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=wa&planguage=${stats.key}"/>"><c:out
-								value="${stats.wa}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&planguage=${stats.key}"/>"><c:out
-								value="${stats.total}" /></a></td>
-				</tr>
-			</c:forEach>
-			<thead>
-				<tr>
-					<th><spring:message code="tablehdr.total" /></th>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ac"/>"><c:out
-								value="${stat.acc}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ce"/>"><c:out
-								value="${stat.ce}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=sle"/>"><c:out
-								value="${stat.fle}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ivf"/>"><c:out
-								value="${stat.ivf}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=mle"/>"><c:out
-								value="${stat.mle}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ole"/>"><c:out
-								value="${stat.ole}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=pe"/>"><c:out
-								value="${stat.pe}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=rte"/>"><c:out
-								value="${stat.rte}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=tle"/>"><c:out
-								value="${stat.tle}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=wa"/>"><c:out
-								value="${stat.wa}" /></a></td>
-					<td><a
-						href="<c:url value="cstatus.xhtml?cid=${contest.cid}"/>"><c:out
-								value="${stat.total}" /></a></td>
-				</tr>
-			</thead>
-		</table>
-		<br />
+<c:if
+		test="${(contest.past && contest.blocked) || (contest.running && (contest.full_frozen || contest.frozen))}">
+		<center><c:choose>
+																	<c:when test="${contest.full_frozen == true}">
+																		<span class="label label-danger"><i
+																			class="fa fa-warning"></i>&nbsp;<spring:message
+																				code="text.deadtime" /></span>
+																	</c:when>
+																	<c:otherwise>
+																		<span class="label label-primary"><i
+																			class="fa fa-info-circle"></i>&nbsp;<spring:message
+																				code="text.frozentime" /></span>
+																	</c:otherwise>
+																</c:choose></center>
+		</c:if>
+	<c:if
+		test="${(contest.past && not contest.blocked) || (contest.running && not contest.full_frozen && not contest.frozen)}">
+		<c:if test="${showStats}">
+			<table class="table table-condensed table-striped">
+				<thead>
+					<tr>
+						<th><spring:message code="tablehdr.lang" /></th>
+						<th><spring:message code="tablehdr.ac" /></th>
+						<th><spring:message code="tablehdr.ce" /></th>
+						<th><spring:message code="tablehdr.sle" /></th>
+						<th><spring:message code="tablehdr.ivf" /></th>
+						<th><spring:message code="tablehdr.mle" /></th>
+						<th><spring:message code="tablehdr.ole" /></th>
+						<th><spring:message code="tablehdr.pe" /></th>
+						<th><spring:message code="tablehdr.rte" /></th>
+						<th><spring:message code="tablehdr.tle" /></th>
+						<th><spring:message code="tablehdr.wa" /></th>
+						<th><spring:message code="tablehdr.total" /></th>
+					</tr>
+				</thead>
+				<c:forEach items="${statistics}" var="stats">
+					<tr>
+						<td><c:out value="${stats.language}" /></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ac&planguage=${stats.key}"/>"><c:out
+									value="${stats.acc}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ce&planguage=${stats.key}"/>"><c:out
+									value="${stats.ce}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=sle&planguage=${stats.key}"/>"><c:out
+									value="${stats.fle}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ivf&planguage=${stats.key}"/>"><c:out
+									value="${stats.ivf}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=mle&planguage=${stats.key}"/>"><c:out
+									value="${stats.mle}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ole&planguage=${stats.key}"/>"><c:out
+									value="${stats.ole}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=pe&planguage=${stats.key}"/>"><c:out
+									value="${stats.pe}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=rte&planguage=${stats.key}"/>"><c:out
+									value="${stats.rte}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=tle&planguage=${stats.key}"/>"><c:out
+									value="${stats.tle}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=wa&planguage=${stats.key}"/>"><c:out
+									value="${stats.wa}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&planguage=${stats.key}"/>"><c:out
+									value="${stats.total}" /></a></td>
+					</tr>
+				</c:forEach>
+				<thead>
+					<tr>
+						<th><spring:message code="tablehdr.total" /></th>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ac"/>"><c:out
+									value="${stat.acc}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ce"/>"><c:out
+									value="${stat.ce}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=sle"/>"><c:out
+									value="${stat.fle}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ivf"/>"><c:out
+									value="${stat.ivf}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=mle"/>"><c:out
+									value="${stat.mle}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ole"/>"><c:out
+									value="${stat.ole}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=pe"/>"><c:out
+									value="${stat.pe}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=rte"/>"><c:out
+									value="${stat.rte}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=tle"/>"><c:out
+									value="${stat.tle}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=wa"/>"><c:out
+									value="${stat.wa}" /></a></td>
+						<td><a
+							href="<c:url value="cstatus.xhtml?cid=${contest.cid}"/>"><c:out
+									value="${stat.total}" /></a></td>
+					</tr>
+				</thead>
+			</table>
+			<br />
 
 
 
-		<div class="row row-centered">
-			<div class="col-xs-4 col-centered">
-				<select id="username" class="form-control"
-					onchange="javascript:callback();">
-					<option selected="selected" value="">All Users</option>
-					<c:forEach items="${contest.users}" var="user">
-						<option value="${user.username}">${user.nick}</option>
-					</c:forEach>
-				</select>
+			<div class="row row-centered">
+				<div class="col-xs-4 col-centered">
+					<select id="username" class="form-control"
+						onchange="javascript:callback();">
+						<option selected="selected" value="">All Users</option>
+						<c:forEach items="${contest.users}" var="user">
+							<option value="${user.username}">${user.nick}</option>
+						</c:forEach>
+					</select>
+				</div>
 			</div>
-		</div>
-		<div class="row row-centered">
-			<div class="col-xs-4 col-centered">
-				<canvas id="chart" style="width: 756px; height: 475px">
+			<div class="row row-centered">
+				<div class="col-xs-4 col-centered">
+					<canvas id="chart" style="width: 756px; height: 475px">
 				</canvas>
+				</div>
 			</div>
-		</div>
+		</c:if>
 	</c:if>
 </div>
 

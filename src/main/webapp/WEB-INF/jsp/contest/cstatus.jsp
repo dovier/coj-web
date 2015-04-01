@@ -33,18 +33,28 @@
 	</c:if>
 </div>
 <div class="postcontent">
-	<form id="filter-form"
-		class="form-inline">
+	<form id="filter-form" class="form-inline">
 
 		<div class="form-group">
 			<input placeholder="<spring:message code="fieldhdr.user" />"
 				type="text" name="username" value="${filter.username}"
 				class="form-control" />
 		</div>
-			<input type="hidden" name="cid" value="${contest.cid}"/>
+		<input type="hidden" name="cid" value="${contest.cid}" />
 		<div class="form-group">
-			<input placeholder="<spring:message code="fieldhdr.prob" />"
-				type="text" name="pid" value="${filter.pid}" class="form-control" />
+			<select name="pid" class="form-control">
+				<option value="0"><spring:message code="fieldhdr.all" /></option>
+				<c:forEach items="${letterlist}" var="letter">
+					<c:choose>
+						<c:when test="${filter.pid eq letter.pid}">
+							<option value="${letter.pid}" selected>${letter.letter}</option>
+						</c:when>
+						<c:otherwise>
+							<option value="${letter.pid}">${letter.letter}</option>
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+			</select>
 		</div>
 		<div class="form-group">
 			<select name="status" class="form-control">
@@ -112,5 +122,5 @@
 	</c:choose>
 </div>
 <script>
-$(initStandardFilterForm);
+	$(initStandardFilterForm);
 </script>

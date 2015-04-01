@@ -57,7 +57,8 @@ public class ContestSubmissionController extends BaseController {
 	@RequestMapping(value = "/contest/cstatus.xhtml", method = RequestMethod.GET)
 	public String Judgements(HttpServletRequest request, Principal principal, PagingOptions options, Model model, @RequestParam("cid") Integer cid,
 			@RequestParam(required = false, value = "username") String filter_user, @RequestParam(required = false, value = "pid") Integer pid,
-			@RequestParam(required = false, value = "status") String status, @RequestParam(required = false, value = "planguage") String language,
+			@RequestParam(required = false, value = "status") String status,
+			@RequestParam(required = false, value = "planguage") String language,
 			@RequestParam(required = false, value = "refresh") Boolean refresh) {
 		String username = getUsername(principal);
 		Contest contest = contestDAO.loadContest(cid);
@@ -80,6 +81,7 @@ public class ContestSubmissionController extends BaseController {
 						String string = ar[i];
 						statuslist.add(new Status(string, Config.getProperty(string.replaceAll(" ", "."))));
 					}
+					
 					List<Language> languagelist = new LinkedList<Language>();
 					try {
 						languagelist = contestDAO.getContestLanguages(contest.getCid());
@@ -90,6 +92,7 @@ public class ContestSubmissionController extends BaseController {
 					filter.fillSecondParam();
 					model.addAttribute("filter", filter);
 					model.addAttribute("statuslist", statuslist);
+					model.addAttribute("letterlist", problemDAO.getAllContestProblems(contest.getCid()));
 				}
 			}
 		}
@@ -102,7 +105,7 @@ public class ContestSubmissionController extends BaseController {
 	@RequestMapping(value = "/tables/cstatus.xhtml", method = RequestMethod.GET)
 	public String tableJudgements(HttpServletRequest request, Principal principal, PagingOptions options, Model model, @RequestParam("cid") Integer cid,
 			@RequestParam(required = false, value = "username") String filter_user, @RequestParam(required = false, value = "pid",defaultValue="0") Integer pid,
-			@RequestParam(required = false, value = "status") String status, @RequestParam(required = false, value = "planguage") String language,
+			@RequestParam(required = false, value = "status") String status,@RequestParam(required = false, value = "planguage") String language,
 			@RequestParam(required = false, value = "refresh") Boolean refresh) {
 		if (pid==0) pid = null;
 		String username = getUsername(principal);
@@ -132,11 +135,11 @@ public class ContestSubmissionController extends BaseController {
 								getUsername(principal),
 								request.getUserPrincipal() != null,
 								request.isUserInRole(Roles.ROLE_ADMIN)
-										|| (contestDAO.isJudgeInContest(cid, contestDAO.integer("select.uid.by.username", principal.getName()))), contest);
+										|| (contestDAO.isJudgeInContest(cid, contestDAO.integer(0,"select.uid.by.username", getUsername(principal)))), contest);
 						if (contest.getStyle() == 1) {
 							Map<Integer, Problem> pids = contestDAO.loadContestProblemsLetters(cid);
 							for (SubmissionJudge sub : submissions.getList()) {
-								if (!request.isUserInRole(Roles.ROLE_ADMIN) && contest.isInFrozen(sub.getDate().getTime()) && contest.isFrozen())
+								if (!sub.isAuthorize() && contest.isInFrozen(sub.getDate().getTime()) && contest.isFrozen())
 									sub.froze();
 								sub.setLetter(pids.get(sub.getPid()).getLetter());
 								sub.setProblemTitle(pids.get(sub.getPid()).getTitle());
@@ -155,11 +158,12 @@ public class ContestSubmissionController extends BaseController {
 						languagelist = contestDAO.getContestLanguages(contest.getCid());
 					} catch (Exception e) {
 					}
-					Filter filter = new Filter(null, null, filter_user, cid, status, language, pid, languagelist, null);
+					Filter filter = new Filter(null, null, filter_user, cid, status,language, pid, languagelist, null);
 					filter.fillFirstParam();
 					filter.fillSecondParam();
 					model.addAttribute("filter", filter);
 					model.addAttribute("statuslist", statuslist);
+					model.addAttribute("statuslist", contestDAO.getAllContestProblems(cid));
 				}
 			}
 		}
@@ -264,7 +268,9 @@ public class ContestSubmissionController extends BaseController {
 		if ((submit.getContest().getRegistration() == 0 && submit.getContest().isAllow_registration()) && !contestDAO.isInContest(submit.getCid(), userDAO.integer("select.uid.by.username", submit.getUsername()))) {
 			contestDAO.insertUserContest(iduser, submit.getCid(), "General");
 		}
-		Problem problem = problemDAO.getProblemSubmitDataByAbb(locale.getLanguage(), submit.getPid());
+		Problem problem = problemDAO.getProblemSubmitDataByAbb(submit.getPid(),submit.getLid());
+                problem.setUserLanguage(locale.getLanguage());
+                
 		int sid = submissionDAO.insertContestSubmission(iduser, getUsername(principal), problem.getPid(), submit.getCode(), submit.getLanguageByLid(), submit.getCid(), false);
 		SubmissionJudge submission = new SubmissionJudge(sid, iduser, submit.getCode(), problem.getPid(), problem.getTime(), problem.getCasetimelimit(), problem.getMemory(), submit.getLanguageByLid());
 		submission.setCid(submit.getCid());

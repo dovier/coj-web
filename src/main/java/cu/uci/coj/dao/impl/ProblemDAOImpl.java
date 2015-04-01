@@ -1,23 +1,5 @@
 package cu.uci.coj.dao.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import cu.uci.coj.config.Config;
 import cu.uci.coj.controller.interfaces.IForIntegerMap;
 import cu.uci.coj.dao.ContributionDAO;
@@ -25,6 +7,7 @@ import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
+import cu.uci.coj.model.Limits;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.ProblemClassification;
 import cu.uci.coj.model.ProblemSource;
@@ -37,6 +20,36 @@ import cu.uci.coj.query.Query;
 import cu.uci.coj.query.Where;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("problemDAO")
 @Transactional
@@ -723,12 +736,11 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		return bool("language.available", pid, lid);
 	}
 
-	@Transactional(readOnly = true)
-	public Problem getProblemSubmitDataByAbb(String language, Integer pid) {
-		Problem problem = object("problem.submit.data.by.pid", Problem.class, pid);
-		setProblemLanguage(language, problem);
-		return problem;
-	}
+        @Transactional(readOnly = true)
+        public Problem getProblemSubmitDataByAbb(Integer pid, int lid) {
+            Problem problem = object("problem.submit.data.by.pid", Problem.class, pid, lid);
+            return problem;
+        }
 
 	@Transactional(readOnly = true)
 	public boolean exists(Integer pid) {
@@ -831,6 +843,10 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		setProblemLanguage(language, probs);
 		return getPaginatedList(options, probs, 50, found);
 	}
+	
+	public List<Problem> getAllContestProblems(int cid){
+		return objects("select.contest.problem.letters",Problem.class,cid);
+	}
 
 	@Transactional(readOnly = true)
 	public IPaginatedList<Problem> getVirtualContestProblems(int found, String language, String username, Contest contest, PagingOptions options) {
@@ -925,6 +941,16 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 				problem.getAuthor(), problem.getComments(), problem.getCommentsEs(), problem.getCommentsPt(), problem.getTime(), problem.getMemory(), problem.getFontsize(), problem.getContest(),
 				problem.getUid(), problem.isEnabled(), problem.getCasetimelimit(), problem.isMultidata(), problem.isSpecial_judge());
 	}
+
+        @Override
+        public void insertLimit(Limits limit) {
+            dml("insert.problem.limit", limit.getProblemId(), limit.getLanguageId(), limit.getMaxMemory(), limit.getMaxCaseExecutionTime(), limit.getMaxTotalExecutionTime(), limit.getMaxSourceCodeLenght());
+        }
+
+        @Override
+        public void clearLimits(int problemId) {
+            dml("clear.problem.limits", problemId);
+        }
 
 	@Override
 	public void insertProblemLanguage(int pid, int lid) {
@@ -1311,4 +1337,18 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	public Translation getTranslation(Integer id) {
 		return object("translation.get", Translation.class, id);
 	}
+        
+         @Transactional(readOnly = true)
+         @Override
+         public void fillProblemLimits(Problem problem) {
+             List<Limits> limits = objects("select.problem.limits", Limits.class, problem.getPid());
+             problem.setLimits(limits);
+         }
+        
+         @Transactional(readOnly = true)
+         @Override
+         public void fillProblemLimits(Problem problem) {
+             List<Limits> limits = objects("select.problem.limits", Limits.class, problem.getPid());
+             problem.setLimits(limits);
+         }
 }

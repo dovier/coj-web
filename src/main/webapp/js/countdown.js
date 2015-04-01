@@ -11,8 +11,7 @@ function Countdown(server_time, time_access) {
 	    if (s < 10 && h + m > 0) s = '0' + s;
 
 	    if (d > 2) return d + ' d';
-	    if (m + h > 0) return h + ':' + m + ':' + s;
-	    return s + '.' + c;
+	    return h + ':' + m + ':' + s;
 	}
 	
 	return {

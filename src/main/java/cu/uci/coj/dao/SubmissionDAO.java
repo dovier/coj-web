@@ -13,96 +13,121 @@ import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 
 public interface SubmissionDAO extends BaseDAO {
-	
-	public List<SubmissionJudge> rejudgeSubmits(Filter filter,PagingOptions options);
-	public void applyEffects(SubmissionJudge submit,boolean isDisabling);
+
+	public List<SubmissionJudge> rejudgeSubmits(Filter filter,
+			PagingOptions options);
+
+	public void applyEffects(SubmissionJudge submit, boolean isDisabling);
+
 	public void applyEffects(SubmissionJudge submit);
+
 	public void removeEffects(SubmissionJudge submit, boolean isDisabling);
+
 	public void removeEffects(SubmissionJudge submit);
-	
-    public String submitStatus(Integer submitId);
-    
-    public boolean Solved(int uid, int pid);
 
-    public boolean tryButunSolved(int uid, int pid);
+	public void updateDate(SubmissionJudge submit);
 
-    public List<SubmissionJudge> submissions(Integer uid);
-    /**
-     * Counts the total number of SubmissionJudge that have been made to the given
-     * problem
-     *
-     * @param id ID of the problem
-     * @return A resultSet object with the result of the query or null if there
-     * are not any submissions to the problem
-     *
-     */
-    public Integer ProblemSolutionsCount(String id);
+	public String submitStatus(Integer submitId);
 
-    public int countSubmissions(String username, String language, Integer pid, String status);
+	public boolean Solved(int uid, int pid);
 
-    public int countSubmissionsAdmin(Filter filter);
+	public boolean tryButunSolved(int uid, int pid);
 
-    public int countSubmissionsAdminRejudge(String username, String language, Integer pid, String status);
+	public List<SubmissionJudge> submissions(Integer uid);
 
-    public int countSubmissionsContest(String username, String language, Integer pid, String status, Contest contest);
+	/**
+	 * Counts the total number of SubmissionJudge that have been made to the
+	 * given problem
+	 *
+	 * @param id
+	 *            ID of the problem
+	 * @return A resultSet object with the result of the query or null if there
+	 *         are not any submissions to the problem
+	 *
+	 */
+	public Integer ProblemSolutionsCount(String id);
 
-    public int countSubmissionsVirtualContest(String username, String language, Integer pid, String status, Contest contest,String current_user);
+	public int countSubmissions(String username, String language, Integer pid,
+			String status);
 
-    public int countSubmissionsContestAdmin(String username, String language, Integer pid, String status, int cid);
+	public int countSubmissionsAdmin(Filter filter);
 
-    public IPaginatedList<SubmissionJudge> getSubmissions(String username, int found,String language, Integer pid, String status, PagingOptions options,Boolean loggedIn, Boolean admin,String usern);
+	public int countSubmissionsAdminRejudge(String username, String language,
+			Integer pid, String status);
 
-    public List<SubmissionJudge> getSourceCodes(String username, int type);
-            
-    public IPaginatedList<SubmissionJudge> getSubmissionsAdmin(Filter filter, int found,PagingOptions options,boolean asc);
+	public int countSubmissionsContest(String username, String language,
+			Integer pid, String status, Contest contest);
 
-    public IPaginatedList<SubmissionJudge> getSubmissionsAdminRejudge(String username, int found, String language, Integer pid, String status, PagingOptions options);
+	public int countSubmissionsVirtualContest(String username, String language,
+			Integer pid, String status, Contest contest, String current_user);
 
-    public IPaginatedList<SubmissionJudge> getContestSubmissions(int found,String username, String language, Integer pid, String status, PagingOptions options, String usern,boolean loggedIn,boolean admin,  Contest contest);
+	public int countSubmissionsContestAdmin(String username, String language,
+			Integer pid, String status, int cid);
 
-    public IPaginatedList<SubmissionJudge> getVirtualContestSubmissions(int found,String username, String language, Integer pid, String status, PagingOptions options, boolean is_admin, Contest contest,String current_user);
+	public IPaginatedList<SubmissionJudge> getSubmissions(String username,
+			int found, String language, Integer pid, String status,
+			PagingOptions options, Boolean loggedIn, Boolean admin, String usern);
 
-    public IPaginatedList<SubmissionJudge> getContestSubmissionsAdmin(String username, int found,String language, Integer pid, String status, PagingOptions options, int cid);
+	public List<SubmissionJudge> getSourceCodes(String username, int type);
 
-    public List<Language> getEnabledLanguages();
+	public IPaginatedList<SubmissionJudge> getSubmissionsAdmin(Filter filter,
+			int found, PagingOptions options, boolean asc);
 
-    public SubmissionJudge getSourceCode(int submit_id);
+	public IPaginatedList<SubmissionJudge> getSubmissionsAdminRejudge(
+			String username, int found, String language, Integer pid,
+			String status, PagingOptions options);
 
-    public String getCompileInfo(int sid);
+	public IPaginatedList<SubmissionJudge> getContestSubmissions(int found,
+			String username, String language, Integer pid, String status,
+			PagingOptions options, String usern, boolean loggedIn,
+			boolean admin, Contest contest);
 
-    public SubmissionJudge getContestCompileInfo(int sid, int cid);
+	public IPaginatedList<SubmissionJudge> getVirtualContestSubmissions(
+			int found, String username, String language, Integer pid,
+			String status, PagingOptions options, boolean is_admin,
+			Contest contest, String current_user);
 
-    public int insertSubmission(int iduser, String username, int pid, String source, String language, boolean locked, Integer courseId);
+	public IPaginatedList<SubmissionJudge> getContestSubmissionsAdmin(
+			String username, int found, String language, Integer pid,
+			String status, PagingOptions options, int cid);
 
-    public void changeStatus(int sid, String status);
+	public List<Language> getEnabledLanguages();
 
-    public int insertContestSubmission(int iduser, String username, int pid, String source, String language,int cid,boolean virtual);
+	public SubmissionJudge getSourceCode(int submit_id);
 
-    public int insertVirtualSubmission(int iduser, String username, int pid, String source, String language,int cid,boolean virtual,Contest contest);
+	public String getCompileInfo(int sid);
 
+	public SubmissionJudge getContestCompileInfo(int sid, int cid);
 
-    public SubmissionJudge loadSubmissionAdmin(int sid);
+	public int insertSubmission(int iduser, String username, int pid,
+			String source, String language, boolean locked, Integer courseId);
 
-    public SubmissionJudge loadContestSubmissionAdmin(int sid);
+	public void changeStatus(int sid, String status);
 
-    public void updateSubmission(SubmissionJudge submission);
+	public int insertContestSubmission(int iduser, String username, int pid,
+			String source, String language, int cid, boolean virtual);
 
-    public void updateContestSubmission(SubmissionJudge submission);
+	public int insertVirtualSubmission(int iduser, String username, int pid,
+			String source, String language, int cid, boolean virtual,
+			Contest contest);
 
-    public int getAccu(Integer pid);
+	public SubmissionJudge loadSubmissionAdmin(int sid);
 
-    public int countBestSolutions(Integer pid);
+	public SubmissionJudge loadContestSubmissionAdmin(int sid);
 
-    public IPaginatedList<SubmissionJudge> bestSolutions(Integer pid,int found,PagingOptions options, SecurityContextHolderAwareRequestWrapper request, Problem problem);
+	public void updateSubmission(SubmissionJudge submission);
 
-    public String emailBySubmission(int sid);
-    
-    public List<String> emailBySubmissionRange(int sid1,int sid2);
+	public void updateContestSubmission(SubmissionJudge submission);
+
+	public int getAccu(Integer pid);
+
+	public int countBestSolutions(Integer pid);
+
+	public IPaginatedList<SubmissionJudge> bestSolutions(Integer pid,
+			int found, PagingOptions options,
+			SecurityContextHolderAwareRequestWrapper request, Problem problem);
+
+	public String emailBySubmission(int sid);
+
+	public List<String> emailBySubmissionRange(int sid1, int sid2);
 }
-
-
-
-
-
-
-

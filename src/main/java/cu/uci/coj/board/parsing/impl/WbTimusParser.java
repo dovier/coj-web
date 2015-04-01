@@ -68,6 +68,7 @@ public class WbTimusParser  extends WbParser  {
 	                
 	        try {	        	
 	        	doc = Jsoup.connect(siteUrl).timeout(20 * 1000).get();
+	        	System.out.println("pagina: "+doc.html());
 	        } catch (IOException ex) {
 	            throw new ConnectionErrorException(site.getSite());
 	        }        
@@ -81,9 +82,11 @@ public class WbTimusParser  extends WbParser  {
 	            strUrl = url + "/" + entry.attr("href");
 	            
 	            Document doc2 = null;	            
-	            try {        	
+	            try {     
+	            	doc2 = Jsoup.connect(siteUrl).timeout(20 * 1000).get();
 		        	doc2 = Jsoup.connect(strUrl).timeout(20 * 1000).get();
 		        } catch (IOException ex) {
+		        	ex.printStackTrace();
 		            throw new ConnectionErrorException(site.getSite());
 		        }
 	            
@@ -92,9 +95,11 @@ public class WbTimusParser  extends WbParser  {
 	            strEnd = elements.get(1).html();
 	            
 	            try {
+	            	System.out.println("strBegin " + strBegin);
 	                dateBegin = format.parse(strBegin);
 	                dateEnd = format.parse(strEnd);
 	            } catch (ParseException ex) {
+	            	ex.printStackTrace();
 	                return null;
 	            }                   
 	            

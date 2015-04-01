@@ -65,7 +65,7 @@
 									href="<c:url value="/contest/cscoreboard.xhtml?cid=${contest.cid}" />"><i
 										class="fa fa-sort-numeric-asc"></i>&nbsp;<spring:message
 											code="link.standings" /></a></li>
-								<c:if test="${contest.balloon}">
+								<c:if test="${contest.balloon and showBalloons}">
 									<li><a target="_blank"
 										href="<c:url value="/contest/cballoontracker.xhtml?cid=${contest.cid}" />">
 											<span style="position: relative; top: 2px"><i

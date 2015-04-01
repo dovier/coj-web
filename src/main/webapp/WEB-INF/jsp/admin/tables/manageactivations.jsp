@@ -9,14 +9,26 @@
 	<display:column property="token" titleKey="tablehdr.token" />
 	<display:column property="date" titleKey="tablehdr.date" />
 	<display:column titleKey="tablehdr.actions">
+		<button data-activation="${activation.id}"
+			class="resend mybutton btn btn-primary " type="button">
+			<i class="fa fa-envelope-o"></i>
+		</button>&nbsp;
 		<a
 			href="<c:url value="/admin/accountactivation.xhtml?key=${activation.token}"/>"><i
-			class="text-success fa fa-check-circle"></i>&nbsp; <a
-			href="<c:url value="/admin/resendactivations.xhtml?act_id=${activation.id}"/>">
-				<i class="fa fa-envelope-o"></i>&nbsp;
-		</a> <a
+			class="text-success fa fa-check-circle"></i></a>&nbsp;
+			<a
 			href="<c:url value="/admin/deleteactivation.xhtml?key=${activation.token}"/>">
-				<i class="fa fa-trash"></i>
+			<i class="fa fa-trash"></i>
 		</a>
 	</display:column>
 </display:table>
+<script>
+	$(".resend").click(function(event) {
+		var data = $(this).data("activation");
+		var caller = $(this);
+		$.post("/admin/resendactivations.json?act_id=" + data, function(event) {
+			caller.hide();
+		});
+		event.preventDefault();
+	});
+</script>

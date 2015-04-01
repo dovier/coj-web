@@ -172,46 +172,4 @@ public class ClassificationController extends BaseController {
 		return "/admin/manageproblemclassification";
 	}
 
-	// @RequestMapping(value = "/problems.xhtml", method = RequestMethod.GET)
-	// public String Problems(Model model, Principal principal,
-	// @RequestParam(required = false, defaultValue = "1", value =
-	// IPaginatedList.IRequestParameters.PAGE) Integer page,
-	// @RequestParam(required = false, value =
-	// IPaginatedList.IRequestParameters.DIRECTION) String direction,
-	// @RequestParam(required = false, value =
-	// IPaginatedList.IRequestParameters.SORT) String sort,
-	// @RequestParam(required = false, value = "pattern") String pattern,
-	// @RequestParam(required = false, defaultValue = "0", value = "filterby")
-	// Integer filterby, @RequestParam(required = false, defaultValue = "-1",
-	// value = "classification") Integer idClassification,
-	// @RequestParam(required = false, defaultValue = "-1", value =
-	// "complexity") Integer complexity) {
-	//
-	//
-	// String username = getUsername(principal);
-	// if (pattern != null) {
-	// model.addAttribute("search", true);
-	// model.addAttribute("get", "&pattern=" + pattern);
-	// model.addAttribute("pattern", pattern);
-	// }
-	//
-	// int found = problemDAO.countProblem(pattern, filterby,
-	// username,idClassification, complexity);
-	// if (found != 0) {
-	// List<Problem> problems = problemDAO.findAllProblems(pattern, (page - 1) *
-	// 50, username, sort, direction, username == null ? 0 :
-	// problemDAO.integer("select.uid.by.username", username), filterby, idClassification,
-	// complexity);
-	// model.addAttribute("problems",
-	// paginateListFactory.getPaginatedList(options, problems, 50, found));
-	// }
-	// model.addAttribute("found", found);
-	// model.addAttribute("classifications",
-	// problemDAO.objects("problem.classifications",
-	// ProblemClassification.class));
-	// model.addAttribute("filterby", filterby);
-	// model.addAttribute("complexity", complexity);
-	// model.addAttribute("classification", idClassification);
-	// return "/24h/problems";
-	// }
 }

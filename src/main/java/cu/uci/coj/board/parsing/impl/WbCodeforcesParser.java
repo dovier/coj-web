@@ -70,8 +70,9 @@ public class WbCodeforcesParser extends WbParser {
 
 		try {
 			doc = Jsoup.connect(siteUrl).timeout(20*1000).get();
+			System.out.println("pagina: "+doc.html());
 		} catch (IOException ex) {
-			System.out.println("Connection timeout for site" + siteUrl);
+			System.out.println("Connection timeout for site " + siteUrl);
 			throw new ConnectionErrorException(site.getSite());
 		}
 
@@ -90,8 +91,8 @@ public class WbCodeforcesParser extends WbParser {
 				continue;
 			}
 			try {
+				System.out.println("strBegin " + strBegin);
 				dateBegin = format.parse(strBegin);
-
 				intDurationHours = Integer.parseInt(strDuration[0]);
 				intDurationMinutes = Integer.parseInt(strDuration[1]);
 
@@ -103,6 +104,7 @@ public class WbCodeforcesParser extends WbParser {
 				dateEnd = new Date(cal.getTimeInMillis());
 
 			} catch (ParseException ex) {
+				ex.printStackTrace();
 				System.out.println("Error in DOM page");
 				return null;
 			}

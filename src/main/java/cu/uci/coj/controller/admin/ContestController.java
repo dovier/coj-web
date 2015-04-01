@@ -559,6 +559,7 @@ public class ContestController extends BaseController {
 		contest.setJudges(userDAO.loadContestJudges(contest.getCid()));
 		model.addAttribute(contest);
 		model.addAttribute("allusers", userDAO.loadUsersOffContest(contest));
+		model.addAttribute("btusers", userDAO.loadBalloonUsersOffContest(contest));
 		model.addAttribute("alljudges",
 				userDAO.loadJudgesOffContest(contest.getCid()));
 		return "/admin/contestusers";
@@ -683,8 +684,7 @@ public class ContestController extends BaseController {
 		if (requestWrapper.isUserInRole(Roles.ROLE_ADMIN) && contest.isPast()) {
 			// se cambian las banderas block y unfreeze auto del contest a
 			// valores complementarios
-			contestDAO.dml("update.freeze.blocked.contest", true, false, cid);
-			contestDAO.repointContest(contest, true);
+			contestDAO.freezeContest(contest);
 		}
 		return "redirect:/contest/cscoreboard.xhtml?cid=" + cid;
 	}

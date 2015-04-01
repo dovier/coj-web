@@ -43,14 +43,13 @@
 								href="<c:url value="/forwardentry.xhtml?id=${entry.id}"/>"><i
 								class="fa fa-mail-forward"></i></a>
 						</authz:authorize>
-						<c:if
-							test="${not entry.voted and entry.username != principal}">
-							<authz:authorize access="isAuthenticated()">
+						<authz:authorize access="isAuthenticated()">
+							<c:if test="${not entry.voted and entry.username != principal.username}">
 								<a id="thumbs-up${entry.id}" data-toggle="tooltip"
 									title="up vote entry" href="javascript:like(${entry.id});"><i
 									class="fa fa-thumbs-o-up"></i></a>
-							</authz:authorize>
-						</c:if>
+							</c:if>
+						</authz:authorize>
 						<c:if test="${entry.rate gt 0}">
 							<b class="text-success" id="rating${entry.id}">${entry.rate}</b>
 						</c:if>
@@ -60,14 +59,14 @@
 						<c:if test="${entry.rate eq 0}">
 							<b id="rating${entry.id}">${entry.rate}</b>
 						</c:if>
-						<c:if
-							test="${not entry.voted and entry.username != principal}">
 							<authz:authorize access="isAuthenticated()">
+						<c:if
+							test="${not entry.voted and entry.username != principal.username}">
 								<a id="thumbs-down${entry.id}" data-toggle="tooltip"
 									title="down vote entry" href="javascript:dislike(${entry.id});"><i
 									class="fa fa-thumbs-o-down"></i></a>
-							</authz:authorize>
 						</c:if>
+							</authz:authorize>
 					</div>
 				</authz:authorize>
 			</div>

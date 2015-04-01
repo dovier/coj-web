@@ -21,7 +21,6 @@ import cu.uci.coj.config.Config;
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.model.Contest;
-import cu.uci.coj.model.JsonContest;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
@@ -65,8 +64,8 @@ public class ContestController extends BaseController {
 		List<String> values = new ArrayList<String>();
 		List[] other = new ArrayList[2];
 		for (Map<String,Object> u : mapa) {
-			tags.add(Config.getProperty(String.valueOf(u.get("state"))).replace(" ", "."));
-			values.add(String.valueOf(String.valueOf(u.get("cstats"))));
+			tags.add(Config.getProperty(String.valueOf(u.get("state")).replace(" ", ".")));
+			values.add(String.valueOf(u.get("cstats")));
 		}
 		other[0] = tags;
 		other[1] = values;
@@ -74,9 +73,12 @@ public class ContestController extends BaseController {
 	}
 
 	@RequestMapping(value = "/contest/cballoontracker.xhtml", method = RequestMethod.GET)
-	public String cballoontracker(Model model, PagingOptions options,
+	public String cballoontracker(Model model, Principal principal,PagingOptions options,
 			@RequestParam(required = false, value = "group") String group,
 			@RequestParam("cid") Integer cid) {
+		if (!contestDAO.bool("balloontracker.in.contest",
+						getUid(principal), cid)) 
+			return "redirect:/contest/contestview.xhtml?cid="+cid;
 		Contest contest = contestDAO.loadContest(cid);
 		List<String> groups = contestDAO.getGroups(cid);
 		if ("".equals(group))
@@ -102,9 +104,7 @@ public class ContestController extends BaseController {
 			@RequestParam("cid") Integer cid) {
 		model.addAttribute("submits",
 				contestDAO.pendingBalloons(cid, options, group));
-		boolean isBalloonTracker = requestWrapper
-				.isUserInRole(Roles.ROLE_ADMIN)
-				|| contestDAO.bool("balloontracker.in.contest",
+		boolean isBalloonTracker = contestDAO.bool("balloontracker.in.contest",
 						getUid(principal), cid);
 		model.addAttribute("showBalloonMark", isBalloonTracker);
 		return "/tables/cballoontracker";

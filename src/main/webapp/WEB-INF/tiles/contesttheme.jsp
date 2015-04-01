@@ -130,7 +130,7 @@
 																<td colspan="6" style="text-align: right"><c:choose>
 																		<c:when test="${contest.full_frozen == true}">
 																			<span class="label label-danger"><i
-																				class="dead">&#x2620;</i>&nbsp;<spring:message
+																				class="fa fa-warning"></i>&nbsp;<spring:message
 																					code="text.deadtime" /></span>
 																		</c:when>
 																		<c:otherwise>

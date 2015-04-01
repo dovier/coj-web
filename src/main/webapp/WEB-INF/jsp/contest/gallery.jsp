@@ -14,8 +14,8 @@
 <div class="postcontent">
 	<div id="links" class="hidden">
 		<c:forEach items="${images}" var="image">
-			<a href="/images/${contest.cid}/${image}" title="${image}"> <img
-				src="/images/${contest.cid}/${image}">
+			<a href="/contests/images/${contest.cid}/${image}" title="${image}"> <img
+				src="/contests/images/${contest.cid}/${image}">
 			</a>
 		</c:forEach>
 	</div>

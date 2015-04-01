@@ -665,4 +665,9 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 				getSql("best.solutions.1"), bsolutions, pid,
 				(options.getPage() - 1) * 20), 20, found);
 	}
+
+	@Override
+	public void updateDate(SubmissionJudge submit) {
+		submit.setDate(date("select date from submition where submit_id=?",submit.getSid()));
+	}
 }

@@ -43,6 +43,15 @@ public class MailNotificationsServiceImpl extends MailServiceImpl implements Mai
 			sendAccountVerificationReminder(activation);
 		}
 	}
+	
+	@Override
+	public void sendBulkWakeup(String status) {
+	/*	List<String> activations = baseDAO.objects("select.unactivated.emails", AccountActivation.class);
+
+		for (AccountActivation activation : activations) {
+			sendAccountVerificationReminder(activation);
+		}*/
+	}
 
 	@Override
 	public void sendAccountVerificationReminder(AccountActivation activation) {

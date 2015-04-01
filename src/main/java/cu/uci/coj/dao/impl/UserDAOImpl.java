@@ -126,12 +126,12 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	@Transactional(readOnly = true)
 	public int countEnabledUsersForScoreboard(String pattern, boolean online,
 			Integer uid) {
-		
+
 		String sql = "user_profile join users on user_profile.uid= users.uid join country on country.country_id = users.country_id join user_stats on user_stats.uid = users.uid join institution on institution.inst_id = users.inst_id";
 		if (uid != null)
-			sql += " join followers on followers.uid = users.uid and followers.fid="+uid;
-		Query query = new Query(
-				sql);
+			sql += " join followers on followers.uid = users.uid and followers.fid="
+					+ uid;
+		Query query = new Query(sql);
 		query.where(
 				Where.yes("users.enabled"),
 				Where.yes(online ? "online" : null),
@@ -172,7 +172,8 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
 		String sql = "public.users join country on public.users.country_id=country.country_id join institution on public.users.inst_id= institution.inst_id join user_stats on user_stats.uid= public.users.uid join user_profile on user_profile.uid= users.uid";
 		if (uid != null)
-			sql += " join followers on followers.uid = users.uid and followers.fid="+uid;
+			sql += " join followers on followers.uid = users.uid and followers.fid="
+					+ uid;
 		Query query = new Query(sql);
 		query.where(
 				Where.yes("users.enabled"),
@@ -454,10 +455,9 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
 		if (!StringUtils.isEmpty(user.getPassword())
 				&& user.getPassword().length() > 0) {
-			dml("update.user.by.admin", user.getNick(),
-					user.getCountry_id(), user.getInstitution_id(),
-					user.getLid(), user.getLocale(), user.getPassword(),
-					user.isContestNotifications(),
+			dml("update.user.by.admin", user.getNick(), user.getCountry_id(),
+					user.getInstitution_id(), user.getLid(), user.getLocale(),
+					user.getPassword(), user.isContestNotifications(),
 					user.isSubmissionNotifications(),
 					user.isNewprivatemessageNotifications(),
 					user.isWboardNotifications(),
@@ -466,9 +466,8 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 					user.getGender(), user.getAccess_rule(), user.isEnabled(),
 					user.isUpdate_nick(), user.getUsername());
 		} else {
-			dml("update.user.by.admin.1", user.getNick(),
-					user.getCountry_id(), user.getInstitution_id(),
-					user.getLid(), user.getLocale(),
+			dml("update.user.by.admin.1", user.getNick(), user.getCountry_id(),
+					user.getInstitution_id(), user.getLid(), user.getLocale(),
 					user.isContestNotifications(),
 					user.isSubmissionNotifications(),
 					user.isNewprivatemessageNotifications(),
@@ -570,6 +569,11 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		}
 		}
 		return null;
+	}
+
+	@Transactional(readOnly = true)
+	public List<User> loadBalloonUsersOffContest(Contest contest) {
+		return objects("load.users.off.contest.2", User.class, contest.getCid());
 	}
 
 	@Transactional(readOnly = true)
@@ -735,16 +739,17 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
 	@Override
 	public UserClassificationStats getUserClassifications(Integer uid) {
-		List<Map<String,Object>> maps = maps("select.user.classif",uid);
-		List<Map<String,Object>> probs = maps("select.prob.classif");
-		
-		List<Map<String,Object>> timeline = maps("select.user.timeline",uid,uid);
-		return new UserClassificationStats(maps,probs,timeline);
+		List<Map<String, Object>> maps = maps("select.user.classif", uid);
+		List<Map<String, Object>> probs = maps("select.prob.classif");
+
+		List<Map<String, Object>> timeline = maps("select.user.timeline", uid,
+				uid);
+		return new UserClassificationStats(maps, probs, timeline);
 	}
-	
+
 	@Override
 	public UserClassificationStats getTotalClassifications() {
-		List<Map<String,Object>> probs = maps("select.prob.classif");
+		List<Map<String, Object>> probs = maps("select.prob.classif");
 		return new UserClassificationStats(probs);
 	}
 

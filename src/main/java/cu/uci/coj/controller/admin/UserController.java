@@ -48,6 +48,11 @@ public class UserController extends BaseController {
 	@Resource
 	private userValidator validator;
 
+	@RequestMapping(produces = "application/json", value = "/wakeup.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void wakeup(Model model, @RequestParam(value = "status") String status) {
+	}
+	
 	@RequestMapping(value = "/manageusers.xhtml", method = RequestMethod.GET)
 	public String listUsers(Model model, PagingOptions options,
 			@RequestParam(required = false, value = "pattern") String pattern) {
