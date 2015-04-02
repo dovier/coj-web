@@ -1260,26 +1260,4 @@ public class Problem {
             limits.add(new Limits(language.getLid(), this.getPid()));
         }
     }
-        
-    /**
-     * @return the limits
-     */
-    public List<Limits> getLimits() {
-        return limits;
-    }
-
-    /**
-     * @param limits the limits to set
-     */
-    public void setLimits(List<Limits> limits) {
-        this.limits = limits;
-    }
-
-    public void initLimits(List<Language> languages) {
-        this.limits = new ArrayList<>();
-
-        for (Language language : languages) {
-            limits.add(new Limits(language.getLid(), this.getPid()));
-        }
-    }
 }

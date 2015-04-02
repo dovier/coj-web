@@ -10,6 +10,7 @@ import cu.uci.coj.model.Translation;
 import cu.uci.coj.model.UserProfile;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
+import java.util.List;
 
 public interface ProblemDAO extends BaseDAO {
 	public int getSourceLimitByPid(int pid);
@@ -186,11 +187,10 @@ public interface ProblemDAO extends BaseDAO {
 	public void approveTranslation(Translation translation, String username);
 
 	public Translation getTranslation(Integer id);
-        
-        public void insertLimit(Limits limit);
 
-        public void clearLimits(int problemId);
+	void clearLimits(int problemId);
 
-        public void fillProblemLimits(Problem problem);
+	void fillProblemLimits(Problem problem);
 
+	void insertLimit(Limits limit);
 }

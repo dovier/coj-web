@@ -25,8 +25,8 @@ public class SubmissionJudge implements Serializable {
 	private boolean test;
 
 	private int sid;
-	private int timeLimit;
-	private int caseTimeLimit;
+	private long timeLimit;
+	private long caseTimeLimit;
 	private long memoryLimit;
 	private String lang;
 	private String source;
@@ -395,7 +395,7 @@ public class SubmissionJudge implements Serializable {
 
 	}
 
-	public SubmissionJudge(int sid, int uid, String code, int pid, int time, int caseTimeLimit, int memory, String lang) {
+	public SubmissionJudge(int sid, int uid, String code, int pid, long time, long caseTimeLimit, long memory, String lang) {
 		this.sid = sid;
 		this.uid = uid;
 		this.source = code;
@@ -421,7 +421,7 @@ public class SubmissionJudge implements Serializable {
 		this.lang = lang;
 	}
 
-	public SubmissionJudge(int sid, int uid, String code, int pid, int timeLimit, int caseTimeLimit, int memoryLimit, String lang, int cid) {
+	public SubmissionJudge(int sid, int uid, String code, int pid, long timeLimit, long caseTimeLimit, long memoryLimit, String lang, int cid) {
 		this.sid = sid;
 		this.uid = uid;
 		this.source = code;
@@ -449,11 +449,11 @@ public class SubmissionJudge implements Serializable {
 		this.sid = sid;
 	}
 
-	public int getTimeLimit() {
+	public long getTimeLimit() {
 		return timeLimit;
 	}
 
-	public void setTimeLimit(int timeLimit) {
+	public void setTimeLimit(long timeLimit) {
 		this.timeLimit = timeLimit;
 	}
 
@@ -553,7 +553,7 @@ public class SubmissionJudge implements Serializable {
 		this.avgTimeUsed = avgTimeUsed;
 	}
 
-	public void setCaseTimeLimit(int caseTimeLimit) {
+	public void setCaseTimeLimit(long caseTimeLimit) {
 		this.caseTimeLimit = caseTimeLimit;
 	}
 
@@ -581,7 +581,7 @@ public class SubmissionJudge implements Serializable {
 		this.uid = uid;
 	}
 
-	public int getCaseTimeLimit() {
+	public long getCaseTimeLimit() {
 		return caseTimeLimit;
 	}
 

@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
@@ -142,17 +140,13 @@ public class ProblemController extends BaseController {
             return "/admin/adminproblems";
         }
 
-	@RequestMapping(value = "/tables/adminproblems.xhtml", method = RequestMethod.GET)
-	public String tablesListProblems(Principal principal, HttpServletRequest request, Model model, Locale locale, PagingOptions options,
-			@RequestParam(required = false, value = "pattern") String pattern) {
-		Integer uid = contestDAO.idByUsername(getUsername(principal));
-		String role = Roles.ROLE_USER;
-		if (request.isUserInRole(Roles.ROLE_ADMIN))
-			role = Roles.ROLE_ADMIN;
-		else if (request.isUserInRole(Roles.ROLE_SUPER_PSETTER))
-			role = Roles.ROLE_SUPER_PSETTER;
-		else if (request.isUserInRole(Roles.ROLE_PSETTER))
-			role = Roles.ROLE_PSETTER;
+        if (pid != null) {
+            Problem problem = problemDAO.getProblemByPid(locale.getLanguage(), pid);
+            problemDAO.fillProblemLanguages(problem);
+            problemDAO.fillProblemSetters(problem);
+            problemDAO.fillProblemLimits(problem);
+            problem.initProblemsetters();
+            problem.initLanguages();
 
             model.addAttribute("pid", pid);
             model.addAttribute("psetters", utilDAO.objects("select.psetters.pid", User.class, pid));
@@ -202,27 +196,9 @@ public class ProblemController extends BaseController {
             return "/admin/manageproblem";
         }
 
-		if (pid != null) {
-			Problem problem = problemDAO.getProblemByPid(locale.getLanguage(), pid);
-			problemDAO.fillProblemLanguages(problem);
-			problemDAO.fillProblemSetters(problem);
-			problem.initProblemsetters();
-			problem.initLanguages();
-			model.addAttribute("pid", pid);
-			model.addAttribute("psetters", utilDAO.objects("select.psetters.pid", User.class, pid));
-			model.addAttribute("datasets", utils.getDatasetsNames(pid));
-			model.addAttribute("showpsetters", requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || principal.getName().equals(problem.getUsername()));
-			model.addAttribute(problem);
-		} else {
-			model.addAttribute("psetters", utilDAO.objects("select.psetters.pid", User.class, 0));
-			model.addAttribute("showpsetters", true);
-			model.addAttribute("problem", new Problem());
-		}
-		model.addAttribute("languages", utilDAO.getEnabledProgramingLanguages());
-		model.addAttribute("contests", contestDAO.getComingAndRunningContests());
-		model.addAttribute("sources", problemDAO.getProblemSources());
-		return "/admin/manageproblem";
-	}
+        if (!problem.isMultidata()) {
+            problem.setCasetimelimit(problem.getTime());
+        }
 
         problemDAO.updateProblem(problem);
         problemDAO.clearProgrammingLanguages(problem.getPid());
@@ -264,22 +240,20 @@ public class ProblemController extends BaseController {
         final MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
         final Map<String, MultipartFile> files = multiRequest.getFileMap();
 
-		problemDAO.updateProblem(problem);
-		problemDAO.clearProgrammingLanguages(problem.getPid());
-		if (problem.getLanguageids() != null) {
-			for (int i = 0; i < problem.getLanguageids().length; i++) {
-				problemDAO.insertProblemLanguage(problem.getPid(), problem.getLanguageids()[i]);
-			}
-		}
-		// solo los admins y creadores de problemas pueden asignar nuevos problemsetters
-		if (requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || principal.getName().equals(problemDAO.creatorUsernameByPid(problem.getPid()))) {
-			problemDAO.clearPsetters(problem.getPid());
-			if (problem.getPsettersids() != null) {
-				for (int i = 0; i < problem.getPsettersids().length; i++) {
-					problemDAO.dml("insert.psetter.pid", problem.getPsettersids()[i], problem.getPid());
-				}
-			}
-		}
+        boolean mkdirs = true;
+        File dir = new File(Config.getProperty("problems.directory") + problem.getPid());
+        dir.mkdirs();
+        boolean exec = false;
+        for (MultipartFile filex : files.values()) {
+            if (filex.getOriginalFilename() != null && !filex.getOriginalFilename().equals("") && filex.getSize() > 0) {
+                String filename = filex.getOriginalFilename();
+                if (filex.getName().equals("inputgen")) {
+                    String ext = filex.getOriginalFilename().substring(filex.getOriginalFilename().lastIndexOf("."));
+                    filename = "datagen" + ext;
+                } else if (filex.getName().equals("modelsol")) {
+                    String ext = filex.getOriginalFilename().substring(filex.getOriginalFilename().lastIndexOf("."));
+                    filename = "Model" + ext;
+                }
 
                 File file = new File(Config.getProperty("problems.directory") + problem.getPid(), filename);
                 if (file.exists() && !file.isDirectory()) {

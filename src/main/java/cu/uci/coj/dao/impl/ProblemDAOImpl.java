@@ -59,20 +59,23 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	private MailNotificationService mailNotificationService;
 	@Resource
 	ContributionDAO contributionDAO;
+
 	public int getSourceLimitByPid(int pid) {
-		return integer(0,"select fontsize from problem where pid=?",pid);
+		return integer(0, "select fontsize from problem where pid=?", pid);
 	}
-	
+
 	@Override
 	public void deleteProblemSource(Integer idSource) {
-		ProblemSource source = object("select.problemsource.id", ProblemSource.class, idSource);
+		ProblemSource source = object("select.problemsource.id",
+				ProblemSource.class, idSource);
 		dml("delete.problemsource", idSource);
 		dml("delete.problemsources.problem", source.getFullName());
 	}
 
 	@Override
 	public IPaginatedList<ProblemSource> getProblemSources(PagingOptions options) {
-		return paginated("select.problemsources", ProblemSource.class, 20, options, options.getOffset(20));
+		return paginated("select.problemsources", ProblemSource.class, 20,
+				options, options.getOffset(20));
 	}
 
 	@Override
@@ -87,10 +90,13 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 
 	@Override
 	public void updateProblemSource(int idSource, String name, String author) {
-		ProblemSource sourceBefore = object("select.problemsource.id", ProblemSource.class, idSource);
+		ProblemSource sourceBefore = object("select.problemsource.id",
+				ProblemSource.class, idSource);
 		dml("update.problemsource", name, author, idSource);
-		ProblemSource sourceAfter = object("select.problemsource.id", ProblemSource.class, idSource);
-		dml("update.problemsources.problem", sourceAfter.getFullName(), sourceBefore.getFullName());
+		ProblemSource sourceAfter = object("select.problemsource.id",
+				ProblemSource.class, idSource);
+		dml("update.problemsources.problem", sourceAfter.getFullName(),
+				sourceBefore.getFullName());
 	}
 
 	public void checkProblemCreated() {
@@ -116,7 +122,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 			try {
 
 				String ext = map.get("ext").toString();
-				File modelsol = new File(Config.getProperty("problems.directory") + String.valueOf(problemId) + "/Model." + ext);
+				File modelsol = new File(
+						Config.getProperty("problems.directory")
+								+ String.valueOf(problemId) + "/Model." + ext);
 				FileUtils.writeStringToFile(modelsol, code);
 			} catch (IOException ex) {
 				return null;
@@ -136,13 +144,15 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Problem> searchProblems(String language, String pattern, boolean admin, String username) {
+	public List<Problem> searchProblems(String language, String pattern,
+			boolean admin, String username) {
 		List<Problem> problems = null;
 		if (pattern != null && pattern.length() > 0) {
 
 			pattern = "%" + pattern + "%";
 			if (admin) {
-				String sql = replaceSql("search.problems.admin", "<pattern>", pattern);
+				String sql = replaceSql("search.problems.admin", "<pattern>",
+						pattern);
 				problems = objects(sql, Problem.class);
 
 			} else {
@@ -156,7 +166,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<Problem> findAllProblems(String language, String pattern, int found, PagingOptions options, String username, int uid, Integer filterby, Integer idClassification,
+	public IPaginatedList<Problem> findAllProblems(String language,
+			String pattern, int found, PagingOptions options, String username,
+			int uid, Integer filterby, Integer idClassification,
 			Integer complexity) {
 
 		int top = options.getOffset(50);
@@ -177,7 +189,8 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		List<Object> list = new LinkedList<Object>();
 
 		if (pattern != null) {
-			sql = replaceSql("find.all.problems", "pattern", "%" + pattern + "%");
+			sql = replaceSql("find.all.problems", "pattern", "%" + pattern
+					+ "%");
 			list.add("%" + pattern + "%");
 			list.add("%" + pattern + "%");
 			list.add("%" + pattern + "%");
@@ -194,14 +207,18 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		}
 
 		if (orderby != null) {
-			sql = sql.replace("<orderby>", getSql(inv.equals("asc") ? "order.all.problems.asc" : "order.all.problems.desc") + ",pid");
+			sql = sql.replace("<orderby>",
+					getSql(inv.equals("asc") ? "order.all.problems.asc"
+							: "order.all.problems.desc") + ",pid");
 			sql = sql.replace("<orderby>", orderby);
 		} else {
 			sql = sql.replace("<orderby>", getSql("order.all.problem.pid"));
 		}
 
 		if (idClassification != -1 || complexity != -1) {
-			sql = sql.replace("<and>", " AND problem.pid IN (SELECT pid FROM problem_classification WHERE true<and>");
+			sql = sql
+					.replace("<and>",
+							" AND problem.pid IN (SELECT pid FROM problem_classification WHERE true<and>");
 
 			if (idClassification != -1) {
 				sql = sql.replace("<and>", " AND id_classification = ?<and>");
@@ -250,7 +267,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		List<Problem> problems = objects(sql, Problem.class, list.toArray());
 		for (Iterator<Problem> it = problems.iterator(); it.hasNext();) {
 			Problem problem = it.next();
-			problem.setPoints((double) Integer.valueOf(Config.getProperty("formula.value")) / (double) (40 + problem.getAccu()));
+			problem.setPoints((double) Integer.valueOf(Config
+					.getProperty("formula.value"))
+					/ (double) (40 + problem.getAccu()));
 			if (solved != null) {
 				if (solved.containsKey(problem.getPid())) {
 					problem.setSolved(true);
@@ -266,7 +285,8 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Override
-	public IPaginatedList<Problem> findAllProblemsWithoutClassification(String language, PagingOptions options) {
+	public IPaginatedList<Problem> findAllProblemsWithoutClassification(
+			String language, PagingOptions options) {
 		int found = countProblemWithoutClassifications();
 		Map<?, ?> solved = null;
 		Map<?, ?> tried = null;
@@ -279,7 +299,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		sql = getSql("find.all.problems.no.pattern");
 
 		if (options.getSort() != null) {
-			sql = sql.replace("<orderby>", getSql(options.getDirection().equals("asc") ? "order.all.problems.asc" : "order.all.problems.desc"));
+			sql = sql.replace("<orderby>", getSql(options.getDirection()
+					.equals("asc") ? "order.all.problems.asc"
+					: "order.all.problems.desc"));
 			sql = sql.replace("<orderby>", options.getSort());
 		} else {
 			sql = sql.replace("<orderby>", getSql("order.all.problem.pid"));
@@ -290,7 +312,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		List<Problem> problems = objects(sql, Problem.class, list.toArray());
 		for (Iterator<Problem> it = problems.iterator(); it.hasNext();) {
 			Problem problem = it.next();
-			problem.setPoints((double) Integer.valueOf(Config.getProperty("formula.value")) / (double) (40 + problem.getAccu()));
+			problem.setPoints((double) Integer.valueOf(Config
+					.getProperty("formula.value"))
+					/ (double) (40 + problem.getAccu()));
 			if (solved != null) {
 				if (solved.containsKey(problem.getPid())) {
 					problem.setSolved(true);
@@ -306,7 +330,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<Problem> findAllProblems(String language, String pattern, int found, PagingOptions options, String username, int uid, int filterby) {
+	public IPaginatedList<Problem> findAllProblems(String language,
+			String pattern, int found, PagingOptions options, String username,
+			int uid, int filterby) {
 
 		int top = options.getOffset(50);
 		Map<?, ?> solved = null;
@@ -324,7 +350,8 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		List<Object> list = new LinkedList<Object>();
 
 		if (pattern != null) {
-			sql = replaceSql("find.all.problems", "pattern", "%" + pattern + "%");
+			sql = replaceSql("find.all.problems", "pattern", "%" + pattern
+					+ "%");
 			list.add("%" + pattern + "%");
 			list.add("%" + pattern + "%");
 		} else {
@@ -332,7 +359,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		}
 
 		if (options.getSort() != null) {
-			sql = sql.replace("<orderby>", getSql(options.getDirection().equals("asc") ? "order.all.problems.asc" : "order.all.problems.desc"));
+			sql = sql.replace("<orderby>", getSql(options.getDirection()
+					.equals("asc") ? "order.all.problems.asc"
+					: "order.all.problems.desc"));
 			sql = sql.replace("<orderby>", options.getSort());
 		} else {
 			sql = sql.replace("<orderby>", getSql("order.all.problem.pid"));
@@ -372,7 +401,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		List<Problem> problems = objects(sql, Problem.class, list.toArray());
 		for (Iterator<Problem> it = problems.iterator(); it.hasNext();) {
 			Problem problem = it.next();
-			problem.setPoints((double) Integer.valueOf(Config.getProperty("formula.value")) / (double) (40 + problem.getAccu()));
+			problem.setPoints((double) Integer.valueOf(Config
+					.getProperty("formula.value"))
+					/ (double) (40 + problem.getAccu()));
 			if (solved != null) {
 				if (solved.containsKey(problem.getPid())) {
 					problem.setSolved(true);
@@ -393,7 +424,8 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public int countProblem(String pattern, Integer filterby, String username, Integer idClassification, Integer complexity) {
+	public int countProblem(String pattern, Integer filterby, String username,
+			Integer idClassification, Integer complexity) {
 		if (pattern != null) {
 			List<Object> list = new LinkedList<Object>();
 			String sql = getSql("count.problems.1");
@@ -430,18 +462,21 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 				}
 			}
 			if (idClassification != -1 || complexity != -1) {
-				sql += " " + getSql("and pid in (SELECT pid FROM problem_classification WHERE true <CLASSIFICATIONWHERE>");
+				sql += " "
+						+ getSql("and pid in (SELECT pid FROM problem_classification WHERE true <CLASSIFICATIONWHERE>");
 				if (idClassification != -1) {
-					sql = sql.replace("<CLASSIFICATIONWHERE>", " AND id_classification = ? <CLASSIFICATIONWHERE>");
+					sql = sql.replace("<CLASSIFICATIONWHERE>",
+							" AND id_classification = ? <CLASSIFICATIONWHERE>");
 					list.add(idClassification);
 				}
 				if (complexity != -1) {
-					sql = sql.replace("<CLASSIFICATIONWHERE>", " AND complexity = ? <CLASSIFICATIONWHERE>");
+					sql = sql.replace("<CLASSIFICATIONWHERE>",
+							" AND complexity = ? <CLASSIFICATIONWHERE>");
 					list.add(complexity);
 				}
 				sql = sql.replace("<CLASSIFICATIONWHERE>", ")");
 			}
-			
+
 			return integer(sql, list.toArray());
 		} else {
 			String sql = getSql("count.problems.6");
@@ -546,33 +581,45 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 			int pid = 0;
 			if (NumberUtils.isNumber(pattern))
 				pid = NumberUtils.toInt(pattern);
-			if (role.equals(Roles.ROLE_ADMIN) || role.equals(Roles.ROLE_SUPER_PSETTER))
-				return integer("count.problem.admin.all", "%" + pattern + "%", pid);
+			if (role.equals(Roles.ROLE_ADMIN)
+					|| role.equals(Roles.ROLE_SUPER_PSETTER))
+				return integer("count.problem.admin.all", "%" + pattern + "%",
+						pid);
 			return integer("count.problem.admin", uid, "%" + pattern + "%", pid);
 		}
 
-		if (role.equals(Roles.ROLE_ADMIN) || role.equals(Roles.ROLE_SUPER_PSETTER))
+		if (role.equals(Roles.ROLE_ADMIN)
+				|| role.equals(Roles.ROLE_SUPER_PSETTER))
 			return integer("count.problem.all");
 		return integer("count.problem", uid);
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<Problem> loadProblemsAdmin(int found, Integer uid, String role, String language, String pattern, PagingOptions options) {
+	public IPaginatedList<Problem> loadProblemsAdmin(int found, Integer uid,
+			String role, String language, String pattern, PagingOptions options) {
 		List<Problem> problems = new LinkedList<Problem>();
 
 		if (pattern == null) {
-			if (role.equals(Roles.ROLE_ADMIN) || role.equals(Roles.ROLE_SUPER_PSETTER))
-				problems = objects("load.problems.admin.all", Problem.class, options.getOffset(50));
+			if (role.equals(Roles.ROLE_ADMIN)
+					|| role.equals(Roles.ROLE_SUPER_PSETTER))
+				problems = objects("load.problems.admin.all", Problem.class,
+						options.getOffset(50));
 			else
-				problems = objects("load.problems.admin", Problem.class, uid, options.getOffset(50));
+				problems = objects("load.problems.admin", Problem.class, uid,
+						options.getOffset(50));
 		} else {
 			int pid = 0;
 			if (NumberUtils.isNumber(pattern))
 				pid = NumberUtils.toInt(pattern);
-			if (role.equals(Roles.ROLE_ADMIN) || role.equals(Roles.ROLE_SUPER_PSETTER))
-				problems = objects("load.problems.admin.pattern.all", Problem.class, "%" + pattern + "%", pid, options.getOffset(50));
+			if (role.equals(Roles.ROLE_ADMIN)
+					|| role.equals(Roles.ROLE_SUPER_PSETTER))
+				problems = objects("load.problems.admin.pattern.all",
+						Problem.class, "%" + pattern + "%", pid,
+						options.getOffset(50));
 			else
-				problems = objects("load.problems.admin.pattern", Problem.class, uid, "%" + pattern + "%", pid, options.getOffset(50));
+				problems = objects("load.problems.admin.pattern",
+						Problem.class, uid, "%" + pattern + "%", pid,
+						options.getOffset(50));
 		}
 
 		for (Problem problem : problems) {
@@ -594,23 +641,27 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	@Transactional(readOnly = true)
 	private Map<?, ?> userFavorite(int uid) {
 		IForIntegerMap mymap = new IForIntegerMap();
-		jdbcTemplate.query(getSql("problems.favorite.byuser"), new Object[] { uid }, mymap);
+		jdbcTemplate.query(getSql("problems.favorite.byuser"),
+				new Object[] { uid }, mymap);
 		return mymap.getMymap();
 	}
 
 	@Transactional(readOnly = true)
 	private Map<?, ?> problemsSolvedByUser(int uid) {
 		IForIntegerMap mymap = new IForIntegerMap();
-		jdbcTemplate.query(getSql("problems.solved.byuser"), new Object[] { uid }, mymap);
+		jdbcTemplate.query(getSql("problems.solved.byuser"),
+				new Object[] { uid }, mymap);
 		return mymap.getMymap();
 	}
 
 	@Transactional(readOnly = true)
-	private Map<Integer, Integer> problemsSolvedByUserInContest(String username, Contest contest) {
+	private Map<Integer, Integer> problemsSolvedByUserInContest(
+			String username, Contest contest) {
 		Map<Integer, Integer> solved = new HashMap<Integer, Integer>();
 		List<Integer> pids;
 		if (contest.isFrozen()) {
-			String sql = replaceSql("solved.by.user.cont.frozen", "<frtime>", String.valueOf(contest.getFrtime()));
+			String sql = replaceSql("solved.by.user.cont.frozen", "<frtime>",
+					String.valueOf(contest.getFrtime()));
 			pids = integers(sql, username, contest.getCid(), contest.getCid());
 		} else {
 			pids = integers("solved.by.user.cont", username, contest.getCid());
@@ -624,16 +675,19 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
-	private Map<Integer, Integer> problemsSolvedByUserInVirtualContest(String username, Contest contest) {
+	private Map<Integer, Integer> problemsSolvedByUserInVirtualContest(
+			String username, Contest contest) {
 		Map<Integer, Integer> solved = new HashMap<Integer, Integer>();
 
 		List<Integer> pids = null;
 		if (contest.isFrozen()) {
-			String sql = replaceSql("problem.solved.by.user.vcont.frozen", "<frtime>", String.valueOf(contest.getFrtime()));
+			String sql = replaceSql("problem.solved.by.user.vcont.frozen",
+					"<frtime>", String.valueOf(contest.getFrtime()));
 
 			pids = integers(sql, username, contest.getCid(), contest.getCid());
 		} else {
-			pids = integers("problem.solved.by.user.vcont", username, contest.getCid());
+			pids = integers("problem.solved.by.user.vcont", username,
+					contest.getCid());
 		}
 
 		if (pids != null) {
@@ -649,7 +703,8 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	@Transactional(readOnly = true)
 	private Map<Integer, Integer> problemsTriedByUser(String username) {
 		Map<Integer, Integer> tryied = new HashMap<Integer, Integer>();
-		List<Integer> pids = integers("problems.tried.by.user", username, username);
+		List<Integer> pids = integers("problems.tried.by.user", username,
+				username);
 		for (Integer pid : pids) {
 			tryied.put(pid, pid);
 		}
@@ -659,21 +714,26 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	@Transactional(readOnly = true)
 	private Map<?, ?> problemsTriedByUser(String username, int uid) {
 		IForIntegerMap mymap = new IForIntegerMap();
-		jdbcTemplate.query(getSql("problems.tried.byuser"), new Object[] { username, uid }, mymap);
+		jdbcTemplate.query(getSql("problems.tried.byuser"), new Object[] {
+				username, uid }, mymap);
 		return mymap.getMymap();
 	}
 
 	@Transactional(readOnly = true)
-	private Map<Integer, Integer> problemsTriedByUserInContest(String username, Contest contest) {
+	private Map<Integer, Integer> problemsTriedByUserInContest(String username,
+			Contest contest) {
 		Map<Integer, Integer> tryied = new HashMap<Integer, Integer>();
 		List<Integer> pids;
 		String sql = null;
 
 		if (contest.isFrozen()) {
-			sql = replaceSql("problem.tried.user.in.contest.1", "<frtime>", String.valueOf(contest.getFrtime()));
-			pids = integers(sql, username, contest.getCid(), contest.getCid(), username, contest.getCid(), contest.getCid());
+			sql = replaceSql("problem.tried.user.in.contest.1", "<frtime>",
+					String.valueOf(contest.getFrtime()));
+			pids = integers(sql, username, contest.getCid(), contest.getCid(),
+					username, contest.getCid(), contest.getCid());
 		} else {
-			pids = integers("problem.tried.user.in.contest", username, contest.getCid(), username, contest.getCid());
+			pids = integers("problem.tried.user.in.contest", username,
+					contest.getCid(), username, contest.getCid());
 		}
 
 		for (Integer pid : pids) {
@@ -683,7 +743,8 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
-	private Map<Integer, Integer> problemsTriedByUserInVirtualContest(String username, Contest contest) {
+	private Map<Integer, Integer> problemsTriedByUserInVirtualContest(
+			String username, Contest contest) {
 		Map<Integer, Integer> tryied = new HashMap<Integer, Integer>();
 
 		List<Integer> pids = null;
@@ -691,16 +752,20 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 
 		if (contest.isFrozen()) {
 
-			sql += replaceSql("problems.tried.vcont.1", "<frtime>", String.valueOf(contest.getFrtime()));
+			sql += replaceSql("problems.tried.vcont.1", "<frtime>",
+					String.valueOf(contest.getFrtime()));
 			sql += getSql("problems.tried.vcont.2");
-			sql += replaceSql("problems.tried.vcont.1", "<frtime>", String.valueOf(contest.getFrtime()));
+			sql += replaceSql("problems.tried.vcont.1", "<frtime>",
+					String.valueOf(contest.getFrtime()));
 			sql += getSql("problems.tried.vcont.3");
 
-			pids = integers(sql, username, contest.getCid(), contest.getCid(), username, contest.getCid(), contest.getCid());
+			pids = integers(sql, username, contest.getCid(), contest.getCid(),
+					username, contest.getCid(), contest.getCid());
 		} else {
 			sql += getSql("problems.tried.vcont.2");
 			sql += getSql("problems.tried.vcont.3");
-			pids = integers(sql, username, contest.getCid(), username, contest.getCid());
+			pids = integers(sql, username, contest.getCid(), username,
+					contest.getCid());
 		}
 
 		if (pids != null) {
@@ -712,22 +777,28 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public Problem getProblemByCode(String language, Integer pid, boolean isAdminOrPsetter) {
-		Problem problem = object(isAdminOrPsetter ? "select.problem.bycode.1" : "select.problem.bycode.2", Problem.class, pid);
-		problem.setPoints((double) Integer.valueOf(Config.getProperty("formula.value")) / (double) (40 + problem.getAccu()));
+	public Problem getProblemByCode(String language, Integer pid,
+			boolean isAdminOrPsetter) {
+		Problem problem = object(isAdminOrPsetter ? "select.problem.bycode.1"
+				: "select.problem.bycode.2", Problem.class, pid);
+		problem.setPoints((double) Integer.valueOf(Config
+				.getProperty("formula.value"))
+				/ (double) (40 + problem.getAccu()));
 		setProblemLanguage(language, problem);
 		return problem;
 	}
 
 	@Transactional(readOnly = true)
 	public void fillProblemLanguages(Problem problem) {
-		List<Language> languages = objects(getSql("select.problem.languages"), Language.class, problem.getPid());
+		List<Language> languages = objects(getSql("select.problem.languages"),
+				Language.class, problem.getPid());
 		problem.setLanguages(languages);
 	}
 
 	@Transactional(readOnly = true)
 	public void fillProblemSetters(Problem problem) {
-		List<User> psetters = objects(getSql("select.current.psetters.pid"), User.class, problem.getPid());
+		List<User> psetters = objects(getSql("select.current.psetters.pid"),
+				User.class, problem.getPid());
 		problem.setPsetters(psetters);
 	}
 
@@ -736,11 +807,12 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		return bool("language.available", pid, lid);
 	}
 
-        @Transactional(readOnly = true)
-        public Problem getProblemSubmitDataByAbb(Integer pid, int lid) {
-            Problem problem = object("problem.submit.data.by.pid", Problem.class, pid, lid);
-            return problem;
-        }
+	@Transactional(readOnly = true)
+	public Problem getProblemSubmitDataByAbb(Integer pid, int lid) {
+		Problem problem = object("problem.submit.data.by.pid", Problem.class,
+				pid, lid);
+		return problem;
+	}
 
 	@Transactional(readOnly = true)
 	public boolean exists(Integer pid) {
@@ -787,7 +859,8 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 			res = objects("enabled.language", Language.class);
 		}
 		for (Language lang : res) {
-			lang.setDescripcion(lang.getLanguage() + " (" + lang.getDescripcion() + ")");
+			lang.setDescripcion(lang.getLanguage() + " ("
+					+ lang.getDescripcion() + ")");
 		}
 		return res;
 	}
@@ -802,11 +875,13 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	public String creatorUsernameByPid(int pid) {
-		return string("select.creator.by.pid",pid);
+		return string("select.creator.by.pid", pid);
 	}
-	
+
 	@Transactional(readOnly = true)
-	public IPaginatedList<Problem> getContestProblems(int found, String language, String username, Contest contest, PagingOptions options) {
+	public IPaginatedList<Problem> getContestProblems(int found,
+			String language, String username, Contest contest,
+			PagingOptions options) {
 		Map<Integer, Integer> solved = null, tryied = null;
 		if (username != null) {
 			solved = problemsSolvedByUserInContest(username, contest);
@@ -815,26 +890,33 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		int curr = 1;
 		if (username != null) {
 			try {
-				curr = getCurrentLevel(integer("select.uid.by.username", username), contest.getCid());
+				curr = getCurrentLevel(
+						integer("select.uid.by.username", username),
+						contest.getCid());
 			} catch (Exception e) {
 			}
 		}
-		List<Problem> probs = objects("contest.problems", Problem.class, contest.getCid(), options.getOffset(50));
+		List<Problem> probs = objects("contest.problems", Problem.class,
+				contest.getCid(), options.getOffset(50));
 		for (int i = 0; i < probs.size(); i++) {
 			if (contest.getStyle() == 3) {
-				probs.get(i).setPoints(formulaFree(contest.getPpoints(), probs.get(i).getAccu() + 1));
+				probs.get(i).setPoints(
+						formulaFree(contest.getPpoints(), probs.get(i)
+								.getAccu() + 1));
 			}
-				if (solved != null && solved.containsKey(probs.get(i).getPid())) {
-					probs.get(i).setSolved(true);
-				} else if (tryied != null && tryied.containsKey(probs.get(i).getPid())) {
-					probs.get(i).setUnsolved(true);
-				}
+			if (solved != null && solved.containsKey(probs.get(i).getPid())) {
+				probs.get(i).setSolved(true);
+			} else if (tryied != null
+					&& tryied.containsKey(probs.get(i).getPid())) {
+				probs.get(i).setUnsolved(true);
+			}
 			probs.get(i).setLetter(i);
 			if (contest.getStyle() != 4) {
 				probs.get(i).setSee(true);
 			} else {
 
-				if (probs.get(i).getLevel() == 1 || (username != null && probs.get(i).getLevel() <= curr)) {
+				if (probs.get(i).getLevel() == 1
+						|| (username != null && probs.get(i).getLevel() <= curr)) {
 					probs.get(i).setSee(true);
 				}
 			}
@@ -843,15 +925,18 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		setProblemLanguage(language, probs);
 		return getPaginatedList(options, probs, 50, found);
 	}
-	
-	public List<Problem> getAllContestProblems(int cid){
-		return objects("select.contest.problem.letters",Problem.class,cid);
+
+	public List<Problem> getAllContestProblems(int cid) {
+		return objects("select.contest.problem.letters", Problem.class, cid);
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<Problem> getVirtualContestProblems(int found, String language, String username, Contest contest, PagingOptions options) {
+	public IPaginatedList<Problem> getVirtualContestProblems(int found,
+			String language, String username, Contest contest,
+			PagingOptions options) {
 
-		List<Problem> probs = objects("load.virtual.contest.problems", Problem.class, contest.getVid(), options.getOffset(50));
+		List<Problem> probs = objects("load.virtual.contest.problems",
+				Problem.class, contest.getVid(), options.getOffset(50));
 		for (int i = 0; i < probs.size(); i++) {
 			probs.get(i).setLetter(i);
 			if (contest.getStyle() != 4) {
@@ -874,15 +959,19 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public Problem getProblemContest(String language, Integer pid, Contest contest) {
-		Problem problem = object("load.virtual.contest.problem", Problem.class, pid, contest.getCid());
+	public Problem getProblemContest(String language, Integer pid,
+			Contest contest) {
+		Problem problem = object("load.virtual.contest.problem", Problem.class,
+				pid, contest.getCid());
 		setProblemLanguage(language, problem);
 		return problem;
 	}
 
 	@Override
-	public Problem getContestProblem(String language, Integer pid, Contest contest) {
-		Problem problem = object("load.contest.problem", Problem.class, pid, contest.getCid());
+	public Problem getContestProblem(String language, Integer pid,
+			Contest contest) {
+		Problem problem = object("load.contest.problem", Problem.class, pid,
+				contest.getCid());
 		setProblemLanguage(language, problem);
 		return problem;
 	}
@@ -898,8 +987,10 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Override
-	public List<Problem> getVirtualContestProblems(String language, String username) {
-		List<Problem> cprobs = objects("virtual.contest.problems", Problem.class, username);
+	public List<Problem> getVirtualContestProblems(String language,
+			String username) {
+		List<Problem> cprobs = objects("virtual.contest.problems",
+				Problem.class, username);
 		for (int i = 0; i < cprobs.size(); i++) {
 			cprobs.get(i).setLetter(i);
 		}
@@ -909,14 +1000,16 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 
 	@Transactional(readOnly = true)
 	public List<Problem> getProblemsOffContest(String language, int cid) {
-		List<Problem> problems = objects("problems.off.contest", Problem.class, cid);
+		List<Problem> problems = objects("problems.off.contest", Problem.class,
+				cid);
 		setProblemLanguage(language, problems);
 		return problems;
 	}
 
 	@Transactional(readOnly = true)
 	public List<Problem> getProblemsOffContestVirtual(String language) {
-		List<Problem> problems = objects("problems.virtual.enabled", Problem.class);
+		List<Problem> problems = objects("problems.virtual.enabled",
+				Problem.class);
 		setProblemLanguage(language, problems);
 		return problems;
 	}
@@ -936,21 +1029,35 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 
 	@Override
 	public void addProblem(Problem problem) {
-		dml("add.prob", problem.getForumLink(), problem.getTitle(), problem.getTitleEs(), problem.getTitlePt(), problem.getDescription(), problem.getDescriptionEs(), problem.getDescriptionPt(),
-				problem.getInput(), problem.getInputEs(), problem.getInputPt(), problem.getOutput(), problem.getOutputEs(), problem.getOutputPt(), problem.getInputex(), problem.getOutputex(),
-				problem.getAuthor(), problem.getComments(), problem.getCommentsEs(), problem.getCommentsPt(), problem.getTime(), problem.getMemory(), problem.getFontsize(), problem.getContest(),
-				problem.getUid(), problem.isEnabled(), problem.getCasetimelimit(), problem.isMultidata(), problem.isSpecial_judge());
+		dml("add.prob", problem.getForumLink(), problem.getTitle(),
+				problem.getTitleEs(), problem.getTitlePt(),
+				problem.getDescription(), problem.getDescriptionEs(),
+				problem.getDescriptionPt(), problem.getInput(),
+				problem.getInputEs(), problem.getInputPt(),
+				problem.getOutput(), problem.getOutputEs(),
+				problem.getOutputPt(), problem.getInputex(),
+				problem.getOutputex(), problem.getAuthor(),
+				problem.getComments(), problem.getCommentsEs(),
+				problem.getCommentsPt(), problem.getTime(),
+				problem.getMemory(), problem.getFontsize(),
+				problem.getContest(), problem.getUid(), problem.isEnabled(),
+				problem.getCasetimelimit(), problem.isMultidata(),
+				problem.isSpecial_judge());
 	}
 
-        @Override
-        public void insertLimit(Limits limit) {
-            dml("insert.problem.limit", limit.getProblemId(), limit.getLanguageId(), limit.getMaxMemory(), limit.getMaxCaseExecutionTime(), limit.getMaxTotalExecutionTime(), limit.getMaxSourceCodeLenght());
-        }
+	@Override
+	public void insertLimit(Limits limit) {
+		dml("insert.problem.limit", limit.getProblemId(),
+				limit.getLanguageId(), limit.getMaxMemory(),
+				limit.getMaxCaseExecutionTime(),
+				limit.getMaxTotalExecutionTime(),
+				limit.getMaxSourceCodeLenght());
+	}
 
-        @Override
-        public void clearLimits(int problemId) {
-            dml("clear.problem.limits", problemId);
-        }
+	@Override
+	public void clearLimits(int problemId) {
+		dml("clear.problem.limits", problemId);
+	}
 
 	@Override
 	public void insertProblemLanguage(int pid, int lid) {
@@ -971,29 +1078,44 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	public void clearPsetters(int pid) {
 		dml("clear.psetters.pid", pid);
 	}
-	
+
 	@Override
 	public void updateProblemI18N(Problem problem) {
-			dml("update.problem.i18n", problem.getTitle(), problem.getTitleEs(), problem.getTitlePt(), 
-					problem.getDescription(), problem.getDescriptionEs(), problem.getDescriptionPt(), 
-					problem.getInput(), problem.getInputEs(), problem.getInputPt(), 
-					problem.getOutput(), problem.getOutputEs(), problem.getOutputPt(),
-					problem.getComments(), problem.getCommentsEs(), problem.getCommentsPt(), 
-					problem.getPid());
+		dml("update.problem.i18n", problem.getTitle(), problem.getTitleEs(),
+				problem.getTitlePt(), problem.getDescription(),
+				problem.getDescriptionEs(), problem.getDescriptionPt(),
+				problem.getInput(), problem.getInputEs(), problem.getInputPt(),
+				problem.getOutput(), problem.getOutputEs(),
+				problem.getOutputPt(), problem.getComments(),
+				problem.getCommentsEs(), problem.getCommentsPt(),
+				problem.getPid());
 	}
 
 	@Override
 	public void updateProblem(Problem problem) {
 		if (problem.getUid() != 0)
-			dml("update.problem", problem.getForumLink(), problem.getTitle(), problem.getDescription(), problem.getInput(), problem.getOutput(), 
-					problem.getInputex(), problem.getOutputex(), problem.getAuthor(), problem.getComments(), problem.getTime(), problem.getMemory(),
-					problem.getFontsize(), problem.getContest(), problem.getPid(), problem.isEnabled(), problem.getCasetimelimit(), problem.isMultidata(), problem.isSpecial_judge(),
+			dml("update.problem", problem.getForumLink(), problem.getTitle(),
+					problem.getDescription(), problem.getInput(),
+					problem.getOutput(), problem.getInputex(),
+					problem.getOutputex(), problem.getAuthor(),
+					problem.getComments(), problem.getTime(),
+					problem.getMemory(), problem.getFontsize(),
+					problem.getContest(), problem.getPid(),
+					problem.isEnabled(), problem.getCasetimelimit(),
+					problem.isMultidata(), problem.isSpecial_judge(),
 					problem.isDisable_24h(), problem.getUid(), problem.getPid());
 		else
-			dml("update.problem.no.uid", problem.getForumLink(), problem.getTitle(), problem.getDescription(), problem.getInput(), problem.getOutput(), 
-					problem.getInputex(), problem.getOutputex(), problem.getAuthor(), problem.getComments(), problem.getTime(), problem.getMemory(),
-					problem.getFontsize(), problem.getContest(), problem.getPid(), problem.isEnabled(), problem.getCasetimelimit(), problem.isMultidata(), problem.isSpecial_judge(),
-					problem.isDisable_24h(), problem.getPid());
+			dml("update.problem.no.uid", problem.getForumLink(),
+					problem.getTitle(), problem.getDescription(),
+					problem.getInput(), problem.getOutput(),
+					problem.getInputex(), problem.getOutputex(),
+					problem.getAuthor(), problem.getComments(),
+					problem.getTime(), problem.getMemory(),
+					problem.getFontsize(), problem.getContest(),
+					problem.getPid(), problem.isEnabled(),
+					problem.getCasetimelimit(), problem.isMultidata(),
+					problem.isSpecial_judge(), problem.isDisable_24h(),
+					problem.getPid());
 	}
 
 	@Transactional(readOnly = true)
@@ -1025,13 +1147,17 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 
 	@Transactional(readOnly = true)
 	public List<ProblemClassification> getProblemClassifications(int pid) {
-		return objects("select.problem.classifications", ProblemClassification.class, pid);
+		return objects("select.problem.classifications",
+				ProblemClassification.class, pid);
 	}
 
 	@Transactional(readOnly = true)
-	public IPaginatedList<ProblemClassification> getClassifications(PagingOptions options) {
-		List<ProblemClassification> classifications = objects("select.classifications", ProblemClassification.class);
-		return getPaginatedList(options, classifications, 20, classifications.size());
+	public IPaginatedList<ProblemClassification> getClassifications(
+			PagingOptions options) {
+		List<ProblemClassification> classifications = objects(
+				"select.classifications", ProblemClassification.class);
+		return getPaginatedList(options, classifications, 20,
+				classifications.size());
 	}
 
 	public List<ProblemClassification> getClassifications() {
@@ -1039,7 +1165,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Problem> suggestedProblems(String language, List<UserProfile> profiles, UserProfile profile, String pattern, int top, String orderby, String inv, Integer idClassification,
+	public List<Problem> suggestedProblems(String language,
+			List<UserProfile> profiles, UserProfile profile, String pattern,
+			int top, String orderby, String inv, Integer idClassification,
 			Integer complexity) {
 		StringBuffer buffer = new StringBuffer();
 		for (UserProfile userProfile : profiles) {
@@ -1061,7 +1189,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		list.add(buffer.toString());
 		list.add(PROBLEM_SUGGESTION_QTY);
 		if (pattern != null) {
-			sql = replaceSql("load.users.recommender.suggestedproblems.filtered", "pattern", "%" + pattern + "%");
+			sql = replaceSql(
+					"load.users.recommender.suggestedproblems.filtered",
+					"pattern", "%" + pattern + "%");
 			list.add("%" + pattern + "%");
 			list.add("%" + pattern + "%");
 		} else {
@@ -1069,14 +1199,18 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		}
 
 		if (orderby != null) {
-			sql = sql.replace("<orderby>", getSql(inv.equals("asc") ? "order.all.problems.asc" : "order.all.problems.desc"));
+			sql = sql.replace("<orderby>",
+					getSql(inv.equals("asc") ? "order.all.problems.asc"
+							: "order.all.problems.desc"));
 			sql = sql.replace("<orderby>", orderby);
 		} else {
 			sql = sql.replace("<orderby>", "");
 		}
 
 		if (idClassification != -1 || complexity != -1) {
-			sql = sql.replace("<and>", " AND problem.pid IN (SELECT pid FROM problem_classification WHERE true<and>");
+			sql = sql
+					.replace("<and>",
+							" AND problem.pid IN (SELECT pid FROM problem_classification WHERE true<and>");
 
 			if (idClassification != -1) {
 				sql = sql.replace("<and>", " AND id_classification = ?<and>");
@@ -1095,13 +1229,16 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		// /
 
 		Map<?, ?> solved = problemsSolvedByUser(profile.getUid());
-		Map<?, ?> tried = problemsTriedByUser(profile.getUsername(), profile.getUid());
+		Map<?, ?> tried = problemsTriedByUser(profile.getUsername(),
+				profile.getUid());
 		Map<?, ?> favorite = userFavorite(profile.getUid());
 
 		List<Problem> problems = objects(sql, Problem.class, list.toArray());
 		for (Iterator<Problem> it = problems.iterator(); it.hasNext();) {
 			Problem problem = it.next();
-			problem.setPoints((double) Integer.valueOf(Config.getProperty("formula.value")) / (double) (40 + problem.getAccu()));
+			problem.setPoints((double) Integer.valueOf(Config
+					.getProperty("formula.value"))
+					/ (double) (40 + problem.getAccu()));
 			if (solved != null) {
 				if (solved.containsKey(problem.getPid())) {
 					problem.setSolved(true);
@@ -1117,7 +1254,8 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Problem> suggestedProblems(String language, List<UserProfile> profiles, UserProfile profile) {
+	public List<Problem> suggestedProblems(String language,
+			List<UserProfile> profiles, UserProfile profile) {
 		StringBuffer buffer = new StringBuffer();
 		for (UserProfile userProfile : profiles) {
 			buffer.append(userProfile.getUsername()).append(",");
@@ -1131,13 +1269,19 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		int PROBLEM_SUGGESTION_QTY = 10; // this is configuration
 
 		Map<?, ?> solved = problemsSolvedByUser(profile.getUid());
-		Map<?, ?> tried = problemsTriedByUser(profile.getUsername(), profile.getUid());
+		Map<?, ?> tried = problemsTriedByUser(profile.getUsername(),
+				profile.getUid());
 		Map<?, ?> favorite = userFavorite(profile.getUid());
 
-		List<Problem> problems = objects("load.users.recommender.suggestedproblems", Problem.class, profile.getUsername(), buffer.toString(), PROBLEM_SUGGESTION_QTY);
+		List<Problem> problems = objects(
+				"load.users.recommender.suggestedproblems", Problem.class,
+				profile.getUsername(), buffer.toString(),
+				PROBLEM_SUGGESTION_QTY);
 		for (Iterator<Problem> it = problems.iterator(); it.hasNext();) {
 			Problem problem = it.next();
-			problem.setPoints((double) Integer.valueOf(Config.getProperty("formula.value")) / (double) (40 + problem.getAccu()));
+			problem.setPoints((double) Integer.valueOf(Config
+					.getProperty("formula.value"))
+					/ (double) (40 + problem.getAccu()));
 			if (solved != null) {
 				if (solved.containsKey(problem.getPid())) {
 					problem.setSolved(true);
@@ -1153,7 +1297,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Problem> suggestedProblemsColdStart(String language, String username, String pattern, int top, String orderby, String inv, int uid, Integer idClassification, Integer complexity) {
+	public List<Problem> suggestedProblemsColdStart(String language,
+			String username, String pattern, int top, String orderby,
+			String inv, int uid, Integer idClassification, Integer complexity) {
 
 		int PROBLEM_SUGGESTION_QTY = 10; // this is configuration
 
@@ -1165,7 +1311,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		list.add(PROBLEM_SUGGESTION_QTY);
 
 		if (pattern != null) {
-			sql = replaceSql("load.users.recommender.suggestedproblemscoldstart.filtered", "pattern", "%" + pattern + "%");
+			sql = replaceSql(
+					"load.users.recommender.suggestedproblemscoldstart.filtered",
+					"pattern", "%" + pattern + "%");
 			list.add("%" + pattern + "%");
 			list.add("%" + pattern + "%");
 		} else {
@@ -1173,14 +1321,18 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		}
 
 		if (orderby != null) {
-			sql = sql.replace("<orderby>", getSql(inv.equals("asc") ? "order.all.problems.asc" : "order.all.problems.desc"));
+			sql = sql.replace("<orderby>",
+					getSql(inv.equals("asc") ? "order.all.problems.asc"
+							: "order.all.problems.desc"));
 			sql = sql.replace("<orderby>", orderby);
 		} else {
 			sql = sql.replace("<orderby>", "");
 		}
 
 		if (idClassification != -1 || complexity != -1) {
-			sql = sql.replace("<and>", " AND problem.pid IN (SELECT pid FROM problem_classification WHERE true<and>");
+			sql = sql
+					.replace("<and>",
+							" AND problem.pid IN (SELECT pid FROM problem_classification WHERE true<and>");
 
 			if (idClassification != -1) {
 				sql = sql.replace("<and>", " AND id_classification = ?<and>");
@@ -1205,7 +1357,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		List<Problem> problems = objects(sql, Problem.class, list.toArray());
 		for (Iterator<Problem> it = problems.iterator(); it.hasNext();) {
 			Problem problem = it.next();
-			problem.setPoints((double) Integer.valueOf(Config.getProperty("formula.value")) / (double) (40 + problem.getAccu()));
+			problem.setPoints((double) Integer.valueOf(Config
+					.getProperty("formula.value"))
+					/ (double) (40 + problem.getAccu()));
 			if (solved != null) {
 				if (solved.containsKey(problem.getPid())) {
 					problem.setSolved(true);
@@ -1221,7 +1375,8 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Problem> suggestedProblemsColdStart(String language, String username, int uid) {
+	public List<Problem> suggestedProblemsColdStart(String language,
+			String username, int uid) {
 		int PROBLEM_SUGGESTION_QTY = 10; // this is configuration
 
 		Map<?, ?> solved = null;
@@ -1234,10 +1389,14 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 			favorite = userFavorite(uid);
 		}
 
-		List<Problem> problems = objects("load.users.recommender.suggestedproblemscoldstart", Problem.class, username, PROBLEM_SUGGESTION_QTY);
+		List<Problem> problems = objects(
+				"load.users.recommender.suggestedproblemscoldstart",
+				Problem.class, username, PROBLEM_SUGGESTION_QTY);
 		for (Iterator<Problem> it = problems.iterator(); it.hasNext();) {
 			Problem problem = it.next();
-			problem.setPoints((double) Integer.valueOf(Config.getProperty("formula.value")) / (double) (40 + problem.getAccu()));
+			problem.setPoints((double) Integer.valueOf(Config
+					.getProperty("formula.value"))
+					/ (double) (40 + problem.getAccu()));
 			if (solved != null) {
 				if (solved.containsKey(problem.getPid())) {
 					problem.setSolved(true);
@@ -1253,8 +1412,10 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Override
-	public void insertProblemClassification(Integer pid, Integer classificationid, Integer complexity) {
-		dml("insert.problem.classification.2", pid, classificationid, complexity);
+	public void insertProblemClassification(Integer pid,
+			Integer classificationid, Integer complexity) {
+		dml("insert.problem.classification.2", pid, classificationid,
+				complexity);
 	}
 
 	@Override
@@ -1268,14 +1429,17 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Override
-	public List<Problem> fillInformation(String username, int uid, List<Problem> problems) {
+	public List<Problem> fillInformation(String username, int uid,
+			List<Problem> problems) {
 		Map solved = problemsSolvedByUser(uid);
 		Map tried = problemsTriedByUser(username, uid);
 		Map favorite = userFavorite(uid);
 
 		for (Iterator<Problem> it = problems.iterator(); it.hasNext();) {
 			Problem problem = it.next();
-			problem.setPoints((double) Integer.valueOf(Config.getProperty("formula.value")) / (double) (40 + problem.getAccu()));
+			problem.setPoints((double) Integer.valueOf(Config
+					.getProperty("formula.value"))
+					/ (double) (40 + problem.getAccu()));
 			if (solved != null) {
 				if (solved.containsKey(problem.getPid())) {
 					problem.setSolved(true);
@@ -1290,46 +1454,58 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 
 	@Override
 	public void insertTranslation(String username, Translation translation) {
-		dml("translation.insert", username, new Date(), translation.getPid(), translation.getLocale(), translation.getTitle(), translation.getDescription(), translation.getInput(), translation.getOutput(), translation.getComments());		
+		dml("translation.insert", username, new Date(), translation.getPid(),
+				translation.getLocale(), translation.getTitle(),
+				translation.getDescription(), translation.getInput(),
+				translation.getOutput(), translation.getComments());
 	}
 
 	@Override
-	@Transactional(readOnly=true)
-	public IPaginatedList<Translation> getTranslationList(String username, Integer pid, String locale, PagingOptions options) {
-		locale = "all".equals(locale)?null:locale;
-		
+	@Transactional(readOnly = true)
+	public IPaginatedList<Translation> getTranslationList(String username,
+			Integer pid, String locale, PagingOptions options) {
+		locale = "all".equals(locale) ? null : locale;
+
 		Query query = new Query("translation_pending");
-		query.where(Where.eq("username", username), Where.eq("pid", pid), Where.eq("locale", locale));
-		
+		query.where(Where.eq("username", username), Where.eq("pid", pid),
+				Where.eq("locale", locale));
+
 		int found = integer(query.count(), query.arguments());
-		
-		query.order(Order.desc("date"));		
+
+		query.order(Order.desc("date"));
 		query.paginate(options, 20);
-		
-		List<Translation> translations = objects(query.select("id", "username", "locale", "pid", "date"), Translation.class, query.arguments());		
-		
+
+		List<Translation> translations = objects(
+				query.select("id", "username", "locale", "pid", "date"),
+				Translation.class, query.arguments());
+
 		return getPaginatedList(options, translations, 20, found);
 	}
-	
+
 	@Override
 	public void deleteTranslation(Integer id) {
-		dml("translation.delete", id);		
+		dml("translation.delete", id);
 	}
 
 	@Override
 	public void editTranslation(Translation translation) {
-		dml("translation.update", translation.getLocale(), translation.getTitle(), translation.getDescription(), translation.getInput(),
-				translation.getOutput(), translation.getComments(), translation.getId());		
+		dml("translation.update", translation.getLocale(),
+				translation.getTitle(), translation.getDescription(),
+				translation.getInput(), translation.getOutput(),
+				translation.getComments(), translation.getId());
 	}
 
 	@Override
 	public void approveTranslation(Translation translation, String username) {
-		dml("translation.approve." + translation.getLocale(), translation.getTitle(), translation.getDescription(), translation.getInput(),
-				translation.getOutput(), translation.getComments(), translation.getPid());
-	
+		dml("translation.approve." + translation.getLocale(),
+				translation.getTitle(), translation.getDescription(),
+				translation.getInput(), translation.getOutput(),
+				translation.getComments(), translation.getPid());
+
 		deleteTranslation(translation.getId());
-		
-		log(translation.getUsername() + " translated " + translation.getPid() + " (" + translation.getLocale() + ")", username);
+
+		log(translation.getUsername() + " translated " + translation.getPid()
+				+ " (" + translation.getLocale() + ")", username);
 		contributionDAO.insertContribution(translation.getUsername(), 1);
 	}
 
@@ -1337,18 +1513,12 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	public Translation getTranslation(Integer id) {
 		return object("translation.get", Translation.class, id);
 	}
-        
-         @Transactional(readOnly = true)
-         @Override
-         public void fillProblemLimits(Problem problem) {
-             List<Limits> limits = objects("select.problem.limits", Limits.class, problem.getPid());
-             problem.setLimits(limits);
-         }
-        
-         @Transactional(readOnly = true)
-         @Override
-         public void fillProblemLimits(Problem problem) {
-             List<Limits> limits = objects("select.problem.limits", Limits.class, problem.getPid());
-             problem.setLimits(limits);
-         }
+
+	@Transactional(readOnly = true)
+	@Override
+	public void fillProblemLimits(Problem problem) {
+		List<Limits> limits = objects("select.problem.limits", Limits.class,
+				problem.getPid());
+		problem.setLimits(limits);
+	}
 }

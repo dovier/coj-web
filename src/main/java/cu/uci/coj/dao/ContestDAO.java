@@ -17,19 +17,28 @@ import cu.uci.coj.utils.paging.PagingOptions;
 public interface ContestDAO extends BaseDAO {
 
 	public int getStyle(int cid);
+
 	public ContestStyle loadScoringStyle(int sid);
+
 	public void insertLanguages(Contest contest);
+
 	public void updateDate(SubmissionJudge submit);
 
 	public void insertLanguages(int cid, int[] languagesids);
+
 	public void freezeContest(Contest contest);
-	public IPaginatedList<SubmissionJudge> pendingBalloons(int cid, PagingOptions options, String group);
+
+	public IPaginatedList<SubmissionJudge> pendingBalloons(int cid,
+			PagingOptions options, String group);
+
 	public List<Problem> getAllContestProblems(int cid);
+
 	public void markBalloon(int sid);
 
 	public List<Map<String, Object>> baylorXMLData(Integer cid);
 
-	public void insertData(String site, String[] teams, String teamCoach, String[] teamUsers, String[] user, Integer cid, Integer warmupCid);
+	public void insertData(String site, String[] teams, String teamCoach,
+			String[] teamUsers, String[] user, Integer cid, Integer warmupCid);
 
 	public List<Language> getContestLanguagesVirtual(int cid);
 
@@ -77,15 +86,18 @@ public interface ContestDAO extends BaseDAO {
 
 	public int[] getGlobalRankingAcmMinimun(List<Integer> cids);
 
-	public IACMScoreboard getRankingAcm(int cid, String selGroup, boolean groupby, List<Problem> problems);
+	public IACMScoreboard getRankingAcm(int cid, String selGroup,
+			boolean groupby, List<Problem> problems);
 
-	public IACMScoreboard getGlobalRankingAcm(List<Integer> cids, boolean groupby, List<Problem> problems);
+	public IACMScoreboard getGlobalRankingAcm(List<Integer> cids,
+			boolean groupby, List<Problem> problems);
 
 	public List<User> getUsers();
 
 	public List<String> getGroups(Integer cid);
 
-	public IPaginatedList<User> getFreeContestRanking(int cid, PagingOptions options);
+	public IPaginatedList<User> getFreeContestRanking(int cid,
+			PagingOptions options);
 
 	public List<Contest> loadContestToImport();
 
@@ -135,11 +147,13 @@ public interface ContestDAO extends BaseDAO {
 
 	public IPaginatedList<Contest> getRunningContests(PagingOptions options);
 
-	public IPaginatedList<Contest> getPastContests(PagingOptions options, String pattern);
+	public IPaginatedList<Contest> getPastContests(PagingOptions options,
+			String pattern);
 
 	public int countContest();
 
-	public IPaginatedList<Contest> loadContests(PagingOptions options, String access, String enabled, String status);
+	public IPaginatedList<Contest> loadContests(PagingOptions options,
+			String access, String enabled, String status);
 
 	public Contest loadContestGlobalSettings(int cid);
 
@@ -163,7 +177,8 @@ public interface ContestDAO extends BaseDAO {
 
 	public boolean overlapsContest(Contest contest);
 
-	public IPaginatedList<Contest> loadUserVirtualContests(int uid, PagingOptions options);
+	public IPaginatedList<Contest> loadUserVirtualContests(int uid,
+			PagingOptions options);
 
 	public void deleteVirtualContestCid(int cid);
 
@@ -171,23 +186,31 @@ public interface ContestDAO extends BaseDAO {
 
 	public int countVirtualContests();
 
-	public int countVirtualGlobalList(String cid, String username, int access, int status);
+	public int countVirtualGlobalList(String cid, String username, int access,
+			int status);
 
-	public IPaginatedList<Contest> loadGlobalVirtualContests(PagingOptions options, String cid, String username, int access, int status);
+	public IPaginatedList<Contest> loadGlobalVirtualContests(
+			PagingOptions options, String cid, String username, int access,
+			int status);
 
 	public int getVirtualRunning(String username);
 
 	public int findVirtualContestForUser(String username);
 
-	public List<User> getRankingACMVirtual(int cid, String username, List<Problem> problems);
+	public List<User> getRankingACMVirtual(int cid, String username,
+			List<Problem> problems);
 
-	public void buildRankingACMVirtual(List<Problem> problems, List<User> users, Map<Integer, Integer> uidPos, Contest contest, String username, int uid);
+	public void buildRankingACMVirtual(List<Problem> problems,
+			List<User> users, Map<Integer, Integer> uidPos, Contest contest,
+			String username, int uid);
 
-	public IPaginatedList<VirtualContest> loadVirtualContests(PagingOptions options);
+	public IPaginatedList<VirtualContest> loadVirtualContests(
+			PagingOptions options);
 
 	public int countContestGeneralScoreboard(String pattern);
 
-	public IPaginatedList<User> getContestGeneralScoreboard(int found, String pattern, PagingOptions options);
+	public IPaginatedList<User> getContestGeneralScoreboard(int found,
+			String pattern, PagingOptions options);
 
 	public void updateBlockedContest(int cid, boolean block);
 
