@@ -139,9 +139,6 @@ public interface ProblemDAO extends BaseDAO {
 
 	public void updateProblemSource(int idSource, String name, String author);
 
-	public List<Problem> suggestedProblems(String language,
-			List<UserProfile> knProfiles, UserProfile profile);
-
 	public List<Problem> suggestedProblemsColdStart(String language,
 			String userName, int uid);
 
@@ -187,14 +184,6 @@ public interface ProblemDAO extends BaseDAO {
 	public void approveTranslation(Translation translation, String username);
 
 	public Translation getTranslation(Integer id);
-<<<<<<< HEAD
-
-	void clearLimits(int problemId);
-
-	void fillProblemLimits(Problem problem);
-
-	void insertLimit(Limits limit);
-=======
         
         public void insertLimit(Limits limit);
 
@@ -202,5 +191,4 @@ public interface ProblemDAO extends BaseDAO {
 
         public void fillProblemLimits(Problem problem);
 	
->>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 }

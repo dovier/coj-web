@@ -34,10 +34,8 @@ public class UEngineMessageListener implements MessageListener {
 	public void onMessage(Message message) {
 
 		try {
-<<<<<<< HEAD
 			VerdictDTO verdict = (VerdictDTO) jsonMessageConverter.fromMessage(message);
-			SubmissionJudge submit = (SubmissionJudge) jsonMessageConverter
-					.fromMessage(message);
+			SubmissionJudge submit = new VerdictDTOToSubmissionJudgeAdapter(verdict);
 
 			// FIXME Esto es un parche para evitar que el motor sobreescriba la
 			// fecha del submit. No sabemos porque ni como, pero lo hace, y eso
@@ -47,10 +45,6 @@ public class UEngineMessageListener implements MessageListener {
 					submissionDAO.updateDate(submit);
 				else
 					contestDAO.updateDate(submit);
-=======
-                        VerdictDTO verdict = (VerdictDTO) jsonMessageConverter.fromMessage(message);
-                        SubmissionJudge submit = new VerdictDTOToSubmissionJudgeAdapter(verdict);
->>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 
 			if (submit.getSid() < 0) {
 				testSubmit.add(submit);

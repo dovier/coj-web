@@ -945,17 +945,10 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		Boolean bEnabled = "all".equals(enabled) ? null : Boolean
 				.parseBoolean(enabled);
 		status = "all".equals(status) ? null : status;
-<<<<<<< HEAD
+
+		Where wStatus = Where.noop();
 
 		if (status != null) {
-			Where wStatus = Where.noop();
-
-=======
-		
-		Where wStatus = Where.noop();
-		
-		if(status != null ) {			
->>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 			if (status.equals("running")) {
 				wStatus = Where.and(Where.le("initdate", new Date()),
 						Where.ge("enddate", new Date()));
@@ -964,26 +957,15 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 			} else {
 				wStatus = Where.and(Where.lt("enddate", new Date()));
 			}
-		}	
-		
+		}
+
 		query.where(Where.eq("enabled", bEnabled),
 				Where.ne("registration", iAccess), wStatus);
-
-<<<<<<< HEAD
-			query.where(Where.eq("enabled", bEnabled),
-					Where.ne("registration", iAccess), wStatus);
-		}
 
 		int found = integer(query.count(), query.arguments());
 
 		query.order(Order.desc("running"), Order.desc("coming"),
-				Order.desc("enddate"));
-=======
-		int found = integer(query.count(), query.arguments());		
-		
-		query.order(Order.desc("running"), Order.desc("coming"),
 				Order.asc("enddate"));
->>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 		query.paginate(options, 50);
 
 		List<Contest> contests = objects(
@@ -1629,14 +1611,17 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	@Override
 	public void freezeContest(Contest contest) {
 		dml("update.freeze.blocked.contest", true, false, contest.getCid());
-		dml("update problem set disable_24h=? where pid in (select pid from problem_contest where cid=?)",true,contest.getCid());
+		dml("update problem set disable_24h=? where pid in (select pid from problem_contest where cid=?)",
+				true, contest.getCid());
 		repointContest(contest, true);
 	}
+
 	@Override
 	public void unfreezeIfNecessary(Contest contest) {
 		if (contest.mustUnfreeze(new Date())) {
 			dml("update.blocked.contest", false, contest.getCid());
-			dml("update problem set disable_24h=? where pid in (select pid from problem_contest where cid=?)",false,contest.getCid());
+			dml("update problem set disable_24h=? where pid in (select pid from problem_contest where cid=?)",
+					false, contest.getCid());
 			repointContest(contest, false);
 		}
 	}

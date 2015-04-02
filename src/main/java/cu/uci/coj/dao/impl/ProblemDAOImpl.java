@@ -20,6 +20,7 @@ import cu.uci.coj.query.Query;
 import cu.uci.coj.query.Where;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,30 +30,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-<<<<<<< HEAD
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.Resource;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-=======
->>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 
 @Repository("problemDAO")
 @Transactional
@@ -810,20 +795,12 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		return bool("language.available", pid, lid);
 	}
 
-<<<<<<< HEAD
 	@Transactional(readOnly = true)
 	public Problem getProblemSubmitDataByAbb(Integer pid, int lid) {
 		Problem problem = object("problem.submit.data.by.pid", Problem.class,
 				pid, lid);
 		return problem;
 	}
-=======
-        @Transactional(readOnly = true)
-        public Problem getProblemSubmitDataByAbb(Integer pid, int lid) {
-            Problem problem = object("problem.submit.data.by.pid", Problem.class, pid, lid);
-            return problem;
-        }
->>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 
 	@Transactional(readOnly = true)
 	public boolean exists(Integer pid) {
@@ -1065,16 +1042,6 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 				limit.getMaxSourceCodeLenght());
 	}
 
-	@Override
-	public void clearLimits(int problemId) {
-		dml("clear.problem.limits", problemId);
-	}
-
-        @Override
-        public void insertLimit(Limits limit) {
-            dml("insert.problem.limit", limit.getProblemId(), limit.getLanguageId(), limit.getMaxMemory(), limit.getMaxCaseExecutionTime(), limit.getMaxTotalExecutionTime(), limit.getMaxSourceCodeLenght());
-        }
-
         @Override
         public void clearLimits(int problemId) {
             dml("clear.problem.limits", problemId);
@@ -1186,6 +1153,7 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Transactional(readOnly = true)
+	@Override
 	public List<Problem> suggestedProblems(String language,
 			List<UserProfile> profiles, UserProfile profile, String pattern,
 			int top, String orderby, String inv, Integer idClassification,
@@ -1255,49 +1223,6 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		Map<?, ?> favorite = userFavorite(profile.getUid());
 
 		List<Problem> problems = objects(sql, Problem.class, list.toArray());
-		for (Iterator<Problem> it = problems.iterator(); it.hasNext();) {
-			Problem problem = it.next();
-			problem.setPoints((double) Integer.valueOf(Config
-					.getProperty("formula.value"))
-					/ (double) (40 + problem.getAccu()));
-			if (solved != null) {
-				if (solved.containsKey(problem.getPid())) {
-					problem.setSolved(true);
-				} else if (tried.containsKey(problem.getPid())) {
-					problem.setUnsolved(true);
-				}
-				problem.setFavorite(favorite.containsKey(problem.getPid()));
-			}
-		}
-
-		setProblemLanguage(language, problems);
-		return problems;
-	}
-
-	@Transactional(readOnly = true)
-	public List<Problem> suggestedProblems(String language,
-			List<UserProfile> profiles, UserProfile profile) {
-		StringBuffer buffer = new StringBuffer();
-		for (UserProfile userProfile : profiles) {
-			buffer.append(userProfile.getUsername()).append(",");
-		}
-		// eliminar la ultima coma
-		if (buffer.length() == 0) {
-			return new ArrayList<Problem>();
-		}
-		buffer.deleteCharAt(buffer.length() - 1);
-
-		int PROBLEM_SUGGESTION_QTY = 10; // this is configuration
-
-		Map<?, ?> solved = problemsSolvedByUser(profile.getUid());
-		Map<?, ?> tried = problemsTriedByUser(profile.getUsername(),
-				profile.getUid());
-		Map<?, ?> favorite = userFavorite(profile.getUid());
-
-		List<Problem> problems = objects(
-				"load.users.recommender.suggestedproblems", Problem.class,
-				profile.getUsername(), buffer.toString(),
-				PROBLEM_SUGGESTION_QTY);
 		for (Iterator<Problem> it = problems.iterator(); it.hasNext();) {
 			Problem problem = it.next();
 			problem.setPoints((double) Integer.valueOf(Config
@@ -1482,33 +1407,19 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Override
-<<<<<<< HEAD
 	@Transactional(readOnly = true)
 	public IPaginatedList<Translation> getTranslationList(String username,
 			Integer pid, String locale, PagingOptions options) {
 		locale = "all".equals(locale) ? null : locale;
 
-=======
-	@Transactional(readOnly=true)
-	public IPaginatedList<Translation> getTranslationList(String username, Integer pid, String locale, PagingOptions options) {
-		locale = "all".equals(locale)?null:locale;
-		
->>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
+
 		Query query = new Query("translation_pending");
-<<<<<<< HEAD
 		query.where(Where.eq("username", username), Where.eq("pid", pid),
 				Where.eq("locale", locale));
 
 		int found = integer(query.count(), query.arguments());
 
 		query.order(Order.desc("date"));
-=======
-		query.where(Where.eq("username", username), Where.eq("pid", pid), Where.eq("locale", locale));
-		
-		int found = integer(query.count(), query.arguments());
-		
-		query.order(Order.desc("date"));		
->>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 		query.paginate(options, 20);
 
 		List<Translation> translations = objects(
@@ -1549,7 +1460,6 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	public Translation getTranslation(Integer id) {
 		return object("translation.get", Translation.class, id);
 	}
-<<<<<<< HEAD
 
 	@Transactional(readOnly = true)
 	@Override
@@ -1558,13 +1468,6 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 				problem.getPid());
 		problem.setLimits(limits);
 	}
-=======
-        
-         @Transactional(readOnly = true)
-         @Override
-         public void fillProblemLimits(Problem problem) {
-             List<Limits> limits = objects("select.problem.limits", Limits.class, problem.getPid());
-             problem.setLimits(limits);
-         }
->>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
+
+
 }
