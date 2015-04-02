@@ -152,8 +152,12 @@ public interface ContestDAO extends BaseDAO {
 
 	public int countContest();
 
+<<<<<<< HEAD
 	public IPaginatedList<Contest> loadContests(PagingOptions options,
 			String access, String enabled, String status);
+=======
+	public IPaginatedList<Contest> loadContests(PagingOptions options, String access, String enabled, String status);
+>>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 
 	public Contest loadContestGlobalSettings(int cid);
 

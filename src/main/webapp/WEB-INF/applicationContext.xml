@@ -117,9 +117,10 @@
 		destroy-method="close">
 		
         <property name="driverClass" value="org.postgresql.Driver" />
-		<property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/coj" />
+		<property name="jdbcUrl" value="jdbc:postgresql://127.0.0.1:5432/coj" />
 		<property name="user" value="postgres" />                
 		<property name="password" value="coj1234*-+" />                
+		<!--<property name="password" value="postgres" />-->                
                 
 		<property name="maxPoolSize" value="10" />
 		<property name="maxIdleTime" value="300" />

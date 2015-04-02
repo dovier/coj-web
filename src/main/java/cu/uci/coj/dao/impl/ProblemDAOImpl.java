@@ -35,6 +35,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+<<<<<<< HEAD
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,6 +51,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+=======
+>>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 
 @Repository("problemDAO")
 @Transactional
@@ -807,12 +810,20 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		return bool("language.available", pid, lid);
 	}
 
+<<<<<<< HEAD
 	@Transactional(readOnly = true)
 	public Problem getProblemSubmitDataByAbb(Integer pid, int lid) {
 		Problem problem = object("problem.submit.data.by.pid", Problem.class,
 				pid, lid);
 		return problem;
 	}
+=======
+        @Transactional(readOnly = true)
+        public Problem getProblemSubmitDataByAbb(Integer pid, int lid) {
+            Problem problem = object("problem.submit.data.by.pid", Problem.class, pid, lid);
+            return problem;
+        }
+>>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 
 	@Transactional(readOnly = true)
 	public boolean exists(Integer pid) {
@@ -1058,6 +1069,16 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	public void clearLimits(int problemId) {
 		dml("clear.problem.limits", problemId);
 	}
+
+        @Override
+        public void insertLimit(Limits limit) {
+            dml("insert.problem.limit", limit.getProblemId(), limit.getLanguageId(), limit.getMaxMemory(), limit.getMaxCaseExecutionTime(), limit.getMaxTotalExecutionTime(), limit.getMaxSourceCodeLenght());
+        }
+
+        @Override
+        public void clearLimits(int problemId) {
+            dml("clear.problem.limits", problemId);
+        }
 
 	@Override
 	public void insertProblemLanguage(int pid, int lid) {
@@ -1461,18 +1482,33 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	}
 
 	@Override
+<<<<<<< HEAD
 	@Transactional(readOnly = true)
 	public IPaginatedList<Translation> getTranslationList(String username,
 			Integer pid, String locale, PagingOptions options) {
 		locale = "all".equals(locale) ? null : locale;
 
+=======
+	@Transactional(readOnly=true)
+	public IPaginatedList<Translation> getTranslationList(String username, Integer pid, String locale, PagingOptions options) {
+		locale = "all".equals(locale)?null:locale;
+		
+>>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 		Query query = new Query("translation_pending");
+<<<<<<< HEAD
 		query.where(Where.eq("username", username), Where.eq("pid", pid),
 				Where.eq("locale", locale));
 
 		int found = integer(query.count(), query.arguments());
 
 		query.order(Order.desc("date"));
+=======
+		query.where(Where.eq("username", username), Where.eq("pid", pid), Where.eq("locale", locale));
+		
+		int found = integer(query.count(), query.arguments());
+		
+		query.order(Order.desc("date"));		
+>>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 		query.paginate(options, 20);
 
 		List<Translation> translations = objects(
@@ -1513,6 +1549,7 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	public Translation getTranslation(Integer id) {
 		return object("translation.get", Translation.class, id);
 	}
+<<<<<<< HEAD
 
 	@Transactional(readOnly = true)
 	@Override
@@ -1521,4 +1558,13 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 				problem.getPid());
 		problem.setLimits(limits);
 	}
+=======
+        
+         @Transactional(readOnly = true)
+         @Override
+         public void fillProblemLimits(Problem problem) {
+             List<Limits> limits = objects("select.problem.limits", Limits.class, problem.getPid());
+             problem.setLimits(limits);
+         }
+>>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 }

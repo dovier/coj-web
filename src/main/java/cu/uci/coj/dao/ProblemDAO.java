@@ -187,10 +187,20 @@ public interface ProblemDAO extends BaseDAO {
 	public void approveTranslation(Translation translation, String username);
 
 	public Translation getTranslation(Integer id);
+<<<<<<< HEAD
 
 	void clearLimits(int problemId);
 
 	void fillProblemLimits(Problem problem);
 
 	void insertLimit(Limits limit);
+=======
+        
+        public void insertLimit(Limits limit);
+
+        public void clearLimits(int problemId);
+
+        public void fillProblemLimits(Problem problem);
+	
+>>>>>>> branch 'master' of ssh://git@codecomunidades.uci.cu/night91/coj.git
 }
