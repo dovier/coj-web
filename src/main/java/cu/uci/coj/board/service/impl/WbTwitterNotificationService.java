@@ -30,17 +30,6 @@ public class WbTwitterNotificationService implements WbNotificationService {
 		String text = "";		
 		WbContest contest;
 		
-		if(nearContestNotification != null) {
-			for(int i = 0;i<nearContestNotification.size();i++) {
-				contest = nearContestNotification.get(i);
-				text = "The contest " + contest.getName() + " is near. More info: http://coj.uci.cu/wboard/contests.xhtml.";
-				try {
-					socialIntegration.getTwitterTemplate().timelineOperations().updateStatus(text);	
-				} catch(Exception e) {
-					System.out.println("Update on twitter failed.");
-				}
-			}
-		}		
 
 		if(newcontestNotificationSites != null) {
 			for(int i = 0;i<newcontestNotificationSites.size();i++) {
@@ -56,6 +45,18 @@ public class WbTwitterNotificationService implements WbNotificationService {
 				}
 			}
 		}
+		
+		if(nearContestNotification != null) {
+			for(int i = 0;i<nearContestNotification.size();i++) {
+				contest = nearContestNotification.get(i);
+				text = "The contest " + contest.getName() + " is near. More info: http://coj.uci.cu/wboard/contests.xhtml.";
+				try {
+					socialIntegration.getTwitterTemplate().timelineOperations().updateStatus(text);	
+				} catch(Exception e) {
+					System.out.println("Update on twitter failed.");
+				}
+			}
+		}	
 		
 		if(changedNotificationSites != null) {
 			for(int i = 0;i<changedNotificationSites.size();i++) {
