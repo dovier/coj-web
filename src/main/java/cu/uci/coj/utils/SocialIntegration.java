@@ -1,5 +1,6 @@
 package cu.uci.coj.utils;
 
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.social.twitter.api.Twitter;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import cu.uci.coj.config.Config;
 
 @Component
+@DependsOn("config")
 public class SocialIntegration {
 	//Twitter
 	//App twitter

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,6 +26,7 @@ import cu.uci.coj.ws.models.WsContest;
 
 
 @Component("wbRestCojParser")
+@DependsOn(value={"proxy", "config"})
 public class WbRestCojParser extends WbParser {
 
 	@Resource

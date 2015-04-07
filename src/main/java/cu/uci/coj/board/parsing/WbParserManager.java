@@ -74,6 +74,9 @@ public class WbParserManager {
 		}
 		
 		if(isNotificationTime()) {
+			System.out.println(new Date().toString());
+			
+			
 			List<WbSite> newcontestNotificationSites = wbSiteDAO.getListSitesWithContestsNewContestNotification();
 			List<WbSite> changedNotificationSites = wbSiteDAO.getListSitesWithContestsScheduleChangedNotification();		
 			
@@ -88,7 +91,7 @@ public class WbParserManager {
 				}
 			}
 			
-			wbContestDAO.cleanNotifications();
+			//wbContestDAO.cleanNotifications();
 			
 			for(int i = 0;i<parserList.size();i++) {
 				parserList.get(i).getSite().setCompleted(false);
