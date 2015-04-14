@@ -15,6 +15,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import cu.uci.coj.board.dao.WbSiteDAO;
@@ -25,6 +26,7 @@ import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
 
 @Component("wbTimusParser")
+@DependsOn(value={"proxy", "config"})
 public class WbTimusParser  extends WbParser  {
 	 private String DATE_FORMAT = "dd MMM yyyy hh:mm";
 	    

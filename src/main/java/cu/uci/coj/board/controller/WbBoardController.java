@@ -25,7 +25,7 @@ import cu.uci.coj.model.WbSite;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 
-@Controller
+@Controller("wbBoardController")
 public class WbBoardController extends BaseController {
 	@Resource
 	WbContestService wbContestService;
