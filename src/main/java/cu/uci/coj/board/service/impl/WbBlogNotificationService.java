@@ -34,10 +34,10 @@ public class WbBlogNotificationService implements WbNotificationService {
 	
 	@PostConstruct
 	void init() {
-		if(userDAO.idByUsername("WebBoard") == null) {
+		if(userDAO.idByUsername("COJbot") == null) {
 			User user = new User();
-			user.setUsername("WebBoard");
-			user.setNick("WebBoard");
+			user.setUsername("COJbot");
+			user.setNick("COJbot");
 			user.setEmail("coj@uci.cu");
 			user.setEnabled(true);
 			user.setLid(1);
@@ -59,24 +59,24 @@ public class WbBlogNotificationService implements WbNotificationService {
 		String text = "";		
 		WbContest contest;
 		
-		if(nearContestNotification != null) {
-			for(int i = 0;i<nearContestNotification.size();i++) {
-				contest = nearContestNotification.get(i);
-				text = "The contest " + contest.getName() + " is near. More info: http://coj.uci.cu/wboard/contests.xhtml";
-				entryDAO.addEntry(createEntry(text), true, "WebBoard");	
-			}
-		}		
-
 		if(newcontestNotificationSites != null) {
 			for(int i = 0;i<newcontestNotificationSites.size();i++) {
 				WbSite site = newcontestNotificationSites.get(i);
 				for(int j = 0;j<site.getContests().size();j++) {			
 					contest = site.getContests().get(j);
 					text = "New contest: " + contest.getName() + ". More info: http://coj.uci.cu/wboard/contests.xhtml";
-					entryDAO.addEntry(createEntry(text), true, "WebBoard");		
+					entryDAO.addEntry(createEntry(text), true, "COJbot");		
 				}
 			}
 		}
+		
+		if(nearContestNotification != null) {
+			for(int i = 0;i<nearContestNotification.size();i++) {
+				contest = nearContestNotification.get(i);
+				text = "The contest " + contest.getName() + " is near. More info: http://coj.uci.cu/wboard/contests.xhtml";
+				entryDAO.addEntry(createEntry(text), true, "COJbot");	
+			}
+		}		
 		
 		if(changedNotificationSites != null) {
 			for(int i = 0;i<changedNotificationSites.size();i++) {
@@ -84,7 +84,7 @@ public class WbBlogNotificationService implements WbNotificationService {
 				for(int j = 0;j<site.getContests().size();j++) {			
 					contest = site.getContests().get(j);
 					text = "The contest " + contest.getName() + " has suffered changes. More info: http://coj.uci.cu/wboard/contests.xhtml";
-					entryDAO.addEntry(createEntry(text), true, "WebBoard");	
+					entryDAO.addEntry(createEntry(text), true, "COJbot");	
 				}
 			}
 		}		

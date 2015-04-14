@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -49,8 +51,8 @@ import cu.uci.coj.model.ContestAwardsFlags;
 import cu.uci.coj.model.Level;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.Rejudge;
-import cu.uci.coj.model.RepointUser;
 import cu.uci.coj.model.Roles;
+import cu.uci.coj.model.Team;
 import cu.uci.coj.model.User;
 import cu.uci.coj.model.VirtualContest;
 import cu.uci.coj.service.ContestService;
@@ -117,6 +119,64 @@ public class ContestController extends BaseController {
 		IPaginatedList<Contest> contests = contestDAO.loadContests(options, access, enabled, status);
 		model.addAttribute("contests", contests);
 		return "/admin/tables/admincontests";
+	}
+	
+	@RequestMapping(value = "/importteams.xhtml", method = RequestMethod.GET)
+	public String importTeams(Model model,@RequestParam Integer cid) {
+		model.addAttribute("cid",cid);
+		return "/admin/importteams";
+	}
+	
+	@RequestMapping(value = "/importteams.xhtml", method = RequestMethod.POST)
+	public String importTeams(Model model, HttpServletRequest request,@RequestParam Integer cid) throws IOException {
+		
+		Assert.state(request instanceof MultipartHttpServletRequest,
+				"request !instanceof MultipartHttpServletRequest");
+		final MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+		MultipartFile file = multiRequest.getFile("teamsFile");
+		
+		LineNumberReader reader = new LineNumberReader(new InputStreamReader(file.getInputStream()));
+		String prototypeStr = reader.readLine();
+		Team prototype = convertPrototypeCSV(prototypeStr);
+		String teamStr = null;
+		List<Team> teams = new ArrayList<>();
+		while ((teamStr = reader.readLine()) != null) {
+			teams.add(convertCSV(teamStr));
+		}
+		prototype.setContest(cid);
+		userDAO.importTeams(prototype, teams);
+		
+		return "redirect:/admin/contestusers.xhtml?cid=" + cid;
+	}
+	
+	private Team convertPrototypeCSV(String team) {
+		Team result = new Team();
+		//username_base		password	inst_id		group	locale
+		String[] fields = team.split("\t");
+		result.setUsername(fields[0]);
+		result.setPassword(fields[1]);
+		result.setCountry(baseDAO.integer("select country_id from institution where zip = ?", fields[2]));
+		result.setInstitution(baseDAO.integer("select inst_id from institution where zip = ?", fields[2]));
+		result.setGroup(fields[3]);
+		result.setLocale(baseDAO.integer("select lid from locale where i18n=?", fields[4]));
+		return result;
+	}
+	
+	private Team convertCSV(String team) {
+		Team result = new Team();
+		//Nick	inst_code	group	locale	coach	user1	user2	user3
+		String[] fields = team.split("\t");
+		result.setNick(fields[0]);
+		result.setCountry(baseDAO.integer("select country_id from institution where zip = ?", fields[1]));
+		result.setInstitution(baseDAO.integer("select inst_id from institution where zip = ?", fields[1]));
+		result.setGroup(fields[2]);
+		result.setLocale(baseDAO.integer("select lid from locale where i18n=?", fields[3]));
+		result.setCoach(fields[4]);
+		result.setUser_1(fields[5]);
+		result.setUser_2(fields[6]);
+		result.setUser_3(fields[7]);
+		
+		return result;
 	}
 
 	@RequestMapping(value = "/managecontest.xhtml", method = RequestMethod.GET)

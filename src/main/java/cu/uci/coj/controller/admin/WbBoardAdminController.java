@@ -32,9 +32,9 @@ import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.WbContestValidator;
 import cu.uci.coj.validator.WbSiteValidator;
 
-@Controller("wbAdminBoardController")
+@Controller("wbBoardAdminController")
 @RequestMapping(value = "/admin")
-public class WbBoardController extends BaseController {
+public class WbBoardAdminController extends BaseController {
 	@Resource
 	WbParserManager wbParserManager;
 	@Resource

@@ -558,10 +558,10 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	}
 
 	@Transactional(readOnly = true)
-	public int[] getRankingAcmMinimun(int cid) {
+	public Integer[] getRankingAcmMinimun(int cid) {
 		RowMapper<?> rowMapper = new RowMapper<Object>() {
 			public Object mapRow(ResultSet result, int i) throws SQLException {
-				int[] minimums = new int[12];
+				Integer[] minimums = new Integer[12];
 				minimums[0] = result.getInt(1);
 				minimums[1] = result.getInt(2);
 				minimums[2] = result.getInt(3);
@@ -577,15 +577,14 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 				return minimums;
 			}
 		};
-		return (int[]) jdbcTemplate.queryForObject(
-				getSql("ranking.acm.minimum"), rowMapper, cid);
+		return (Integer[]) jdbcTemplate.queryForObject(getSql("ranking.acm.minimum"), rowMapper,cid);
 	}
 
 	@Transactional(readOnly = true)
-	public int[] getGlobalRankingAcmMinimun(List<Integer> cids) {
+	public Integer[] getCompositeRankingAcmMinimun(int cid1, int cid2) {
 		RowMapper<?> rowMapper = new RowMapper<Object>() {
 			public Object mapRow(ResultSet result, int i) throws SQLException {
-				int[] minimums = new int[12];
+				Integer[] minimums = new Integer[12];
 				minimums[0] = result.getInt(1);
 				minimums[1] = result.getInt(2);
 				minimums[2] = result.getInt(3);
@@ -601,6 +600,12 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 				return minimums;
 			}
 		};
+		return (Integer[]) jdbcTemplate.queryForObject(
+				getSql("composite.ranking.acm.minimum"), rowMapper, cid1, cid2);
+	}
+
+	@Transactional(readOnly = true)
+	public Integer[] getGlobalRankingAcmMinimun(List<Integer> cids) {
 		boolean first = true;
 		String rest = "";
 		for (Iterator<Integer> it = cids.iterator(); it.hasNext();) {
@@ -612,14 +617,28 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 				rest += "," + integer;
 			}
 		}
-		if (rest.isEmpty()) {
-			return (int[]) jdbcTemplate.queryForObject(
-					getSql("global.ranking.acm.minimum"), rowMapper);
-		} else {
-			return (int[]) jdbcTemplate.queryForObject(
-					replaceSql("global.ranking.acm.minimum.cids", "<cids>",
-							rest), rowMapper);
-		}
+		String sql = rest.isEmpty() ? "global.ranking.acm.minimum"
+				: replaceSql("global.ranking.acm.minimum.cids", "<cids>", rest);
+
+		RowMapper<?> rowMapper = new RowMapper<Object>() {
+			public Object mapRow(ResultSet result, int i) throws SQLException {
+				Integer[] minimums = new Integer[12];
+				minimums[0] = result.getInt(1);
+				minimums[1] = result.getInt(2);
+				minimums[2] = result.getInt(3);
+				minimums[3] = result.getInt(4);
+				minimums[4] = result.getInt(5);
+				minimums[5] = result.getInt(6);
+				minimums[6] = result.getInt(7);
+				minimums[7] = result.getInt(8);
+				minimums[8] = result.getInt(9);
+				minimums[9] = result.getInt(10);
+				minimums[10] = result.getInt(11);
+				minimums[11] = result.getInt(12);
+				return minimums;
+			}
+		};
+		return (Integer[]) jdbcTemplate.queryForObject(getSql(sql), rowMapper);
 	}
 
 	@Transactional(readOnly = true)
@@ -635,6 +654,25 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 					aCMScoreboard, cid, selGroup);
 		else
 			jdbcTemplate.query(getSql("ranking.acm"), aCMScoreboard, cid);
+		return aCMScoreboard;
+	}
+
+	@Transactional(readOnly = true)
+	public IACMScoreboard getCompositeRankingAcm(int cid1, int cid2,
+			String selGroup, boolean groupby, List<Problem> prbls) {
+
+		IACMScoreboard aCMScoreboard = new IACMScoreboard();
+		// sacamos guestgroup de un solo porque tenre el mismo guest group es
+		// condicion para poder mezclar los scoreboards
+		aCMScoreboard.init(groupby, string("get.contest.guestgroup", cid1),
+				prbls, getCompositeRankingAcmMinimun(cid1, cid2));
+
+		if (StringUtils.hasText(selGroup))
+			jdbcTemplate.query(getSql("composite.ranking.acm.selected.group"),
+					aCMScoreboard, cid1, cid2, selGroup);
+		else
+			jdbcTemplate.query(getSql("composite.ranking.acm"), aCMScoreboard,
+					cid1, cid2);
 		return aCMScoreboard;
 	}
 

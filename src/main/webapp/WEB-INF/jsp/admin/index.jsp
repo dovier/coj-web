@@ -31,10 +31,18 @@
 											<li><label class="label bg${userStatus[1]['status']}">${userStatus[1]['status']}&nbsp;${userStatus[1]['count']}</label></li>
 										</c:if>
 										<c:if test="${not empty userStatus[2]['status']}">
-											<li><label class="label bg${userStatus[2]['status']}">${userStatus[2]['status']}&nbsp;${userStatus[2]['count']}</label></li>
+											<li><label
+													class="label bg${userStatus[2]['status']}"><a class="white status"
+												data-status="${userStatus[2]['status']}"><i
+														class="fa fa-bell"></i></a></label>&nbsp;<label
+												class="label bg${userStatus[2]['status']}">${userStatus[2]['status']}&nbsp;${userStatus[2]['count']}</label></li>
 										</c:if>
 										<c:if test="${not empty userStatus[3]['status']}">
-											<li><label class="label bg${userStatus[3]['status']}">${userStatus[3]['status']}&nbsp;${userStatus[3]['count']}</label></li>
+											<li><label
+													class="label bg${userStatus[3]['status']}"><a class="white status"
+												data-status="${userStatus[3]['status']}"><i
+														class="fa fa-bell"></i></a></label>&nbsp;<label
+												class="label bg${userStatus[3]['status']}">${userStatus[3]['status']}&nbsp;${userStatus[3]['count']}</label></li>
 										</c:if>
 										<c:if test="${not empty userStatus[4]['status']}">
 											<li><label class="label bg${userStatus[4]['status']}">${userStatus[4]['status']}&nbsp;${userStatus[4]['count']}</label></li>
@@ -371,3 +379,24 @@
 		</div>
 	</authz:authorize>
 </div>
+<script>
+	$("a.status").on("click", function(event) {
+		var caller = $(this);
+		var status = $(this).data("status");
+		$.ajax({
+			type : "POST",
+			url : "/admin/wakeup.json",
+			data : {
+				"status" : status
+			},
+			beforeSend: function(){
+				caller.html('<i class="fa fa-circle-o-notch fa-spin"></i>');
+			},
+			success : function(data) {
+				caller.html('<i class="fa fa-bell"></i>');
+			}
+		});
+		event.preventDefault();
+
+	});
+</script>

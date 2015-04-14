@@ -1,26 +1,48 @@
 package cu.uci.coj.utils;
 
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Component;
 
+import cu.uci.coj.config.Config;
+
 @Component
+@DependsOn("config")
 public class SocialIntegration {
+	//Twitter
 	//App twitter
-	final String consumerKey = "V3xfbPZRwTFnwQ10q1ZQd8wOT";
-	final String consumerSecret = "qsIecwNCQtfTVyphDJNn7BN3er8qFlo5bgd8tG01LdeA4oOHxx";
+	final String consumerKeyTwitter = Config.getProperty("twitter.consumer.key");
+	final String consumerSecretTwitter = Config.getProperty("twitter.consumer.secret");
 	
 	//Coj Twitter account
-	final String accessToken = "2890833509-HT2xbdjFtl4oO1ngoWYcglXf2DV39wOcQ6zSj2a";
-	final String accessTokenSecret = "ja8mwMhPDpmPa7njDPe8aD8SCOrIJf9oyqQ3VZD7Y3ToM";
+	final String accessTokenTwitter = Config.getProperty("twitter.accesstoken");
+	final String accessTokenSecretTwitter = Config.getProperty("twitter.accesstoken.secret");
 	
 	Twitter twitterTemplate;
 	
+	
+	
+	//Facebook
+	//User token: only valid for 60days, till June 2th
+	final String accessTokenFacebook = Config.getProperty("facebook.accesstoken");
+	
+	Facebook facebookTemplate;
+	
+	
 	SocialIntegration() {
-		twitterTemplate = new TwitterTemplate(consumerKey, consumerSecret, accessToken, accessTokenSecret);
+		twitterTemplate = new TwitterTemplate(consumerKeyTwitter, consumerSecretTwitter, accessTokenTwitter, accessTokenSecretTwitter);
+		facebookTemplate = new FacebookTemplate(accessTokenFacebook);
 	}
 
 	public Twitter getTwitterTemplate() {
 		return twitterTemplate;
 	}		
+	
+	public Facebook getFacebookTemplate() {
+		return facebookTemplate;
+	}
+		
 }

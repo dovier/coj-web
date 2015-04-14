@@ -28,7 +28,7 @@ public class IACMScoreboard extends BaseController implements RowMapper<Object> 
 	List<User> users;
 	boolean groupby;
 	int min, toffset;
-	int[] minimums;
+	Integer[] minimums;
 	// para las comparaciones de sameRank()
 	int[][] orderedProblems;
 	boolean solved = false;
@@ -71,7 +71,7 @@ public class IACMScoreboard extends BaseController implements RowMapper<Object> 
 		}
 	}
 
-	public void init(boolean groupby, String guestGroup, List<Problem> prbls, int[] a) {
+	public void init(boolean groupby, String guestGroup, List<Problem> prbls, Integer[] a) {
 		groups = new LinkedList<Group>();
 		groupsRecords = new HashMap<String, Integer>();
 		users = new LinkedList<User>();
@@ -89,7 +89,7 @@ public class IACMScoreboard extends BaseController implements RowMapper<Object> 
 		}
 	}
 
-	public void init2(boolean groupby, List<Problem> prbls, int[] a) {
+	public void init2(boolean groupby, List<Problem> prbls, Integer[] a) {
 		groups = new LinkedList<Group>();
 		groupsRecords = new HashMap<String, Integer>();
 		users = new LinkedList<User>();
