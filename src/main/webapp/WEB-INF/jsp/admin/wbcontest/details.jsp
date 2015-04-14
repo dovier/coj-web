@@ -7,7 +7,7 @@
 </h2>
 
 <div class="postcontent">
-	<a class="btn btn-primary mybutton" href='<c:url value="/admin/wboard/contest/list.xhtml"/>'> <spring:message code="wboard.list.contest"/> </a>
+	<a class="btn btn-primary" href='<c:url value="/admin/wboard/contest/list.xhtml"/>'> <spring:message code="wboard.list.contest"/> </a>
 	
 	<br />
 	<br />
