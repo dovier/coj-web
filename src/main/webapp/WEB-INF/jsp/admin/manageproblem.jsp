@@ -126,7 +126,7 @@
                                         <div class="col-lg-3">
                                             <label for="memoryLimit">Memory (B)</label>
                                             <div class="input-group">
-                                                <input type="text" id="memoryLimit"  placeholder="Max Memory" class="form-control">
+                                                <input type="text" id="memoryLimit"  placeholder="Max Memory" class="form-control" data-toggle="unit-selector">
                                                 <span class="input-group-btn">
                                                     <button id="btn-max-memory" class="btn btn-default" type="button" onclick="applyLimit(this,'.max-memory')">Apply</button>
                                                 </span>                                            
@@ -143,7 +143,7 @@
                                         </div>
                                         <div class="col-lg-3">
                                             <label for="maxTotalExecutionTime">Total Execution Time (MS)</label>
-                                            <div class="input-group">
+                                            <div class="input-group" id="popover-container">
                                                 <input type="text" id="maxTotalExecutionTime" placeholder="Max Total Execution Time" class="form-control">
                                                 <span class="input-group-btn">
                                                     <button id="btn-max-total-execution-time" class="btn btn-default" type="button" onclick="applyLimit(this,'.max-total-execution-time')">Apply</button>
@@ -153,7 +153,7 @@
                                         <div class="col-lg-3">
                                             <label for="maxSourceCodeLenght">Source Code Length (B)</label>
                                             <div class="input-group">
-                                                <input type="text" id="maxSourceCodeLenght" placeholder="Max Source Code Length" class="form-control">
+                                                <input type="text" id="maxSourceCodeLenght" placeholder="Max Source Code Length" class="form-control" data-toggle="unit-selector">
                                                 <span class="input-group-btn">
                                                     <button id="btn-max-source-code-lenght" class="btn btn-default"  type="button" onclick="applyLimit(this,'.max-source-code-lenght')">Apply</button>
                                                 </span>                                            
@@ -193,7 +193,7 @@
                                                 <div class="row">   
                                                     <form:hidden id="languageId{loop.index}" path="limits[${loop.index}].languageId" />
                                                     <div class="col-lg-3">
-                                                        <form:input cssClass="form-control max-memory"  id="maxMemory{loop.index}" path="limits[${loop.index}].maxMemory" />
+                                                        <form:input cssClass="form-control max-memory" data-toggle="unit-selector" id="maxMemory{loop.index}" path="limits[${loop.index}].maxMemory" />
                                                     </div>
                                                     <div class="col-lg-3">
                                                         <form:input cssClass="form-control max-case-execution-time"  id="maxCaseExecutionTime${loop.index}" path="limits[${loop.index}].maxCaseExecutionTime" />
@@ -202,7 +202,7 @@
                                                         <form:input cssClass="form-control max-total-execution-time"  id="maxTotalExecutionTime${loop.index}" path="limits[${loop.index}].maxTotalExecutionTime" />
                                                     </div>
                                                     <div class="col-lg-3">
-                                                        <form:input cssClass="form-control max-source-code-lenght"  id="maxSourceCodeLenght{loop.index}" path="limits[${loop.index}].maxSourceCodeLenght" />
+                                                        <form:input cssClass="form-control max-source-code-lenght" data-toggle="unit-selector" id="maxSourceCodeLenght{loop.index}" path="limits[${loop.index}].maxSourceCodeLenght" />
 
                                                     </div>                                                                                
                                                 </div>
@@ -456,7 +456,33 @@
 		</div>
 	</form:form>
 </div>
+        <div id="popover_content_wrapper" style="display: none" >
+            <div class="unit-selector clearfix" style="width: 170px">                             
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Size">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" aria-label="Left Align">
+                                <span class="fa fa-check" aria-hidden="true"></span>
+                            </button>
+                        </span>
+                    </div>                
+                 <select class="form-control">
+                            <option value="1">B</option>
+                            <option value="1024">KB</option>
+                            <option selected value="1048576">MB</option>
+                            <option value="1073741824">GB</option>
+                 </select>
+            </div>
+        </div>
 <%@include file="/WEB-INF/jsp/general/confirmmessage.jsp"%>
 <script type="text/javascript"
 	src="<c:url value="/js/WYSIWYG/source.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/admin/manage-problem.js" />"></script>
+<script type="text/javascript" src="<c:url value="/js/custom-libs/unit-selector.js" />"></script>
+<script type="text/javascript">
+    
+$(function () {    
+     $('[data-toggle="unit-selector"]').unitSelector()    
+});
+
+</script>
