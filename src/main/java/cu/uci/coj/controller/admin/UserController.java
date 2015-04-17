@@ -21,7 +21,6 @@ import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.InstitutionDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.dao.UtilDAO;
-import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.Authority;
 import cu.uci.coj.model.Country;
 import cu.uci.coj.model.Group;
@@ -48,13 +47,10 @@ public class UserController extends BaseController {
 	private InstitutionDAO institutionDAO;
 	@Resource
 	private userValidator validator;
-	@Resource
-	private MailNotificationService mailNotificationService;
 
-	@RequestMapping(produces = "application/json", value = "/wakeup.json", method = RequestMethod.POST, headers = { "Accept=application/json" })
+	@RequestMapping(produces = "application/json", value = "/wakeup.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void wakeup(Model model, @RequestParam(value = "status") String status) {
-		mailNotificationService.sendBulkWakeup(status);
 	}
 	
 	@RequestMapping(value = "/manageusers.xhtml", method = RequestMethod.GET)
@@ -215,5 +211,4 @@ public class UserController extends BaseController {
 		userDAO.createTeams(team);
 		return "redirect:/admin/createteams.xhtml";
 	}
-	
 }

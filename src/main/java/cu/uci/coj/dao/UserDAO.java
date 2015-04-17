@@ -18,12 +18,10 @@ public interface UserDAO extends BaseDAO {
 
 	public void unbanUser(int uid);
 
-	public void banUser(int uid, String description);
-
-	public void importTeams(Team prototype, List<Team> teams);
-
+	public void banUser(int uid,String description);
+	
 	public List<User> loadBalloonUsersOffContest(Contest contest);
-
+	
 	public UserProfile loadUserProfile(String userName);
 
 	public boolean hasProfile(String userName);
@@ -44,12 +42,10 @@ public interface UserDAO extends BaseDAO {
 
 	public void UpdateUserProfile(Registration registration, int uid);
 
-	public void UpdateUser(int id, String pass, int country, int institution,
-			boolean enabled, String nick, int locale, Registration registration);
+	public void UpdateUser(int id, String pass, int country, int institution, boolean enabled, String nick, int locale, Registration registration);
 
 	@Deprecated
-	public void insertUser(String user, String name, String lastname,
-			String email);
+	public void insertUser(String user, String name, String lastname, String email);
 
 	@Deprecated
 	public void insertUserPrivate(String user);
@@ -62,23 +58,17 @@ public interface UserDAO extends BaseDAO {
 
 	public int countEnabledUsers(String pattern, boolean online);
 
-	public int countEnabledUsersForScoreboard(String pattern, boolean online,
-			Integer uid);
+	public int countEnabledUsersForScoreboard(String pattern, boolean online,Integer uid);
 
-	public int countEnabledUsersByInstitutions(String pattern, boolean online,
-			int inst_id);
+	public int countEnabledUsersByInstitutions(String pattern, boolean online, int inst_id);
 
-	public int countEnabledUsersByCountry(String pattern, boolean online,
-			int country_id);
+	public int countEnabledUsersByCountry(String pattern, boolean online, int country_id);
 
-	public IPaginatedList<User> getUserRanking(String pattern, int found,
-			boolean online, Integer uid, PagingOptions options);
+	public IPaginatedList<User> getUserRanking(String pattern, int found, boolean online, Integer uid,PagingOptions options);
 
-	public IPaginatedList<User> getInstitutionUsersRanking(String pattern,
-			int found, boolean online, PagingOptions options, int inst_id);
+	public IPaginatedList<User> getInstitutionUsersRanking(String pattern, int found, boolean online, PagingOptions options, int inst_id);
 
-	public IPaginatedList<User> getCountryUsersRanking(String pattern,
-			int found, boolean online, PagingOptions options, int country_id);
+	public IPaginatedList<User> getCountryUsersRanking(String pattern, int found, boolean online, PagingOptions options, int country_id);
 
 	public boolean isUser(String username);
 
@@ -128,11 +118,9 @@ public interface UserDAO extends BaseDAO {
 
 	public List<String> getUserAuthorities(String username);
 
-	public IPaginatedList<User> loadUsersAdmin(String pattern,
-			PagingOptions options);
+	public IPaginatedList<User> loadUsersAdmin(String pattern, PagingOptions options);
 
-	public IPaginatedList<User> loadTeamsAdmin(String pattern,
-			PagingOptions options);
+	public IPaginatedList<User> loadTeamsAdmin(String pattern, PagingOptions options);
 
 	public void createTeams(Team teams);
 

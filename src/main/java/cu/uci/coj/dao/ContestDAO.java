@@ -82,9 +82,9 @@ public interface ContestDAO extends BaseDAO {
 
 	public List<ContestStyle> loadEnabledScoringStyles();
 
-	public Integer[] getRankingAcmMinimun(int cid);
+	public int[] getRankingAcmMinimun(int cid);
 
-	public Integer[] getGlobalRankingAcmMinimun(List<Integer> cids);
+	public int[] getGlobalRankingAcmMinimun(List<Integer> cids);
 
 	public IACMScoreboard getRankingAcm(int cid, String selGroup,
 			boolean groupby, List<Problem> problems);
@@ -222,7 +222,4 @@ public interface ContestDAO extends BaseDAO {
 	public void applyEffects(SubmissionJudge submit, Contest contest);
 
 	public void unfreezeIfNecessary(Contest contest);
-	public Integer[] getCompositeRankingAcmMinimun(int cid1,int cid2);
-	public IACMScoreboard getCompositeRankingAcm(int cid1, int cid2,String selGroup,
-			boolean groupby, List<Problem> prbls);
 }

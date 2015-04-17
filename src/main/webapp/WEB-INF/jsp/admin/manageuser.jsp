@@ -256,13 +256,7 @@
 					<span class="label label-danger"><form:errors path="email" /></span>
 				</div>
 			</div>
-			<div class="form-group col-xs-12">
-				<label class="control-label col-xs-3"><spring:message
-						code="fieldhdr.emailnotif" /></label>
-				<div class="col-xs-9">
-					<form:checkbox path="emailNotifications" />
-				</div>
-			</div>
+
 			<div class="form-group col-xs-12">
 				<label class="control-label col-xs-3"><spring:message
 						code="fieldhdr.notifcontest" /></label>

@@ -1017,7 +1017,6 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 
 	@Override
 	public void addProblem(Problem problem) {
-		
 		dml("add.prob", problem.getForumLink(), problem.getTitle(),
 				problem.getTitleEs(), problem.getTitlePt(),
 				problem.getDescription(), problem.getDescriptionEs(),
@@ -1025,10 +1024,10 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 				problem.getInputEs(), problem.getInputPt(),
 				problem.getOutput(), problem.getOutputEs(),
 				problem.getOutputPt(), problem.getInputex(),
-				problem.getOutputex(), 
-				problem.getId_source(), problem.getComments(),
-				problem.getCommentsEs(), problem.getCommentsPt(),
-				problem.getTime(), problem.getMemory(), problem.getFontsize(),
+				problem.getOutputex(), problem.getAuthor(),
+				problem.getComments(), problem.getCommentsEs(),
+				problem.getCommentsPt(), problem.getTime(),
+				problem.getMemory(), problem.getFontsize(),
 				problem.getContest(), problem.getUid(), problem.isEnabled(),
 				problem.getCasetimelimit(), problem.isMultidata(),
 				problem.isSpecial_judge());
@@ -1043,10 +1042,10 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 				limit.getMaxSourceCodeLenght());
 	}
 
-	@Override
-	public void clearLimits(int problemId) {
-		dml("clear.problem.limits", problemId);
-	}
+        @Override
+        public void clearLimits(int problemId) {
+            dml("clear.problem.limits", problemId);
+        }
 
 	@Override
 	public void insertProblemLanguage(int pid, int lid) {
@@ -1086,7 +1085,7 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 			dml("update.problem", problem.getForumLink(), problem.getTitle(),
 					problem.getDescription(), problem.getInput(),
 					problem.getOutput(), problem.getInputex(),
-					problem.getOutputex(), problem.getId_source(),
+					problem.getOutputex(), problem.getAuthor(),
 					problem.getComments(), problem.getTime(),
 					problem.getMemory(), problem.getFontsize(),
 					problem.getContest(), problem.getPid(),
@@ -1098,7 +1097,7 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 					problem.getTitle(), problem.getDescription(),
 					problem.getInput(), problem.getOutput(),
 					problem.getInputex(), problem.getOutputex(),
-					problem.getId_source(), problem.getComments(),
+					problem.getAuthor(), problem.getComments(),
 					problem.getTime(), problem.getMemory(),
 					problem.getFontsize(), problem.getContest(),
 					problem.getPid(), problem.isEnabled(),
@@ -1413,6 +1412,7 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 			Integer pid, String locale, PagingOptions options) {
 		locale = "all".equals(locale) ? null : locale;
 
+
 		Query query = new Query("translation_pending");
 		query.where(Where.eq("username", username), Where.eq("pid", pid),
 				Where.eq("locale", locale));
@@ -1468,5 +1468,6 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 				problem.getPid());
 		problem.setLimits(limits);
 	}
+
 
 }

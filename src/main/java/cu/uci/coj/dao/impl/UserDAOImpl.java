@@ -421,7 +421,6 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 				dml("update.user.2", user.getNick(), user.getCountry_id(),
 						user.getInstitution_id(), user.getLid(),
 						user.getLocale(), user.getPassword(),
-						user.isEmailNotifications(),
 						user.isProblemNotifications(),
 						user.isContestNotifications(),
 						user.isSubmissionNotifications(),
@@ -433,7 +432,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 			} else {
 				dml("update.user.3", user.getNick(), user.getCountry_id(),
 						user.getInstitution_id(), user.getLid(),
-						user.getLocale(), user.isEmailNotifications(),user.isProblemNotifications(),
+						user.getLocale(), user.isProblemNotifications(),
 						user.isContestNotifications(),
 						user.isSubmissionNotifications(),
 						user.isNewprivatemessageNotifications(),
@@ -458,7 +457,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 				&& user.getPassword().length() > 0) {
 			dml("update.user.by.admin", user.getNick(), user.getCountry_id(),
 					user.getInstitution_id(), user.getLid(), user.getLocale(),
-					user.getPassword(), user.isEmailNotifications(),user.isContestNotifications(),
+					user.getPassword(), user.isContestNotifications(),
 					user.isSubmissionNotifications(),
 					user.isNewprivatemessageNotifications(),
 					user.isWboardNotifications(),
@@ -469,7 +468,6 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		} else {
 			dml("update.user.by.admin.1", user.getNick(), user.getCountry_id(),
 					user.getInstitution_id(), user.getLid(), user.getLocale(),
-					user.isEmailNotifications(),
 					user.isContestNotifications(),
 					user.isSubmissionNotifications(),
 					user.isNewprivatemessageNotifications(),
@@ -636,25 +634,6 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 			if (team.getContest() > 0) {
 				insertUserContest(add.getUid(), team.getContest(),
 						team.getGroup());
-			}
-		}
-	}
-	
-	public void importTeams(Team prototype,List<Team> teams) {
-		for (int i = 0; i < teams.size(); i++) {
-			
-			teams.get(i).fillMissing(prototype);
-			teams.get(i).setUsername(buildteamUsername(prototype.getUsername(),
-					teams.size(), i + 1));
-			Md5PasswordEncoder md5 = new Md5PasswordEncoder();
-			teams.get(i).setPassword(md5.encodePassword(teams.get(i).getPassword(), "ABC123XYZ789"));
-			insertTeam(teams.get(i));
-			dml("update.user.by.admin.3", teams.get(i).getCoach(),
-					teams.get(i).getUser_1(), teams.get(i).getUser_2(), teams.get(i).getUser_3(),
-					teams.get(i).getUid());
-			if (teams.get(i).getContest() > 0) {
-				insertUserContest(teams.get(i).getUid(), teams.get(i).getContest(),
-						teams.get(i).getGroup());
 			}
 		}
 	}

@@ -97,8 +97,8 @@
 								<i class="fa fa-arrow-right"></i>
 							</button>
 						</td>
-						<td rowspan="2"><input id="search-allusers" /> <form:select
-								path="" id="allusers" size="14" cssClass="login"
+						<td rowspan="2"><input id="search-allusers" />
+							<form:select path="" id="allusers" size="14" cssClass="login"
 								cssStyle="width: 310px; border: 1px solid #577A5A;"
 								multiple="true">
 								<form:options items="${allusers}" itemValue="uid"
@@ -201,8 +201,8 @@
 							</button>
 						</td>
 
-						<td rowspan="2"><input id="search-btusers" /> <form:select
-								path="" id="bt_allusers" size="14" cssClass="login"
+						<td rowspan="2"><input id="search-btusers" /><form:select path="" id="bt_allusers"
+								size="14" cssClass="login"
 								cssStyle="width: 310px; border: 1px solid #577A5A;"
 								multiple="true">
 								<form:options items="${btusers}" itemValue="uid"
@@ -224,24 +224,6 @@
 		<input type="submit" name="but"
 			value="<spring:message code="button.update"/>" />
 	</form:form>
-	<div class="panel panel-primary">
-		<form method="post" enctype="multipart/form-data"
-			action="importteams.xhtml">
-			<input type='hidden' name='cid' value="${contest.cid}" />
-			<div class="row row-centered">
-				<div class="col-xs-10 col-centered"><p>TSV file with users. First line is user data fallback:</p>
-					<p>username_base	password	institution_code	group</p>
-					<p>Subsequent lines contain base information for teams. Missing data will be taken from fallback.</p>
-					<p>nick		institution_code	group	coach	user_1		user_2		user_3</p> 
-				</div>
-				<div class="form-group col-xs-10 col-centered">
-					<input type="file" class="form-control file" name="teamsFile"
-						id="teamsfile" />
-				</div>
-			</div>
-		</form>
-	</div>
-
 	<a href="deleteusercontest.xhtml?all=true&cid=${contest.cid}"><i
 		class="fa fa-trash"></i>&nbsp;Delete</a>
 	<table class="table table-condensed table-striped">
@@ -317,18 +299,4 @@
 				highlight : true,
 				captureLength : 0
 			});
-
-	$("#teamsfile.file").fileinput({
-		maxFileSize : 5000000,
-		allowedFileTypes : [ 'text' ],
-		removeClass : "btn btn-default",
-		removeLabel : "Delete",
-		previewFileType : 'text',
-		showPreview : 0,
-		msgProgress : 'Loading {percent}%',
-		browseClass : "btn btn-primary",
-		browseLabel : "Pick",
-		browseIcon : '<i class="fa fa-file-o"></i>&nbsp;',
-		removeIcon : '<i class="fa fa-trash"></i>'
-	});
 </script>

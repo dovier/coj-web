@@ -125,15 +125,9 @@ public class User implements CommonScoreboardInterface {
     private List<Integer> sitesFollowing;   
     private boolean wboardNotifications;
     private boolean newprivatemessageNotifications;
-    private boolean emailNotifications;
     
-	public boolean isEmailNotifications() {
-		return emailNotifications;
-	}
+    
 
-	public void setEmailNotifications(boolean emailNotifications) {
-		this.emailNotifications = emailNotifications;
-	}
 
 	public boolean isNewprivatemessageNotifications() {
 		return newprivatemessageNotifications;

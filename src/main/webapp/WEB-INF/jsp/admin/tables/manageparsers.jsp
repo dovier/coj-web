@@ -91,7 +91,6 @@
 			var elem = $(this);
 			var sid = elem.attr("id").substr(1);
 			
-			elem.toggleClass("disabled");
 			$("#g" + sid).addClass("hide");
 			$("#b" + sid).addClass("hide");
 			$("#ajax-loader" + sid).toggleClass("hide");
@@ -103,7 +102,6 @@
 					"sid" : sid
 				},
 				success : function(data) {
-					elem.toggleClass("disabled");
 					$("#ajax-loader" + sid).toggleClass("hide");
 					if (data == true) {
 						$("#g" + sid).removeClass("hide");

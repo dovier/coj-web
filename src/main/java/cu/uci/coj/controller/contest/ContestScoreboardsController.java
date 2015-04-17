@@ -55,11 +55,7 @@ public class ContestScoreboardsController extends BaseController {
 	private UserDAO userDAO;
 
 	@RequestMapping(value = "/contest/contestsrank.xhtml", method = RequestMethod.GET)
-	public String UsersRank(
-			Model model,
-			HttpServletRequest request,
-			PagingOptions options,
-			@RequestParam(required = false, value = "pattern") String pattern,
+	public String UsersRank(Model model, HttpServletRequest request, PagingOptions options, @RequestParam(required = false, value = "pattern") String pattern,
 			@RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
 		model.addAttribute("pattern", pattern);
 		model.addAttribute("online", online);
@@ -67,16 +63,11 @@ public class ContestScoreboardsController extends BaseController {
 	}
 
 	@RequestMapping(value = "/tables/contestsrank.xhtml", method = RequestMethod.GET)
-	public String tablesUsersRank(
-			Model model,
-			HttpServletRequest request,
-			PagingOptions options,
-			@RequestParam(required = false, value = "pattern") String pattern,
+	public String tablesUsersRank(Model model, HttpServletRequest request, PagingOptions options, @RequestParam(required = false, value = "pattern") String pattern,
 			@RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
 		int found = contestDAO.countContestGeneralScoreboard(pattern);
 		if (found != 0) {
-			IPaginatedList<User> users = contestDAO
-					.getContestGeneralScoreboard(found, pattern, options);
+			IPaginatedList<User> users = contestDAO.getContestGeneralScoreboard(found, pattern, options);
 			if (options.getPage() == 1) {
 				assigMedals(users.getList());
 			}
@@ -86,53 +77,36 @@ public class ContestScoreboardsController extends BaseController {
 	}
 
 	@RequestMapping(value = "/tables/cscoreboard3.xhtml", method = RequestMethod.GET)
-	public String ContestScoreboard(Locale locale, Model model,
-			Principal principal, PagingOptions options,
+	public String ContestScoreboard(Locale locale, Model model, Principal principal, PagingOptions options,
 			@RequestParam("cid") Integer cid) {
 
 		Contest contest = contestDAO.loadContest(cid);
-		IPaginatedList<User> users = contestDAO.getFreeContestRanking(cid,
-				options);
-		if (!users.getList().isEmpty()
-				&& users.getList().get(0).getRank() <= contest.getGold()
-						+ contest.getSilver() + contest.getBronze()) {
+		IPaginatedList<User> users = contestDAO.getFreeContestRanking(cid, options);
+		if (!users.getList().isEmpty() && users.getList().get(0).getRank() <= contest.getGold() + contest.getSilver() + contest.getBronze()) {
 			setMedals(users.getList(), contest, 0);
 		}
-		model.addAttribute("contest", contest);
+		model.addAttribute("contest",contest);
 		model.addAttribute("users", users);
 		return "/tables/cscoreboard3";
 	}
-
+	
 	@RequestMapping(value = "/tables/cscoreboard4.xhtml", method = RequestMethod.GET)
-	public String ContestScoreboardProgressive(Locale locale, Model model,
-			Principal principal, PagingOptions options,
+	public String ContestScoreboardProgressive(Locale locale, Model model, Principal principal, PagingOptions options,
 			@RequestParam("cid") Integer cid) {
 		Contest contest = contestDAO.loadContest(cid);
-		IPaginatedList<User> users = contestDAO.getFreeContestRanking(cid,
-				options);
-		if (!users.getList().isEmpty()
-				&& users.getList().get(0).getRank() <= contest.getGold()
-						+ contest.getSilver() + contest.getBronze()) {
+		IPaginatedList<User> users = contestDAO.getFreeContestRanking(cid, options);
+		if (!users.getList().isEmpty() && users.getList().get(0).getRank() <= contest.getGold() + contest.getSilver() + contest.getBronze()) {
 			setMedals(users.getList(), contest, 0);
 		}
-		model.addAttribute("contest", contest);
+		model.addAttribute("contest",contest);
 		model.addAttribute("users", users);
 		return "/tables/cscoreboard4";
 	}
 
 	@RequestMapping(value = "/contest/cscoreboard.xhtml", method = RequestMethod.GET)
-	public String ContestScoreboard(
-			Locale locale,
-			SecurityContextHolderAwareRequestWrapper requestWrapper,
-			Model model,
-			Principal principal,
-			PagingOptions options,
-			HttpServletRequest request,
-			@RequestParam("cid") Integer cid,
-			@RequestParam(required = false, value = "selGroup") String selGroup,
-			@RequestParam(required = false, value = "ungroup") String ungroup,
-			@RequestParam(required = false, value = "grouponly") String groupOnly,
-			@RequestParam(required = false, value = "refresh") Boolean refresh) {
+	public String ContestScoreboard(Locale locale, SecurityContextHolderAwareRequestWrapper requestWrapper, Model model, Principal principal, PagingOptions options, HttpServletRequest request,
+			@RequestParam("cid") Integer cid, @RequestParam(required = false, value = "selGroup") String selGroup, @RequestParam(required = false, value = "ungroup") String ungroup,
+			@RequestParam(required = false, value = "grouponly") String groupOnly, @RequestParam(required = false, value = "refresh") Boolean refresh) {
 
 		if (refresh == null)
 			refresh = false;
@@ -145,56 +119,60 @@ public class ContestScoreboardsController extends BaseController {
 			return "redirect:/contest/contestview.xhtml?cid=" + cid;
 		}
 
-		if ((contest.isRunning() || contest.isPast())
-				&& !contest.isRepointing()) {
-			if (contest.isShow_scoreboard()
-					|| (principal != null && requestWrapper
-							.isUserInRole(Roles.ROLE_ADMIN))) {
+		if ((contest.isRunning() || contest.isPast()) && !contest.isRepointing()) {
+			if (contest.isShow_scoreboard() || (principal != null && requestWrapper.isUserInRole(Roles.ROLE_ADMIN))) {
 				contest.setShow_status(false);
-				if (contest.isShow_scoreboard_out()
-						|| (principal != null && requestWrapper
-								.isUserInRole(Roles.ROLE_ADMIN))
-						|| (!contest.isShow_scoreboard_out()
-								&& request.getUserPrincipal() != null && contestDAO
-									.isInContest(cid, contestDAO
-											.integer("users.uid",
-													getUsername(principal))))) {
+				if (contest.isShow_scoreboard_out() || (principal != null && requestWrapper.isUserInRole(Roles.ROLE_ADMIN))
+						|| (!contest.isShow_scoreboard_out() && request.getUserPrincipal() != null && contestDAO.isInContest(cid, contestDAO.integer("users.uid", getUsername(principal))))) {
 					contest.setShow_status(true);
-					List<Problem> problems = problemDAO.getContestProblems(
-							locale.getLanguage(), cid);
-					Integer[] minimums = contestDAO.getRankingAcmMinimun(cid);
-					int min = minimums[0];
-					for (int i = 1; i < minimums.length; i++) {
-						if (minimums[i] < min) {
-							min = minimums[i];
+					switch (contest.getStyle()) {
+					case 1: {
+						List<Problem> problems = problemDAO.getContestProblems(locale.getLanguage(), cid);
+						int[] minimums = contestDAO.getRankingAcmMinimun(cid);
+						int min = minimums[0];
+						for (int i = 1; i < minimums.length; i++) {
+							if (minimums[i] < min) {
+								min = minimums[i];
+							}
 						}
+
+						boolean group = contest.isGrouped() && ungroup == null;
+						if (StringUtils.hasText(selGroup))
+							group = true;
+						IACMScoreboard iacmscoreboard = contestDAO.getRankingAcm(cid, selGroup, group, problems);
+						for (int i = 0; i < problems.size(); i++) {
+							problems.get(i).stats();
+						}
+
+						model.addAttribute("group", group);
+						model.addAttribute("selGroup", selGroup);
+						if (!group)
+							model.addAttribute("users", iacmscoreboard.getUsers());
+
+						if (!contest.isGrouped())
+							ungroup = "ungroup";
+
+						if (ungroup == null) {
+							iacmscoreboard.groupSort();
+							model.addAttribute("cbGroups", contestDAO.strings("ranking.acm.group.names", cid));
+							model.addAttribute("groups", iacmscoreboard.getGroups());
+						}
+
+						model.addAttribute("problems", problems);
+						break;
+					}
+					case 2: {
+						break;
+					}
+					case 3: {
+break;
+					}
+					case 4: {
+						
+						break;
 					}
 
-					boolean group = contest.isGrouped() && ungroup == null;
-					if (StringUtils.hasText(selGroup))
-						group = true;
-					IACMScoreboard iacmscoreboard = contestDAO.getRankingAcm(
-							cid, selGroup, group, problems);
-					for (int i = 0; i < problems.size(); i++) {
-						problems.get(i).stats();
 					}
-
-					model.addAttribute("group", group);
-					model.addAttribute("selGroup", selGroup);
-					if (!group)
-						model.addAttribute("users", iacmscoreboard.getUsers());
-
-					if (!contest.isGrouped())
-						ungroup = "ungroup";
-
-					if (ungroup == null) {
-						iacmscoreboard.groupSort();
-						model.addAttribute("cbGroups", contestDAO.strings(
-								"ranking.acm.group.names", cid));
-						model.addAttribute("groups", iacmscoreboard.getGroups());
-					}
-
-					model.addAttribute("problems", problems);
 				}
 			}
 		}
@@ -203,113 +181,10 @@ public class ContestScoreboardsController extends BaseController {
 		return "/contest/cscoreboard";
 	}
 
-	@RequestMapping(value = "/contest/compositescoreboard.xhtml", method = RequestMethod.GET)
-	public String ContestCompositeScoreboard(
-			Locale locale,
-			SecurityContextHolderAwareRequestWrapper requestWrapper,
-			Model model,
-			Principal principal,
-			PagingOptions options,
-			HttpServletRequest request,
-			@RequestParam("cid1") Integer cid1,
-			@RequestParam("cid2") Integer cid2,
-			@RequestParam(required = false, value = "selGroup") String selGroup,
-			@RequestParam(required = false, value = "ungroup") String ungroup,
-			@RequestParam(required = false, value = "grouponly") String groupOnly,
-			@RequestParam(required = false, value = "refresh") Boolean refresh) {
-
-		if (refresh == null)
-			refresh = false;
-		model.addAttribute("refresh", refresh);
-		Contest contest1 = contestDAO.loadContest(cid1);
-		Contest contest2 = contestDAO.loadContest(cid2);
-
-		contestDAO.unfreezeIfNecessary(contest1);
-		contestDAO.unfreezeIfNecessary(contest2);
-
-		if (contest1.isComing()) {
-			return "redirect:/contest/contestview.xhtml?cid=" + cid1;
-		}
-
-		if (contest2.isComing()) {
-			return "redirect:/contest/contestview.xhtml?cid=" + cid2;
-		}
-
-		if (((contest1.isRunning() || contest1.isPast()) && !contest1
-				.isRepointing())
-				&& ((contest2.isRunning() || contest2.isPast()) && !contest2
-						.isRepointing())) {
-			if ((contest1.isShow_scoreboard() && contest2.isShow_scoreboard())
-					|| (principal != null && requestWrapper
-							.isUserInRole(Roles.ROLE_ADMIN))) {
-				contest1.setShow_status(false);
-				contest2.setShow_status(false);
-				if ((contest1.isShow_scoreboard_out() && contest2
-						.isShow_scoreboard_out())
-						|| (principal != null && requestWrapper
-								.isUserInRole(Roles.ROLE_ADMIN))
-						|| (!contest1.isShow_scoreboard_out()
-								&& request.getUserPrincipal() != null && contestDAO
-									.isInContest(cid1, contestDAO
-											.integer("users.uid",
-													getUsername(principal))))
-						|| (!contest2.isShow_scoreboard_out()
-								&& request.getUserPrincipal() != null && contestDAO
-									.isInContest(cid2, contestDAO
-											.integer("users.uid",
-													getUsername(principal))))) {
-					contest1.setShow_status(true);
-					contest2.setShow_status(true);
-					List<Problem> problems = problemDAO.getContestProblems(
-							locale.getLanguage(), cid1);
-					Integer[] minimums = contestDAO.getCompositeRankingAcmMinimun(cid1,cid2);
-					int min = minimums[0];
-					for (int i = 1; i < minimums.length; i++) {
-						if (minimums[i] < min) {
-							min = minimums[i];
-						}
-					}
-
-					boolean group = (contest1.isGrouped() && contest2.isGrouped()) && ungroup == null;
-					if (StringUtils.hasText(selGroup))
-						group = true;
-					IACMScoreboard iacmscoreboard = contestDAO.getCompositeRankingAcm(
-							cid1,cid2, selGroup, group, problems);
-					for (int i = 0; i < problems.size(); i++) {
-						problems.get(i).stats();
-					}
-
-					model.addAttribute("group", group);
-					model.addAttribute("selGroup", selGroup);
-					if (!group)
-						model.addAttribute("users", iacmscoreboard.getUsers());
-
-					if (!contest1.isGrouped() && !contest2.isGrouped())
-						ungroup = "ungroup";
-
-					if (ungroup == null) {
-						iacmscoreboard.groupSort();
-						model.addAttribute("cbGroups", contestDAO.strings(
-								"composite.ranking.acm.group.names", cid1,cid2));
-						model.addAttribute("groups", iacmscoreboard.getGroups());
-					}
-
-					model.addAttribute("problems", problems);
-				}
-			}
-		}
-
-		model.addAttribute("contest", contest1);
-		return "/contest/cscoreboard";
-	}
-
 	@Deprecated
 	@RequestMapping(value = "/contest/globalcontestscoreboard.xhtml", method = RequestMethod.GET)
-	public String GlobalContestScoreboartd(Locale locale,
-			SecurityContextHolderAwareRequestWrapper requestWrapper,
-			Model model, Principal principal, PagingOptions options,
-			@RequestParam("cid") Integer cid,
-			@RequestParam(required = false, value = "ungroup") String ungroup) {
+	public String GlobalContestScoreboartd(Locale locale, SecurityContextHolderAwareRequestWrapper requestWrapper, Model model, Principal principal, PagingOptions options,
+			@RequestParam("cid") Integer cid, @RequestParam(required = false, value = "ungroup") String ungroup) {
 
 		Contest contest = contestDAO.loadContest(cid);
 		if (contest.isComing()) {
@@ -318,35 +193,22 @@ public class ContestScoreboardsController extends BaseController {
 		if (contest.getStyle() == 4) {
 			contest.setStyle(3);
 		}
-		if ((contest.isRunning() || contest.isPast())
-				&& !contest.isRepointing()) {
-			if (contest.isShow_scoreboard()
-					|| (principal != null && requestWrapper
-							.isUserInRole(Roles.ROLE_ADMIN))) {
+		if ((contest.isRunning() || contest.isPast()) && !contest.isRepointing()) {
+			if (contest.isShow_scoreboard() || (principal != null && requestWrapper.isUserInRole(Roles.ROLE_ADMIN))) {
 				contest.setShow_status(false);
-				if (contest.isShow_scoreboard_out()
-						|| (principal != null && requestWrapper
-								.isUserInRole(Roles.ROLE_ADMIN))
-						|| (!contest.isShow_scoreboard_out()
-								&& principal != null && contestDAO.isInContest(
-								cid, contestDAO.integer("users.uid",
-										getUsername(principal))))) {
+				if (contest.isShow_scoreboard_out() || (principal != null && requestWrapper.isUserInRole(Roles.ROLE_ADMIN))
+						|| (!contest.isShow_scoreboard_out() && principal != null && contestDAO.isInContest(cid, contestDAO.integer("users.uid", getUsername(principal))))) {
 					contest.setShow_status(true);
 					switch (contest.getStyle()) {
 					case 1: {
-						List<Problem> problems = problemDAO.getContestProblems(
-								locale.getLanguage(), cid);
-						int[] ids = new int[] { 1213, 1200, 1199, 1192, 1196,
-								1214, 1212, 1204, 1193, 1178, 1206, 1202, 1211,
-								1195, 1208, 1187, 1209, 1198, 1210, 1205, 1191,
-								1207, 1194 };
+						List<Problem> problems = problemDAO.getContestProblems(locale.getLanguage(), cid);
+						int[] ids = new int[] { 1213, 1200, 1199, 1192, 1196, 1214, 1212, 1204, 1193, 1178, 1206, 1202, 1211, 1195, 1208, 1187, 1209, 1198, 1210, 1205, 1191, 1207, 1194 };
 						List<Integer> cids = new LinkedList<Integer>();
 						for (int i = 0; i < ids.length; i++) {
 							int j = ids[i];
 							cids.add(j);
 						}
-						Integer[] minimums = contestDAO
-								.getGlobalRankingAcmMinimun(cids);
+						int[] minimums = contestDAO.getGlobalRankingAcmMinimun(cids);
 						int min = minimums[0];
 						for (int i = 1; i < minimums.length; i++) {
 							if (minimums[i] < min) {
@@ -354,33 +216,26 @@ public class ContestScoreboardsController extends BaseController {
 							}
 						}
 
-						IACMScoreboard iacmscoreboard = contestDAO
-								.getGlobalRankingAcm(cids, ungroup != null,
-										problems);
+						IACMScoreboard iacmscoreboard = contestDAO.getGlobalRankingAcm(cids, ungroup != null, problems);
 						for (int i = 0; i < problems.size(); i++) {
 							problems.get(i).stats();
 						}
 
 						if (ungroup != null) {
 							setMedals(iacmscoreboard.getUsers(), contest, 0);
-							model.addAttribute("users",
-									iacmscoreboard.getUsers());
+							model.addAttribute("users", iacmscoreboard.getUsers());
 						} else {
 							model.addAttribute("group", true);
-							for (int i = 0; i < iacmscoreboard.getGroups()
-									.size(); i++) {
-								setMedals(iacmscoreboard.getGroups().get(i)
-										.getUsers(), contest, 0);
+							for (int i = 0; i < iacmscoreboard.getGroups().size(); i++) {
+								setMedals(iacmscoreboard.getGroups().get(i).getUsers(), contest, 0);
 							}
-							model.addAttribute("groups",
-									iacmscoreboard.getGroups());
+							model.addAttribute("groups", iacmscoreboard.getGroups());
 						}
 						model.addAttribute("problems", problems);
 						break;
 					}
 					case 3:
-						IPaginatedList<User> users = contestDAO
-								.getFreeContestRanking(cid, options);
+						IPaginatedList<User> users = contestDAO.getFreeContestRanking(cid, options);
 						model.addAttribute("users", users);
 						break;
 					}
@@ -391,39 +246,28 @@ public class ContestScoreboardsController extends BaseController {
 
 		return "/contest/globalcontestscoreboard";
 	}
-
+	
 	@Deprecated
 	@RequestMapping(value = "/tables/globalcontestscoreboard.xhtml", method = RequestMethod.GET)
-	public String tablesGlobalContestScoreboartd(Locale locale,
-			SecurityContextHolderAwareRequestWrapper requestWrapper,
-			Model model, Principal principal, PagingOptions options,
+	public String tablesGlobalContestScoreboartd(Locale locale, SecurityContextHolderAwareRequestWrapper requestWrapper, Model model, Principal principal, PagingOptions options,
 			@RequestParam("cid") Integer cid) {
 
 		Contest contest = contestDAO.loadContest(cid);
 		if (contest.getStyle() == 4) {
 			contest.setStyle(3);
 		}
-		if ((contest.isRunning() || contest.isPast())
-				&& !contest.isRepointing()) {
-			if (contest.isShow_scoreboard()
-					|| (principal != null && requestWrapper
-							.isUserInRole(Roles.ROLE_ADMIN))) {
+		if ((contest.isRunning() || contest.isPast()) && !contest.isRepointing()) {
+			if (contest.isShow_scoreboard() || (principal != null && requestWrapper.isUserInRole(Roles.ROLE_ADMIN))) {
 				contest.setShow_status(false);
-				if (contest.isShow_scoreboard_out()
-						|| (principal != null && requestWrapper
-								.isUserInRole(Roles.ROLE_ADMIN))
-						|| (!contest.isShow_scoreboard_out()
-								&& principal != null && contestDAO.isInContest(
-								cid, contestDAO.integer("users.uid",
-										getUsername(principal))))) {
+				if (contest.isShow_scoreboard_out() || (principal != null && requestWrapper.isUserInRole(Roles.ROLE_ADMIN))
+						|| (!contest.isShow_scoreboard_out() && principal != null && contestDAO.isInContest(cid, contestDAO.integer("users.uid", getUsername(principal))))) {
 					contest.setShow_status(true);
 					switch (contest.getStyle()) {
 					case 1: {
 						break;
 					}
 					case 3:
-						IPaginatedList<User> users = contestDAO
-								.getFreeContestRanking(cid, options);
+						IPaginatedList<User> users = contestDAO.getFreeContestRanking(cid, options);
 						model.addAttribute("users", users);
 						break;
 					}
@@ -436,54 +280,36 @@ public class ContestScoreboardsController extends BaseController {
 	}
 
 	@RequestMapping(value = "/contest/saris.xhtml", method = RequestMethod.GET)
-	public String sarisGenerator(Principal principal,
-			SecurityContextHolderAwareRequestWrapper requestWrapper,
-			Locale locale, Model model, HttpServletResponse response,
-			@RequestParam("cid") Integer cid,
-			@RequestParam(required = false, value = "group") String group)
-			throws JSONException, IOException {
-		if (!(requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || (contestDAO
-				.isJudgeInContest(cid,
-						userDAO.idByUsername(getUsername(principal)))))) {
+	public String sarisGenerator(Principal principal, SecurityContextHolderAwareRequestWrapper requestWrapper, Locale locale, Model model, HttpServletResponse response,
+			@RequestParam("cid") Integer cid, @RequestParam(required = false, value = "group") String group) throws JSONException, IOException {
+		if (!(requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || ( contestDAO.isJudgeInContest(cid, userDAO.idByUsername(getUsername(principal)))))) {
 			return "/error/accessdenied";
 		}
-		Contest contest = contestDAO.object("get.contest.forsaris",
-				Contest.class, cid);
+		Contest contest = contestDAO.object("get.contest.forsaris", Contest.class, cid);
 
 		JSONObject json = new JSONObject();
-		contest.setProblems(problemDAO.getContestProblems(locale.getLanguage(),
-				cid));
+		contest.setProblems(problemDAO.getContestProblems(locale.getLanguage(), cid));
 		List<SarisSubmission> contestruns = null;
 		if (group != null) {
-			contest.setUsers(contestDAO.objects(
-					"get.contest.users.forsaris.group", User.class, cid, group));
+			contest.setUsers(contestDAO.objects("get.contest.users.forsaris.group", User.class, cid, group));
 
-			List<Map<String, Object>> maps = contestDAO.maps(
-					"get.contest.runs.forsaris.group", cid, cid, group);
+			List<Map<String, Object>> maps = contestDAO.maps("get.contest.runs.forsaris.group", cid, cid, group);
 			contestruns = new ArrayList<>();
 			if (maps == null)
 				maps = Collections.emptyList();
 			for (Map<String, Object> map : maps) {
-				SarisSubmission ss = new SarisSubmission(map.get("nick")
-						.toString(), map.get("pid").toString(), map.get(
-						"from_start").toString(), Boolean.parseBoolean(map.get(
-						"success").toString()));
+				SarisSubmission ss = new SarisSubmission(map.get("nick").toString(), map.get("pid").toString(), map.get("from_start").toString(), Boolean.parseBoolean(map.get("success").toString()));
 				contestruns.add(ss);
 			}
 		} else {
-			contest.setUsers(contestDAO.objects("get.contest.users.forsaris",
-					User.class, cid));
+			contest.setUsers(contestDAO.objects("get.contest.users.forsaris", User.class, cid));
 
-			List<Map<String, Object>> maps = contestDAO.maps(
-					"get.contest.runs.forsaris", cid, cid);
+			List<Map<String, Object>> maps = contestDAO.maps("get.contest.runs.forsaris", cid, cid);
 			contestruns = new ArrayList<>();
 			if (maps == null)
 				maps = Collections.emptyList();
 			for (Map<String, Object> map : maps) {
-				SarisSubmission ss = new SarisSubmission(map.get("nick")
-						.toString(), map.get("pid").toString(), map.get(
-						"from_start").toString(), Boolean.parseBoolean(map.get(
-						"success").toString()));
+				SarisSubmission ss = new SarisSubmission(map.get("nick").toString(), map.get("pid").toString(), map.get("from_start").toString(), Boolean.parseBoolean(map.get("success").toString()));
 				contestruns.add(ss);
 			}
 		}
@@ -497,15 +323,12 @@ public class ContestScoreboardsController extends BaseController {
 		}
 		json.accumulate("contestants", users);
 		JSONArray runs = new JSONArray();
-		for (Iterator<SarisSubmission> it = contestruns.iterator(); it
-				.hasNext();) {
+		for (Iterator<SarisSubmission> it = contestruns.iterator(); it.hasNext();) {
 			SarisSubmission submission = (SarisSubmission) it.next();
 			JSONObject run = new JSONObject();
 			run.accumulate("contestant", submission.getNick());
-			run.accumulate("problemLetter",
-					contest.getProblemLetter(new Integer(submission.getPid())));
-			run.accumulate("timeMinutesFromStart",
-					Integer.parseInt(submission.getFrom_start()));
+			run.accumulate("problemLetter", contest.getProblemLetter(new Integer(submission.getPid())));
+			run.accumulate("timeMinutesFromStart", Integer.parseInt(submission.getFrom_start()));
 			run.accumulate("success", submission.isSuccess());
 			runs.add(run);
 		}
@@ -519,15 +342,11 @@ public class ContestScoreboardsController extends BaseController {
 	}
 
 	@RequestMapping(value = "/contest/cawards.xhtml", method = RequestMethod.GET)
-	public String contestAwards(Model model,
-			SecurityContextHolderAwareRequestWrapper requestWrapper,
-			Locale locale, @RequestParam("cid") Integer cid) {
+	public String contestAwards(Model model, SecurityContextHolderAwareRequestWrapper requestWrapper, Locale locale, @RequestParam("cid") Integer cid) {
 
 		Contest contest = contestDAO.loadContest(cid);
-		List<Problem> problems = problemDAO.getContestProblems(
-				locale.getLanguage(), cid);
-		IACMScoreboard iacmscoreboard = contestDAO.getRankingAcm(cid, null,
-				false, problems);
+		List<Problem> problems = problemDAO.getContestProblems(locale.getLanguage(), cid);
+		IACMScoreboard iacmscoreboard = contestDAO.getRankingAcm(cid, null, false, problems);
 		List<User> users = iacmscoreboard.assignMedals(contest);
 
 		model.addAttribute("cid", cid);
@@ -541,26 +360,23 @@ public class ContestScoreboardsController extends BaseController {
 		return "/contest/cawards";
 	}
 
-	public void awards(Model model, Integer cid) {
+	public void awards(Model model,Integer cid) {
 		List<Integer> aids = baseDAO.integers("load.contest.awards.id", cid);
 		for (Integer aid : aids) {
 			switch (aid) {
 			case ContestAwardsFlags.FAST_AWARD:
-				model.addAttribute("fastAward", baseDAO.object("fast.award",
-						ContestAwards.class, cid, cid));
+				model.addAttribute("fastAward",baseDAO.object("fast.award", ContestAwards.class, cid,cid));
 				break;
 			case ContestAwardsFlags.EXCLUSIVE_AWARD:
-				model.addAttribute("exclusiveAward", baseDAO.object(
-						"exclusive.award", ContestAwards.class, cid, cid));
+				model.addAttribute("exclusiveAward",baseDAO.object("exclusive.award", ContestAwards.class, cid,cid));
 				break;
 			case ContestAwardsFlags.ACCURATE_AWARD:
-				model.addAttribute("accurateAward", baseDAO.object(
-						"accurate.award", ContestAwards.class, cid, cid));
+				model.addAttribute("accurateAward",baseDAO.object("accurate.award", ContestAwards.class, cid,cid));
 				break;
 			}
 		}
 	}
-
+	
 	public void setMedals(List<User> users, Contest contest, int i) {
 		while (i < users.size() && i < contest.getGold()) {
 			if (users.get(i).getAcc() == 0) {
@@ -570,8 +386,7 @@ public class ContestScoreboardsController extends BaseController {
 			i++;
 		}
 
-		while (i < users.size()
-				&& (i - contest.getGold()) < contest.getSilver()) {
+		while (i < users.size() && (i - contest.getGold()) < contest.getSilver()) {
 			if (users.get(i).getAcc() == 0) {
 				break;
 			}
@@ -579,9 +394,7 @@ public class ContestScoreboardsController extends BaseController {
 			i++;
 		}
 
-		while (i < users.size()
-				&& (i - contest.getGold() - contest.getSilver()) < contest
-						.getBronze()) {
+		while (i < users.size() && (i - contest.getGold() - contest.getSilver()) < contest.getBronze()) {
 			if (users.get(i).getAcc() == 0) {
 				break;
 			}

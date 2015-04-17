@@ -198,13 +198,6 @@
 				</div>
 				<div class="form-group">
 					<label class="control-label col-xs-3"><spring:message
-							code="fieldhdr.emailnotif" />: </label>
-					<div class="col-xs-8">
-						<form:checkbox cssClass="checkbox" path="emailNotifications" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label col-xs-3"><spring:message
 							code="fieldhdr.notifcontest" />: </label>
 					<div class="col-xs-8">
 						<form:checkbox cssClass="checkbox" path="contestNotifications" />
