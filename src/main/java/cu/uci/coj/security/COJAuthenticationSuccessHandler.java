@@ -39,6 +39,7 @@ public class COJAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
         String username = ((User)authentication.getPrincipal()).getUsername();
         String locale = userDAO.getUserLocale(username);
         userDAO.dml("update.last.ip",request.getRemoteAddr(), username);
+        userDAO.dml("update.last.login.date",username);
         SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
         sessionLocaleResolver.setLocale(request, response, new Locale(locale));
         setDefaultTargetUrl(determineTargetUrl(request));
