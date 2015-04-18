@@ -392,9 +392,9 @@ public class SubmissionController extends BaseController {
 					problem.getCasetimelimit(), problem.getMemory(),
 					submit.getLanguageByLid());
 			submission.setSpecialJudge(problem.isSpecial_judge());
-			try {
-
-				utils.startCalification(submission);
+			try {                            
+                            int priority = 6;
+                            utils.startCalification(submission,priority);
 			} catch (Exception e) {
 				submissionDAO.changeStatus(sid, "Unqualified");
 			}

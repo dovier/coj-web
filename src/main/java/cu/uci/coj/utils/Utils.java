@@ -42,6 +42,9 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.Lexer;
 import org.antlr.runtime.Token;
 import org.apache.commons.lang.ArrayUtils;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +110,8 @@ public class Utils {
 				.object("select.contest.submit.for.removal",
 						SubmissionJudge.class, sid);
 		if (submit != null) {
-			startCalification(submit);
+                    int priority = 4;
+                    startCalification(submit,priority);
 		}
 		return submit;
 	}
@@ -117,7 +121,8 @@ public class Utils {
 				"select.submit.for.removal", SubmissionJudge.class, sid);
 		if (submit != null) {
 			submissionDAO.removeEffects(submit);
-			startCalification(submit);
+                        int priority = 2;
+			startCalification(submit,priority);
 		}
 		return submit;
 	}
@@ -198,10 +203,26 @@ public class Utils {
             submitTemplate.convertAndSend(submission);
         }
 
+         public void startCalification(SubmissionJudge submit,final int priority) {
+            SubmissionJudgeToSubmissionDTOAdapter submission = new SubmissionJudgeToSubmissionDTOAdapter(submit);
+            submitTemplate.convertAndSend(submission, new MessagePostProcessor() {
+                    @Override
+                    public Message postProcessMessage(Message message) throws AmqpException {
+                        message.getMessageProperties().setPriority(priority);
+                        return message;
+                    }
+                });
+        }
+        
         public void startCalification(List<SubmissionJudge> submits) {
             for (SubmissionJudge submit : submits) {
-                SubmissionJudgeToSubmissionDTOAdapter submission = new SubmissionJudgeToSubmissionDTOAdapter(submit);
-                submitTemplate.convertAndSend(submission);
+                startCalification(submit);
+            }
+        }
+        
+        public void startCalification(List<SubmissionJudge> submits, final int priority) {
+            for (SubmissionJudge submit : submits) {
+                startCalification(submit, priority);
             }
         }
 
