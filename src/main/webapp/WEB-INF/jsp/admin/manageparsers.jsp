@@ -8,8 +8,7 @@
 	type="text/css" media="screen" />
 
 <h2 class="postheader">
-	<fmt:message key="page.general.admin.header" />
-	<spring:message code="text.manageparsers" />
+	<fmt:message key="page.header.admin.manageparsers" />
 </h2>
 
 <button id="parseall" class="btn btn-primary " type="button">

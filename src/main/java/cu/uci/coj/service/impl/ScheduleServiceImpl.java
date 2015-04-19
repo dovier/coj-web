@@ -53,7 +53,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	private Integer currentActivationInterval = 0;
 	// cada dia
 	private Integer WBOARD_INTERVAL = 3600 * 2;
-	private Integer currentWBoardInterval = 3600 * 2;
+	private Integer currentWBoardInterval = 0;
 	//cada dia
 	private Integer USER_STATUS_INTERVAL = 3600 * 2;
 	private Integer currentUserStatusInterval = 0;

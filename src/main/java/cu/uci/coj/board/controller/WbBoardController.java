@@ -34,8 +34,6 @@ public class WbBoardController extends BaseController {
 	@Resource
 	WbSiteDAO wbSiteDAO;
 	
-	WbContestDAO wbContestDAO;	
-
 	@RequestMapping(value = "/wboard/contests.xhtml", method = RequestMethod.GET)
 	public String listContests(Model model) {
 		model.addAttribute("sites", wbSiteDAO.getSiteList());		
@@ -94,7 +92,7 @@ public class WbBoardController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/wboard/combobox.xhtml", method = RequestMethod.GET)
-	public String loadCombobox(Model model, Principal principal, @RequestParam Integer followed) {
+	public String loadCombobox(Model model, Principal principal, @RequestParam(defaultValue="0") Integer followed) {
 		Integer	uid = userDAO.idByUsername(getUsername(principal));
 		if(followed == 0) {
 			if(uid != null) {
