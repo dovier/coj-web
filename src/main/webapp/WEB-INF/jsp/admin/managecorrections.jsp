@@ -97,6 +97,18 @@
 					 </span>
 				</td>
 			</tr>
+			<tr class="even">
+				<td><spring:message code="tableval.correctsharedfiles"/></td>
+				<td>
+					<span id="tshared" class="time"></span>
+					<button id="pshared" class="btn btn-primary parse mybutton"
+						type="button"><spring:message code="btn.correct"/></button>
+					 <span id="gshared" class="label label-success hide notif"><spring:message code="text.good"/></span>
+					 <span id="ajax-loadershared" class="hide label notif myloader">
+					 	<img src="/images/ajax-loader-6.gif"/>
+					 </span>
+				</td>
+			</tr>
 			<tr class="odd">
 				<td><spring:message code="tableval.correctproblemstats24h"/></td>
 				<td>

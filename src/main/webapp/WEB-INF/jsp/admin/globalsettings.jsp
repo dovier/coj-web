@@ -78,6 +78,11 @@
 						</c:choose></td>
 				</tr>
 			</table>
+		</fieldset>
+		<fieldset style="width: 400px;">
+			<legend>
+				<fmt:message key="page.managecontest.style" />
+			</legend>
 			<table class="contestlanguages">
 				<c:choose>
 					<c:when test="${contest.style eq 0}">

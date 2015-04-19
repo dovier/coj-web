@@ -102,7 +102,6 @@
 		</c:choose>
 
 		<br />
-	<button id = "problem-randomize">Random Ordering</button>
 		<input type="submit" name="but"
 			value="<spring:message code="button.update"/>" />
 		<br />
@@ -125,15 +124,6 @@
 			</c:forEach>
 		</c:when>
 	</c:choose>
+
 </div>
-<script>
-	
-$("#problem-randomize").click(function (event) {
-    var parent = $("#problem");
-    var lis = parent.children();
-    while (lis.length) {
-        parent.append(lis.splice(Math.floor(Math.random() * lis.length), 1)[0]);
-    }
-    event.preventDefault();
-});
-</script>
+
