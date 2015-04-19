@@ -89,6 +89,11 @@ public class WbContestDAOImpl extends BaseDAOImpl implements WbContestDAO {
 		
 		query.where(Where.eq("sid", sid));
 		
+		if(options.getDirection() == null) {
+			options.setDirection("asc");
+			options.setSort("startDate");
+		}
+		
 		if(options.getDirection().equals("asc")) {
 			query.order(Order.asc(options.getSort()));
 		} else {
@@ -107,7 +112,9 @@ public class WbContestDAOImpl extends BaseDAOImpl implements WbContestDAO {
 		List<WbContest> result = new ArrayList<WbContest>();
 		long now = new Date().getTime();
 		for(int i = 0;i<list.size();i++) {
-			if(list.get(i).getEndDate().getTime() - map.get(list.get(i).getSid()).getOffset() >= now) {
+			if(list.get(i).getEndDate().getTime() 
+					- map.get(list.get(i).getSid()).getOffset() 
+					>= now) {
 				result.add(list.get(i));
 			}				
 		}
@@ -129,6 +136,11 @@ public class WbContestDAOImpl extends BaseDAOImpl implements WbContestDAO {
 		sid = sid == 0?null:sid;
 		
 		query.where(Where.eq("sid", sid), Where.eq("uid", uid));
+		
+		if(options.getDirection() == null) {
+			options.setDirection("asc");
+			options.setSort("startDate");
+		}
 		
 		if(options.getDirection().equals("asc")) {
 			query.order(Order.asc(options.getSort()));
@@ -167,6 +179,11 @@ public class WbContestDAOImpl extends BaseDAOImpl implements WbContestDAO {
 	@Transactional(readOnly=true)
 	public IPaginatedList<WbContest> getPaginatedContestList(PagingOptions options) {
 		int found = integer("count.wbcontest.list");
+		
+		if(options.getDirection() == null) {
+			options.setDirection("asc");
+			options.setSort("startDate");
+		}
 
 		Query query = new Query("wboard_contest");
 		if(options.getDirection().equals("asc")) {

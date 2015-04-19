@@ -65,7 +65,7 @@ public class WbBlogNotificationService implements WbNotificationService {
 				for(int j = 0;j<site.getContests().size();j++) {			
 					contest = site.getContests().get(j);
 					text = "New contest: " + contest.getName() + ". More info: http://coj.uci.cu/wboard/contests.xhtml";
-					entryDAO.addEntry(createEntry(text), true, "COJbot");		
+					entryDAO.addEntry(createEntry(text), true, "COJbot");
 				}
 			}
 		}

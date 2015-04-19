@@ -67,7 +67,7 @@ public class WbParserManager {
 							} catch(Exception e) {}
 						}
 					} catch(ConnectionErrorException e) {
-						//e.printStackTrace();
+						e.printStackTrace();
 					}				
 				}
 			}
@@ -91,7 +91,7 @@ public class WbParserManager {
 				}
 			}
 			
-			//wbContestDAO.cleanNotifications();
+			wbContestDAO.cleanNotifications();
 			
 			for(int i = 0;i<parserList.size();i++) {
 				parserList.get(i).getSite().setCompleted(false);
