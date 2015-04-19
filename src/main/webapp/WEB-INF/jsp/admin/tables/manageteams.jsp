@@ -14,6 +14,8 @@
 		paramProperty="username" />
 	<display:column property="rgdate" titleKey="tablehdr.date"
 		headerClass="headdate" />
+	<display:column property="last_connected_date" titleKey="tablehdr.date"
+		headerClass="headdate" />
 	<display:column titleKey="tablehdr.connected">
 		<c:choose>
 			<c:when test="${user.online == true}">

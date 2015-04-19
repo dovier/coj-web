@@ -275,7 +275,8 @@ public class ContestSubmissionController extends BaseController {
 		SubmissionJudge submission = new SubmissionJudge(sid, iduser, submit.getCode(), problem.getPid(), problem.getTime(), problem.getCasetimelimit(), problem.getMemory(), submit.getLanguageByLid());
 		submission.setCid(submit.getCid());
 		submission.setSpecialJudge(problem.isSpecial_judge());
-		utils.startCalification(submission);
+                int priority = 8;
+		utils.startCalification(submission,priority);
 		return "redirect:/contest/cstatus.xhtml?cid=" + submit.getCid();
 	}
 
