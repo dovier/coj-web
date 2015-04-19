@@ -68,7 +68,9 @@ public class FileSystemController extends BaseController {
 			boolean[] downloadables = new boolean[files.length];
 			int idx = 0;
 			for (File f : files)
-				downloadables[idx++] = baseDAO.bool("is.shared.file", f.getAbsolutePath());
+				if(f.getAbsolutePath().startsWith(publicDir.getAbsolutePath()) 
+						&& !f.getAbsolutePath().equals(publicDir.getAbsolutePath()))
+				downloadables[idx++] = baseDAO.bool("is.shared.file", f.getAbsolutePath().substring(publicDir.getAbsolutePath().length()+1));
 
 			model.addAttribute("downloadables", downloadables);
 			model.addAttribute("files", files);
@@ -90,6 +92,10 @@ public class FileSystemController extends BaseController {
 	@RequestMapping(value = "/unshare.xhtml", method = RequestMethod.GET)
 	@ResponseStatus(value=HttpStatus.NO_CONTENT)
 	public void unshare(HttpServletResponse response, @RequestParam("file") String file) throws Exception {
+		doUnshare(file);
+	}
+	
+	private void doUnshare(String file) throws Exception{
 		baseDAO.dml("delete.shared.file", current(file).getAbsolutePath().substring(publicDir.getAbsolutePath().length()+1));
 	}
 
@@ -192,6 +198,7 @@ public class FileSystemController extends BaseController {
 
 		File file = current(dir);
 		org.apache.commons.io.FileUtils.deleteQuietly(file);
+		doUnshare(dir);
 		return "redirect:/admin/files/list.xhtml";
 	}
 

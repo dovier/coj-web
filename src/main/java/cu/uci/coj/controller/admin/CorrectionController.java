@@ -59,6 +59,12 @@ public class CorrectionController extends BaseController {
 	public void correctUserStats24h(Model model) throws Exception {
 		correctionDAO.calculateUserStats24h();
 	}
+	
+	@RequestMapping(value = "/shared.xhtml", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void correctSharedFiles(Model model) throws Exception {
+		correctionDAO.synchSharedFiles();
+	}
 
 	@RequestMapping(value = "/problemstats24h.xhtml", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)

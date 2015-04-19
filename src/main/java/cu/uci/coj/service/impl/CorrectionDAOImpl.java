@@ -1,5 +1,8 @@
 package cu.uci.coj.service.impl;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -8,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import cu.uci.coj.config.Config;
 import cu.uci.coj.dao.impl.BaseDAOImpl;
 import cu.uci.coj.model.Language;
+import cu.uci.coj.model.SharedFile;
 import cu.uci.coj.service.CorrectionDAO;
 import cu.uci.coj.utils.enums.AchievementType;
 
@@ -86,5 +90,14 @@ public class CorrectionDAOImpl extends BaseDAOImpl implements CorrectionDAO {
 	public void calculateStatsContest() {
 		dml("delete.stats.contest");
 		dml("calculate.stats.contest");
+	}
+	
+	public void synchSharedFiles() {
+		File publicDir = new File(Config.getProperty("base.public.dir"));
+		List<SharedFile> sharedFiles = objects("select fid as id,path from shared_files", SharedFile.class);
+		for(SharedFile shared: sharedFiles) {
+			if (!Files.exists(Paths.get(publicDir.getAbsolutePath(),shared.getPath())))
+				dml("delete from shared_files where fid = ?",shared.getId());
+		}
 	}
 }
