@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +34,7 @@ public class FileSystemController extends BaseController {
 	private File baseDir;
 	private File publicDir;
 	private File currentDir;
+	private String problemDir;
 
 	private Set<File> cutFiles;
 	private Set<File> copiedFiles;
@@ -42,6 +44,7 @@ public class FileSystemController extends BaseController {
 		baseDir = new File(Config.getProperty("base.dir") + "/");
 		publicDir = new File(Config.getProperty("base.public.dir"));
 		currentDir = new File(Config.getProperty("base.dir"));
+		problemDir = Config.getProperty("problems.directory");
 		cutFiles = new HashSet<>();
 		copiedFiles = new HashSet<>();
 	}
@@ -51,16 +54,24 @@ public class FileSystemController extends BaseController {
 	}
 
 	@RequestMapping(value = "/list.xhtml", method = RequestMethod.GET)
-	public String download(Model model, @RequestParam(required = false, defaultValue = "", value = "f") String dir, @RequestParam(required = false, defaultValue = "false", value = "b") boolean back)
+	public String download(
+			Model model,
+			@RequestParam(required = false, defaultValue = "", value = "f") String dir,
+			@RequestParam(required = false, defaultValue = "false", value = "b") boolean back)
 			throws Exception {
 
 		File file = null;
 		if (!(baseDir.equals(currentDir)) && back)
-			file = currentDir = new File(currentDir.getAbsolutePath().substring(0, FilenameUtils.indexOfLastSeparator(currentDir.getAbsolutePath())));
+			file = currentDir = new File(currentDir.getAbsolutePath()
+					.substring(
+							0,
+							FilenameUtils.indexOfLastSeparator(currentDir
+									.getAbsolutePath())));
 		else
 			file = current(dir);
 
-		model.addAttribute("downloadable", file.getAbsolutePath().startsWith(publicDir.getAbsolutePath()));
+		model.addAttribute("downloadable",
+				file.getAbsolutePath().startsWith(publicDir.getAbsolutePath()));
 		// si es un directorio, se lista
 		if (file.isDirectory()) {
 			currentDir = file;
@@ -68,49 +79,79 @@ public class FileSystemController extends BaseController {
 			boolean[] downloadables = new boolean[files.length];
 			int idx = 0;
 			for (File f : files)
-				if(f.getAbsolutePath().startsWith(publicDir.getAbsolutePath()) 
-						&& !f.getAbsolutePath().equals(publicDir.getAbsolutePath()))
-				downloadables[idx++] = baseDAO.bool("is.shared.file", f.getAbsolutePath().substring(publicDir.getAbsolutePath().length()+1));
+				if (f.getAbsolutePath().startsWith(publicDir.getAbsolutePath())
+						&& !f.getAbsolutePath().equals(
+								publicDir.getAbsolutePath()))
+					downloadables[idx++] = baseDAO.bool(
+							"is.shared.file",
+							f.getAbsolutePath().substring(
+									publicDir.getAbsolutePath().length() + 1));
 
 			model.addAttribute("downloadables", downloadables);
 			model.addAttribute("files", files);
 			model.addAttribute("copiedFiles", copiedFiles);
 			model.addAttribute("cutFiles", cutFiles);
 			model.addAttribute("back", !(baseDir.equals(currentDir)));
-			model.addAttribute("currentDir", currentDir.getAbsolutePath().substring(baseDir.getAbsolutePath().length()));
+			model.addAttribute("currentDir", currentDir.getAbsolutePath()
+					.substring(baseDir.getAbsolutePath().length()));
 			return "/admin/files";
 		}
 		return null;
 	}
 
 	@RequestMapping(value = "/share.xhtml", method = RequestMethod.GET)
-	@ResponseStatus(value=HttpStatus.NO_CONTENT)
-	public void share(HttpServletResponse response, @RequestParam("file") String file) throws Exception {
-		baseDAO.dml("insert.shared.file", file,current(file).getAbsolutePath().substring(publicDir.getAbsolutePath().length()+1));
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void share(HttpServletResponse response,
+			@RequestParam("file") String file) throws Exception {
+		baseDAO.dml("insert.shared.file", file, current(file).getAbsolutePath()
+				.substring(publicDir.getAbsolutePath().length() + 1));
 	}
 
 	@RequestMapping(value = "/unshare.xhtml", method = RequestMethod.GET)
-	@ResponseStatus(value=HttpStatus.NO_CONTENT)
-	public void unshare(HttpServletResponse response, @RequestParam("file") String file) throws Exception {
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void unshare(HttpServletResponse response,
+			@RequestParam("file") String file) throws Exception {
 		doUnshare(file);
 	}
-	
-	private void doUnshare(String file) throws Exception{
-		baseDAO.dml("delete.shared.file", current(file).getAbsolutePath().substring(publicDir.getAbsolutePath().length()+1));
+
+	private void doUnshare(String file) throws Exception {
+		baseDAO.dml("delete.shared.file", current(file).getAbsolutePath()
+				.substring(publicDir.getAbsolutePath().length() + 1));
 	}
 
 	@RequestMapping(value = "/download.xhtml", method = RequestMethod.GET)
-	public void download(Model model, HttpServletResponse response, @RequestParam(required = false, defaultValue = "/", value = "f") String dir) throws Exception {
-
+	public void download(
+			Model model,
+			HttpServletResponse response,
+			@RequestParam(required = false, defaultValue = "/", value = "f") String dir)
+			throws Exception {
 		File file = current(dir);
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + dir);
+		doDownload(response, file,dir);
+	}
+
+	@RequestMapping(value = "/{problem}/{ext}/{id}.xhtml", method = RequestMethod.GET)
+	public void dataset(Model model, HttpServletResponse response,
+			@PathVariable("problem") String problem,
+			@PathVariable("ext") String ext, @PathVariable("id") String id)
+			throws Exception {
+		String dir = problem + "/" + id + "." + ext;
+		doDownload(response, new File(problemDir,dir),dir);
+	}
+
+	private void doDownload(HttpServletResponse response, File file,String dir)
+			throws Exception {
+		
+		response.setHeader("Content-Disposition", "attachment; filename=\""
+				+ dir);
 		// si es un archivo, se descarga
 		if (!file.isDirectory())
-			FileUtils.redirectStreams(new FileInputStream(file), response.getOutputStream());
+			FileUtils.redirectStreams(new FileInputStream(file),
+					response.getOutputStream());
 	}
 
 	@RequestMapping(value = "/list.xhtml", method = RequestMethod.POST)
-	public String upload(Model model, MultipartFile file, String[] files, String folder) throws Exception {
+	public String upload(Model model, MultipartFile file, String[] files,
+			String folder) throws Exception {
 
 		if (StringUtils.hasText(folder)) {
 			// no lleva codificacion UTF-8
@@ -126,7 +167,8 @@ public class FileSystemController extends BaseController {
 	}
 
 	@RequestMapping(value = "/cut.xhtml", method = RequestMethod.GET)
-	public String cut(Model model, @RequestParam(value = "f") String dir) throws Exception {
+	public String cut(Model model, @RequestParam(value = "f") String dir)
+			throws Exception {
 
 		File file = current(dir);
 
@@ -136,7 +178,8 @@ public class FileSystemController extends BaseController {
 	}
 
 	@RequestMapping(value = "/copy.xhtml", method = RequestMethod.GET)
-	public String copy(Model model, @RequestParam(value = "f") String dir) throws Exception {
+	public String copy(Model model, @RequestParam(value = "f") String dir)
+			throws Exception {
 
 		File file = current(dir);
 
@@ -146,7 +189,10 @@ public class FileSystemController extends BaseController {
 	}
 
 	@RequestMapping(value = "/paste.xhtml", method = RequestMethod.GET)
-	public String paste(Model model, @RequestParam(required = false, defaultValue = "/", value = "f") String dir) throws Exception {
+	public String paste(
+			Model model,
+			@RequestParam(required = false, defaultValue = "/", value = "f") String dir)
+			throws Exception {
 
 		File file = current(dir);
 		if (file.isDirectory()) {
@@ -155,7 +201,8 @@ public class FileSystemController extends BaseController {
 					org.apache.commons.io.FileUtils.copyDirectory(cut, file);
 					org.apache.commons.io.FileUtils.deleteDirectory(cut);
 				} else {
-					org.apache.commons.io.FileUtils.copyFileToDirectory(cut, file);
+					org.apache.commons.io.FileUtils.copyFileToDirectory(cut,
+							file);
 					org.apache.commons.io.FileUtils.deleteQuietly(cut);
 				}
 			}
@@ -163,7 +210,8 @@ public class FileSystemController extends BaseController {
 				if (copy.isDirectory()) {
 					org.apache.commons.io.FileUtils.copyDirectory(copy, file);
 				} else {
-					org.apache.commons.io.FileUtils.copyFileToDirectory(copy, file);
+					org.apache.commons.io.FileUtils.copyFileToDirectory(copy,
+							file);
 				}
 			}
 			cutFiles.clear();
@@ -173,7 +221,8 @@ public class FileSystemController extends BaseController {
 	}
 
 	@RequestMapping(value = "/clear.xhtml", method = RequestMethod.GET)
-	public String clearSelected(Model model, @RequestParam(value = "f") String dir) throws Exception {
+	public String clearSelected(Model model,
+			@RequestParam(value = "f") String dir) throws Exception {
 
 		File file = current(dir);
 		Iterator<File> cIt = cutFiles.iterator();
@@ -194,7 +243,8 @@ public class FileSystemController extends BaseController {
 	}
 
 	@RequestMapping(value = "/delete.xhtml", method = RequestMethod.GET)
-	public String delete(Model model, @RequestParam(value = "f") String dir) throws Exception {
+	public String delete(Model model, @RequestParam(value = "f") String dir)
+			throws Exception {
 
 		File file = current(dir);
 		org.apache.commons.io.FileUtils.deleteQuietly(file);

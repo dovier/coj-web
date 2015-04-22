@@ -16,17 +16,24 @@ import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.problemValidator;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
@@ -56,6 +63,13 @@ public class ProblemController extends BaseController {
     private problemValidator validator;
     @Resource
     private Utils utils;
+    
+    
+    
+    @PostConstruct
+	public void init() {
+		
+	}
 
     @RequestMapping(value = "/adminproblems.xhtml", method = RequestMethod.GET)
     public String listProblems(Principal principal, HttpServletRequest request, Model model, Locale locale, PagingOptions options, @RequestParam(required = false, value = "pattern") String pattern) {
