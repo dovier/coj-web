@@ -117,7 +117,7 @@
 
 	<bean id="ds" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
-		
+		e
         <property name="driverClass" value="org.postgresql.Driver" />
 		<property name="jdbcUrl" value="jdbc:postgresql://127.0.0.1:5432/coj" />
 		<property name="user" value="postgres" />                
