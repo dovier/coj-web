@@ -117,13 +117,9 @@
 
 						<!-- Nav tabs -->
 						<ul class="nav nav-tabs" role="tablist">
-							<li role="presentation" class="active"><a
-								href="#basicLimits" aria-controls="basicLimits" role="tab"
-								data-toggle="tab">Basic</a></li>
-							<li role="presentation"><a href="#allLimits"
-								aria-controls="profile" role="tab" data-toggle="tab">All</a></li>
-							<li role="presentation"><a href="#multipliers"
-								aria-controls="profile" role="tab" data-toggle="tab">Multipliers</a></li>
+                                <li role="presentation" class="active"><a href="#basicLimits" aria-controls="basicLimits" role="tab" data-toggle="tab">Basic</a></li>
+                                <li role="presentation"><a href="#allLimits" aria-controls="profile" role="tab" data-toggle="tab">All</a></li>
+                                <li role="presentation"><a href="#multipliers" aria-controls="profile" role="tab" data-toggle="tab">Multipliers</a></li>
 						</ul>
 
 						<!-- Tab panes -->
@@ -133,62 +129,47 @@
 									<div class="col-lg-3">
 										<label for="memoryLimit">Memory (B)</label>
 										<div class="input-group">
-											<input type="text" id="memoryLimit" placeholder="Max Memory"
-												class="form-control"> <span class="input-group-btn">
-												<button id="btn-max-memory" class="btn btn-default"
-													type="button" onclick="applyLimit(this,'.max-memory')">Apply</button>
+                                                <input type="text" id="memoryLimit"  placeholder="Max Memory" class="form-control" data-toggle="unit-selector">
+                                                <span class="input-group-btn">
+                                                    <button id="btn-max-memory" class="btn btn-default" type="button" onclick="applyLimit(this,'.max-memory')">Apply</button>
 											</span>
 										</div>
 									</div>
 									<div class="col-lg-3">
-										<label for="maxCaseExecutionTime">Case Execution Time
-											(MS)</label>
+                                            <label for="maxCaseExecutionTime">Case Execution Time (MS)</label>
 										<div class="input-group">
-											<input type="text" id="maxCaseExecutionTime"
-												placeholder="Max Case Execution Time" class="form-control">
+                                                <input type="text" id="maxCaseExecutionTime" placeholder="Max Case Execution Time" class="form-control">
 											<span class="input-group-btn">
-												<button id="btn-max-case-execution-time"
-													class="btn btn-default" type="button"
-													onclick="applyLimit(this,'.max-case-execution-time')">Apply</button>
+                                                    <button id="btn-max-case-execution-time" class="btn btn-default" type="button" onclick="applyLimit(this,'.max-case-execution-time')">Apply</button>
 											</span>
 										</div>
 									</div>
 									<div class="col-lg-3">
-										<label for="maxTotalExecutionTime">Total Execution
-											Time (MS)</label>
-										<div class="input-group">
-											<input type="text" id="maxTotalExecutionTime"
-												placeholder="Max Total Execution Time" class="form-control">
+                                            <label for="maxTotalExecutionTime">Total Execution Time (MS)</label>
+                                            <div class="input-group" id="popover-container">
+                                                <input type="text" id="maxTotalExecutionTime" placeholder="Max Total Execution Time" class="form-control">
 											<span class="input-group-btn">
-												<button id="btn-max-total-execution-time"
-													class="btn btn-default" type="button"
-													onclick="applyLimit(this,'.max-total-execution-time')">Apply</button>
+                                                    <button id="btn-max-total-execution-time" class="btn btn-default" type="button" onclick="applyLimit(this,'.max-total-execution-time')">Apply</button>
 											</span>
 										</div>
 									</div>
 									<div class="col-lg-3">
-										<label for="maxSourceCodeLenght">Source Code Length
-											(B)</label>
+                                            <label for="maxSourceCodeLenght">Source Code Length (B)</label>
 										<div class="input-group">
-											<input type="text" id="maxSourceCodeLenght"
-												placeholder="Max Source Code Length" class="form-control">
+                                                <input type="text" id="maxSourceCodeLenght" placeholder="Max Source Code Length" class="form-control" data-toggle="unit-selector">
 											<span class="input-group-btn">
-												<button id="btn-max-source-code-lenght"
-													class="btn btn-default" type="button"
-													onclick="applyLimit(this,'.max-source-code-lenght')">Apply</button>
+                                                    <button id="btn-max-source-code-lenght" class="btn btn-default"  type="button" onclick="applyLimit(this,'.max-source-code-lenght')">Apply</button>
 											</span>
 										</div>
 									</div>
 								</div>
 								<div class="checkbox">
-									<label> <input id="use-multipliers" type="checkbox"
-										name="use-miltipliers">Multipliers
+                                        <label>
+                                            <input id="use-multipliers" type="checkbox" name="use-miltipliers">Multipliers
 									</label>
 								</div>
-								<button type="button" class="btn btn-default"
-									onclick="applyAllLimit()">
-									<span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>Apply
-									All
+                                    <button type="button" class="btn btn-default" onclick="applyAllLimit()">
+                                        <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>Apply All
 								</button>
 							</div>
 							<div role="tabpanel" class="tab-pane" id="allLimits">
@@ -197,48 +178,34 @@
 										<label for="memoryLimit1">Memory (B)</label>
 									</div>
 									<div class="col-lg-3">
-										<label for="maxCaseExecutionTime1">Case Execution Time
-											(MS)</label>
+                                            <label for="maxCaseExecutionTime1">Case Execution Time (MS)</label>
 									</div>
 									<div class="col-lg-3">
-										<label for="maxTotalExecutionTime1">Total Execution
-											Time (MS)</label>
+                                            <label for="maxTotalExecutionTime1">Total Execution Time (MS)</label>
 									</div>
 									<div class="col-lg-3">
-										<label for="maxSourceCodeLenght1">Source Code Length
-											(B)</label>
+                                            <label for="maxSourceCodeLenght1">Source Code Length (B)</label>
 									</div>
 								</div>
 								<c:forEach items="${languages}" var="language" varStatus="loop">
-									<div class="panel panel-default language-container"
-										language="${language.language}">
+                                        <div class="panel panel-default language-container" language="${language.language}">
 										<div class="panel-heading">
 											<h3 class="panel-title">${language.language}</h3>
 										</div>
 										<div class="panel-body">
 											<div class="row">
-												<form:hidden id="languageId{loop.index}"
-													path="limits[${loop.index}].languageId" />
+                                                    <form:hidden id="languageId{loop.index}" path="limits[${loop.index}].languageId" />
 												<div class="col-lg-3">
-													<form:input cssClass="form-control max-memory"
-														id="maxMemory{loop.index}"
-														path="limits[${loop.index}].maxMemory" />
+                                                        <form:input cssClass="form-control max-memory" data-toggle="unit-selector" id="maxMemory{loop.index}" path="limits[${loop.index}].maxMemory" />
 												</div>
 												<div class="col-lg-3">
-													<form:input cssClass="form-control max-case-execution-time"
-														id="maxCaseExecutionTime${loop.index}"
-														path="limits[${loop.index}].maxCaseExecutionTime" />
+                                                        <form:input cssClass="form-control max-case-execution-time"  id="maxCaseExecutionTime${loop.index}" path="limits[${loop.index}].maxCaseExecutionTime" />
 												</div>
 												<div class="col-lg-3">
-													<form:input
-														cssClass="form-control max-total-execution-time"
-														id="maxTotalExecutionTime${loop.index}"
-														path="limits[${loop.index}].maxTotalExecutionTime" />
+                                                        <form:input cssClass="form-control max-total-execution-time"  id="maxTotalExecutionTime${loop.index}" path="limits[${loop.index}].maxTotalExecutionTime" />
 												</div>
 												<div class="col-lg-3">
-													<form:input cssClass="form-control max-source-code-lenght"
-														id="maxSourceCodeLenght{loop.index}"
-														path="limits[${loop.index}].maxSourceCodeLenght" />
+                                                        <form:input cssClass="form-control max-source-code-lenght" data-toggle="unit-selector" id="maxSourceCodeLenght{loop.index}" path="limits[${loop.index}].maxSourceCodeLenght" />
 
 												</div>
 											</div>
@@ -255,17 +222,14 @@
 										<label for="maxCaseExecutionTime1">Case Execution Time</label>
 									</div>
 									<div class="col-lg-3">
-										<label for="maxTotalExecutionTime1">Total Execution
-											Time</label>
+                                            <label for="maxTotalExecutionTime1">Total Execution Time</label>
 									</div>
 									<div class="col-lg-3">
 										<label for="maxSourceCodeLenght1">Source Code Length</label>
 									</div>
 								</div>
-								<c:forEach items="${multipliers.entrySet()}" var="multiplier"
-									varStatus="loop">
-									<div class="panel panel-default mult-cnt"
-										language="${multiplier.getKey()}">
+                                    <c:forEach items="${multipliers.entrySet()}" var="multiplier" varStatus="loop">
+                                        <div class="panel panel-default mult-cnt" language="${multiplier.getKey()}">
 										<div class="panel-heading">
 											<h3 class="panel-title">${multiplier.getKey()}</h3>
 										</div>
@@ -273,24 +237,16 @@
 
 											<div class="row">
 												<div class="col-lg-3">
-													<input class="form-control max-memory"
-														id="maxMemoryMult{loop.index}"
-														value="${multiplier.getValue()[0]}" />
+                                                        <input class="form-control max-memory"  id="maxMemoryMult{loop.index}" value="${multiplier.getValue()[0]}"/>
 												</div>
 												<div class="col-lg-3">
-													<input class="form-control max-case-execution-time"
-														id="maxCaseExecutionTimeMult${loop.index}"
-														value="${multiplier.getValue()[1]}" />
+                                                        <input class="form-control max-case-execution-time"  id="maxCaseExecutionTimeMult${loop.index}" value="${multiplier.getValue()[1]}"/>                                                    
 												</div>
 												<div class="col-lg-3">
-													<input class="form-control max-total-execution-time"
-														id="maxTotalExecutionTimeMult${loop.index}"
-														value="${multiplier.getValue()[2]}" />
+                                                        <input class="form-control max-total-execution-time"  id="maxTotalExecutionTimeMult${loop.index}" value="${multiplier.getValue()[2]}"/>                                                    
 												</div>
 												<div class="col-lg-3">
-													<input class="form-control max-source-code-lenght"
-														id="maxSourceCodeLenghtMult{loop.index}"
-														value="${multiplier.getValue()[3]}" />
+                                                        <input class="form-control max-source-code-lenght"  id="maxSourceCodeLenghtMult{loop.index}" value="${multiplier.getValue()[3]}"/>                                                    
 												</div>
 											</div>
 										</div>
@@ -305,8 +261,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="alert alert-danger col-xs-6" role="alert">The
-			following limits are deprecated but, for now, you have to fill it.</div>
+            <div class="alert alert-danger col-xs-6" role="alert">The following limits are deprecated but, for now, you have to fill it.</div>
 		<div class="form-group col-xs-12">
 			<label class="control-label col-xs-3"> <fmt:message
 					key="addproblem.casechk" />
@@ -506,8 +461,33 @@
 		</div>
 	</form:form>
 </div>
+        <div id="popover_content_wrapper" style="display: none" >
+            <div class="unit-selector clearfix" style="width: 170px">                             
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Size">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" aria-label="Left Align">
+                                <span class="fa fa-check" aria-hidden="true"></span>
+                            </button>
+                        </span>
+                    </div>                
+                 <select class="form-control">
+                            <option value="1">B</option>
+                            <option value="1024">KB</option>
+                            <option selected value="1048576">MB</option>
+                            <option value="1073741824">GB</option>
+                 </select>
+            </div>
+        </div>
 <%@include file="/WEB-INF/jsp/general/confirmmessage.jsp"%>
 <script type="text/javascript"
 	src="<c:url value="/js/WYSIWYG/source.js" />"></script>
-<script type="text/javascript"
-	src="<c:url value="/js/admin/manage-problem.js" />"></script>
+<script type="text/javascript" src="<c:url value="/js/admin/manage-problem.js" />"></script>
+<script type="text/javascript" src="<c:url value="/js/custom-libs/unit-selector.js" />"></script>
+<script type="text/javascript">
+    
+$(function () {    
+     $('[data-toggle="unit-selector"]').unitSelector()    
+});
+
+</script>
