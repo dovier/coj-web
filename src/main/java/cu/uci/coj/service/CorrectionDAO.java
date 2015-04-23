@@ -12,4 +12,5 @@ public interface CorrectionDAO extends BaseDAO {
 	public void calculateStatsContest();
 	public void calculateAwards();
 	public void calculatePoints();
+	public void synchSharedFiles();
 }

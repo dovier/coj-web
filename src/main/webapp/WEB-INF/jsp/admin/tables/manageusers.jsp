@@ -7,7 +7,7 @@
 		paramProperty="username" />
 	<display:column property="rgdate" titleKey="tablehdr.date"
 		headerClass="headdate" />
-	<display:column property="last_connected_date" titleKey="tablehdr.last"
+	<display:column property="status" titleKey="tablehdr.last"
 		headerClass="headdate" />
 	<display:column titleKey="tablehdr.connected">
 		<c:choose>
@@ -22,7 +22,7 @@
 		</c:choose>
 	</display:column>
 	<display:column property="lastip" titleKey="tablehdr.ip" />
-	<display:column titleKey="tablehdr.enabled">
+	<display:column titleKey="tablehdr.status">
 			<label class="label bg${user.status}">${user.status}</label>
 	</display:column>
 	<display:column titleKey="tablehdr.edit">

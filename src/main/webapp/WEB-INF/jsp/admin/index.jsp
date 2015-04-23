@@ -32,9 +32,6 @@
 										</c:if>
 										<c:if test="${not empty userStatus[2]['status']}">
 											<li><label
-													class="label bg${userStatus[2]['status']}"><a class="white status"
-												data-status="${userStatus[2]['status']}"><i
-														class="fa fa-bell"></i></a></label>&nbsp;<label
 												class="label bg${userStatus[2]['status']}">${userStatus[2]['status']}&nbsp;${userStatus[2]['count']}</label></li>
 										</c:if>
 										<c:if test="${not empty userStatus[3]['status']}">
@@ -45,7 +42,10 @@
 												class="label bg${userStatus[3]['status']}">${userStatus[3]['status']}&nbsp;${userStatus[3]['count']}</label></li>
 										</c:if>
 										<c:if test="${not empty userStatus[4]['status']}">
-											<li><label class="label bg${userStatus[4]['status']}">${userStatus[4]['status']}&nbsp;${userStatus[4]['count']}</label></li>
+											<li><label
+													class="label bg${userStatus[4]['status']}"><a class="white status"
+												data-status="${userStatus[4]['status']}"><i
+														class="fa fa-bell"></i></a></label>&nbsp;<label class="label bg${userStatus[4]['status']}">${userStatus[4]['status']}&nbsp;${userStatus[4]['count']}</label></li>
 										</c:if>
 									</ul>
 								</div>

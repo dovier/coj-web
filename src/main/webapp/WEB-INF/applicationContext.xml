@@ -109,6 +109,8 @@
 			access="permitAll" />
 		<security:intercept-url pattern="/schoolar/**"
 			access="hasRole('ROLE_USER')" />
+		<security:intercept-url pattern="/datasets/**"
+			access="hasRole('ROLE_USER')" />
 		<security:intercept-url pattern="/**" access="permitAll" />
 	</security:filter-security-metadata-source>
 
