@@ -682,6 +682,10 @@ public class Problem {
 	}
 
 	public String getAuthor() {
+		if (author.trim().startsWith("- "))
+			return author.substring(2);
+		if (author.trim().endsWith(" -"))
+			return author.substring(0,author.length() - 2);
 		return author;
 	}
 
