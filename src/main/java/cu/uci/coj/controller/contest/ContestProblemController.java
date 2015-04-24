@@ -89,8 +89,9 @@ public class ContestProblemController extends BaseController {
                 } else {
                     problem.setSee(true);
                     problem.setLanguages(contestDAO.getContestLanguages(cid));
+                    problemDAO.fillProblemLimits(problem);                    
                     model.addAttribute("problem", problem);
-                }
+                }                
             } else {
                 return "/error/wproblem";
             }
