@@ -55,16 +55,16 @@ import org.springframework.util.CollectionUtils;
 @Component
 public class Utils {
 
-	@Autowired
 	private static RabbitTemplate submitTemplate;
-	@Autowired
+        
+	@Resource
 	private RabbitAdmin rabbitAdmin;
 	@Resource
 	private SubmissionDAO submissionDAO;
 	@Resource
 	private ContestDAO contestDAO;
 
-	@Autowired
+	@Resource(name = "submitTemplate")
 	void setRabbitTemplate(RabbitTemplate rabbitTemplate) {
 		submitTemplate = rabbitTemplate;
 	}

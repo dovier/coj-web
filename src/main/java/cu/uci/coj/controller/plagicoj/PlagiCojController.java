@@ -1,28 +1,5 @@
 package cu.uci.coj.controller.plagicoj;
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
-import net.sf.json.JSONObject;
-
-import org.atmosphere.cpr.AtmosphereResource;
-import org.atmosphere.cpr.AtmosphereResourceFactory;
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import cu.uci.coj.config.Config;
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.PlagiCOJDAO;
@@ -53,13 +30,35 @@ import cu.uci.plagicoj.entities.SourceCode;
 import cu.uci.plagicoj.factories.PlagiCOJFactory;
 import cu.uci.plagicoj.scpdt.PlagiCOJClient;
 import cu.uci.plagicoj.utils.DetectionPriority;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import net.sf.json.JSONObject;
+import org.atmosphere.cpr.AtmosphereResource;
+import org.atmosphere.cpr.AtmosphereResourceFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
 @RequestMapping(value = "/")
 public class PlagiCojController extends BaseController implements PlagiCOJClient.DictumReceivedCallback {
-
     public final int MAX_WEBSOCKET_CNX_WAITING_TIME = 5000;
+        
+    @Resource
+    RabbitTemplate plagiarismDetectorTemplate;
     
     @Resource
     private PlagiCOJDAO plagiCOJDAO;

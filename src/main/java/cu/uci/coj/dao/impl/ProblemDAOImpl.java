@@ -1024,7 +1024,7 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 				problem.getInputEs(), problem.getInputPt(),
 				problem.getOutput(), problem.getOutputEs(),
 				problem.getOutputPt(), problem.getInputex(),
-				problem.getOutputex(), problem.getAuthor(),
+				problem.getOutputex(), problem.getId_source(),
 				problem.getComments(), problem.getCommentsEs(),
 				problem.getCommentsPt(), problem.getTime(),
 				problem.getMemory(), problem.getFontsize(),

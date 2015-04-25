@@ -47,6 +47,14 @@ public class AMQPConfiguration {
         bean.setExchange(env.getProperty("submit.exchange"));
         return bean;
     }
+    
+    @Bean
+    public RabbitTemplate plagiarismDetectorTemplate() {
+        RabbitTemplate bean = new RabbitTemplate(connectionFactory());
+        bean.setMessageConverter(jsonMessageConverter());
+        bean.setExchange(env.getProperty("plagiarism.detection.exchange"));
+        return bean;
+    }
 
     @Autowired
     private UEngineMessageListener messageListener;
