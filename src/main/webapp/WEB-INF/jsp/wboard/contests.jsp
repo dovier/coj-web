@@ -10,6 +10,7 @@
 <div class="postcontent">
 	<!-- content -->
 	<div style="clear: both;"></div>
+
 	<div class="row">
 		<div class="col-xs-12">
 			<form id="filter-form" class="form-inline">
@@ -30,6 +31,15 @@
 	</div>
 	
 	<br>
+	
+	<a
+		class="pull-right"
+		data-toggle="tooltip"
+		href="#"
+		title="<spring:message code="message.timezoneinfo.text"/>"><i
+		class="fa fa-info"></i> &nbsp;<spring:message code="message.timezoneinfo"/></a>
+	
+	<br>
 			
 	 <div id="display-table-container" data-reload-url="/tables/wbcontests.xhtml"></div>
 	
@@ -39,6 +49,9 @@
 <script>
 
 $(document).ready(function(){
+	
+	$("[data-toggle='tooltip']").tooltip();
+	
 	var follow_text = "<spring:message code="button.follow"/>";
 	var unfollow_text = "<spring:message code="button.unfollow"/>";
 

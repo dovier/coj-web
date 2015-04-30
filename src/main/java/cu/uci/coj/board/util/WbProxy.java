@@ -33,5 +33,9 @@ public class WbProxy {
     	System.setProperty("http.proxyHost", proxy);
 		System.setProperty("http.proxyPort", port);
 		System.setProperty("http.nonProxyHosts", noProxy);
+		
+		System.setProperty("https.proxyHost", proxy);
+		System.setProperty("https.proxyPort", port);
+		System.setProperty("https.nonProxyHosts", noProxy);
     }
 }
