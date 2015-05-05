@@ -329,8 +329,39 @@
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
+                <dependency>
+                    <groupId>org.flywaydb</groupId>
+                    <artifactId>flyway-core</artifactId>
+                    <version>3.2.1</version>
+                </dependency>
 	</dependencies>
-
+        <profiles>
+            <profile>
+                <id>dev</id>
+                <activation>
+                    <activeByDefault>true</activeByDefault>
+                </activation>
+                <properties>
+                    <database.name>dev</database.name>
+                    <database.driver>org.postgresql.Driver</database.driver>
+                    <database.url>jdbc:postgresql://127.0.0.1:5432/coj</database.url>
+                     <database.user>postgres</database.user>
+                     <database.password>cojdbpass123</database.password> 
+                    <migration.customLocation>classpath:cu/uci/coj/db/migration/dev</migration.customLocation>                                              
+                </properties>
+            </profile>
+            <profile>
+                <id>prod</id>
+                <properties>
+                    <database.name>prod</database.name>
+                    <database.driver>org.postgresql.Driver</database.driver>
+                    <database.url>jdbc:postgresql://127.0.0.1:5432/coj</database.url>                    
+                    <database.user>postgres</database.user>
+                    <database.password>cojdbpass123</database.password>                    
+                    <migration.customLocation>classpath:cu/uci/coj/db/migration/prod</migration.customLocation>        
+                </properties>
+            </profile>
+        </profiles>
 	<build>
 		<plugins>
 			<plugin>
@@ -377,7 +408,26 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> 
+                        <plugin>
+                            <groupId>org.flywaydb</groupId>
+                            <artifactId>flyway-maven-plugin</artifactId>
+                            <version>3.2.1</version>                           
+                            <configuration>                                                               
+                                <driver>${database.driver}</driver>
+                                <url>${database.url}</url>
+                                <user>${database.user}</user>
+                                <password>${database.password}</password> 
+                                <locations>
+                                    <location>
+                                        classpath:cu/uci/coj/db/migration/commons
+                                    </location>
+                                    <location>
+                                        ${migration.customLocation}                                       
+                                    </location>
+                                </locations>
+                            </configuration>                    
+                        </plugin>                       
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -416,5 +466,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
+        
 </project>
