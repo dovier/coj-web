@@ -228,6 +228,11 @@
 		<put-attribute name="title" value="pagetit.aaddannouncement" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/addann.jsp" />
 	</definition>
+	
+	<definition name="/admin/poll/manage" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.managepoll" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/poll/manage.jsp" />
+	</definition>
 
 	<definition name="/user/entry" extends="template">
 		<put-attribute name="title" value="Entry" />
@@ -276,6 +281,11 @@
 	<definition name="/admin/listann" extends="admintemplate">
 		<put-attribute name="title" value="pagetit.amannouncement" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/listann.jsp" />
+	</definition>
+	
+	<definition name="/admin/poll/list" extends="admintemplate">
+		<put-attribute name="title" value="pagetit.listpolls" />
+		<put-attribute name="content" value="/WEB-INF/jsp/admin/poll/list.jsp" />
 	</definition>
 
 	<definition name="/admin/sessions" extends="admintemplate">
@@ -1031,6 +1041,12 @@
 		<put-attribute name="title" value="pagetit.achievements" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/general/achievements.jsp" />
+	</definition>
+	
+	<definition name="/poll/list" extends="template">
+		<put-attribute name="title" value="pagetit.polls" />
+		<put-attribute name="content"
+			value="/WEB-INF/jsp/poll/list.jsp" />
 	</definition>
 
 	<definition name="/user/createnewaccount" extends="template">
