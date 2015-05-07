@@ -49,7 +49,6 @@ import cu.uci.coj.security.COJAuthenticationFailureHandler;
 import cu.uci.coj.security.COJAuthenticationProcessingFilter;
 import cu.uci.coj.security.COJAuthenticationSuccessHandler;
 import cu.uci.coj.security.COJSessionRegistryImpl;
-import cu.uci.coj.security.UrlLogFilter;
 
 @Configuration
 public class SecurityConfiguration {
@@ -207,7 +206,7 @@ public class SecurityConfiguration {
 	List<SecurityFilterChain> filters = new ArrayList<SecurityFilterChain>(12);
         RequestMatcher req = new AntPathRequestMatcher("/**");
         
-        filters.add(new DefaultSecurityFilterChain(req, new UrlLogFilter(userDAO),new SecurityContextPersistenceFilter(), 
+        filters.add(new DefaultSecurityFilterChain(req, new SecurityContextPersistenceFilter(), 
                 logoutFilter(),cojAuthenticationProcessingFilter(),new SecurityContextHolderAwareRequestFilter(),
                 rememberMeAuthenticationFilter(),anonymousAuthenticationFilter(),exceptionTranslationFilter(),filterInvocationInterceptor()
                 ));
