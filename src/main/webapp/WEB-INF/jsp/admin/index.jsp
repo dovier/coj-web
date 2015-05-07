@@ -31,21 +31,21 @@
 											<li><label class="label bg${userStatus[1]['status']}">${userStatus[1]['status']}&nbsp;${userStatus[1]['count']}</label></li>
 										</c:if>
 										<c:if test="${not empty userStatus[2]['status']}">
-											<li><label
-												class="label bg${userStatus[2]['status']}">${userStatus[2]['status']}&nbsp;${userStatus[2]['count']}</label></li>
+											<li><label class="label bg${userStatus[2]['status']}">${userStatus[2]['status']}&nbsp;${userStatus[2]['count']}</label></li>
 										</c:if>
 										<c:if test="${not empty userStatus[3]['status']}">
-											<li><label
-													class="label bg${userStatus[3]['status']}"><a class="white status"
-												data-status="${userStatus[3]['status']}"><i
+											<li><label class="label bg${userStatus[3]['status']}"><a
+													class="white status"
+													data-status="${userStatus[3]['status']}"><i
 														class="fa fa-bell"></i></a></label>&nbsp;<label
 												class="label bg${userStatus[3]['status']}">${userStatus[3]['status']}&nbsp;${userStatus[3]['count']}</label></li>
 										</c:if>
 										<c:if test="${not empty userStatus[4]['status']}">
-											<li><label
-													class="label bg${userStatus[4]['status']}"><a class="white status"
-												data-status="${userStatus[4]['status']}"><i
-														class="fa fa-bell"></i></a></label>&nbsp;<label class="label bg${userStatus[4]['status']}">${userStatus[4]['status']}&nbsp;${userStatus[4]['count']}</label></li>
+											<li><label class="label bg${userStatus[4]['status']}"><a
+													class="white status"
+													data-status="${userStatus[4]['status']}"><i
+														class="fa fa-bell"></i></a></label>&nbsp;<label
+												class="label bg${userStatus[4]['status']}">${userStatus[4]['status']}&nbsp;${userStatus[4]['count']}</label></li>
 										</c:if>
 									</ul>
 								</div>
@@ -195,31 +195,6 @@
 			</div>
 		</div>
 	</authz:authorize>
-	<authz:authorize ifAnyGranted="ROLE_ADMIN,ROLE_ENTRIES_MANAGER">
-		<div class="row">
-			<div class="col-xs-12">
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						Entries
-						<div class="badge pull-right">
-							<a data-toggle="collapse" href="#gEntries"><i
-								class="fa fa-chevron-up"></i></a>
-						</div>
-					</div>
-					<div id="gEntries" class="panel-body collapse in">
-						<authz:authorize ifAnyGranted="ROLE_ADMIN,ROLE_ENTRIES_MANAGER">
-							<div class="col-xs-4">
-								<a href="<c:url value="/admin/manageentries.xhtml" />"
-									title="<spring:message code="titval.entries"/>"><i
-									class="fa fa-gear"></i>&nbsp;<spring:message
-										code="tableval.entries" /></a>
-							</div>
-						</authz:authorize>
-					</div>
-				</div>
-			</div>
-		</div>
-	</authz:authorize>
 	<authz:authorize ifAnyGranted="ROLE_ADMIN,ROLE_FILE_MANAGER">
 		<div class="row">
 			<div class="col-xs-12">
@@ -299,6 +274,22 @@
 									title="<spring:message code="titval.manage"/>"><i
 									class="fa fa-gear"></i>&nbsp;<spring:message
 										code="tableval.corrections" /></a>
+							</div>
+						</authz:authorize>
+						<authz:authorize ifAnyGranted="ROLE_ADMIN">
+							<div class="col-xs-4">
+								<a href="<c:url value="poll/list.xhtml" />"
+									title="<spring:message code="titval.manage"/>"><i
+									class="fa fa-gear"></i>&nbsp;<spring:message
+										code="tableval.polls" /></a>
+							</div>
+						</authz:authorize>
+						<authz:authorize ifAnyGranted="ROLE_ADMIN,ROLE_ENTRIES_MANAGER">
+							<div class="col-xs-4">
+								<a href="<c:url value="/admin/manageentries.xhtml" />"
+									title="<spring:message code="titval.entries"/>"><i
+									class="fa fa-gear"></i>&nbsp;<spring:message
+										code="tableval.entries" /></a>
 							</div>
 						</authz:authorize>
 					</div>
@@ -389,7 +380,7 @@
 			data : {
 				"status" : status
 			},
-			beforeSend: function(){
+			beforeSend : function() {
 				caller.html('<i class="fa fa-circle-o-notch fa-spin"></i>');
 			},
 			success : function(data) {

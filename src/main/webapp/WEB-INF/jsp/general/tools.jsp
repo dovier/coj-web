@@ -20,6 +20,9 @@
         <li>
             <a href="<c:url value="/wboard/contests.xhtml"/>">COJboard</a>
         </li>
+        <li>
+            <a href="/poll/list.xhtml"><spring:message code="text.tools.3"/></a>
+        </li>
     </ul>
     <!-- /article-content -->
 </div>

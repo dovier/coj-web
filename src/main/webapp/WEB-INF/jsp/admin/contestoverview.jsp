@@ -36,6 +36,9 @@
 		<li><a
 			href="<c:url value="contestusers.xhtml?cid=${contest.cid}"/>"><fmt:message
 					key="page.managecontest.link.mu" /></a></li>
+		<li><a
+			href="<c:url value="contestawards.xhtml?cid=${contest.cid}"/>"><fmt:message
+					key="page.managecontest.link.aw" /></a></li>
 		<li class="active"><a
 			href="<c:url value="contestoverview.xhtml?cid=${contest.cid}"/>"><fmt:message
 					key="page.managecontest.link.ov" /></a></li>
