@@ -34,11 +34,11 @@ public class WbBlogNotificationService implements WbNotificationService {
 	
 	@PostConstruct
 	void init() {
-		if(userDAO.idByUsername("COJbot") == null) {
+		if(userDAO.idByUsername("COJboard") == null) {
 			User user = new User();
-			user.setUsername("COJbot");
-			user.setNick("COJbot");
-			user.setEmail("coj@uci.cu");
+			user.setUsername("COJboard");
+			user.setNick("COJboard");
+			user.setEmail("cojboard@uci.cu");
 			user.setEnabled(true);
 			user.setLid(1);
 			user.setLocale(1);
@@ -46,7 +46,7 @@ public class WbBlogNotificationService implements WbNotificationService {
 			user.setDob(new Date());
 			userDAO.InsertUser(user);
 		}
-	}
+	}	
 	
 	private Entry createEntry(String text) {
 		Entry entry = new Entry(text, new Date());
@@ -65,7 +65,7 @@ public class WbBlogNotificationService implements WbNotificationService {
 				for(int j = 0;j<site.getContests().size();j++) {			
 					contest = site.getContests().get(j);
 					text = "New contest: " + contest.getName() + ". More info: http://coj.uci.cu/wboard/contests.xhtml";
-					entryDAO.addEntry(createEntry(text), true, "COJbot");
+					entryDAO.addEntry(createEntry(text), true, "COJboard");
 				}
 			}
 		}
@@ -74,7 +74,7 @@ public class WbBlogNotificationService implements WbNotificationService {
 			for(int i = 0;i<nearContestNotification.size();i++) {
 				contest = nearContestNotification.get(i);
 				text = "The contest " + contest.getName() + " is near. More info: http://coj.uci.cu/wboard/contests.xhtml";
-				entryDAO.addEntry(createEntry(text), true, "COJbot");	
+				entryDAO.addEntry(createEntry(text), true, "COJboard");	
 			}
 		}		
 		
@@ -84,7 +84,7 @@ public class WbBlogNotificationService implements WbNotificationService {
 				for(int j = 0;j<site.getContests().size();j++) {			
 					contest = site.getContests().get(j);
 					text = "The contest " + contest.getName() + " has suffered changes. More info: http://coj.uci.cu/wboard/contests.xhtml";
-					entryDAO.addEntry(createEntry(text), true, "COJbot");	
+					entryDAO.addEntry(createEntry(text), true, "COJboard");	
 				}
 			}
 		}		

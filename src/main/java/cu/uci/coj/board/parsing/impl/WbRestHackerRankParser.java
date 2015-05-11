@@ -71,7 +71,14 @@ public class WbRestHackerRankParser extends WbParser {
         String restUrl = siteUrl + "start=" + dateBegin.getTime()/1000 + "&end=" + dateEnd.getTime();
         
         SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
-        HackerRankContest[] response = restTemplate.getForObject(restUrl, HackerRankContest[].class);
+        
+        
+        HackerRankContest[] response;
+        try {
+        	response = restTemplate.getForObject(restUrl, HackerRankContest[].class);
+        } catch(Exception e) {
+        	throw new ConnectionErrorException("HackerRank");
+        }
         
         try {        
 	        for(int i = 0;i<response.length;i++) 
