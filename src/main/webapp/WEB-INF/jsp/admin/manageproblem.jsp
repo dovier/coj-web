@@ -165,7 +165,7 @@
 								</div>
 								<div class="checkbox">
                                         <label>
-                                            <input id="use-multipliers" type="checkbox" name="use-miltipliers">Multipliers
+                                            <input id="use-multipliers" type="checkbox" checked="true" name="use-miltipliers">Multipliers
 									</label>
 								</div>
                                     <button type="button" class="btn btn-default" onclick="applyAllLimit()">
