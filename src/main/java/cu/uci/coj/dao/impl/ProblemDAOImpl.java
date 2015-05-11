@@ -54,10 +54,8 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 
 	@Override
 	public void deleteProblemSource(Integer idSource) {
-		ProblemSource source = object("select.problemsource.id",
-				ProblemSource.class, idSource);
+		dml("delete.problemsources.problem", idSource);
 		dml("delete.problemsource", idSource);
-		dml("delete.problemsources.problem", source.getFullName());
 	}
 
 	@Override
@@ -78,13 +76,7 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 
 	@Override
 	public void updateProblemSource(int idSource, String name, String author) {
-		ProblemSource sourceBefore = object("select.problemsource.id",
-				ProblemSource.class, idSource);
 		dml("update.problemsource", name, author, idSource);
-		ProblemSource sourceAfter = object("select.problemsource.id",
-				ProblemSource.class, idSource);
-		dml("update.problemsources.problem", sourceAfter.getFullName(),
-				sourceBefore.getFullName());
 	}
 
 	public void checkProblemCreated() {

@@ -1,7 +1,7 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <script type="text/javascript" src="<c:url value="/js/coj.js" />"></script>
-
+<script type="text/javascript" src="/js/jquery.typewatch.js"></script>
 <h2 class="postheader">
 	<fmt:message key="page.header.admin.managecontest" />
 </h2>
@@ -45,16 +45,8 @@
 	</ul>
 	<form:form method="post" onsubmit="return SeleccionarRangosContest();"
 		commandName="contest">
-		<fieldset style="width: 400px;">
-			<legend>
-				<fmt:message key="page.managecontest.style" />
-			</legend>
-		</fieldset>
 		<c:if test="${contest.grouped eq true}">
 			<fieldset style="width: 400px;">
-				<legend>
-					<fmt:message key="page.managecontest.style" />
-				</legend>
 				<table class="contestlanguages">
 					<tr>
 						<td colspan="2"><fmt:message
@@ -78,9 +70,9 @@
 				<c:when test="${contest.registration eq 0}">
 					<tr>
 
-						<td><span class="label label-info"><i class="fa fa-info-circle"></i> <fmt:message
-									key="page.managecontest.register.free" />
-						</span></td>
+						<td><span class="label label-info"><i
+								class="fa fa-info-circle"></i> <fmt:message
+									key="page.managecontest.register.free" /> </span></td>
 
 					</tr>
 				</c:when>
@@ -98,18 +90,15 @@
 								id="contest_users" size="14" cssClass="login"
 								cssStyle="width: 310px; border: 1px solid #577A5A;"
 								multiple="true">
-
 							</form:select></td>
-
 						<td>
 							<button name="boton" type="button"
 								onclick="addremove('contest_users','allusers');">
 								<i class="fa fa-arrow-right"></i>
 							</button>
 						</td>
-
-						<td rowspan="2"><form:select path="" id="allusers" size="14"
-								cssClass="login"
+						<td rowspan="2"><input id="search-allusers" />
+							<form:select path="" id="allusers" size="14" cssClass="login"
 								cssStyle="width: 310px; border: 1px solid #577A5A;"
 								multiple="true">
 								<form:options items="${allusers}" itemValue="uid"
@@ -181,9 +170,9 @@
 				<c:when test="${contest.registration eq 0}">
 					<tr>
 
-						<td><span class="label label-info"><i class="fa fa-info-circle"></i> <fmt:message
-									key="page.managecontest.register.free" />
-						</span></td>
+						<td><span class="label label-info"><i
+								class="fa fa-info-circle"></i> <fmt:message
+									key="page.managecontest.register.free" /> </span></td>
 
 					</tr>
 				</c:when>
@@ -212,11 +201,11 @@
 							</button>
 						</td>
 
-						<td rowspan="2"><form:select path="" id="bt_allusers"
+						<td rowspan="2"><input id="search-btusers" /><form:select path="" id="bt_allusers"
 								size="14" cssClass="login"
 								cssStyle="width: 310px; border: 1px solid #577A5A;"
 								multiple="true">
-								<form:options items="${allusers}" itemValue="uid"
+								<form:options items="${btusers}" itemValue="uid"
 									itemLabel="username" />
 							</form:select></td>
 
@@ -235,8 +224,8 @@
 		<input type="submit" name="but"
 			value="<spring:message code="button.update"/>" />
 	</form:form>
-			<a
-				href="deleteusercontest.xhtml?all=true&cid=${contest.cid}"><i class="fa fa-trash"></i>&nbsp;Delete</a>
+	<a href="deleteusercontest.xhtml?all=true&cid=${contest.cid}"><i
+		class="fa fa-trash"></i>&nbsp;Delete</a>
 	<table class="table table-condensed table-striped">
 		<thead>
 			<tr>
@@ -247,22 +236,67 @@
 			</tr>
 		</thead>
 		<c:forEach items="${contest.users}" var="user">
-	
+
 			<tr>
 				<td><a href="manageuser.xhtml?username=${user.username}">${user.username}</a></td>
 				<td>${user.nick}</td>
 
 				<td>${user.group}</td>
-				<td>
-				
-&nbsp;
-<a href="deleteusercontest.xhtml?uid=${user.uid}&cid=${contest.cid}"><i class="fa fa-trash"></i></a>
-			</td>
+				<td>&nbsp; <a
+					href="deleteusercontest.xhtml?uid=${user.uid}&cid=${contest.cid}"><i
+						class="fa fa-trash"></i></a>
+				</td>
 
 			</tr>
 		</c:forEach>
 	</table>
 
 </div>
-
-
+<ul id="user-template" class="hide">
+	<c:forEach items="${allusers}" var="user">
+		<li data-uid="${user.uid}">${user.username}</li>
+	</c:forEach>
+</ul>
+<ul id="bt-template" class="hide">
+	<c:forEach items="${btusers}" var="user">
+		<li data-uid="${user.uid}">${user.username}</li>
+	</c:forEach>
+</ul>
+<script>
+	$("#search-allusers").typeWatch(
+			{
+				callback : function(value) {
+					$("#allusers").empty();
+					$("#user-template li").filter(":contains(" + value + ")")
+							.each(
+									function() {
+										$("#allusers").append(
+												"<option value="
+														+ $(this).data("uid")
+														+ ">" + $(this).html()
+														+ "</option>");
+									});
+				},
+				wait : 250,
+				highlight : true,
+				captureLength : 0
+			});
+	$("#search-btusers").typeWatch(
+			{
+				callback : function(value) {
+					$("#bt_allusers").empty();
+					$("#bt-template li").filter(":contains(" + value + ")")
+							.each(
+									function() {
+										$("#bt_allusers").append(
+												"<option value="
+														+ $(this).data("uid")
+														+ ">" + $(this).html()
+														+ "</option>");
+									});
+				},
+				wait : 250,
+				highlight : true,
+				captureLength : 0
+			});
+</script>

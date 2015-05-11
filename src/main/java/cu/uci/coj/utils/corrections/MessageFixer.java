@@ -139,11 +139,12 @@ public class MessageFixer {
 		// orderKeysSansDuplicates("D:/workspace/COJ/WebContent/WEB-INF/classes/messagess.properties",true);
 		// orderKeysSansDuplicates("D:/workspace/COJ/WebContent/WEB-INF/classes/messages_es.properties",true);
 		// orderKeysSansDuplicates("D:/workspace/COJ/WebContent/WEB-INF/classes/messages_pt.properties",true);
-		// unvaluedKeys("D:/workspace/COJ/WebContent/WEB-INF/classes/messages.properties",
-		// "D:/workspace/COJ/WebContent/WEB-INF/jsp",
-		// "D:/workspace/COJ/WebContent/WEB-INF/tiles");
-		unusedKeys("D:/workspace/COJ/WebContent/WEB-INF/classes/messages.properties", "D:/workspace/COJ/src/cu/uci/coj", "D:/workspace/COJ/WebContent/WEB-INF/jsp",
-				"D:/workspace/COJ/WebContent/WEB-INF/tiles","D:/workspace/COJ/WebContent/WEB-INF/tiles-defs.xml");
-
+		 unvaluedKeys("/home/jasr/Documents/workspace-sts-3.6.1.RELEASE/CojMaven/coj/src/main/webapp/WEB-INF/classes/messages_en.properties",
+				 "/home/jasr/Documents/workspace-sts-3.6.1.RELEASE/CojMaven/coj/src/main/webapp/WEB-INF/jsp",
+				 "/home/jasr/Documents/workspace-sts-3.6.1.RELEASE/CojMaven/coj/src/main/webapp/WEB-INF/tiles");
+	/*	unusedKeys("/home/jasr/Documents/workspace-sts-3.6.1.RELEASE/CojMaven/coj/src/main/webapp/WEB-INF/classes/messages_en.properties", 
+				"/home/jasr/Documents/workspace-sts-3.6.1.RELEASE/CojMaven/coj/src/main/java/cu/uci/coj", "/home/jasr/Documents/workspace-sts-3.6.1.RELEASE/CojMaven/coj/src/main/webapp/WEB-INF/jsp",
+				"/home/jasr/Documents/workspace-sts-3.6.1.RELEASE/CojMaven/coj/src/main/webapp/WEB-INF/tiles","/home/jasr/Documents/workspace-sts-3.6.1.RELEASE/CojMaven/coj/src/main/webapp/WEB-INF/tiles-defs.xml");
+*/
 	}
 }
