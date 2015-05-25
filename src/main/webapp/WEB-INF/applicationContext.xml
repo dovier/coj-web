@@ -4,7 +4,7 @@
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:security="http://www.springframework.org/schema/security"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
@@ -113,77 +113,49 @@
 			access="hasRole('ROLE_USER')" />
 		<security:intercept-url pattern="/**" access="permitAll" />
 	</security:filter-security-metadata-source>
-
-
-	<bean id="ds" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-		destroy-method="close">		
-        <property name="driverClass" value="org.postgresql.Driver" />
-		<property name="jdbcUrl" value="jdbc:postgresql://127.0.0.1:5432/coj" />
-		<property name="user" value="postgres" />                
-		<property name="password" value="cojdbpass123" />                
-                
-		<property name="maxPoolSize" value="10" />
-		<property name="maxIdleTime" value="300" />
-		<property name="maxConnectionAge" value="600" />
-		<property name="idleConnectionTestPeriod" value="1000" />
-		<property name="maxStatementsPerConnection" value="3" />
-		<property name="autoCommitOnClose" value="true" />
-		<property name="checkoutTimeout" value="5000" />
-	</bean>
+<!-- 	<context:property-placeholder
+		properties-ref="prop" />
+	<util:properties id="prop" location="file:/home/coj/config.properties" />
+ -->
 
 
 	<!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
 
-	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="10.0.0.85" />
-		<property name="port" value="25" />
-		<property name="username" value="coj@uci.cu" />
-		<property name="password" value="new$123...*-+" />
-		<property name="javaMailProperties">
-			<props>
-				<prop key="mail.smtp.auth">true</prop>
-				<prop key="mail.smtp.starttls.enable">true</prop>
-				<prop key="mail.smtp.auth.mechanisms">LOGIN PLAIN</prop>
-				<prop key="mail.smtp.starttls.required">true</prop>
-				<prop key="mail.smtp.ssl.trust">*</prop>
-			</props>
-		</property>
-	</bean>
+
 
 	<bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage">
 		<property name="from" value="coj@uci.cu" />
 	</bean>
 
-
-
 	<!-- DAO Initialization -->
 
-	<bean  id="multipartResolver"
+	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="maxUploadSize" value="104857600" />
 		<property name="maxInMemorySize" value="524288000" />
 	</bean>
-	
-		<!-- Jackson converter -->
-	<bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>	  
+
+	<!-- Jackson converter -->
+	<bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
 
 	<bean id="marshallingHttpMessageConverter"
 		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
 		<property name="objectMapper" ref="objectMapper" />
-	</bean>	
+	</bean>
 
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 		<property name="messageConverters">
 			<util:list id="beanList">
 				<ref bean="marshallingHttpMessageConverter" />
 			</util:list>
 		</property>
-	</bean>	
-	
+	</bean>
+
 	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
-		<property name="messageConverters" ref="marshallingHttpMessageConverter"/>
-	</bean> 
-	
+		<property name="messageConverters" ref="marshallingHttpMessageConverter" />
+	</bean>
+
 	<!-- Jackson converter -->
 
 	<!--bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"> 

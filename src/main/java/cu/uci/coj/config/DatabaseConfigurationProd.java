@@ -18,7 +18,7 @@ public class DatabaseConfigurationProd {
     @Resource(name = "ds")
     private DataSource dataSource;
 
-    @Bean(initMethod = "migrate")
+  //  @Bean(initMethod = "migrate")
     public Flyway flyway() {
         Flyway flyway = new Flyway();
         flyway.setBaselineOnMigrate(true);

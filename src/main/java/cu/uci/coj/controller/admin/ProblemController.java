@@ -222,7 +222,7 @@ public class ProblemController extends BaseController {
             }
         }
         // solo los admins pueden asignar nuevos problemsetters
-        if (requestWrapper.isUserInRole(Roles.ROLE_ADMIN)) {
+        if (requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || requestWrapper.isUserInRole(Roles.ROLE_SUPER_PSETTER) || (requestWrapper.isUserInRole(Roles.ROLE_PSETTER) && principal.getName().equals(problemDAO.creatorUsernameByPid(problem.getPid())))) {
             problemDAO.clearPsetters(problem.getPid());
             if (problem.getPsettersids() != null) {
                 for (int i = 0; i < problem.getPsettersids().length; i++) {

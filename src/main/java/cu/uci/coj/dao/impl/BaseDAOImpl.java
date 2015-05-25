@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.displaytag.properties.SortOrderEnum;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
