@@ -20,7 +20,7 @@
 	</display:column>
 	<display:column titleKey="tablehdr.status">
 		<c:choose>
-			<c:when test="${contest.startDate.time <= now.time}">
+			<c:when test="${contest.startDate.time  - mapsites.get(contest.sid).offset <= now.time}">
 				<span class="label label-success"><spring:message
 						code="contest.status.rn" /></span>
 			</c:when>
