@@ -22,7 +22,7 @@ public class RsyncThread extends Thread {
         String cmd = Config.getProperty("rsync.command");
         String exec = "";
         String[] servers = Config.getProperty("rsync.servers").split(",");
-        if (servers != null && servers.length > 0) {
+        if (servers != null) {
             for (int i = 0; i < servers.length; i++) {
                 exec = cmd.replace("<ip>", servers[i]);
                 Process process = null;
