@@ -222,7 +222,7 @@ public class ProblemController extends BaseController {
             }
         }
         // solo los admins pueden asignar nuevos problemsetters
-        if (requestWrapper.isUserInRole(Roles.ROLE_ADMIN)) {
+        if (requestWrapper.isUserInRole(Roles.ROLE_ADMIN) || requestWrapper.isUserInRole(Roles.ROLE_SUPER_PSETTER) || (requestWrapper.isUserInRole(Roles.ROLE_PSETTER) && principal.getName().equals(problemDAO.creatorUsernameByPid(problem.getPid())))) {
             problemDAO.clearPsetters(problem.getPid());
             if (problem.getPsettersids() != null) {
                 for (int i = 0; i < problem.getPsettersids().length; i++) {
@@ -352,11 +352,11 @@ public class ProblemController extends BaseController {
         //TODO: Refactorizar esto, ponerlo en configuraciones o como sea, pero no así
         Map<String, double[]> multipliers = new HashMap<>();
         
-        String[] language = {"Text","C++","Java","C","C#","Perl","Python","Pascal","Ruby","PHP","Bash","C++11","Haskell","Prolog","JavaScript-NodeJS"};
-        double[] memoryMult = {1,1  ,60,1,20,1,2,1,2,5,1,1,1,25,15};
-        double[] caseTimeMult = {3,1,3,1 ,2,3 ,6,3,3,6,3,1,3,3,6};
-        double[] totalTimeMult = {3,1,3,1 ,2,3 ,6,3,3,6,3,1,3,3,6};
-        double[] sourceCodeLenghtMult = {1,1,1,1 ,1,1 ,1,1,1,1,1,1,1,1,1};
+        String[] language = {"Text","C++","Java","C","C#","Perl","Python","Pascal","Ruby","PHP","Bash","C++11","Haskell","Prolog","JavaScript-NodeJS","VBasic"};
+        double[] memoryMult = {1,1  ,60,1,20,1,2,1,2,5,1,1,1,25,15,20};
+        double[] caseTimeMult = {3,1,3,1 ,2,3 ,6,3,3,6,3,1,3,3,6,2};
+        double[] totalTimeMult = {3,1,3,1 ,2,3 ,6,3,3,6,3,1,3,3,6,2};
+        double[] sourceCodeLenghtMult = {1,1,1,1 ,1,1 ,1,1,1,1,1,1,1,1,1,1};
         
         for (int i = 0; i < language.length; i++) {
             double[] limits = new double[4];

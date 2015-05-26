@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import cu.uci.coj.model.Status;
 
 @Component("config")
-@PropertySource({"classpath:cu/uci/coj/config/config.properties"})
 public class Config {
 
     @Autowired
