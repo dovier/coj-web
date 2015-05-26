@@ -56,7 +56,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	private Integer currentWBoardInterval = 0;
 	//cada dia
 	private Integer USER_STATUS_INTERVAL = 3600 * 2;
-	private Integer currentUserStatusInterval = 0;
+	private Integer currentUserStatusInterval = 3600 * 2;
 
 	public void problemEvents() {
 		if (((currentProblemInterval = (currentProblemInterval < PROBLEM_INTERVAL) ? currentProblemInterval + 1 : 0) != 0))
