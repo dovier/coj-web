@@ -9,11 +9,10 @@ function displayTableReload(page) {
 		}).serialize();
 	} else
 		pag = page.charAt(0) == '?' ? page.substring(1) : page;
-
-	var url = $("#display-table-container").data("reloadUrl");
+	var displayUrl = $("#display-table-container").attr("data-reload-url");
 	$
 			.ajax({
-				url : url,
+				url : displayUrl,
 				dataType : "html",
 				data : pag,
 				beforeSend : function() {
@@ -48,6 +47,7 @@ function displayTableReload(page) {
 };
 
 function initStandardFilterForm() {
+
 	$('#filter-button').click(function(event) {
 		displayTableReload();
 		event.preventDefault();
