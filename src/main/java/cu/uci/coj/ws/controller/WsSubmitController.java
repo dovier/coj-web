@@ -22,13 +22,19 @@ public class WsSubmitController {
 	
 	@RequestMapping(value="/submits.json", method = RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	List<WsSubmit> getComingContests(@RequestParam(value="from")int from, @RequestParam(value="to")int to ) {
+	List<WsSubmit> submits(@RequestParam(value="from")int from, @RequestParam(value="to")int to ) {
 		return wsSubmitDAO.getSubmits(from,to);
 	}
 	
 	@RequestMapping(value="/submit.json", method = RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	WsSubmit getComingContests(@RequestParam(value="sid")int sid) {
+	WsSubmit submit(@RequestParam(value="sid")int sid) {
 		return wsSubmitDAO.getSubmit(sid);
+	}
+	
+	@RequestMapping(value="/usersubmits.json", method = RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	List<WsSubmit> submits(@RequestParam(value="user")String user) {
+		return wsSubmitDAO.getSubmits(user);
 	}
 }

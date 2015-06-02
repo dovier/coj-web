@@ -47,9 +47,9 @@ public class WbParserManager {
 	List<WbNotificationService> notificationList;
 	
 	
-	public void doWork() {		
+	synchronized public void doWork() {		
 		List<WbContest> contests;
-		wbSiteDAO.dml("insert.log", "Parsing sites for the WebBoard", "No user");		
+		wbSiteDAO.dml("insert.log", "Parsing sites for the COJboard", "No user");		
 
 		
 		for(int i = 0;i<parserList.size();i++) {
@@ -75,6 +75,7 @@ public class WbParserManager {
 		
 		if(isNotificationTime()) {
 			System.out.println(new Date().toString());
+			wbSiteDAO.dml("insert.log", "Sending COJboard notifications", "No user");
 			
 			
 			List<WbSite> newcontestNotificationSites = wbSiteDAO.getListSitesWithContestsNewContestNotification();
@@ -127,7 +128,7 @@ public class WbParserManager {
 	}
 
 	// Notifications first time after 9:00
-	private boolean isNotificationTime() {
+	synchronized private boolean isNotificationTime() {
 		Date now = new Date();		
 				
 		Calendar calendar = Calendar.getInstance();

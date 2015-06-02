@@ -17,6 +17,11 @@ public class WsSubmitDAOImpl extends BaseDAOImpl implements WsSubmitDAO {
 			to = from + 500;
 		return objects("ws.submit.range", WsSubmit.class, from, to);
 	}
+	
+	@Override
+	public List<WsSubmit> getSubmits(String user) {
+		return objects("ws.submit.users", WsSubmit.class, user);
+	}
 
 	@Override
 	public WsSubmit getSubmit(int sid) {

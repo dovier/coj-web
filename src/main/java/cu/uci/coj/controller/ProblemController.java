@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class ProblemController extends BaseController {
+public class ProblemController extends BaseController{
 
 	private static final long serialVersionUID = -4368385200281070644L;
 	@Resource
@@ -213,7 +213,7 @@ public class ProblemController extends BaseController {
 		}
 		return "redirect:/24h/problems.xhtml";
 	}
-
+	
 	@RequestMapping(value = "/24h/problempdf.xhtml", method = RequestMethod.GET)
 	public String ProblemPdf(Locale locale, HttpServletRequest request,
 			HttpServletResponse response, OutputStream os, Model model,
@@ -246,8 +246,7 @@ public class ProblemController extends BaseController {
 		}
 		return null;
 	}
-
-	@RequestMapping(value = "/24h/votes.xhtml", method = RequestMethod.GET)
+		@RequestMapping(value = "/24h/votes.xhtml", method = RequestMethod.GET)
 	public String Votes(Locale locale, Principal principal,
 			SecurityContextHolderAwareRequestWrapper requestWrapper,
 			Model model, @RequestParam Integer pid) {
