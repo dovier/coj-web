@@ -50,7 +50,7 @@ public class COJAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
     
     protected String determineTargetUrl(HttpServletRequest request) {
         String uri = request.getParameter("rurl");
-        if (!uri.contains(".xhtml")) {
+        if (uri == null || !uri.contains(".xhtml")) {
             return "/index.xhtml";
         }
         return uri;
