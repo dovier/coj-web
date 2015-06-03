@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
-import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -148,7 +147,7 @@ public class SecurityConfiguration {
         bean.setAuthenticationSuccessHandler(cojAuthenticationSuccessHandler);
         bean.setAuthenticationFailureHandler(cojAuthenticationFailureHandler);
         bean.setRememberMeServices(rememberMeServices());
-        bean.setSessionAuthenticationStrategy(concurrentSessionControlStrategy());
+   //     bean.setSessionAuthenticationStrategy(concurrentSessionControlStrategy());
         bean.setUserDAO(userDAO);
         return bean;
     }
@@ -193,13 +192,13 @@ public class SecurityConfiguration {
     }
 
     
-    @Bean
+    /*@Bean
     public ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlStrategy(){
     	ConcurrentSessionControlAuthenticationStrategy bean = new ConcurrentSessionControlAuthenticationStrategy(cojSessionRegistryImpl);
         bean.setMaximumSessions(3);
         bean.setExceptionIfMaximumExceeded(true);
         return bean;
-    }    
+    }    */
 
     private List<SecurityFilterChain> filterChain() {
 	List<SecurityFilterChain> filters = new ArrayList<SecurityFilterChain>(12);
