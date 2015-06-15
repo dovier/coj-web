@@ -65,9 +65,8 @@ public class WbEmailNotificationService implements WbNotificationService {
 					
 			String message = renderFTLTemplate.render("/email.ftl", model);
 					
-			//List<String> mails = wbSiteDAO.strings("users.wboard.notifications");
-			//mailService.sendBulkMessage(mails.toArray(new String[0]), "COJ - WebBoard Contest Notification", message, true);
-			mailService.sendMessage("emoralesp@estudiantes.uci.cu", "COJ - COJboard Contest Notification", message, true);	
+			List<String> mails = wbSiteDAO.strings("users.wboard.notifications");
+			mailService.sendBulkMessage(mails.toArray(new String[0]), "COJ - COJboard Contest Notifications", message, true);
 		}
 	}
 }
