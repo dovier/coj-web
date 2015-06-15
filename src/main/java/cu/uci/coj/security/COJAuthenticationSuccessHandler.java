@@ -27,6 +27,9 @@ public class COJAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
     @Resource
     private UserDAO userDAO;
     
+    @Resource
+    private COJSessionRegistryImpl cojSessionRegistryImpl;
+    
     @PostConstruct
     protected void init() {
         setDefaultTargetUrl("/");
@@ -38,12 +41,10 @@ public class COJAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
         
         String username = ((User)authentication.getPrincipal()).getUsername();
         String locale = userDAO.getUserLocale(username);
-        userDAO.dml("update.last.ip",request.getRemoteAddr(), username);
-        userDAO.dml("update.last.login.date",username);
         SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
         sessionLocaleResolver.setLocale(request, response, new Locale(locale));
+        userDAO.registerLogin(true, request.getRemoteAddr(), ((User) authentication.getPrincipal()).getUsername());
         setDefaultTargetUrl(determineTargetUrl(request));
-        userDAO.dml("insert.log", "user logged in",username);
         super.onAuthenticationSuccess(request, response, authentication);
     }
     

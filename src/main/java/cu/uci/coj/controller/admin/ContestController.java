@@ -324,6 +324,7 @@ public class ContestController extends BaseController {
 	@RequestMapping(value = "/contestproblems.xhtml", method = RequestMethod.POST)
 	public String contestProblems(Model model, Locale locale, Contest contest,
 			BindingResult result) {
+		contest.setStyle(contestDAO.loadScoringStyle(contest.getCid()).getSid());
 		validator.contestProblems(contest, result);
 		if (result.hasErrors()) {
 			List<Problem> problems = contestDAO.loadContestProblems(contest

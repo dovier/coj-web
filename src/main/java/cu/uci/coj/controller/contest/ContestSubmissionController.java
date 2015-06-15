@@ -92,7 +92,12 @@ public class ContestSubmissionController extends BaseController {
 					filter.fillSecondParam();
 					model.addAttribute("filter", filter);
 					model.addAttribute("statuslist", statuslist);
-					model.addAttribute("letterlist", problemDAO.getAllContestProblems(contest.getCid()));
+					List<Problem> letterlist = problemDAO.getAllContestProblems(contest.getCid());
+					if (contest.getStyle() == Contest.ACM_ICPC_STYLE) {
+						model.addAttribute("letterlist", problemDAO.getAllContestProblems(contest.getCid()));
+						model.addAttribute("letterlist", letterlist);
+					}
+
 				}
 			}
 		}

@@ -249,8 +249,9 @@ public class ProblemController extends BaseController {
         return "redirect:/24h/problem.xhtml?pid=" + problem.getPid();
     }
 
-    private void handleFiles(Problem problem, HttpServletRequest request) {
-        Assert.state(request instanceof MultipartHttpServletRequest, "request !instanceof MultipartHttpServletRequest");
+    public void handleFiles(Problem problem, HttpServletRequest request) {
+  //      Assert.state(request instanceof MultipartHttpServletRequest, "request !instanceof MultipartHttpServletRequest");
+       if (!( request instanceof MultipartHttpServletRequest))return;
         final MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
         final Map<String, MultipartFile> files = multiRequest.getFileMap();
 

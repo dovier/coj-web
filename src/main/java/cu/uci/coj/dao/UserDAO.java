@@ -54,7 +54,7 @@ public interface UserDAO extends BaseDAO {
 
 	public String getUserLocale(String username);
 
-	public void updateUsersStatus(boolean status, String username);
+	public void registerLogin(boolean status, String ip,String username);
 
 	public int countEnabledUsers(String pattern, boolean online);
 

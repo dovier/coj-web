@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -37,10 +38,11 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.util.AntPathRequestMatcher;
+import org.springframework.security.web.util.RequestMatcher;
 
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.security.COJAuthenticationFailureHandler;
@@ -147,7 +149,7 @@ public class SecurityConfiguration {
         bean.setAuthenticationSuccessHandler(cojAuthenticationSuccessHandler);
         bean.setAuthenticationFailureHandler(cojAuthenticationFailureHandler);
         bean.setRememberMeServices(rememberMeServices());
-   //     bean.setSessionAuthenticationStrategy(concurrentSessionControlStrategy());
+        bean.setSessionAuthenticationStrategy(concurrentSessionControlStrategy());
         bean.setUserDAO(userDAO);
         return bean;
     }
@@ -180,7 +182,7 @@ public class SecurityConfiguration {
     
     @Bean
     public FilterSecurityInterceptor filterInvocationInterceptor(){
-        List<AccessDecisionVoter<?>> vote = new ArrayList<AccessDecisionVoter<?>>(Arrays.asList(new WebExpressionVoter()));
+        List<AccessDecisionVoter> vote = new ArrayList<AccessDecisionVoter>(Arrays.asList(new WebExpressionVoter()));
         AffirmativeBased voters = new AffirmativeBased(vote);
         voters.setAllowIfAllAbstainDecisions(false);
         FilterSecurityInterceptor bean = new FilterSecurityInterceptor();
@@ -192,13 +194,13 @@ public class SecurityConfiguration {
     }
 
     
-    /*@Bean
-    public ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlStrategy(){
-    	ConcurrentSessionControlAuthenticationStrategy bean = new ConcurrentSessionControlAuthenticationStrategy(cojSessionRegistryImpl);
+    @Bean
+    public ConcurrentSessionControlStrategy concurrentSessionControlStrategy(){
+    	ConcurrentSessionControlStrategy bean = new ConcurrentSessionControlStrategy(cojSessionRegistryImpl);
         bean.setMaximumSessions(3);
         bean.setExceptionIfMaximumExceeded(true);
         return bean;
-    }    */
+    }    
 
     private List<SecurityFilterChain> filterChain() {
 	List<SecurityFilterChain> filters = new ArrayList<SecurityFilterChain>(12);

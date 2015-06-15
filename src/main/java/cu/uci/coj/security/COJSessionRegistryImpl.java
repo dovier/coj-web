@@ -34,7 +34,7 @@ public class COJSessionRegistryImpl extends SessionRegistryImpl {
 
     @Override
     public synchronized void registerNewSession(String sessionId, Object principal) {
-        userDAO.dml("update.user.status", true, ((User) principal).getUsername());
+        
         super.registerNewSession(sessionId, principal);
     }
 

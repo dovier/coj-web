@@ -150,6 +150,7 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
 	public void repointContest(Contest contest, boolean frozen) {
 		resetContest(contest);
+
 		List<SubmissionJudge> subsJudge = objects("repoint.contest.2",
 				SubmissionJudge.class, contest.getCid());
 		contest.setFrozen(frozen);
@@ -410,9 +411,12 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 						submit.getCid());
 				dml("update.problem.contest.accu", submit.getPid(),
 						submit.getCid(), submit.getPid(), submit.getCid());
-				dml("update.user.points.free.contest", submit.getCid(),
+				dml("update.user.contest.accepted", submit.getCid(),
+						submit.getUid(), submit.getUid(), submit.getCid());
+				// dml("update.user.points.free.contest", submit.getCid(),
+				// submit.getCid(), submit.getCid());
+				dml("update.user.points.progressive.contest", submit.getCid(),
 						submit.getCid(), submit.getCid());
-
 			}
 			updateLevel(submit.getUid(), submit.getCid(),
 					getProblemLevel(submit.getPid(), submit.getCid()),
