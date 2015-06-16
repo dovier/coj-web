@@ -18,12 +18,12 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
@@ -38,82 +38,87 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-instrument</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-instrument-tomcat</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jms</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-oxm</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-struts</artifactId>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc-portlet</artifactId>
-			<version>4.1.6.RELEASE</version>
+			<version>3.2.3.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp.jstl</groupId>
@@ -164,25 +169,19 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-			<version>4.0.1.RELEASE</version>
+			<version>3.1.1.RELEASE</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>4.0.1.RELEASE</version>
+			<version>3.1.1.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-taglibs</artifactId>
-			<version>4.0.1.RELEASE</version>
+			<version>3.1.1.RELEASE</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<version>4.0.1.RELEASE</version>
-		</dependency>
-
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
@@ -204,7 +203,7 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>4.0.1.RELEASE</version>
+			<version>3.1.1.RELEASE</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
@@ -330,39 +329,39 @@
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-			<version>3.2.1</version>
-		</dependency>
+                <dependency>
+                    <groupId>org.flywaydb</groupId>
+                    <artifactId>flyway-core</artifactId>
+                    <version>3.2.1</version>
+                </dependency>
 	</dependencies>
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<database.name>dev</database.name>
-				<database.driver>org.postgresql.Driver</database.driver>
-				<database.url>jdbc:postgresql://127.0.0.1:5432/coj</database.url>
-				<database.user>postgres</database.user>
-				<database.password>cojdbpass123</database.password>
-				<migration.customLocation>classpath:cu/uci/coj/db/migration/dev</migration.customLocation>
-			</properties>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<properties>
-				<database.name>prod</database.name>
-				<database.driver>org.postgresql.Driver</database.driver>
-				<database.url>jdbc:postgresql://127.0.0.1:5432/coj</database.url>
-				<database.user>postgres</database.user>
-				<database.password>cojdbpass123</database.password>
-				<migration.customLocation>classpath:cu/uci/coj/db/migration/prod</migration.customLocation>
-			</properties>
-		</profile>
-	</profiles>
+        <profiles>
+            <profile>
+                <id>dev</id>
+                <activation>
+                    <activeByDefault>true</activeByDefault>
+                </activation>
+                <properties>
+                    <database.name>dev</database.name>
+                    <database.driver>org.postgresql.Driver</database.driver>
+                    <database.url>jdbc:postgresql://127.0.0.1:5432/coj</database.url>
+                     <database.user>postgres</database.user>
+                     <database.password>cojdbpass123</database.password> 
+                    <migration.customLocation>classpath:cu/uci/coj/db/migration/dev</migration.customLocation>                                              
+                </properties>
+            </profile>
+            <profile>
+                <id>prod</id>
+                <properties>
+                    <database.name>prod</database.name>
+                    <database.driver>org.postgresql.Driver</database.driver>
+                    <database.url>jdbc:postgresql://127.0.0.1:5432/coj</database.url>                    
+                    <database.user>postgres</database.user>
+                    <database.password>cojdbpass123</database.password>                    
+                    <migration.customLocation>classpath:cu/uci/coj/db/migration/prod</migration.customLocation>        
+                </properties>
+            </profile>
+        </profiles>
 	<build>
 		<plugins>
 			<plugin>
@@ -409,26 +408,26 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-maven-plugin</artifactId>
-				<version>3.2.1</version>
-				<configuration>
-					<driver>${database.driver}</driver>
-					<url>${database.url}</url>
-					<user>${database.user}</user>
-					<password>${database.password}</password>
-					<locations>
-						<location>
-							classpath:cu/uci/coj/db/migration/commons
-						</location>
-						<location>
-							${migration.customLocation}
-						</location>
-					</locations>
-				</configuration>
-			</plugin>
+			</plugin> 
+                        <plugin>
+                            <groupId>org.flywaydb</groupId>
+                            <artifactId>flyway-maven-plugin</artifactId>
+                            <version>3.2.1</version>                           
+                            <configuration>                                                               
+                                <driver>${database.driver}</driver>
+                                <url>${database.url}</url>
+                                <user>${database.user}</user>
+                                <password>${database.password}</password> 
+                                <locations>
+                                    <location>
+                                        classpath:cu/uci/coj/db/migration/commons
+                                    </location>
+                                    <location>
+                                        ${migration.customLocation}                                       
+                                    </location>
+                                </locations>
+                            </configuration>                    
+                        </plugin>                       
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -467,5 +466,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
+        
 </project>

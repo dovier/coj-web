@@ -23,7 +23,7 @@ public class RenderFTLTemplate {
 	
 	@PostConstruct
 	private void init(){
-		String baseFile = servletContext.getRealPath("WEB-INF/ftl");
+		String baseFile = servletContext.getRealPath("/WEB-INF/ftl");
 		try {
 			cfg.setDirectoryForTemplateLoading(new File(baseFile));
 		} catch (IOException e) {
