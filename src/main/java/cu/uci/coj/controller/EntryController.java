@@ -134,7 +134,7 @@ public class EntryController extends BaseController {
 	@RequestMapping(value = "/user/{username}/pagefollowers.xhtml", method = RequestMethod.POST)
 	public String pageFollowers(Model model, @PathVariable("username") String username, @RequestParam(required = false, value = "page", defaultValue = "1") Integer page) {
 
-		int uid = entryDAO.integer("select.uid.by.username", username);
+		int uid = entryDAO.idByUsername(username);
 
 		IPaginatedList<User> followers = entryDAO.paginated("followers", User.class, 15, new PagingOptions(page), uid);
 

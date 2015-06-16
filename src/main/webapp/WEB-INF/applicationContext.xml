@@ -113,14 +113,8 @@
 			access="hasRole('ROLE_USER')" />
 		<security:intercept-url pattern="/**" access="permitAll" />
 	</security:filter-security-metadata-source>
-<!-- 	<context:property-placeholder
-		properties-ref="prop" />
-	<util:properties id="prop" location="file:/home/coj/config.properties" />
- -->
-
-
-	<!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
-
+	<!-- <context:property-placeholder properties-ref="prop" /> <util:properties 
+		id="prop" location="file:/home/coj/config.properties" /> -->
 
 
 	<bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage">

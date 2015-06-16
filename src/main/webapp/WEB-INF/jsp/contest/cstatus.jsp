@@ -42,6 +42,7 @@
 		</div>
 		<input type="hidden" name="cid" value="${contest.cid}" />
 		<div class="form-group">
+			<c:if test="${not empty letterlist}">
 			<select name="pid" class="form-control">
 				<option value="0"><spring:message code="fieldhdr.all" /></option>
 				<c:forEach items="${letterlist}" var="letter">
@@ -55,6 +56,12 @@
 					</c:choose>
 				</c:forEach>
 			</select>
+			</c:if>
+			<c:if test="${empty letterlist}">
+			<input class="form-control"
+						placeholder="<spring:message code="fieldhdr.prob" />" type="text" pattern="/\d*/"
+						name="pid" value="${filter.pid}" size="8" />
+			</c:if>
 		</div>
 		<div class="form-group">
 			<select name="status" class="form-control">

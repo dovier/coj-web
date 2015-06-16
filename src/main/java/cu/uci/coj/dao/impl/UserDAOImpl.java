@@ -103,8 +103,10 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		return string("get.user.locale", username);
 	}
 
-	@Transactional(readOnly = true)
-	public void updateUsersStatus(boolean status, String username) {
+	public void registerLogin(boolean status, String ip,String username) {
+		dml("update.last.ip",ip, username);
+        dml("update.last.login.date",username);
+        dml("insert.log", "user logged in",username);
 		dml("update.user.status", status, username);
 	}
 

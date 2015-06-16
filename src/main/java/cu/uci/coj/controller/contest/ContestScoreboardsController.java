@@ -89,7 +89,6 @@ public class ContestScoreboardsController extends BaseController {
 		model.addAttribute("users", users);
 		return "/tables/cscoreboard3";
 	}
-	
 	@RequestMapping(value = "/tables/cscoreboard4.xhtml", method = RequestMethod.GET)
 	public String ContestScoreboardProgressive(Locale locale, Model model, Principal principal, PagingOptions options,
 			@RequestParam("cid") Integer cid) {

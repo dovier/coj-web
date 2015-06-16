@@ -46,8 +46,7 @@ public class ProblemController extends BaseController{
 	@RequestMapping(value = "/24h/problem.xhtml", method = RequestMethod.GET)
 	public String Problem(HttpServletRequest request, Locale locale,
 			Model model, Principal principal, @RequestParam Integer pid) {
-		Integer uid = problemDAO.integer("select.uid.by.username",
-				getUsername(principal));
+		Integer uid = problemDAO.idByUsername(getUsername(principal));
 		Problem problem = problemDAO
 				.getProblemByCode(
 						locale.getLanguage(),
