@@ -1,6 +1,8 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer = "16kb" autoFlush="true" %>
+ <label><spring:message code="fieldhdr.totalfound" />:
+                ${found}</label>
 <display:table id="institution" name="institutions" class="volume" requestURI="" defaultsort="0" defaultorder="ascending" decorator="cu.uci.coj.utils.tabledecorator.institutionsrankTableDecorator">
         <display:column titleKey="tablehdr.rank" headerClass="headrk">
             <c:choose>

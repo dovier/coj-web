@@ -128,8 +128,7 @@ public class ScoreboardsController extends BaseController {
 
     @RequestMapping(value = "/24h/institutionsrank.xhtml", method = RequestMethod.GET)
     public String InstitutionsRank(Model model, PagingOptions options, @RequestParam(required = false, value = "pattern") String pattern) {
-        int found = institutionDAO.countEnabledInstitutions(pattern);
-        model.addAttribute("found", found);
+      
         return "/24h/institutionsrank";
     }
 
@@ -145,6 +144,7 @@ public class ScoreboardsController extends BaseController {
 
             model.addAttribute("institutions", institutions);
         }
+        model.addAttribute("found", found);
         return "/tables/institutionsrank";
     }
 

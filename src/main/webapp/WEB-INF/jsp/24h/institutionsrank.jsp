@@ -23,7 +23,7 @@
                 ${found}</label>
             </c:when>
         </c:choose>
-        ${found}        
+        
     <br />
 
     <div id="display-table-container"
