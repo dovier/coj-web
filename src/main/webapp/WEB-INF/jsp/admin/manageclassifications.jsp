@@ -17,6 +17,9 @@
      <div id="display-table-container" data-reload-url="/admin/tables/manageclassifications.xhtml"></div>
 
 </div>
+<script>
+$(document).ready(displayTableReload(""));
+</script>
 
 
 
