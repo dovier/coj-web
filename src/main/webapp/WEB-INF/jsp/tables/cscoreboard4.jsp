@@ -15,7 +15,7 @@
 	<display:column titleKey="tablehdr.institution"
 		headerClass="headcountry">
 		<img src="<c:url value="/images/school/${user.institution}"/>.png"
-			title="<c:url value="${user.institution_desc}"/>"
+			title="<c:out value="${user.institution_desc}"/>"
 			alt="<c:url value="${user.institution}"/>" />
 	</display:column>
 	<display:column titleKey="tablehdr.contestant">
