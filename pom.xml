@@ -343,7 +343,7 @@
                     <database.driver>org.postgresql.Driver</database.driver>
                     <database.url>jdbc:postgresql://127.0.0.1:5432/coj</database.url>
                      <database.user>postgres</database.user>
-                     <database.password>cojdbpass123</database.password> 
+                     <database.password>postgres</database.password> 
                     <migration.customLocation>classpath:cu/uci/coj/db/migration/dev</migration.customLocation>                                              
                 </properties>
             </profile>
