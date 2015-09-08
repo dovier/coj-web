@@ -98,6 +98,7 @@ public class ContestProblemController extends BaseController {
         } else {
             return "/error/wproblem";
         }
+        model.addAttribute("locale", locale.getLanguage());
         return "/contest/cproblem";
     }
 }

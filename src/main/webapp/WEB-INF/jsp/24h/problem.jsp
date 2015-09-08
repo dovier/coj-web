@@ -163,12 +163,14 @@
 									data-placement="bottom" class="image change-language"
 									data-language="en" title="<spring:message code="titval.en"/>"
 									src="/images/i18n/en.png" /></a>
-							</c:if> <c:if test="${problem.availableInEs}">
+							</c:if> 
+                                                                <c:if test="${problem.availableInEs}">
 								<a href="#"><img data-toggle="tooltip"
 									data-placement="bottom" class="image change-language"
 									data-language="es" title="<spring:message code="titval.es"/>"
 									src="/images/i18n/es.png" /></a>
-							</c:if> <c:if test="${problem.availableInPt}">
+							</c:if> 
+                                                                <c:if test="${problem.availableInPt}">
 								<a href="#"><img data-toggle="tooltip"
 									data-placement="bottom" class="image change-language"
 									data-language="pt" title="<spring:message code="titval.pt"/>"
