@@ -63,8 +63,7 @@
 <div class="nav-menu">
 	<div class="col-xs-12">
 		<div class="pull-right servertime">
-				<fmt:formatDate value="${now}" pattern="EEEE" var="dia" />
-				${dia} ,
+				
 				<fmt:formatDate value="${now}" dateStyle="long" />
 				.
 				<fmt:formatDate value="${now}" pattern="HH:mm:ss" type="time" />
