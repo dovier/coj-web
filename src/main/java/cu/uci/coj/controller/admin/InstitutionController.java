@@ -1,6 +1,5 @@
 package cu.uci.coj.controller.admin;
 
-import cu.uci.coj.config.Config;
 import java.security.Principal;
 
 import javax.annotation.Resource;
@@ -16,11 +15,9 @@ import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.InstitutionDAO;
 import cu.uci.coj.model.Country;
 import cu.uci.coj.model.Institution;
-import cu.uci.coj.utils.FileUtils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.institutionValidator;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -52,7 +49,7 @@ public class InstitutionController  extends BaseController {
     }
 
     @RequestMapping(value = "/addinstitution.xhtml", method = RequestMethod.POST)
-    public String addInstitution(Model model, Principal principal, Institution institution, BindingResult result, @RequestParam(value="logo",required=false) MultipartFile logo) {
+    public String addInstitution(Model model, Principal principal, Institution institution, BindingResult result) {
         validator.validate(institution, result);
         if (result.hasErrors()) {
             model.addAttribute("countries", institutionDAO.objects("enabled.countries", Country.class));
@@ -61,12 +58,6 @@ public class InstitutionController  extends BaseController {
         }
         institutionDAO.insertInstitution(institution);
         institutionDAO.dml("insert.log", "inserting institution " + institution.getName(), getUsername(principal));
-        
-        //TO SAVE THE INSTITUTION LOGO
-        
-        if (logo!= null && !logo.isEmpty())
-			FileUtils.saveToFile(logo, Config.getProperty("base.upload.dir.logo"), institution.getZip());
-        
         return "redirect:/admin/manageinstitutions.xhtml?pattern=" + institution.getName();
     }
 
