@@ -24,7 +24,7 @@ public class ContestServiceImpl implements ContestService {
 		String[][] persons = new String[person.length - 1][2];
 		String[][] schools = new String[school.length - 1][2];
 		String[][] sites = new String[site.length - 1][2];
-		String[][] teams = new String[team.length - 1][4];
+		String[][] teams = new String[team.length - 1][5];
 		String[][] teamPersons = new String[teamPerson.length - 1][3];
 		String[][] teamCoaches = new String[teamPerson.length - 1][3];
 
@@ -64,7 +64,7 @@ public class ContestServiceImpl implements ContestService {
 		// teams, llave es teamId, valor es un arreglo teamName, inst Id, siteId
 		for (int i = 1; i < team.length; i++) {
 			String[] pArr = team[i].split("\t");
-			teams[i - 1] = new String[] { pArr[0], pArr[2], pArr[3], pArr[4] };
+			teams[i - 1] = new String[] { pArr[0], pArr[2], pArr[3], pArr[4], pArr[1] };
 		}
 
 		int digits = teams.length, digs = 0;
@@ -81,12 +81,13 @@ public class ContestServiceImpl implements ContestService {
 			user[0] = prefix + String.format("%0" + digs + "d", i+1);
 			String basePass = Utils.generateRandomPassword(8);
 			user[1] = md5.encodePassword(basePass, "ABC123XYZ789");
-			for (int m = 0; m < schools.length; m++)
-				if (schools[m][0].equals(teams[i][2])) {
+			for (int m = 0; m < schools.length; m++){
+				if (schools[m][0].equals(teams[i][1])) {
 					user[2] = schools[m][1];
 					user[3] = schools[m][1];
 				}
-			user[4] = teams[i][1];
+                        }
+			user[4] = teams[i][4];
 			user[5] = teams[i][0];
 
 			String[] teamUsers = new String[3];
@@ -115,24 +116,24 @@ public class ContestServiceImpl implements ContestService {
 
 			String cGroupd = "",groupTitle ="";
 			for (int j = 0; j < sites.length; j++)
-				if (sites[j][0].equals(teams[i][3])) {
+				if (sites[j][0].equals(teams[i][2])) {
 					cGroupd = sites[j][0];
 					groupTitle = sites[j][1];
 				}
 
 			contestDAO.insertData(groupTitle, teams[i], teamCoach,teamUsers, user, cid, warmupCid);
-
+                       
 			if (!cGroupd.equals(groupd)) {
 				result.add("\n========================");
 				result.add("\nSite: " + groupTitle);
 				groupd = cGroupd;
 			}
 			result.add("\nteam: " + user[4] + ", username: " + user[0] + ",password: " + basePass);
-			result.add("\ncoach: " + teamCoach);
-			result.add("\nmembers: " + teamUsers[0] + ", " + teamUsers[1] + ", " + teamUsers[2]);
+			//result.add("\ncoach: " + teamCoach);
+			//result.add("\nmembers: " + teamUsers[0] + ", " + teamUsers[1] + ", " + teamUsers[2]);
 
 		}
-
+                
 		return result;
 	}
 }

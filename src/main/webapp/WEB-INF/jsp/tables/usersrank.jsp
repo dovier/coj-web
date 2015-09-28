@@ -21,9 +21,9 @@
 					<a alt="logged" title="<spring:message code="altval.logged"/>"><i
 				class="fa fa-plug"></i></a>
 		</c:if>
-		<span class="pull-right"> <i title="${user.status}"
+<!--		<span class="pull-right"> <i title="${user.status}"
 			class="fa fa-circle user${user.status}"> </i>
-		</span>
+		</span>-->
 	</display:column>
 
 	<display:column property="total" titleKey="tablehdr.sub"

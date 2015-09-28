@@ -77,7 +77,7 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		// adicionarlos
 		dml("insert.contest.data.1", user[0], user[1], user[2], user[3],
 				user[4]);
-		int uid = integer("select.uid.by.username", user[0]);
+     	int uid = integer("select.uid.by.username", user[0]);
 
 		dml("insert.contest.data.2", uid, teamCoach == null ? "none"
 				: teamCoach, teamUsers[0] == null ? "none" : teamUsers[0],
@@ -89,7 +89,7 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		dml("insert.contest.data.5", user[0]);
 		if (warmupCid != null)
 			dml("insert.contest.data.6", uid, warmupCid, site);
-	}
+    }
 
 	public void insertProblemColor(int pid, int cid, String color) {
 		dml("insert.problem.color", color, pid, cid);
@@ -1641,4 +1641,6 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	public List<Problem> getAllContestProblems(int cid) {
 		return objects("select.contest.problem.letters", Problem.class, cid);
 	}
+
+ 
 }
