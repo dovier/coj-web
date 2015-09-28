@@ -124,7 +124,7 @@ public class ContestScoreboardsController extends BaseController {
 				if (contest.isShow_scoreboard_out() || (principal != null && requestWrapper.isUserInRole(Roles.ROLE_ADMIN))
 						|| (!contest.isShow_scoreboard_out() && request.getUserPrincipal() != null && contestDAO.isInContest(cid, contestDAO.integer("users.uid", getUsername(principal))))) {
 					contest.setShow_status(true);
-					switch (contest.getStyle()) {
+                                        switch (contest.getStyle()) {
 					case 1: {
 						List<Problem> problems = problemDAO.getContestProblems(locale.getLanguage(), cid);
 						int[] minimums = contestDAO.getRankingAcmMinimun(cid);

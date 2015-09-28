@@ -23,7 +23,7 @@
 									code="link.overview" />
 						</a></li>
 						<c:if test="${contest.gallery}">
-							<li><a target="_blank"
+							<li><a target="_self"
 								href="<c:url value="/contest/gallery.xhtml?cid=${contest.cid}" />">
 									<span style="position: relative; top: 2px"><i
 										class="fa fa-photo"></i>&nbsp;<spring:message
@@ -66,20 +66,22 @@
 										class="fa fa-sort-numeric-asc"></i>&nbsp;<spring:message
 											code="link.standings" /></a></li>
 								<c:if test="${contest.balloon and showBalloons}">
-									<li><a target="_blank"
+                                                                    <authz:authorize ifAnyGranted="ROLE_USER">		
+                                                                <li><a target="_blank"
 										href="<c:url value="/contest/cballoontracker.xhtml?cid=${contest.cid}" />">
 											<span style="position: relative; top: 2px"><i
 												class="fa fa-circle-o"></i>&nbsp;<spring:message
 													code="link.balloontracker" /></span>
-									</a></li>
+									</a></li></authz:authorize>
 								</c:if>
 								<c:if test="${contest.saris and showSaris}">
-									<li><a target="_blank"
+                                                                    <authz:authorize ifAnyGranted="ROLE_USER">	
+                                                                    <li><a target="_blank"
 										href="<c:url value="/contest/saris.xhtml?cid=${contest.cid}" />">
 											<span style="position: relative; top: 2px"><i
 												class="fa fa-flag-checkered"></i>&nbsp;<spring:message
 													code="link.saris" /></span>
-									</a></li>
+									</a></li></authz:authorize>
 								</c:if>
 								<c:if test="${contest.past}">
 									<li><a
