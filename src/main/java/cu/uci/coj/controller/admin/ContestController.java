@@ -112,8 +112,8 @@ public class ContestController extends BaseController {
     }
 
     @RequestMapping(value = "/tables/admincontests.xhtml", method = RequestMethod.GET)
-	public String tablesListContests(Model model, PagingOptions options, @RequestParam(required=false) String access,
-			@RequestParam(required=false) String enabled, @RequestParam(required=false, defaultValue="all") String status) {
+    public String tablesListContests(Model model, PagingOptions options, @RequestParam(required = false) String access,
+            @RequestParam(required = false) String enabled, @RequestParam(required = false, defaultValue = "all") String status) {
         IPaginatedList<Contest> contests = contestDAO.loadContests(options, access, enabled, status);
         model.addAttribute("contests", contests);
         return "/admin/tables/admincontests";
@@ -193,8 +193,8 @@ public class ContestController extends BaseController {
         return "redirect:/admin/globalsettings.xhtml?cid=" + contest.getCid();
     }
 
-	@RequestMapping(produces = "application/json", value = "/removeimage.json", method = RequestMethod.GET, headers = { "Accept=application/json" })
-	@ResponseStatus(value=HttpStatus.NO_CONTENT)
+    @RequestMapping(produces = "application/json", value = "/removeimage.json", method = RequestMethod.GET, headers = {"Accept=application/json"})
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteDataset(
             @RequestParam(value = "cid") int cid,
             @RequestParam(value = "image") String image) {
@@ -399,9 +399,10 @@ public class ContestController extends BaseController {
     }
 
     @RequestMapping(value = "/importicpcusers.xhtml", method = RequestMethod.POST)
-    public 
-    String importICPCUsers(
+    public @ResponseBody
+    byte[] importICPCUsers(
             Model model,
+            HttpServletResponse response,
             Contest contest,
             Locale locale,
             @RequestParam("cid") Integer cid,
@@ -421,15 +422,16 @@ public class ContestController extends BaseController {
                 new String(teamPersonFile.getBytes(), "UTF-8").split("\r\n"),
                 cid, warmupCid);
 
-		StringBuilder builder = new StringBuilder();
-		for (String msg : messages) {
-			builder.append(msg);
-			builder.append("\n");
+        StringBuilder builder = new StringBuilder();
+        for (String msg : messages) {
+            builder.append(msg);
+            builder.append("\n");
+        }
+
+        response.setHeader("Content-Disposition", "attachment; filename=\""
+                + prefix + "users");
+        return builder.toString().getBytes("UTF-8");
     }
-                model.addAttribute("result",builder.toString());
-                 return "/admin/importicpcusersresult";
-		//return builder.toString();
-	}
 
     @RequestMapping(value = "/contestproblemcolors.xhtml", method = RequestMethod.GET)
     public String contestProblemColors(Model model, Locale locale,
@@ -450,7 +452,7 @@ public class ContestController extends BaseController {
         return "/admin/baylorxml";
     }
 
-    @RequestMapping(produces = "application/octet-stream", value = "/baylorxml.xhtml", method = RequestMethod.POST, headers = {"Accept=application/octet-stream"})
+    @RequestMapping(value = "/baylorxml.xhtml", method = RequestMethod.POST)
     public @ResponseBody
     byte[] baylorXml(Model model, Locale locale,
             HttpServletResponse response, MultipartFile xml,
