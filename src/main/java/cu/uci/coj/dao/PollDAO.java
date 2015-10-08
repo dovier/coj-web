@@ -1,18 +1,26 @@
 package cu.uci.coj.dao;
 
+import cu.uci.coj.model.Poll;
 import java.util.List;
 
-import cu.uci.coj.model.Poll;
+public abstract interface PollDAO
+  extends BaseDAO
+{
+  public abstract void add(Poll paramPoll);
 
-public interface PollDAO extends BaseDAO{
+  public abstract void update(Poll paramPoll);
 
-	public void add(Poll poll);
-	public void update(Poll poll);
-	public void delete(int pid);
-	public void toggleEnable(int pid);
-	public void vote(int pid, int uid, int option);
-	public Poll get(int pid);
-	public List<Poll> list();
-	public List<Poll> listEnabled();
-	public boolean voted(Integer uid,Integer pid);
+  public abstract void delete(int paramInt);
+  
+  public abstract void toggleEnable(int paramInt);
+  
+  public abstract void vote(int paramInt1, int paramInt2, int paramInt3);
+  
+  public abstract Poll get(int paramInt);
+  
+  public abstract List<Poll> list();
+  
+  public abstract List<Poll> listEnabled(Integer paramInteger);
+  
+  public abstract boolean voted(Integer paramInteger1, Integer paramInteger2);
 }
