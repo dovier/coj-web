@@ -101,10 +101,10 @@
                                     <c:when test="${user.online == true}">
                                         <sup><a  alt="logged" title="<spring:message code="altval.logged"/>"><i class="fa fa-plug"></i></a></sup>
                                     </c:when>
-                                </c:choose> <span class="pull-right"> <img
+                                    </c:choose> <span class="pull-right"> <img  
                                         src="<c:url value="/images/countries/${user.country}"/>.png"
                                         title="<c:url value="${user.country_desc}"/>"
-                                    alt="<c:url value="${user.country}"/>" /> <img
+                                    alt="<c:url value="${user.country}"/>" /> <img class="school" 
                                         src="<c:url value="/images/school/${user.institution}"/>.png"
                                         title="<c:out value="${user.institution_desc}"/>"
                                     alt="<c:out value="${user.institution}"/>" />
@@ -198,7 +198,7 @@
                         </c:choose><span class="pull-right"> <img
                                 src="<c:url value="/images/countries/${user.country}"/>.png"
                                 title="<c:url value="${user.country_desc}"/>"
-                            alt="<c:url value="${user.country}"/>" /> <img
+                            alt="<c:url value="${user.country}"/>" /> <img class="school" 
                                 src="<c:url value="/images/school/${user.institution}"/>.png"
                                 title="<c:out value="${user.institution_desc}"/>"
                             alt="<c:out value="${user.institution}"/>" />
