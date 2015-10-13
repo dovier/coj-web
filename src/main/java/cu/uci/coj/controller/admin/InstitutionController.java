@@ -65,7 +65,7 @@ public class InstitutionController  extends BaseController {
         //TO SAVE THE INSTITUTION LOGO
         
         if (logo!= null && !logo.isEmpty())
-			FileUtils.saveToFile(logo, Config.getProperty("base.upload.dir.logo"), institution.getZip());
+			FileUtils.saveToFile(logo, Config.getProperty("base.upload.dir.logo"), institution.getZip() + ".png");
         
         return "redirect:/admin/manageinstitutions.xhtml?pattern=" + institution.getName();
     }

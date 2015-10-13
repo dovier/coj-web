@@ -23,7 +23,7 @@
                                     maxlength="15"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="country_id" /></span>
+                        <span class="label label-danger"><form:errors path="name" /></span>
                     </div>
                     <a>
                         <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -44,7 +44,7 @@
                                     maxlength="15"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="country_id" /></span>
+                        <span class="label label-danger"><form:errors path="zip" /></span>
                     </div>
                     <a>
                         <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -84,7 +84,7 @@
                                     maxlength="15"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="country_id" /></span>
+                        <span class="label label-danger"><form:errors path="website" /></span>
                     </div>
                     <a>
                         <i data-toggle="tooltip" class="fa fa-asterisk"
