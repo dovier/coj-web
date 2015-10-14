@@ -666,7 +666,7 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		jdbcTemplate.query(sql, aCMScoreboard);
 		return aCMScoreboard;
 	}
-
+        @Deprecated//al parecer esto no se utiliza en ningun lugar de la aplicacion
 	public List<User> getUsers() {
 		return users;
 	}
@@ -1641,6 +1641,20 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 	public List<Problem> getAllContestProblems(int cid) {
 		return objects("select.contest.problem.letters", Problem.class, cid);
 	}
+
+    @Override
+    public int getCantCountry(int cid) {
+        int cantCountry = integer("select.cant.country.contest", cid);
+        return cantCountry;
+      //  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getCantInst(int cid) {
+         int cantInst = integer("select.cant.inst.contest", cid);
+        return cantInst;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
  
 }

@@ -1,9 +1,13 @@
 package cu.uci.coj.model;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class Contest {
 	
@@ -114,7 +118,7 @@ public class Contest {
     private String groupd;
     private String guestGroup;
     private int template;
-    
+
     
     public List<User> getBalloontrackers() {
 		return balloontrackers;
