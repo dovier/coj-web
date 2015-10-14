@@ -7,8 +7,9 @@
 
 
 <h2 class="postheader">
-	<fmt:message key="page.general.admin.header" />
-	: Manage Account Activations
+	<fmt:message key="page.general.admin.header" />:
+	<fmt:message key="page.general.admin.account.activation" />
+            
 </h2>
 <div class="postcontent">
 	<div>
@@ -24,7 +25,7 @@
 			</div>
 		</form>
 	</div>
-	<label><spring:message code="fieldhdr.totalfound" />: ${found}</label>
+	<!--<label><spring:message code="fieldhdr.totalfound" />: ${found}</label>-->                              
 	<div>
 		<button id="resend" class="mybutton btn btn-primary " type="button">
 			<fmt:message key="fieldhdr.resendactivations" />

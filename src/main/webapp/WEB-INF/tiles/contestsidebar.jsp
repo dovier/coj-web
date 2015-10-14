@@ -66,22 +66,24 @@
                                             class="fa fa-sort-numeric-asc"></i>&nbsp;<spring:message
                                             code="link.standings" /></a></li>
                                         <c:if test="${contest.balloon and showBalloons}">
-                                            <authz:authorize ifAnyGranted="ROLE_USER">		
+                                            <%--<authz:authorize ifAllGranted="ROLE_USER">--%>		
                                         <li><a target="_blank"
                                                href="<c:url value="/contest/cballoontracker.xhtml?cid=${contest.cid}" />">
                                                 <span style="position: relative; top: 2px"><i
                                                         class="fa fa-circle-o"></i>&nbsp;<spring:message
                                                         code="link.balloontracker" /></span>
-                                            </a></li></authz:authorize>
+                                            </a></li>
+                                <%--</authz:authorize>--%>
                                     </c:if>
                                     <c:if test="${contest.saris and showSaris}">
-                                        <authz:authorize ifAnyGranted="ROLE_USER">	
+                                        <%--<authz:authorize ifAllGranted="ROLE_USER">--%>	
                                         <li><a target="_blank"
                                                href="<c:url value="/contest/saris.xhtml?cid=${contest.cid}" />">
                                                 <span style="position: relative; top: 2px"><i
                                                         class="fa fa-flag-checkered"></i>&nbsp;<spring:message
                                                         code="link.saris" /></span>
-                                            </a></li></authz:authorize>
+                                            </a></li>
+                                    <%--</authz:authorize>--%>
                                     </c:if>
                                     <c:if test="${contest.past}">
                                     <li><a
