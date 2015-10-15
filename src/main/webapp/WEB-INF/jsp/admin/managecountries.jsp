@@ -4,12 +4,12 @@
 
 <h2 class="postheader">
 	<fmt:message key="page.general.admin.header" />
-	: Manage Countries
+	: <fmt:message key="page.general.admin.managecountries" />
 </h2>
 <div class="postcontent">
 	<form id="filter-form" class="form-inline">
 		<div class="form-group">
-			<label>Search in name and code:</label> <input type="text"
+			<label><fmt:message key="page.general.admin.search" />:</label> <input type="text"
 				class="form-control" name="pattern" value="${pattern}">
 		</div>
 		<div class="form-group">
@@ -18,8 +18,7 @@
 		</div>
 	</form>
 	
-	<br /> <a href="<c:url value="/admin/addcountry.xhtml" />">Add New
-		Country</a>
+	<br /> <a href="<c:url value="/admin/addcountry.xhtml" />"><fmt:message key="page.general.admin.addnewcountry" /></a>
 
 	<div id="display-table-container"
 		data-reload-url="/admin/tables/managecountries.xhtml"></div>

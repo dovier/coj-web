@@ -2,44 +2,107 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer = "16kb" autoFlush="true" %>
 
+<div class="row">
+    <div class="col-xs-10">
+        <form:form method="post" enctype="multipart/form-data"
+                   commandName="country" cssClass="form-horizontal">
 
-<h2 class="postheader">
-    <fmt:message key="page.addcountry.header"/>
-</h2>
-<div class="postcontent">    
-    <form:form method="post" commandName="country">
-        <table class="createnewuser">
-            <tbody>
-                <tr>
-                    <td style="align:right"><fmt:message key="page.addcountry.name"/><i class="fa fa-asterisk"></i></td>
-                    <td><form:input path="name" size="30" maxlength="30" /></td>
-                    <td><span class="label label-danger"><form:errors path="name" /></span></td>
-                </tr>
+            <!-- NAME OF VIEW -->
+            <legend>
+                <spring:message code="page.addcountry.header" />
+            </legend>
 
-                <tr>
-                    <td style="align:right"><fmt:message key="page.addcountry.zip"/><i class="fa fa-asterisk"></i></td>
-                    <td><form:input path="zip" size="30" maxlength="30" /></td>
-                    <td><span class="label label-danger"><form:errors path="zip" /></span></td>
-                </tr>
+            <!-- NAME OF COUNTRY -->
+            <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
+                <div class="form-group">
+                    <label class="control-label col-xs-3">
+                        <spring:message code="page.addcountry.name" />
+                    </label>
+                    <div class="col-xs-8">
+                        <form:input cssClass="form-control" path="name" size="30"
+                                    maxlength="15"/>
+                    </div>
+                    <div class="error col-xs-8 col-xs-offset-3">
+                        <span class="label label-danger"><form:errors path="name" /></span>
+                    </div>
+                    <a>
+                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                           title="<spring:message code="mandatory.field"/>">
+                        </i>
+                    </a>
+                </div>
+            </authz:authorize>
 
-                <tr>
-                    <td style="align:right">Two letters code<i class="fa fa-asterisk"></i></td>
-                    <td><form:input path="zip_two" size="2" maxlength="2" /></td>
-                    <td><span class="label label-danger"><form:errors path="zip_two" /></span></td>
-                </tr>
+            <!-- ACRONYM OF COUNTRY -->
+            <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
+                <div class="form-group">
+                    <label class="control-label col-xs-3">
+                        <spring:message code="page.addcountry.zip" />
+                    </label>
+                    <div class="col-xs-8">
+                        <form:input cssClass="form-control" path="zip" size="30"
+                                    maxlength="15"/>
+                    </div>
+                    <div class="error col-xs-8 col-xs-offset-3">
+                        <span class="label label-danger"><form:errors path="zip" /></span>
+                    </div>
+                    <a>
+                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                           title="<spring:message code="mandatory.field"/>">
+                        </i>
+                    </a>
+                </div>
+            </authz:authorize>
 
-                <tr>
-                    <td style="align:right">Website<i class="fa fa-asterisk"></i></td>
-                    <td><form:input path="website"/></td>
-                    <td><span class="label label-danger"><form:errors path="website" /></span></td>
-                </tr>
 
-                <tr>
-                    <td><input type="submit" name="submit" id="submit" value="<fmt:message key="judge.register.submit.value"/>" /></td>
-                    <td><input type="reset" name="submit" id="submit" value="<fmt:message key="judge.register.reset.value"/>" /></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-    </form:form>    
-</div>            
+            <!-- TWO LETTER OF COUNTRY -->
+            <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
+                <div class="form-group">
+                    <label class="control-label col-xs-3">
+                        <spring:message code="page.addcountry.twozip" />
+                    </label>
+                    <div class="col-xs-8">
+                        <form:input cssClass="form-control" path="zip_two" size="30"
+                                    maxlength="15"/>
+                    </div>
+                    <div class="error col-xs-8 col-xs-offset-3">
+                        <span class="label label-danger"><form:errors path="zip" /></span>
+                    </div>
+                    <a>
+                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                           title="<spring:message code="mandatory.field"/>">
+                        </i>
+                    </a>
+                </div>
+            </authz:authorize>
+
+            <!-- WEB OF COUNTRY -->
+            <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
+                <div class="form-group">
+                    <label class="control-label col-xs-3">
+                        <spring:message code="page.addcountry.website" />
+                    </label>
+                    <div class="col-xs-8">
+                        <form:input cssClass="form-control" path="website" size="30"
+                                    maxlength="15"/>
+                    </div>
+                    <div class="error col-xs-8 col-xs-offset-3">
+                        <span class="label label-danger"><form:errors path="website" /></span>
+                    </div>
+                    <a>
+                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                           title="<spring:message code="mandatory.field"/>">
+                        </i>
+                    </a>
+                </div>
+            </authz:authorize>            
+
+            <div class="form-actions pull-right">
+                <input class="btn btn-primary" type="submit" name="submit"
+                       id="submit" value="<spring:message code="judge.register.submit.value"/>" /> <input
+                       class="btn btn-primary" type="reset" name="reset" id="reset"
+                       value="<spring:message code="judge.register.reset.value"/>" />
+            </div>
+        </form:form>
+    </div>
+</div>
