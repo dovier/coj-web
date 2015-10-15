@@ -9,7 +9,7 @@
 
             <!-- NAME OF VIEW -->
             <legend>
-                <spring:message code="page.addcountry.header" />
+                <spring:message code="page.general.admin.header" />: <spring:message code="page.addcountry.header" />
             </legend>
 
             <!-- NAME OF COUNTRY -->
