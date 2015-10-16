@@ -3,21 +3,21 @@
 
 
 <h2 class="postheader">
-    <fmt:message key="page.general.admin.header"/>: Programming Languages
+    <fmt:message key="page.general.admin.header"/>: <fmt:message key="page.general.admin.languages"/>
 </h2>
 <div class="postcontent"> 
 
-    <a href="<c:url value="managelanguage.xhtml" />">Add Programming Language</a>
+    <a href="<c:url value="managelanguage.xhtml" />"><fmt:message key="page.general.admin.addlanguage"/></a>
 
     <table class="volume" border="1px">
         <thead class="orderby">
         <th>ID</th>
-        <th>Language</th>
-        <th>Description</th>
-        <th>Name Bin</th>
-        <th>Key</th>
-        <th>Enabled</th>
-        <th>Edit</th>
+        <th><fmt:message key="tablehdr.language"/></th>
+        <th><fmt:message key="tablehdr.description"/></th>
+        <th><fmt:message key="tablehdr.namebin"/></th>
+        <th><fmt:message key="tablehdr.key"/></th>
+        <th><fmt:message key="tablehdr.enable"/></th>
+        <th><fmt:message key="tablehdr.edit"/></th>
         </thead>
 
         <c:forEach items="${languages}" var="language">

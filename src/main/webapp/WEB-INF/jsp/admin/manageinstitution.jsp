@@ -10,7 +10,7 @@
             <!-- NAME OF VIEW -->
             <legend>
                 <spring:message code="page.general.admin.header" />
-                : Manage Institution
+                : <spring:message code="page.general.admin.manageinstitution" />
             </legend>
 
             <!-- ID OF INTITUTION -->
