@@ -128,7 +128,7 @@ public class ContestServiceImpl implements ContestService {
 				result.add("\nSite: " + groupTitle);
 				groupd = cGroupd;
 			}
-			result.add("\nteam: " + user[4] + ", username: " + user[0] + ",password: " + basePass);
+			result.add("team: " + user[4] + ", username: " + user[0] + ",password: " + basePass);
 			//result.add("\ncoach: " + teamCoach);
 			//result.add("\nmembers: " + teamUsers[0] + ", " + teamUsers[1] + ", " + teamUsers[2]);
 

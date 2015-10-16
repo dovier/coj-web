@@ -13,7 +13,7 @@
 	</display:column>
 	<display:column titleKey="tablehdr.institution"
 		headerClass="headcountry">
-		<img src="<c:url value="/images/school/${user.institution}"/>.png"
+		<img class="school" src="<c:url value="/images/school/${user.institution}"/>.png"
 			title="<c:out value="${user.institution_desc}"/>"
 			alt="<c:url value="${user.institution}"/>" />
 	</display:column>
