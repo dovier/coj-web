@@ -65,3 +65,8 @@
         </form:form>
     </div>
 </div>
+<script>    
+$(function(){
+		$("[data-toggle='tooltip']").tooltip();	
+	});
+</script>

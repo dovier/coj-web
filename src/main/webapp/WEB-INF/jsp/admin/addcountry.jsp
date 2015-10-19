@@ -106,3 +106,7 @@
         </form:form>
     </div>
 </div>
+
+<script>    
+    $("[data-toggle='tooltip']").tooltip();
+</script>

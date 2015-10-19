@@ -84,3 +84,6 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
         </form:form>
     </div>
 </div>
+<script>    
+    $("[data-toggle='tooltip']").tooltip();
+</script>
