@@ -18,7 +18,7 @@
                 <label class="control-label col-xs-3"><spring:message code="tablehdr.language" /></label>
                 <div class="col-xs-8">
                     <form:input cssClass="form-control" path="lid" size="30"
-                                maxlength="15" readonly="true"/>
+                                maxlength="30" readonly="true"/>
                 </div>
                 <div class="error col-xs-8 col-xs-offset-3">
                     <span class="label label-danger"><form:errors path="lid" /></span>
@@ -58,7 +58,7 @@
                 </label>
                 <div class="col-xs-8">
                     <form:input cssClass="form-control" path="descripcion" size="30"
-                                maxlength="15"/>
+                                maxlength="70"/>
                 </div>
                 <div class="error col-xs-8 col-xs-offset-3">
                     <span class="label label-danger"><form:errors path="descripcion" /></span>

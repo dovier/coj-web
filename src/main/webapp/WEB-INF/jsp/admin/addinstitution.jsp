@@ -20,7 +20,7 @@
                     </label>
                     <div class="col-xs-8">
                         <form:input cssClass="form-control" path="name" size="30"
-                                    maxlength="15"/>
+                                    maxlength="70"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="name" /></span>
@@ -81,7 +81,7 @@
                     </label>
                     <div class="col-xs-8">
                         <form:input cssClass="form-control" path="website" size="30"
-                                    maxlength="15"/>
+                                    maxlength="70"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="website" /></span>
