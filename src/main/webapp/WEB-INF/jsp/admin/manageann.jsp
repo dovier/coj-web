@@ -1,53 +1,106 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page buffer = "16kb" autoFlush="true" %>
 
-<script  type="text/javascript" src="<c:url value="/js/WYSIWYG/source.js" />"></script>
+<script  type="text/javascript"
+src="<c:url value="/js/WYSIWYG/source.js" />"></script>
 
 
-<h2 class="postheader">
-    <spring:message code="pagehdr.aeannouncement"/>
-</h2>
-<div class="postcontent">
-    <form:form method="post" commandName="announcement">
-        <table class="createnewuser">
-            <tbody>
+<div class="row">
+    <div class="col-xs-10">
+        <form:form method="post" enctype="multipart/form-data"
+                   commandName="announcement" cssClass="form-horizontal">
 
-                <tr>
-                    <td style="align:right"><spring:message code="fieldhdr.id"/>:</td>
-                    <td><form:input path="aid" readonly="true" disabled="true"/></td>
-                    <td><span class="label label-danger"><form:errors path="aid" /></span></td>
-                </tr>   
+            <!-- NAME OF VIEW -->
+            <legend>
+                <spring:message code="page.general.admin.header" />: <spring:message code="pagehdr.aeannouncement" />
+            </legend>
+            
+            <!-- ID OF ANNOUNCEMENT -->
+            <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
+                <div class="form-group">
+                    <label class="control-label col-xs-3">
+                        <spring:message code="fieldhdr.id" />
+                    </label>                    
+                    <div class="col-xs-8">
+                        <form:input path="aid" cssClass="form-control" readonly="true" disabled="true"/>
+                    </div>
+                    <div class="error col-xs-8 col-xs-offset-3">
+                        <span class="label label-danger"><form:errors path="aid" /></span>
+                    </div>  
+                    <a>
+                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                           title="<spring:message code="mandatory.field"/>">
+                        </i>
+                    </a>
+                </div>
+            </authz:authorize>
 
-                <tr>
-                    <td style="align:right"><spring:message code="fieldhdr.content"/>:<i class="fa fa-asterisk"></i></td>
-                    <td>
-                        <form:textarea path="content"/>
-                    </td>
-                    <td><span class="label label-danger"><form:errors path="content" /></span></td>
-                </tr>
+            <!-- TEXT OF ANNOUNCEMENT -->
+            <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
+                <div class="form-group">
+                    <label class="control-label col-xs-3">
+                        <spring:message code="fieldhdr.content" />
+                    </label>                    
+                    <div class="col-xs-8">
+                        <form:textarea path="content" cssClass="form-control"/>
+                    </div>
+                    <div class="error col-xs-8 col-xs-offset-3">
+                        <span class="label label-danger"><form:errors path="content" /></span>
+                    </div>  
+                    <a>
+                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                           title="<spring:message code="mandatory.field"/>">
+                        </i>
+                    </a>
+                </div>
+            </authz:authorize>
 
-                <tr>
-                    <td style="align:right"><spring:message code="fieldhdr.enabled"/>:</td>
-                    <td>
-                        <form:checkbox path="enabled" />
-                    </td>
-                    <td><span class="label label-danger"><form:errors path="enabled" /></span></td>
-                </tr>
+            <!-- ENABLED OF ANNOUNCEMENT -->
+            <div class="form-group">
+                <label class="control-label col-xs-3">
+                    <spring:message code="fieldhdr.enabled" />
+                </label>
+                <div class="col-xs-8">
+                    <form:checkbox path="enabled" />
+                </div>    
+                <div class="error col-xs-8 col-xs-offset-3">
+                        <span class="label label-danger"><form:errors path="enabled" /></span>
+                    </div>  
+                <a>
+                    <i data-toggle="tooltip" class="fa fa-asterisk"
+                       title="<spring:message code="mandatory.field"/>">
+                    </i>
+                </a>
+            </div>
 
-                <tr>
-                    <td style="align:right"><spring:message code="fieldhdr.contest" />:</td>
-                    <td>
-                        <form:select path="contest">
-                            <form:options items="${contests}" itemLabel="name" itemValue="cid" />
-                        </form:select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><input type="submit" value="<spring:message code="button.edit"/>" /></td>
-                    <td><input type="reset" value="<spring:message code="button.reset"/>" /></td>
-                </tr>
-            </tbody>
-        </table>
-    </form:form>   
+            <!-- CONTEST OF ANNOUNCEMENT -->
+            <div class="form-group">
+                <label class="control-label col-xs-3">
+                    <spring:message code="fieldhdr.contest" />
+                </label>
+                <!-- ADD ALL CONTESTS AND SELECT THE OWNER -->
+                <div class="col-xs-8">
+                    <form:select path="contest">
+                        <form:options items="${contests}" itemLabel="name" itemValue="cid" />
+                    </form:select>
+                </div>
+                <div class="error col-xs-8 col-xs-offset-3">
+                    <span class="label label-danger"><form:errors path="contest" /></span>
+                </div>
+                <a>
+                    <i data-toggle="tooltip" class="fa fa-asterisk"
+                       title="<spring:message code="mandatory.field"/>">
+                    </i>
+                </a>
+            </div>   
+
+
+            <div class="form-actions pull-right">
+                <input class="btn btn-primary" type="submit" name="submit"
+                       id="submit" value="<spring:message code="button.edit"/>" /> <input
+                       class="btn btn-primary" type="reset" name="reset" id="reset"
+                       value="<spring:message code="button.reset"/>" />
+            </div>
+        </form:form>
+    </div>
 </div>

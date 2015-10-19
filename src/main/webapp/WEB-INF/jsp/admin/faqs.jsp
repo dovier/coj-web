@@ -6,7 +6,7 @@
 </h2>
 <div class="postcontent">
     <br/>
-    <a href="<c:url value="/admin/addfaq.xhtml" />">Add New FAQ</a>
+    <a href="<c:url value="/admin/addfaq.xhtml" />"><fmt:message key="page.faqs.add"/></a>
 
      <div id="display-table-container" data-reload-url="/admin/tables/faqs.xhtml"></div> 
 </div>
