@@ -4,12 +4,12 @@
 
 <h2 class="postheader">
 	<fmt:message key="page.general.admin.header" />
-	: Users
+	: <fmt:message key="page.general.admin.users" />
 </h2>
 <div class="postcontent">
 	<form id="filter-form" class="form-inline">
 		<div class="form-group">
-			<label>Search in username, nick and email:</label> <input type="text"
+			<label><fmt:message key="page.general.admin.usersearch" /></label> <input type="text"
 				class="form-control" name="pattern" value="${pattern}">
 		</div>
 		<div class="form-group">
