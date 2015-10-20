@@ -6,7 +6,7 @@
 
 <h2 class="postheader">
 	<fmt:message key="page.general.admin.header" />
-	: Manage Entries
+	: <fmt:message key="page.general.admin.manageentries" />
 </h2>
 <div class="postcontent">
 	<div id="hidden-form">

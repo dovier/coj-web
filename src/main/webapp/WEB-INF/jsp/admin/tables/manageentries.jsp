@@ -21,10 +21,8 @@
 		<a data-toggle="tooltip" title="Show entry"
 			href="<c:url value="/admin/enableentry.xhtml?id=${n.id}"/>"> <i
 			class="fa fa-eye"></i></a>
-		<a data-toggle="tooltip" title="Send PM"
-			href="<c:url value="/mail/composemail.xhtml?usernameto=${n.username}"/>">
-			<i class="fa fa-envelope"></i>
-		</a>
+		<a data-toggle="tooltip" title="Send PM" href="<c:url value="/mail/composemail.xhtml?usernameto=${n.username}"/>">
+			<i class="fa fa-envelope"></i></a>
 		<a data-toggle="tooltip" title="Edit entry"
 			href="<c:url value="javascript:edit(${n.id})"/>"> <i
 			class="fa fa-edit"></i></a>
