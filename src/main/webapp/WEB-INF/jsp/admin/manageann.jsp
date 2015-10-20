@@ -80,7 +80,7 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
                 </label>
                 <!-- ADD ALL CONTESTS AND SELECT THE OWNER -->
                 <div class="col-xs-8">
-                    <form:select path="contest">
+                    <form:select path="contest" class="form-control">
                         <form:options items="${contests}" itemLabel="name" itemValue="cid" />
                     </form:select>
                 </div>

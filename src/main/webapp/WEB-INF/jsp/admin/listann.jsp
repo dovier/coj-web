@@ -8,11 +8,9 @@
 	<br />
 	<form id="filter-form" class="form-inline">
 		<div id="form-group">
-			<label><spring:message code="filedhdr.searchcontent" />:</label> <input
-				type="text" class="form-control" name="pattern" value="${pattern}">
-		</div>
-		<div class="form-group">
-			<input id="filter-button" type="submit" class="btn btn-primary"
+                    <label class="control-label"><spring:message code="filedhdr.searchcontent" />:</label> 
+                    <input type="text" class="form-control" name="pattern" value="${pattern}">
+                        <input id="filter-button" type="submit" class="btn btn-primary"
 				value="<spring:message code="button.filter"/>">
 		</div>
 	</form>
