@@ -225,4 +225,10 @@ public interface ContestDAO extends BaseDAO {
     public void applyEffects(SubmissionJudge submit, Contest contest);
 
     public void unfreezeIfNecessary(Contest contest);
+
+    public Object getCantUserGuest(Integer cid, String guestGroup);
+
+    public Object getCantCountryGuest(Integer cid, String guestGroup);
+
+    public Object getCantInstGuest(Integer cid, String guestGroup);
 }

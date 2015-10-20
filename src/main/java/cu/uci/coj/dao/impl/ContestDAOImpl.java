@@ -1656,5 +1656,24 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public Object getCantUserGuest(Integer cid, String guestGroup) {
+       int cantUserGuest = integer("select.cant.user.contest.guest", cid,guestGroup);
+       return cantUserGuest;
+    }
+
+    @Override
+    public Object getCantCountryGuest(Integer cid, String guestGroup) {
+         int cantCountryGuest = integer("select.cant.country.contest.guest", cid,guestGroup);
+       return cantCountryGuest;
+    }
+
+    @Override
+    public Object getCantInstGuest(Integer cid, String guestGroup) {
+         int cantInstGuest = integer("select.cant.inst.contest.guest", cid,guestGroup);
+       return cantInstGuest;
+        
+    }
+
  
 }
