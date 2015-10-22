@@ -1664,13 +1664,13 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 
     @Override
     public Object getCantCountryGuest(Integer cid, String guestGroup) {
-         int cantCountryGuest = integer("select.cant.country.contest.guest", cid,guestGroup);
+         int cantCountryGuest = integer("select.cant.country.contest.guest", cid,guestGroup,cid,guestGroup);
        return cantCountryGuest;
     }
 
     @Override
     public Object getCantInstGuest(Integer cid, String guestGroup) {
-         int cantInstGuest = integer("select.cant.inst.contest.guest", cid,guestGroup);
+         int cantInstGuest = integer("select.cant.inst.contest.guest", cid,guestGroup,cid,guestGroup);
        return cantInstGuest;
         
     }

@@ -142,9 +142,9 @@
                     </canvas>
                 </div>
 
-                <div class="col-xs-7"><label><spring:message code="contest.cant.users" />: </label> ${cuser} (<spring:message code="stats.including" /> ${cuserguest} <spring:message code="stats.guest" /> )</div>
-                <div class="col-xs-7"><label><spring:message code="contest.cant.inst" />: </label> ${cinst} (including ${cinstguest} guest)</div>
-                <div class="col-xs-7"><label><spring:message code="contest.cant.country" />: </label> ${ccountry} (including ${ccountryguest} guest)</div>
+                <div class="col-xs-7"><label><spring:message code="contest.cant.users" />: </label> ${cuser} (<spring:message code="stats.including" /> ${cuserguest} <spring:message code="stats.guest" />)</div>
+                <div class="col-xs-7"><label><spring:message code="contest.cant.inst" />: </label> ${cinst} (<spring:message code="stats.including" /> ${cinstguest} <spring:message code="stats.guest" />)</div>
+                <div class="col-xs-7"><label><spring:message code="contest.cant.country" />: </label> ${ccountry} (<spring:message code="stats.including" /> ${ccountryguest} <spring:message code="stats.guest" />)</div>
 
 
 
