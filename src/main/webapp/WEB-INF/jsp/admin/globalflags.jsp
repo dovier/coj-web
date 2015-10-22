@@ -4,38 +4,41 @@
 
 
 <h2 class="postheader">
-    <fmt:message key="page.general.admin.header"/>: Global Flags
+    <fmt:message key="page.general.admin.header"/>: <fmt:message key="page.general.admin.globalflags"/>
 </h2>
 <div class="postcontent">                    
-    <form:form method="post" commandName="globalFlags">
+    <form:form method="post" commandName="globalFlags" cssClass="form-">
         <table class="createnewuser">
             <tbody>
                 <tr>
-                    <td style="align:right">Disabled Mail Notifications</td>
+                    <td style="align:right"><fmt:message key="page.globalflags.disabledmailnotifications"/></td>
                     <td><form:checkbox path="mailNotificationDisabled"/></td>
                 </tr>
-                
+
                 <tr>
-                    <td style="align:right">Enabled Internal Mail</td>
+                    <td style="align:right"><fmt:message key="page.globalflags.enabledinternalmail"/></td>
                     <td><form:checkbox path="enabled_mail"/></td>
                 </tr>
 
                 <tr>
-                    <td style="align:right">Enabled Source Code View</td>
+                    <td style="align:right"><fmt:message key="page.globalflags.enabledsourcecodeview"/></td>
                     <td><form:checkbox path="enabled_source_code_view"/></td>
                 </tr>
 
                 <tr>
-                    <td style="align:right">Enabled SubmissionJudge 24h</td>
+                    <td style="align:right"><fmt:message key="page.globalflags.enabledsubmissionjudge"/></td>
                     <td><form:checkbox path="enabled_submission"/></td>
                 </tr>
                 <tr>
                     <td style="align:right"><spring:message code="tableval.maintenancemode" /></td>
                     <td><form:checkbox path="maintenanceMode"/></td>
                 </tr>
-				
+
                 <tr>
-                    <td><input type="submit" name="submit" id="submit" value="Update" /></td>
+                    <td>                        
+                        <input class="btn btn-primary" type="submit" name="submit" id="submit" 
+                               value="<spring:message code="judgeregister.update.value"/>" />
+                    </td>
                     <td></td>
                 </tr>
             </tbody>

@@ -31,10 +31,10 @@
 		</display:column>
 		<display:column titleKey="tablehdr.actions" headerClass="headid">
 			<a href="<c:url value="/admin/poll/manage.xhtml?pid=${poll.pid}"/>"
-				title="<spring:message code="messages.general.go"/>"><i
+				title="<spring:message code="messages.general.edit"/>"><i
 				class="fa fa-edit"></i></a>
 			<a href="<c:url value="/admin/poll/delete.xhtml?pid=${poll.pid}"/>"
-				title="<spring:message code="messages.general.go"/>"><i
+				title="<spring:message code="messages.general.delete"/>"><i
 				class="fa fa-trash"></i> </a>
 		</display:column>
 	</display:table>
