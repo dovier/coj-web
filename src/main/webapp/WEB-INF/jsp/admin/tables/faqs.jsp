@@ -8,12 +8,17 @@
 	<display:column property="question" titleKey="tablehdr.question"
 		paramId="question" paramProperty="question" />
 	<display:column titleKey="tablehdr.edit">
-		<a href="<c:url value="/admin/addfaq.xhtml?id=${faq.id}"/>"> <i
+		<a href="<c:url value="/admin/addfaq.xhtml?id=${faq.id}"/>"> <i 
+                        title="<spring:message code="messages.general.edit"/>" data-toggle="tooltip"
 			class="fa fa-edit"></i></a>
 	</display:column>
 	<display:column titleKey="tablehdr.delete">
-		<a href="<c:url value="/admin/deletefaq.xhtml?id=${faq.id}"/>"> <i
-			class="fa fa-trash"></i>
+		<a href="<c:url value="/admin/deletefaq.xhtml?id=${faq.id}"/>"> <i title="<spring:message code="messages.general.delete"/>"
+				data-toggle="tooltip" class="fa fa-trash"></i>
 		</a>
 	</display:column>
 </display:table>
+
+<script>    
+    $("[data-toggle='tooltip']").tooltip();
+</script>

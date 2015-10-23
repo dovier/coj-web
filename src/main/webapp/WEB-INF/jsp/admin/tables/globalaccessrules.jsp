@@ -8,7 +8,11 @@
 	<display:column titleKey="tablehdr.content" property="rule" />
 	<display:column titleKey="tablehdr.delete">
 		<a href="<c:url value="/admin/deleterule.xhtml?rid=${rul.rid}"/>"
-			title="<fmt:message key="messages.general.go"/>"><i
-			class="fa fa-trash"></i></a>
+			><i title="<spring:message code="messages.general.delete"/>"
+				data-toggle="tooltip" class="fa fa-trash"></i></a>
 	</display:column>
 </display:table>
+
+<script>    
+    $("[data-toggle='tooltip']").tooltip();
+</script>

@@ -12,7 +12,7 @@
             <label class="control-label"><fmt:message key="page.general.admin.rule" /></label>            
             <form:input cssClass="form-control" path="rule"/>
             <input id="filter-button" type="submit" class="btn btn-primary"
-                   value="<spring:message code="button.filter"/>">            
+                   value="<spring:message code="button.add"/>">            
         </div>
         <div class="error col-xs-8 col-xs-offset-3">
             <span class="label label-danger"><form:errors path="rule" cssClass="error" /></span>

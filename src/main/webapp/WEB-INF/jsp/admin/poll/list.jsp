@@ -1,9 +1,9 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<h2 class="postheader">
-	<spring:message code="pagetit.listpolls" />
-</h2>
+<legend>
+	<spring:message code="page.general.admin.header" />: <spring:message code="pagetit.listpolls" />
+</legend>
 <div class="postcontent">
 	<br /> <a href="<c:url value="/admin/poll/manage.xhtml" />"><spring:message
 			code="add.poll" /></a> <br />
@@ -31,11 +31,11 @@
 		</display:column>
 		<display:column titleKey="tablehdr.actions" headerClass="headid">
 			<a href="<c:url value="/admin/poll/manage.xhtml?pid=${poll.pid}"/>"
-				title="<spring:message code="messages.general.edit"/>"><i
-				class="fa fa-edit"></i></a>
+				><i title="<spring:message code="messages.general.edit"/>"
+				data-toggle="tooltip" class="fa fa-edit"></i></a>
 			<a href="<c:url value="/admin/poll/delete.xhtml?pid=${poll.pid}"/>"
-				title="<spring:message code="messages.general.delete"/>"><i
-				class="fa fa-trash"></i> </a>
+				><i title="<spring:message code="messages.general.delete"/>"
+				data-toggle="tooltip" class="fa fa-trash"></i> </a>
 		</display:column>
 	</display:table>
 </div>
@@ -67,4 +67,8 @@
 			});
 		});
 	});
+</script>
+
+<script>    
+    $("[data-toggle='tooltip']").tooltip();
 </script>
