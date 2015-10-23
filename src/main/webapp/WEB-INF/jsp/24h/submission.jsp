@@ -45,9 +45,9 @@
 							<label class="sub${submission.statusClass}">
 								${submission.status} </label>
 							<c:if test="${submission.ontest == true}">
-								<br />
+<!--								<br />
 								<i><sub><spring:message code="tableval.test" />
-										${submission.firstWaCase}</sub></i>
+										${submission.firstWaCase}</sub></i>-->
 							</c:if>
 						</c:if></b></td>
 				<td><c:if test="${submission.timeUsed == -1}">
