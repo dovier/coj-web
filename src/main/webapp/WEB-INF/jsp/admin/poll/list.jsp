@@ -16,16 +16,12 @@
 		<display:column titleKey="tablehdr.enabled" headerClass="headid">
 			<c:choose>
 				<c:when test="${poll.enabled}">
-					<button data-id="${poll.pid}"
-						class="btn btn-success enable mybutton" type="button">
-						<fmt:message key="page.general.yes" />
-					</button>
+                                    <span class="label label-success"><fmt:message
+						key="page.general.yes" /></span>
 				</c:when>
 				<c:otherwise>
-					<button data-id="${poll.pid}"
-						class="btn btn-danger enable mybutton" type="button">
-						<fmt:message key="page.general.no" />
-					</button>
+					<span class="label label-danger"><fmt:message
+						key="page.general.no" /></span>
 				</c:otherwise>
 			</c:choose>
 		</display:column>

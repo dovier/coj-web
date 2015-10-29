@@ -95,6 +95,7 @@ public class GeneralConfigController extends BaseController {
 	
 	@RequestMapping(value = "/tables/globalaccessrules.xhtml", method = RequestMethod.GET)
 	public String tableGlobalAccessRules(Model model) {
+                //List<Rule> rules = baseDAO.objects("load.access.rules", Rule.class);
 		model.addAttribute("rules", baseDAO.objects("load.access.rules", Rule.class));
 		return "/admin/tables/globalaccessrules";
 	}
