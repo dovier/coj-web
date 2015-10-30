@@ -37,8 +37,16 @@
                         </c:otherwise>
                     </c:choose>
                 </td>
-                <td><a href="<c:url value="/admin/managelanguage.xhtml?lid=${language.lid}"/>" title="<fmt:message key="messages.general.go"/>"><i class="fa fa-edit"></i></a></td>
+                <td><a href="<c:url value="/admin/managelanguage.xhtml?lid=${language.lid}"/>">
+                        <i title="<spring:message code="messages.general.edit"/>"
+                           data-toggle="tooltip" class="fa fa-edit"></i>
+                    </a>
+                </td>
             </tr>
         </c:forEach>
     </table>
 </div>
+
+<script>
+$("[data-toggle='tooltip']").tooltip();
+</script>

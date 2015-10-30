@@ -3,7 +3,8 @@
 
 
 <h2 class="postheader">
-    <fmt:message key="page.general.admin.header"/>: Teams
+    <spring:message code="page.general.admin.header" />
+	: <spring:message code="pagehdr.teams" />    
 </h2>
 <div class="postcontent">
     <form id="filter-form" class="form-inline">

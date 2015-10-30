@@ -3,7 +3,8 @@
 
 
 <h2 class="postheader">
-	<spring:message code="pagehdr.amcontests" />
+    <spring:message code="page.general.admin.header" />
+	: <spring:message code="pagehdr.amcontests" />
 </h2>
 <div class="postcontent">
 	<div class="row">

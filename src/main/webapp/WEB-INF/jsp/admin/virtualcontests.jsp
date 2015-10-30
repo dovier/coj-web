@@ -3,8 +3,8 @@
 
 
 <h2 class="postheader">
-	<fmt:message key="page.general.admin.header" />
-	: Virtual Contests
+    <spring:message code="page.general.admin.header" />
+	: <spring:message code="pagehdr.virtualcontests" />
 </h2>
 <div class="postcontent">
 	<div id="display-table-container" data-reload-url=""></div>

@@ -8,8 +8,8 @@
 	href="<c:url value="/css/ui-1.11.2/jquery-ui-1.11.2.min.css"/>"
 	type="text/css" media="screen" />
 <h2 class="postheader">
-	<fmt:message key="page.general.admin.header" />
-	: Submissions
+    <spring:message code="page.general.admin.header" />
+	: <spring:message code="pagehdr.submissions" /> 	
 </h2>
 <div class=" row postcontent">
 	<div class="col-xs-12">

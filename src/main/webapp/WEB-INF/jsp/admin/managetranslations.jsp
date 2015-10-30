@@ -5,7 +5,7 @@
 
 <h2 class="postheader">
 	<fmt:message key="page.general.admin.header" />
-	: Manage Translations
+	: <fmt:message key="tablehdr.translations" />
 </h2>
 <div class="postcontent">
 	<!-- article-content -->

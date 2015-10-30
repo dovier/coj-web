@@ -3,9 +3,9 @@
 
 
 <h2 class="postheader">
-	<fmt:message key="page.general.admin.header" />
+	<spring:message code="page.general.admin.header" />
 	:
-	<fmt:message key="page.24h.problems.header" />
+	<spring:message code="page.24h.problems.header" />
 </h2>
 <div class="postcontent">
 	<br />

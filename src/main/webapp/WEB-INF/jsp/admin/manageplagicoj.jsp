@@ -27,7 +27,8 @@
 
 <!-- Content -->
 <h2 class="postheader">
-    <fmt:message key="plagicoj.title"/>
+    <spring:message code="page.general.admin.header" />
+	: <spring:message code="plagicoj.title" />
 </h2>
 <div class="postcontent">   
     <div>
@@ -52,28 +53,28 @@
             </div>
             <div class="rigthdiv" >
                 <h5>Filters</h5>
-                <label for="onlyac">
+                <label class="control-label" for="onlyac">
                     <input type="checkbox" id="onlyac" name="onlyac"/>
                     <fmt:message key="admin.plagicoj.onlyac"/>                
                 </label>
                 <br>
-                <label for="matchlanguage">
+                <label class="control-label" for="matchlanguage">
                     <input type="checkbox" id="matchlanguage" name="matchlanguage"/>
                     <fmt:message key="admin.plagicoj.matchlanguage"/>                
                 </label>
                 <br>
-                <label for="ownsubmission">
+                <label class="control-label" for="ownsubmission">
                     <input type="checkbox" id="ownsubmission" name="ownsubmission"/>
                     <fmt:message key="admin.plagicoj.ownsubmission"/>                
                 </label><br>
-                <label for="sameuser">
+                <label class="control-label" for="sameuser">
                     <input type="checkbox" id="sameuser" name="sameuser"/>
                     <fmt:message key="admin.plagicoj.sameuser"/>                
                 </label><br>
             </div>
             <div class="buttons nofloat">
-                <input type="submit" value="<fmt:message key="admin.plagicoj.detect"/>" />
-                <input type="reset" value="<fmt:message key="admin.plagicoj.reset"/>" />
+                <input class="btn btn-primary" type="submit" value="<fmt:message key="admin.plagicoj.detect"/>" />
+                <input class="btn btn-primary" type="reset" value="<fmt:message key="admin.plagicoj.reset"/>" />
             </div>
         </form>
     </div>
@@ -125,7 +126,7 @@
                         </select>
                     </td>
                     <td>
-                        <input id="filter-button" type="submit" value="<spring:message code="button.filter"/>"/>
+                        <input class="btn btn-primary" id="filter-button" type="submit" value="<spring:message code="button.filter"/>"/>
                     </td>
                 </tr>
 

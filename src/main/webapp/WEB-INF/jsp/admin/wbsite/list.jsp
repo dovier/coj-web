@@ -5,7 +5,8 @@
 	type="text/css" media="screen" />
 
 <h2 class="postheader">
-	<fmt:message key="page.header.admin.site.list" />
+    <spring:message code="page.general.admin.header" />
+	: <spring:message code="page.header.admin.site.list" />	
 </h2>
 <div class="postcontent">
 	<a class="btn btn-primary"

@@ -42,7 +42,11 @@
 	<display:column titleKey="tablehdr.edit">
 		<a
 			href="<c:url value="/admin/manageuser.xhtml?username=${user.username}" />"
-			title="<fmt:message key="messages.general.go"/>"><i
-			class="fa fa-edit"></i></a>
+			><i title="<spring:message code="messages.general.edit"/>"
+                                                                data-toggle="tooltip" class="fa fa-edit"></i></a>
 	</display:column>
 </display:table>
+
+<script>
+    $("[data-toggle='tooltip']").tooltip();
+</script>

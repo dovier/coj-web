@@ -2,7 +2,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <h2 class="postheader">
-	<spring:message code="pagehdr.amannouncements" />
+    <spring:message code="page.general.admin.header" />
+	: <spring:message code="pagehdr.amannouncements" />
 </h2>
 <div class="postcontent">
 	<br />

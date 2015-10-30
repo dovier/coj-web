@@ -7,6 +7,11 @@
 		<display:column property="sessionid" titleKey="tablehdr.sessionid" />
 		<display:column property="isExpired" titleKey="tablehdr.expired" />
 		<display:column titleKey="tablehdr.delete">
-			<a href="<c:url value="/admin/expire.xhtml?session=${session.sessionid}"/>" title="<fmt:message key="messages.general.go"/>"><i class="fa fa-edit"></i></a>
+			<a href="<c:url value="/admin/expire.xhtml?session=${session.sessionid}"/>">
+                            <i title="<spring:message code="messages.general.edit"/>"
+                                                                data-toggle="tooltip" class="fa fa-edit"></i></a>
 		</display:column>
 	</display:table>
+<script>
+    $("[data-toggle='tooltip']").tooltip();
+</script>

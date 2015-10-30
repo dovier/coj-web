@@ -142,16 +142,17 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
             </c:if>
             <div class="row">
                 <div class="form-group margin-top-05">
-                    <label class="control-label col-xs-3">Folder </label>
+                    <label class="control-label col-xs-3"><spring:message
+                    code="page.files.folder" /></label>
                     <div class="col-xs-9">
                         <input class="form-control" type="text" name="folder" />
                     </div>
                 </div>
                 <div class="form-group margin-top-05">
-                    <label class="control-label col-xs-3" for="imagefile">File
-                        to upload</label>
+                    <label class="control-label col-xs-3" for="imagefile"><spring:message
+                    code="page.files.filetoupload" /></label>
                     <div class="col-xs-9">
-                        <input id="file" name="file" type="file" class="file"
+                        <input id="filen" name="file" type="file" class="file"
                                data-show-upload="false" data-show-caption="true">
                     </div>
                 </div>
@@ -204,4 +205,16 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
             }
         });
     }
+    $("#filen").fileinput({
+        maxFileSize: 35,
+        msgProgress: 'Loading {percent}%',
+        previewClass: 'avatar_preview',
+        previewFileType: "image",
+        browseClass: "btn btn-primary",
+        browseLabel: "Pick Image",
+        browseIcon: '<i class="fa fa-picture-o"></i>&nbsp;',
+        removeClass: "btn btn-default",
+        removeLabel: "Delete",
+        removeIcon: '<i class="fa fa-trash"></i>'
+    });
 </script>
