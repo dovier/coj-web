@@ -8,8 +8,8 @@
 		<display:column property="isExpired" titleKey="tablehdr.expired" />
 		<display:column titleKey="tablehdr.delete">
 			<a href="<c:url value="/admin/expire.xhtml?session=${session.sessionid}"/>">
-                            <i title="<spring:message code="messages.general.edit"/>"
-                                                                data-toggle="tooltip" class="fa fa-edit"></i></a>
+                            <i title="<spring:message code="messages.general.delete"/>"
+                                                                data-toggle="tooltip" class="fa fa-trash"></i></a>
 		</display:column>
 	</display:table>
 <script>
