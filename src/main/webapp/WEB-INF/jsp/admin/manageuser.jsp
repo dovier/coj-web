@@ -15,7 +15,7 @@
 
             <!-- NAME OF VIEW -->
             <legend>
-                <spring:message code="pagehdr.euaccount" />
+                <spring:message code="page.general.admin.header" />: <spring:message code="pagehdr.euaccount" />
             </legend>
 
             <!-- NICKNAME OF USER-->
@@ -433,21 +433,23 @@
                         </label>
                         <!-- ADD DATE -->
                         <div class="col-xs-8">
-                            <form:select path="year" cssClass="form-control">
-                                <c:forEach begin="1930" step="1" end="${year}" var="value">
-                                    <form:option value="${value}">${value}</form:option>
-                                </c:forEach>
-                            </form:select>
-                            <form:select path="month" cssClass="form-control">
-                                <c:forEach begin="1" step="1" end="12" var="value">
-                                    <form:option value="${value}">${value}</form:option>
-                                </c:forEach>
-                            </form:select>
-                            <form:select path="day" cssClass="form-control">
-                                <c:forEach begin="1" step="1" end="31" var="value">
-                                    <form:option value="${value}">${value}</form:option>
-                                </c:forEach>
-                            </form:select>
+                            <div class="form-inline">
+                                <form:select path="year" cssClass="form-control">
+                                    <c:forEach begin="1930" step="1" end="${year}" var="value">
+                                        <form:option value="${value}">${value}</form:option>
+                                    </c:forEach>
+                                </form:select>
+                                <form:select path="month" cssClass="form-control">
+                                    <c:forEach begin="1" step="1" end="12" var="value">
+                                        <form:option value="${value}">${value}</form:option>
+                                    </c:forEach>
+                                </form:select>
+                                <form:select path="day" cssClass="form-control">
+                                    <c:forEach begin="1" step="1" end="31" var="value">
+                                        <form:option value="${value}">${value}</form:option>
+                                    </c:forEach>
+                                </form:select>
+                            </div>
                         </div>                                            
                         <a>
                             <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -570,7 +572,7 @@
                             <spring:message code="fieldhdr.roles" />
                         </label>
                         <div class="col-xs-8">
-                            <div class="col-xs-7">
+                            <div class="col-xs-4">
                                 <form:checkboxes cssClass="checkbox" path="authorities"
                                                  items="${authorities}" itemValue="authority"
                                                  itemLabel="authority" delimiter="</div><div class='col-xs-4'>" />
