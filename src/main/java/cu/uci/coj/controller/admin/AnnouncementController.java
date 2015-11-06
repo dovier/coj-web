@@ -21,6 +21,10 @@ import cu.uci.coj.model.Contest;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.annValidator;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import cu.uci.coj.utils.Notification;
+
+
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -47,10 +51,12 @@ public class AnnouncementController extends BaseController {
 	}
 
 	@RequestMapping(value = "/deleteann.xhtml", method = RequestMethod.GET)
-	public String deleteAnnouncement(Model model, Principal principal, @RequestParam("aid") Integer aid) {
+	public String deleteAnnouncement(Model model, Principal principal, @RequestParam("aid") Integer aid,   RedirectAttributes redirectAttributes) {
 		announcementDAO.dml("delete.announcement", aid);
 		// eventManager.publish(EventType.LOGGABLE_ACTION,
 		// "msg:deleting announcement"+aid +";username:" +principal.getName());
+                
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
 		return "redirect:/admin/listann.xhtml";
 	}
 
@@ -67,7 +73,7 @@ public class AnnouncementController extends BaseController {
 	}
 
 	@RequestMapping(value = "/addann.xhtml", method = RequestMethod.POST)
-	public String addAnnouncement(Model model, Principal principal, Announcement announcement, BindingResult result) {
+	public String addAnnouncement(Model model, Principal principal, Announcement announcement, BindingResult result,   RedirectAttributes redirectAttributes) {
 		validator.validate(announcement, result);
 		if (result.hasErrors()) {
 			List<Contest> contests = new LinkedList<Contest>();
@@ -81,6 +87,8 @@ public class AnnouncementController extends BaseController {
 		announcementDAO.dml("add.announcement", announcement.getContent(), announcement.isEnabled(), principal.getName(), announcement.getContest());
 		// eventManager.publish(EventType.LOGGABLE_ACTION,"msg:adding announcement;username:"
 		// +principal.getName());
+                            
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
 		return "redirect:/admin/listann.xhtml";
 	}
 
@@ -98,7 +106,7 @@ public class AnnouncementController extends BaseController {
 	}
 
 	@RequestMapping(value = "/manageann.xhtml", method = RequestMethod.POST)
-	public String editAnnouncement(Model model, Principal principal, Announcement announcement, BindingResult result) {
+	public String editAnnouncement(Model model, Principal principal, Announcement announcement, BindingResult result,   RedirectAttributes redirectAttributes) {
 		validator.validate(announcement, result);
 		if (result.hasErrors()) {
 			List<Contest> contests = new LinkedList<Contest>();
@@ -112,6 +120,7 @@ public class AnnouncementController extends BaseController {
 		announcementDAO.dml("update.announcement", announcement.getContent(), announcement.isEnabled(), principal.getName(), announcement.getContest(), announcement.getAid());
 		// eventManager.publish(EventType.LOGGABLE_ACTION,
 		// "msg:adding announcement;username:" +principal.getName());
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
 		return "redirect:/admin/listann.xhtml";
 	}
 

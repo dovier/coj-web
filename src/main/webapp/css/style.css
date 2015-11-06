@@ -1517,3 +1517,9 @@ div.panel-heading .badge a {
 .same-width {
 	width: 100px;
 }
+.coj_float_left{
+    float: left;
+}
+.coj_float_rigth{
+    float: right;
+}

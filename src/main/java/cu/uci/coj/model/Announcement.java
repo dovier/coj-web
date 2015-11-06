@@ -1,6 +1,6 @@
 package cu.uci.coj.model;
 
-import javax.persistence.Table;
+//import javax.persistence.Table;
 
 public class Announcement {
 

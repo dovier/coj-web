@@ -31,11 +31,11 @@
                 </c:otherwise>
             </c:choose>
         </display:column>
-        <display:column titleKey="tablehdr.edit">
+        <display:column titleKey="tablehdr.actions">
         <a href="<c:url value="/admin/manageann.xhtml?aid=${ann.aid}"/>"
            ><i title="<spring:message code="messages.general.edit"/>"
             data-toggle="tooltip" class="fa fa-edit"></i></a>
-        <a href="<c:url value="/admin/deleteann.xhtml?aid=${ann.aid}"/>"
+            <a href="#" onclick="confirm_delete('<c:url value="/admin/deleteann.xhtml?aid=${ann.aid}"/>')"
            ><i title="<spring:message code="messages.general.delete"/>"
 				data-toggle="tooltip" class="fa fa-trash"></i></a>
         </display:column>
@@ -43,4 +43,13 @@
 
 <script>
     $("[data-toggle='tooltip']").tooltip();
+    var i18n = {};
+    i18n.title      = "<spring:message code="message.confirm.delete.hdr.entry"/>";
+    i18n.message    = "<spring:message code="message.confirm.delete.entry"/>";
+    i18n.btn_cancel = "<spring:message code="btn.text.cancel"/>";
+    i18n.btn_accept = "<spring:message code="btn.text.accept"/>";
 </script>
+<link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+<script src="/js/bootstrap-dialog.min.js"></script>
+<script src="/js/admin/utility.js"></script>
+

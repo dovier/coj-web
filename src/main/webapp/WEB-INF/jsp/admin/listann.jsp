@@ -5,29 +5,34 @@
     <spring:message code="page.general.admin.header" />
 	: <spring:message code="pagehdr.amannouncements" />
 </h2>
+<c:if test="${message != null}">
+    <div class="alert alert-success alert-dismissable fade in">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <i class="fa fa-check"></i><spring:message code="${message}" />
+                </div>                 
+</c:if> 
 <div class="postcontent">
-	<br />
-	<form id="filter-form" class="form-inline">
+	
+        
+	<form id="filter-form" class="form-inline">            
 		<div id="form-group">
-                    <label class="control-label"><spring:message code="filedhdr.searchcontent" />:</label> 
-                    <input type="text" class="form-control" name="pattern" value="${pattern}">
+                    <div class="coj_float_left">
+                        <a class="btn btn-primary" href="<c:url value="/admin/addann.xhtml" />"><spring:message
+			code="link.aaddannouncement" /></a>
+                    </div>    
+                    <div class="coj_float_rigth">
+                        <input type="text" placeholder="<spring:message code="filedhdr.searchcontent" />" class="form-control" name="pattern" value="${pattern}">
                         <input id="filter-button" type="submit" class="btn btn-primary"
 				value="<spring:message code="button.filter"/>">
+                    </div>
 		</div>
 	</form>
-	<c:choose>
-		<c:when test="${search == true}">
-			<label><spring:message code="fieldhdr.totalfound" />:
-				${found}</label>
-		</c:when>
-	</c:choose>
-	<br /> <a href="<c:url value="/admin/addann.xhtml" />"><spring:message
-			code="link.aaddannouncement" /></a> <br />
 
 	<div id="display-table-container"
 		data-reload-url="/admin/tables/listann.xhtml"></div>
 
 </div>
+
 <script>
 $(initStandardFilterForm);
 </script>
