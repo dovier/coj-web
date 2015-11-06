@@ -364,7 +364,7 @@ break;
 		for (Integer aid : aids) {
 			switch (aid) {
 			case ContestAwardsFlags.FAST_AWARD:
-				model.addAttribute("fastAward",baseDAO.object("fast.award", ContestAwards.class, cid,cid));
+				model.addAttribute("fastAward",baseDAO.object("fast.award", ContestAwards.class, cid));
 				break;
 			case ContestAwardsFlags.EXCLUSIVE_AWARD:
 				model.addAttribute("exclusiveAward",baseDAO.object("exclusive.award", ContestAwards.class, cid,cid));
