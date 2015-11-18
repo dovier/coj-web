@@ -11,6 +11,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.InstitutionDAO;
@@ -20,7 +23,7 @@ import cu.uci.coj.utils.FileUtils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.institutionValidator;
-import org.springframework.web.multipart.MultipartFile;
+import cu.uci.coj.utils.Notification;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -52,7 +55,7 @@ public class InstitutionController  extends BaseController {
     }
 
     @RequestMapping(value = "/addinstitution.xhtml", method = RequestMethod.POST)
-    public String addInstitution(Model model, Principal principal, Institution institution, BindingResult result, @RequestParam(value="logo",required=false) MultipartFile logo) {
+    public String addInstitution(Model model, Principal principal, Institution institution, BindingResult result, @RequestParam(value="logo",required=false) MultipartFile logo, RedirectAttributes redirectAttributes) {
         validator.validate(institution, result);
         if (result.hasErrors()) {
             model.addAttribute("countries", institutionDAO.objects("enabled.countries", Country.class));
@@ -67,6 +70,7 @@ public class InstitutionController  extends BaseController {
         if (logo!= null && !logo.isEmpty())
 			FileUtils.saveToFile(logo, Config.getProperty("base.upload.dir.logo"), institution.getZip() + ".png");
         
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
         return "redirect:/admin/manageinstitutions.xhtml?pattern=" + institution.getName();
     }
 

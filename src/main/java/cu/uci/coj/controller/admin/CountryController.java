@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.CountryDAO;
@@ -17,6 +18,7 @@ import cu.uci.coj.model.Country;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.countryValidator;
+import cu.uci.coj.utils.Notification;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -48,7 +50,7 @@ public class CountryController extends BaseController {
 	}
 
 	@RequestMapping(value = "/addcountry.xhtml", method = RequestMethod.POST)
-	public String addCountry(Model model, Principal principal, Country country, BindingResult result) {
+	public String addCountry(Model model, Principal principal, Country country, BindingResult result, RedirectAttributes redirectAttributes) {
 		countryValidator.validate(country, result);
 		if (result.hasErrors()) {
 			model.addAttribute(country);
@@ -56,6 +58,7 @@ public class CountryController extends BaseController {
 		}
 		countryDAO.dml("add.country.2", country.getName(), country.getZip(), country.getZip_two(), country.getWebsite());
 		countryDAO.dml("insert.log", "inserting country " + country.getName(), getUsername(principal));
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
 		return "redirect:/admin/managecountries.xhtml?pattern=" + country.getName();
 	}
 
@@ -68,7 +71,7 @@ public class CountryController extends BaseController {
 	}
 
 	@RequestMapping(value = "/managecountry.xhtml", method = RequestMethod.POST)
-	public String editCountry(Model model, Principal principal, Country country, BindingResult result) {
+	public String editCountry(Model model, Principal principal, Country country, BindingResult result, RedirectAttributes redirectAttributes) {
 		countryValidator.validateUpdate(country, result);
 		if (result.hasErrors()) {
 			model.addAttribute(country);
@@ -76,6 +79,7 @@ public class CountryController extends BaseController {
 		}
 		countryDAO.dml("update.country.2", country.getName(), country.getZip(), country.getZip_two(), country.getWebsite(), country.isEnabled(), country.getId());
 		countryDAO.dml("insert.log", "updating country " + country.getId(), getUsername(principal));
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
 		return "redirect:/admin/managecountries.xhtml?pattern=" + country.getName();
 	}
 }

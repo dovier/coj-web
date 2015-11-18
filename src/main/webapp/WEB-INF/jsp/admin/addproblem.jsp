@@ -2,7 +2,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <h2 class="postheader">
-	<fmt:message key="addproblem.title" />
+    <fmt:message key="page.general.admin.header" />:
+    <fmt:message key="addproblem.title" />	
 </h2>
 <div class="postcontent">
 	<form:form method="post" enctype="multipart/form-data" commandName="problem">

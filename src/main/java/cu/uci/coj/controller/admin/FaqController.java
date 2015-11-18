@@ -11,12 +11,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.UtilDAO;
 import cu.uci.coj.model.Faq;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.validator.FaqValidator;
+import cu.uci.coj.utils.Notification;
 
 @Controller("FaqController")
 public class FaqController extends BaseController {
@@ -34,7 +36,7 @@ public class FaqController extends BaseController {
     }
 
     @RequestMapping(value = "/admin/addfaq.xhtml", method = RequestMethod.POST)
-    public String addFaq(Locale locale,Model model, Faq faq, BindingResult errors) {
+    public String addFaq(Locale locale,Model model, Faq faq, BindingResult errors, RedirectAttributes redirectAttributes) {
         validator.validate(faq, errors);
         if (errors.hasErrors()){
             model.addAttribute("faq",faq);
@@ -42,6 +44,7 @@ public class FaqController extends BaseController {
         }
         else{
             utilDao.dml("insert.faq", faq.getAnswer(),faq.getQuestion());
+            redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
             return "redirect:/admin/faqs.xhtml";
         }
     }
@@ -71,9 +74,10 @@ List<Faq> faqs = utilDao.objects("list.faq", Faq.class);
     }
     
     @RequestMapping(value = "/admin/deletefaq.xhtml", method = RequestMethod.GET)
-    public String deleteFaq(@RequestParam("id") Integer id) {
+    public String deleteFaq(@RequestParam("id") Integer id, RedirectAttributes redirectAttributes) {
         
         utilDao.dml("delete.faq", id);
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
         return "redirect:/admin/faqs.xhtml";
     }
 

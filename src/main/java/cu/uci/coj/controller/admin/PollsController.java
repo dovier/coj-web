@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.PollDAO;
 import cu.uci.coj.model.Poll;
 import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.pollValidator;
+import cu.uci.coj.utils.Notification;
 
 @Controller("AdminPollsController")
 @RequestMapping(value = "/admin")
@@ -43,8 +45,9 @@ public class PollsController extends BaseController {
 
     @RequestMapping(value = "/poll/delete.xhtml", method = RequestMethod.GET)
     public String delete(Model model, Principal principal,
-            @RequestParam("pid") Integer pid) {
+            @RequestParam("pid") Integer pid, RedirectAttributes redirectAttributes) {
         pollDAO.delete(pid);
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
         return "redirect:/admin/poll/list.xhtml";
     }
 
@@ -62,7 +65,7 @@ public class PollsController extends BaseController {
 
     @RequestMapping(value = "/poll/manage.xhtml", method = RequestMethod.POST)
     public String manage(Model model, Principal principal, Poll poll,
-            BindingResult result) {
+            BindingResult result, RedirectAttributes redirectAttributes) {
         // aqui va el PollValidator, el que no hice porque no quise. Intentemos
         // no equivocarnos en esto.
         pollValidator.validate(poll, result);
@@ -74,8 +77,11 @@ public class PollsController extends BaseController {
 
         if (poll.getPid() == null) {
             pollDAO.add(poll);
+            redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
+            
         } else {
             pollDAO.update(poll);
+            redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         }
         return "redirect:/admin/poll/list.xhtml";
     }

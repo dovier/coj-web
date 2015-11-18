@@ -31,7 +31,7 @@
                 </c:otherwise>
             </c:choose>
         </display:column>
-        <display:column titleKey="tablehdr.edit">
+        <display:column titleKey="tablehdr.actions">
         <a
             href="<c:url value="/admin/manageproblem.xhtml?pid=${problem.pid}"/>"
             > <i title="<spring:message code="messages.general.edit"/>"
@@ -47,6 +47,7 @@
         </display:column>
     </display:table>
 
+<link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
 <script>
     $("[data-toggle='tooltip']").tooltip();
 </script>

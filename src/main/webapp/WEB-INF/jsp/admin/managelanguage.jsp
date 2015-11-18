@@ -12,16 +12,34 @@
                 <spring:message code="page.general.admin.header" />: <spring:message code="page.general.admin.managelanguage" />
             </legend>
 
-            <!-- NAME OF LANGUAGE -->
+            <!-- ID OF LANGUAGE -->
 
             <div class="form-group">
-                <label class="control-label col-xs-3"><spring:message code="tablehdr.language" /></label>
+                <label class="control-label col-xs-3"><spring:message code="tablehdr.id" /></label>
                 <div class="col-xs-8">
                     <form:input cssClass="form-control" path="lid" size="30"
                                 maxlength="30" readonly="true"/>
                 </div>
                 <div class="error col-xs-8 col-xs-offset-3">
                     <span class="label label-danger"><form:errors path="lid" /></span>
+                </div>
+                <a>
+                    <i data-toggle="tooltip" class="fa fa-asterisk"
+                       title="<spring:message code="mandatory.field"/>">
+                    </i>
+                </a>
+            </div>
+                    
+                    <!-- NAME OF LANGUAGE -->
+
+            <div class="form-group">
+                <label class="control-label col-xs-3"><spring:message code="tablehdr.language" /></label>
+                <div class="col-xs-8">
+                    <form:input cssClass="form-control" path="language" size="30"
+                                maxlength="30"/>
+                </div>
+                <div class="error col-xs-8 col-xs-offset-3">
+                    <span class="label label-danger"><form:errors path="language" /></span>
                 </div>
                 <a>
                     <i data-toggle="tooltip" class="fa fa-asterisk"

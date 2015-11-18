@@ -13,12 +13,15 @@ package cu.uci.coj.utils;
 public class Notification {
     
     public static String getSuccesfullCreate() {
-        return "infomsg.create_success";
+        return "infomsg.create.success";
     }
     public static String getSuccesfullUpdate() {
-        return "infomsg.update_success";
+        return "infomsg.update.success";
     }
     public static String getSuccesfullDelete() {
-        return "infomsg.delete_success";
+        return "infomsg.delete.success";
+    }
+    public static String getSuccesfullRejudge() {
+        return "infomsg.rejudge.success";
     }
 }

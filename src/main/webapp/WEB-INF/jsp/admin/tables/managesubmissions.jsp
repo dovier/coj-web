@@ -56,8 +56,8 @@
             </c:choose>
         </display:column>
         <display:column titleKey="tablehdr.edit">
-		<a
-			href="<c:url value="managesubmission.xhtml?sid=${submission.sid}"/>"
+        <a
+            href="<c:url value="managesubmission.xhtml?sid=${submission.sid}"/>"
 			title="<fmt:message key="messages.general.go"/>"><i
 			class="fa fa-edit"></i></a>
     </display:column>
@@ -66,10 +66,10 @@
 			<a title="<spring:message code="tablehdr.rejudge"/>"
 				href="<c:url value="javascript:rejudge24h(${submission.sid})"/>"><i
 				class="fa fa-repeat"></i></a>&nbsp;
-			<a title="<spring:message code="tablehdr.enable"/>"
-                href="<c:url value="javascript:toggle24h(${submission.sid})"/>">
+            <a title="<spring:message code="tablehdr.enable"/>"
+               href="<c:url value="javascript:toggle24h(${submission.sid})"/>">
                 <c:if test="${submission.enabled}">
-					<i class="fa fa-eye-slash"></i>
+                    <i class="fa fa-eye-slash"></i>
                 </c:if> <c:if test="${not submission.enabled}">
 					<i class="fa fa-eye"></i>
                 </c:if>

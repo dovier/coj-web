@@ -12,6 +12,13 @@
                 <fmt:message key="page.general.admin.header"/>: <fmt:message key="page.general.admin.globalflags"/>
             </legend>
 
+            <c:if test="${message != null}">
+                <div class="alert alert-success alert-dismissable fade in">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <i class="fa fa-check"></i><spring:message code="${message}" />
+                </div>                 
+            </c:if> 
+
             <!-- EMAILS NOTIFICATIONS OF FLAGS -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
@@ -26,7 +33,7 @@
                     </div>                    
                 </div>
             </authz:authorize>
-            
+
             <!-- ABLE EMAIL OF FLAGS -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
@@ -41,7 +48,7 @@
                     </div>                    
                 </div>
             </authz:authorize>
-            
+
             <!-- ABLE CODE OF FLAGS -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
@@ -56,7 +63,7 @@
                     </div>                    
                 </div>
             </authz:authorize>
-            
+
             <!-- ABLE SEND OF FLAGS -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
@@ -71,7 +78,7 @@
                     </div>                    
                 </div>
             </authz:authorize>
-            
+
             <!-- MAINTENANCE OF FLAGS -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
@@ -96,6 +103,6 @@
     </div>
 </div>
 
-<script>   
+<script>
     $("[data-toggle='tooltip']").tooltip();
 </script>

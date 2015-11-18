@@ -9,13 +9,14 @@
 	<div class="col-xs-12">
 		<form id="filter-form" method="get" class="form-inline">
 
-			<div class="form-group">
-				<label><spring:message code="fieldhdr.searchusers" />:</label> <input
+			<div class="form-group coj_float_rigth">
+                            <input placeholder="<spring:message code="fieldhdr.searchusers" />"
 					type="text" name="pattern" value="${pattern}" class="form-control" />
+                                <input id="filter-button" type="submit" class="btn btn-primary"
+					value="<spring:message code="button.filter"/>">
 			</div>
 			<div class="form-group">
-				<input id="filter-button" type="submit" class="btn btn-primary"
-					value="<spring:message code="button.filter"/>">
+				
 			</div>
 
 		</form>

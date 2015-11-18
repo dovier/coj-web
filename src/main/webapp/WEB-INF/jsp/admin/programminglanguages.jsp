@@ -7,7 +7,14 @@
 </h2>
 <div class="postcontent"> 
 
-    <a href="<c:url value="managelanguage.xhtml" />"><fmt:message key="page.general.admin.addlanguage"/></a>
+    <c:if test="${message != null}">
+        <div class="alert alert-success alert-dismissable fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <i class="fa fa-check"></i><spring:message code="${message}" />
+        </div>                 
+    </c:if> 
+
+    <a href="<c:url value="managelanguage.xhtml" />" class="btn btn-primary"><fmt:message key="page.general.admin.addlanguage"/></a>
 
     <table class="volume" border="1px">
         <thead class="orderby">
@@ -48,5 +55,5 @@
 </div>
 
 <script>
-$("[data-toggle='tooltip']").tooltip();
+    $("[data-toggle='tooltip']").tooltip();
 </script>

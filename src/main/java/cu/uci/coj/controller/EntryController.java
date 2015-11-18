@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import cu.uci.coj.dao.EntryDAO;
 import cu.uci.coj.dao.UserDAO;
@@ -35,6 +37,7 @@ import cu.uci.coj.utils.EntryHelper;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.entryValidator;
+import cu.uci.coj.utils.Notification;
 
 @Controller("EntryController")
 public class EntryController extends BaseController {
@@ -264,8 +267,9 @@ public class EntryController extends BaseController {
 	}
 
 	@RequestMapping(value = "/admin/deleteentry.xhtml", method = RequestMethod.GET)
-	public String delete(Model model, @RequestParam Integer id) {
+	public String delete(Model model, @RequestParam Integer id, RedirectAttributes redirectAttributes) {
 		entryDAO.deleteEntry(id);
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
 		return "redirect:/admin/manageentries.xhtml";
 	}
 

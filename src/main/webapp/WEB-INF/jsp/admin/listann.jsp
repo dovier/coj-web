@@ -5,15 +5,15 @@
     <spring:message code="page.general.admin.header" />
 	: <spring:message code="pagehdr.amannouncements" />
 </h2>
-<c:if test="${message != null}">
+
+<div class="postcontent">
+	
+        <c:if test="${message != null}">
     <div class="alert alert-success alert-dismissable fade in">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <i class="fa fa-check"></i><spring:message code="${message}" />
                 </div>                 
 </c:if> 
-<div class="postcontent">
-	
-        
 	<form id="filter-form" class="form-inline">            
 		<div id="form-group">
                     <div class="coj_float_left">

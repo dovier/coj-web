@@ -48,6 +48,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import cu.uci.coj.utils.Notification;
+
 @Controller("AdminProblemController")
 @RequestMapping(value = "/admin")
 public class ProblemController extends BaseController {
@@ -140,7 +143,9 @@ public class ProblemController extends BaseController {
 
         handleFiles(problem, request);
         problemDAO.log("adding problem " + problem.getPid(), getUsername(principal));
-        return "redirect:/24h/problem.xhtml?pid=" + problem.getPid();
+        
+        return "redirect:/admin/adminproblems.xhtml";
+        //return "redirect:/24h/problem.xhtml?pid=" + problem.getPid();
     }
 
     @RequestMapping(value = "/manageproblem.xhtml", method = RequestMethod.GET)
@@ -167,6 +172,7 @@ public class ProblemController extends BaseController {
             model.addAttribute("datasets", utils.getDatasetsNames(pid));
             model.addAttribute("showpsetters", (requestWrapper.isUserInRole(Roles.ROLE_ADMIN) && requestWrapper.isUserInRole(Roles.ROLE_ADMIN)) || principal.getName().equals(problem.getUsername()));
             model.addAttribute(problem);
+            model.addAttribute("create", false);
         } else {
             model.addAttribute("psetters", utilDAO.objects("select.psetters.pid", User.class, 0));
             model.addAttribute("showpsetters", true);
@@ -175,6 +181,7 @@ public class ProblemController extends BaseController {
             problem.initLimits(languages);
 
             model.addAttribute("problem", problem);
+            model.addAttribute("create", true);
         }
 
         model.addAttribute("languages", languages);
@@ -185,11 +192,16 @@ public class ProblemController extends BaseController {
     }
 
     @RequestMapping(value = "/manageproblem.xhtml", method = RequestMethod.POST)
-    public String manageProblem(Model model, SecurityContextHolderAwareRequestWrapper requestWrapper, Principal principal, HttpServletRequest request, Problem problem, BindingResult result) {
+    public String manageProblem(Model model, SecurityContextHolderAwareRequestWrapper requestWrapper, Principal principal, HttpServletRequest request, Problem problem, BindingResult result, RedirectAttributes redirectAttributes) {
 
         // adicionar. el resto es modificar.
         if (problem.getPid() == null || problem.getPid() == 0) {
-            return addProblem(model, principal, request, problem, result);
+            String data  = addProblem(model, principal, request, problem, result);
+            //chequeo que haya insertado correctamente y valla a redireccionar para el listar para mostrar los flash
+            if(data.equals("redirect:/admin/adminproblems.xhtml")){
+               redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());              
+            }
+            return data;
         }
 
         Integer uid = contestDAO.integer("select.uid.by.username", getUsername(principal));
@@ -246,7 +258,9 @@ public class ProblemController extends BaseController {
         handleFiles(problem, request);
 
         problemDAO.log("editing problem " + problem.getPid(), getUsername(principal));
-        return "redirect:/24h/problem.xhtml?pid=" + problem.getPid();
+        //return "redirect:/24h/problem.xhtml?pid=" + problem.getPid();
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());   
+        return "redirect:/admin/adminproblems";
     }
 
     public void handleFiles(Problem problem, HttpServletRequest request) {

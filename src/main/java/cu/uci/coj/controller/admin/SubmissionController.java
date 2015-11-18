@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cu.uci.coj.config.Config;
 import cu.uci.coj.controller.BaseController;
@@ -30,6 +31,7 @@ import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.submissionValidator;
+import cu.uci.coj.utils.Notification;
 
 @Controller("ContestSubmissionController")
 @RequestMapping(value = "/admin")
@@ -83,7 +85,7 @@ public class SubmissionController extends BaseController {
 
 	@RequestMapping(value = "/rejudgesubmissions.xhtml", method = RequestMethod.POST)
 	public String rejudgeSubmissions(Model model, Filter filter,
-			PagingOptions options) {
+			PagingOptions options, RedirectAttributes redirectAttributes) {
 		int found = submissionDAO.countSubmissionsAdmin(filter);
 		if (found != 0) {
 			IPaginatedList<SubmissionJudge> submissions = submissionDAO
@@ -106,7 +108,10 @@ public class SubmissionController extends BaseController {
 		model.addAttribute("statuslist", statuslist);
 		model.addAttribute("languagelist", languagelist);
 		model.addAttribute("filter", filter);
-		return "/admin/managesubmissions";
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullRejudge());
+                
+                return "redirect:/admin/managesubmissions.xhtml";
+		//return "/admin/managesubmissions";
 	}
 
 	@RequestMapping(value = "/managesubmission.xhtml", method = RequestMethod.GET)

@@ -67,12 +67,17 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
                                     </c:if>
                                 </c:if>
                             <a title="Cut ${file.name}"
-                               href="/admin/files/cut.xhtml?f=<c:out value="${file.name}"/>"><i
-                                    class="fa fa-cut"></i></a>&nbsp;<a title="Copy ${file.name}"
-                                                               href="/admin/files/copy.xhtml?f=<c:out value="${file.name}"/>"><i
-                                    class="fa fa-copy"></i></a>&nbsp;<a title="Delete ${file.name}"
-                                                                href="/admin/files/delete.xhtml?f=<c:out value="${file.name}"/>"><i
-                                    class="fa fa-trash"></i></a>
+                               href="/admin/files/cut.xhtml?f=<c:out value="${file.name}"/>">
+                                <i title="<spring:message code="messages.general.cut"/>" data-toggle="tooltip" class="fa fa-cut"></i>
+                            </a>&nbsp;
+                            <a title="Copy ${file.name}"
+                                                                                     href="/admin/files/copy.xhtml?f=<c:out value="${file.name}"/>">
+                                <i title="<spring:message code="messages.general.copy"/>" data-toggle="tooltip" class="fa fa-copy"></i>
+                            </a>&nbsp;
+                            <a title="Delete ${file.name}"
+                                            href="#" onclick="confirm_delete('/admin/files/delete.xhtml?f=<c:out value="${file.name}"/>')">
+                                <i title="<spring:message code="messages.general.delete"/>" data-toggle="tooltip" class="fa fa-trash"></i>
+                            </a>
                         </div>
                     </div>
                 </c:forEach>
@@ -143,14 +148,14 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
             <div class="row">
                 <div class="form-group margin-top-05">
                     <label class="control-label col-xs-3"><spring:message
-                    code="page.files.folder" /></label>
+                            code="page.files.folder" /></label>
                     <div class="col-xs-9">
                         <input class="form-control" type="text" name="folder" />
                     </div>
                 </div>
                 <div class="form-group margin-top-05">
                     <label class="control-label col-xs-3" for="imagefile"><spring:message
-                    code="page.files.filetoupload" /></label>
+                            code="page.files.filetoupload" /></label>
                     <div class="col-xs-9">
                         <input id="filen" name="file" type="file" class="file"
                                data-show-upload="false" data-show-caption="true">
@@ -168,7 +173,7 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
 </div>
 
 <script>
-    $(function() {
+    $(function () {
         $("input[type='checkbox']").hide();
 
         $(".fa-share-alt").parent().click(share);
@@ -182,7 +187,7 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
             type: "GET",
             url: "/admin/files/share.xhtml",
             data: "file=" + file,
-            success: function(data) {
+            success: function (data) {
                 link.children(".fa").toggleClass("fa-share-alt fa-share-alt-square");
                 link.children(".fa").parent().unbind("click");
                 link.children(".fa").parent().attr("title", "Unshare " + file);
@@ -197,7 +202,7 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
             type: "GET",
             url: "/admin/files/unshare.xhtml",
             data: "file=" + file,
-            success: function(data) {
+            success: function (data) {
                 link.children(".fa").toggleClass("fa-share-alt fa-share-alt-square");
                 link.children(".fa").parent().unbind("click");
                 link.children(".fa").parent().attr("title", "Share " + file);
@@ -218,3 +223,14 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
         removeIcon: '<i class="fa fa-trash"></i>'
     });
 </script>
+<script>
+    $("[data-toggle='tooltip']").tooltip();
+    var i18n = {};
+    i18n.title = "<spring:message code="message.confirm.delete.hdr.entry"/>";
+    i18n.message = "<spring:message code="message.confirm.delete.entry"/>";
+    i18n.btn_cancel = "<spring:message code="btn.text.cancel"/>";
+    i18n.btn_accept = "<spring:message code="btn.text.accept"/>";
+</script>
+<link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+<script src="/js/bootstrap-dialog.min.js"></script>
+<script src="/js/admin/utility.js"></script>

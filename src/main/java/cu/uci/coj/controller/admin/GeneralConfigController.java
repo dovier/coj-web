@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cu.uci.coj.config.Config;
 import cu.uci.coj.controller.BaseController;
@@ -45,6 +46,7 @@ import cu.uci.coj.utils.FileUtils;
 import cu.uci.coj.utils.HandlerInterceptorImpl;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
+import cu.uci.coj.utils.Notification;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -101,19 +103,21 @@ public class GeneralConfigController extends BaseController {
 	}
 
 	@RequestMapping(value = "/globalaccessrules.xhtml", method = RequestMethod.POST)
-	public String globalAccessRules(Model model, Rule rule, BindingResult result) {
+	public String globalAccessRules(Model model, Rule rule, BindingResult result, RedirectAttributes redirectAttributes) {
 		if (!IpAddress.validate(rule.getRule())) {
 			result.rejectValue("rule", "errormsg.36");
 			model.addAttribute("rules", baseDAO.objects("load.access.rules", Rule.class));
 			return "/admin/globalaccessrules";
 		}
 		baseDAO.dml("access.rule", rule.getRule());
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
 		return "redirect:/admin/globalaccessrules.xhtml";
 	}
 
 	@RequestMapping(value = "/deleterule.xhtml", method = RequestMethod.GET)
-	public String deleteAccessRules(Model model, @RequestParam("rid") Integer rid) {
+	public String deleteAccessRules(Model model, @RequestParam("rid") Integer rid, RedirectAttributes redirectAttributes) {
 		baseDAO.dml("delete.rule", rid);
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
 		return "redirect:/admin/globalaccessrules.xhtml";
 	}
 
@@ -270,12 +274,13 @@ public class GeneralConfigController extends BaseController {
 	}
 
 	@RequestMapping(value = "/globalflags.xhtml", method = RequestMethod.POST)
-	public String globalFlags(Model model, GlobalFlags globalFlags) {
+	public String globalFlags(Model model, GlobalFlags globalFlags, RedirectAttributes redirectAttributes) {
 
 		HandlerInterceptorImpl.setMaintenanceMode(globalFlags.isMaintenanceMode());
 		mailNotificationService.setDisabledMailNotificationFlag(globalFlags.isMailNotificationDisabled());
 		baseDAO.dml("update.flags", globalFlags.isMailNotificationDisabled(), globalFlags.isMaintenanceMode(), globalFlags.isEnabled_mail(), globalFlags.isEnabled_source_code_view(),
 				globalFlags.isEnabled_submission());
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
 		return "redirect:/admin/globalflags.xhtml";
 	}
 

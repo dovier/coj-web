@@ -5,6 +5,7 @@ import cu.uci.coj.dao.BaseDAO;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.utils.enums.EventType;
 import cu.uci.coj.validator.languageValidator;
+import cu.uci.coj.utils.Notification;
 
 import java.security.Principal;
 
@@ -16,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -45,13 +48,14 @@ public class LanguageController  extends BaseController {
     }
 
     @RequestMapping(value = "/managelanguage.xhtml", method = RequestMethod.POST)
-    public String manageLanguages(Model model, Principal principal, Language language, BindingResult result) {
+    public String manageLanguages(Model model, Principal principal, Language language, BindingResult result, RedirectAttributes redirectAttributes) {
         validator.validate(language, result);
         if (result.hasErrors()) {
             model.addAttribute(language);
             return "/admin/managelanguage";
         }
         baseDAO.dml("upsert.language",language.getLanguage(),language.getKey(),language.getName_bin(),language.isEnabled(),language.getDescripcion(),language.getLid(),language.getLanguage(),language.getKey(),language.getName_bin(),language.isEnabled(),language.getDescripcion());
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
         return "redirect:/admin/programminglanguages.xhtml";
     }
 }

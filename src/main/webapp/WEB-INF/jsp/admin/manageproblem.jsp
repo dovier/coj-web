@@ -109,7 +109,8 @@
 		<div class="form-group col-xs-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">Limits</h3>
+					<h3 class="panel-title"><fmt:message
+					key="addproblem.limits" /></h3>
 				</div>
 				<div class="panel-body">
 
@@ -117,9 +118,12 @@
 
 						<!-- Nav tabs -->
 						<ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active"><a href="#basicLimits" aria-controls="basicLimits" role="tab" data-toggle="tab">Basic</a></li>
-                                <li role="presentation"><a href="#allLimits" aria-controls="profile" role="tab" data-toggle="tab">All</a></li>
-                                <li role="presentation"><a href="#multipliers" aria-controls="profile" role="tab" data-toggle="tab">Multipliers</a></li>
+                                <li role="presentation" class="active"><a href="#basicLimits" aria-controls="basicLimits" role="tab" data-toggle="tab"><fmt:message
+					key="addproblem.basic" /></a></li>
+                                <li role="presentation"><a href="#allLimits" aria-controls="profile" role="tab" data-toggle="tab"><fmt:message
+					key="addproblem.all" /></a></li>
+                                <li role="presentation"><a href="#multipliers" aria-controls="profile" role="tab" data-toggle="tab"><fmt:message
+					key="addproblem.multiplier" /></a></li>
 						</ul>
 
 						<!-- Tab panes -->
@@ -127,7 +131,8 @@
 							<div role="tabpanel" class="tab-pane active" id="basicLimits">
 								<div class="row">
 									<div class="col-lg-3">
-										<label for="memoryLimit">Memory (B)</label>
+										<label for="memoryLimit"><fmt:message
+					key="fieldhdr.memorylimit" /></label>
 										<div class="input-group">
                                                 <input type="text" id="memoryLimit"  placeholder="Max Memory" class="form-control" data-toggle="unit-selector">
                                                 <span class="input-group-btn">
@@ -416,15 +421,15 @@
 					key="page.advancedcfg.languages" />
 			</label>
 			<div class="col-xs-9 contestlanguages">
-				<div class='col-xs-4'>
+				<div class='col-xs-5 form-inline'>
 					<form:checkbox cssClass="checkbox" id="all"
 						onchange="selection('all','languageids');" label="All" path=""
 						value="" />
 				</div>
-				<div class='col-xs-4'>
+				<div class='col-xs-5 form-inline'>
 					<form:checkboxes cssClass="checkbox" path="languageids"
 						items="${languages}" itemValue="lid" itemLabel="descripcion"
-						delimiter="</div><div class='col-xs-4'>" />
+						delimiter="</div><div class='col-xs-5 form-inline'>" />
 				</div>
 				<span class="label label-danger"><form:errors
 						path="languages" /></span>
@@ -453,12 +458,24 @@
 				</div>
 			</div>
 		</c:if>
-		<div class="col-xs-12">
-			<div class="form-actions pull-right ">
-				<input class="btn btn-primary" type="submit" name="but"
-					value="Update" />
-			</div>
-		</div>
+                        <div class="col-xs-12">
+                            <div class="form-actions pull-right ">
+                                <c:if test="${create == true}" >
+                                    <input class="btn btn-primary" type="submit" name="but"
+                                         id="submit" value="<spring:message code="judge.register.submit.value"/>" /> 
+                                </c:if>
+                                <c:if test="${create == false}" >
+                                    <input class="btn btn-primary" type="submit" name="but"
+                                         id="submit" value="Update" /> 
+                                </c:if>
+                                   <input  class="btn btn-primary" type="reset" name="reset" id="reset" 
+                                           value="<spring:message code="judge.register.reset.value"/>"
+                                    />
+                               </div>
+                        </div>
+		
+			
+			
 	</form:form>
 </div>
         <div id="popover_content_wrapper" style="display: none" >

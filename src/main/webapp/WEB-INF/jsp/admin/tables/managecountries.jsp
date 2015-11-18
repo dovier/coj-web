@@ -1,7 +1,6 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
-<label><fmt:message key="fieldhdr.totalfound" />: ${found}</label>
 <display:table id="country" name="countries" class="volume"
                decorator="cu.uci.coj.utils.tabledecorator.problemsTableDecorator">
     <display:column property="id" titleKey="tablehdr.id"
