@@ -23,7 +23,7 @@
         <display:column titleKey="tablehdr.status">
         <label class="label bg${user.status}">${user.status}</label>
     </display:column>
-    <display:column titleKey="tablehdr.edit">
+    <display:column titleKey="tablehdr.actions">
         <ul class="list-inline">
             <li><a
                     href="<c:url value="/admin/manageuser.xhtml?username=${user.username}" />"

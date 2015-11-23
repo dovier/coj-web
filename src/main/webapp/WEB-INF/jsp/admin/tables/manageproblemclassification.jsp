@@ -26,7 +26,7 @@
 	<display:column property="points" titleKey="tablehdr.score"
 		sortable="true" sortProperty="accu" sortName="accu"
 		headerClass="headpoint" />
-	<display:column titleKey="pclassifi.btnclassify">
+	<display:column titleKey="tablehdr.actions">
 		<a href="/admin/manageproblemclassification.xhtml?pid=${problem.pid}"
 			title="<fmt:message key="messages.general.go"/>"><i
 			class="fa fa-edit"></i></a>

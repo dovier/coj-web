@@ -15,9 +15,9 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
     <div>
         <form id="filter-form" class="form-inline">
             <div class="form-group coj_float_rigth">
-                <label><spring:message code="fieldhdr.searchactivations" />:</label>
+                <!--<label><spring:message code="fieldhdr.searchactivations" />:</label>-->
                 <input type="text" class="form-control" name="pattern"
-                       value="${pattern}">
+                       value="${pattern}" placeholder="<spring:message code="fieldhdr.searchactivations" />">
                 <input id="filter-button" type="submit" class="btn btn-primary"
                        value="<spring:message code="button.filter"/>">
             </div>

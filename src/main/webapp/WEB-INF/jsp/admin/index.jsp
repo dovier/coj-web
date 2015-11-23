@@ -19,7 +19,7 @@
 						</div>
 					</div>
 					<div id="gUsers" class="panel-body collapse in">
-						<div class="col-xs-12">
+						<div>
 
 							<authz:authorize ifAnyGranted="ROLE_ADMIN">
 								<div id="userStatus" class="panel-body collapse in">
