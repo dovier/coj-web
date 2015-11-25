@@ -36,13 +36,21 @@ public class TranslationController extends BaseController {
 	ProblemDAO problemDAO;
 	
 	@RequestMapping(value = "/translation.xhtml", method = RequestMethod.GET)
-	public String manageProblemI18N(Model model, @RequestParam("pid") Integer pid) {
-		Problem problem = problemDAO.object("select.problem.i18n", Problem.class, pid);
+	public String manageProblemI18N(HttpServletRequest request, Model model, @RequestParam("pid") Integer pid) {
+            Problem problem = null;
+            if (request.isUserInRole(Roles.ROLE_ADMIN) || request.isUserInRole(Roles.ROLE_SUPER_PSETTER) || request.isUserInRole(Roles.ROLE_PSETTER)) {
+		 problem = problemDAO.object("select.problem.i18n.1", Problem.class, pid);                
+            }else{
+		 problem = problemDAO.object("select.problem.i18n.2", Problem.class, pid);                                
+            }
 		
 		Translation translation = new Translation();
 		
 		model.addAttribute("problem", problem);
-		model.addAttribute(translation);
+		model.addAttribute(translation);              
+                if (problem == null ){
+                    return "redirect:/error/error.xhtml?error=2";
+                }
 		return "/24h/translation";
 	}
 

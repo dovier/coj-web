@@ -2,7 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer = "16kb" autoFlush="true" %>
 
-<script type='text/javascript' src="<c:url value="/js/jquery.js" />"></script>
+<!--<script type='text/javascript' src="<c:url value="/js/jquery.js" />"></script>-->
 <script type='text/javascript' src="<c:url value="/js/coj.js" />"></script>
 
 <jsp:useBean id="now" class="java.util.Date" />

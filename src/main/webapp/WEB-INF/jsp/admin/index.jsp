@@ -12,7 +12,7 @@
 			<div class="col-xs-12">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						Users
+						<spring:message code="tableval.users" />
 						<div class="badge pull-right">
 							<a data-toggle="collapse" href="#gUsers"><i
 								class="fa fa-chevron-up"></i></a>
@@ -25,27 +25,27 @@
 								<div id="userStatus" class="panel-body collapse in">
 									<ul class="list-inline">
 										<c:if test="${not empty userStatus[0]['status']}">
-											<li><label class="label bg${userStatus[0]['status']}">${userStatus[0]['status']}&nbsp;${userStatus[0]['count']}</label></li>
+											<li><label class="label bg${userStatus[0]['status']}"><spring:message code="status.${userStatus[0]['status']}" />&nbsp;${userStatus[0]['count']}</label></li>
 										</c:if>
 										<c:if test="${not empty userStatus[1]['status']}">
-											<li><label class="label bg${userStatus[1]['status']}">${userStatus[1]['status']}&nbsp;${userStatus[1]['count']}</label></li>
+											<li><label class="label bg${userStatus[1]['status']}"><spring:message code="status.${userStatus[1]['status']}" />&nbsp;${userStatus[1]['count']}</label></li>
 										</c:if>
 										<c:if test="${not empty userStatus[2]['status']}">
-											<li><label class="label bg${userStatus[2]['status']}">${userStatus[2]['status']}&nbsp;${userStatus[2]['count']}</label></li>
+											<li><label class="label bg${userStatus[2]['status']}"><spring:message code="status.${userStatus[2]['status']}" />&nbsp;${userStatus[2]['count']}</label></li>
 										</c:if>
 										<c:if test="${not empty userStatus[3]['status']}">
 											<li><label class="label bg${userStatus[3]['status']}"><a
 													class="white status"
 													data-status="${userStatus[3]['status']}"><i
 														class="fa fa-bell"></i></a></label>&nbsp;<label
-												class="label bg${userStatus[3]['status']}">${userStatus[3]['status']}&nbsp;${userStatus[3]['count']}</label></li>
+												class="label bg${userStatus[3]['status']}"><spring:message code="status.${userStatus[3]['status']}" />&nbsp;${userStatus[3]['count']}</label></li>
 										</c:if>
 										<c:if test="${not empty userStatus[4]['status']}">
 											<li><label class="label bg${userStatus[4]['status']}"><a
 													class="white status"
 													data-status="${userStatus[4]['status']}"><i
 														class="fa fa-bell"></i></a></label>&nbsp;<label
-												class="label bg${userStatus[4]['status']}">${userStatus[4]['status']}&nbsp;${userStatus[4]['count']}</label></li>
+												class="label bg${userStatus[4]['status']}"><spring:message code="status.${userStatus[4]['status']}" />&nbsp;${userStatus[4]['count']}</label></li>
 										</c:if>
 									</ul>
 								</div>
@@ -81,7 +81,7 @@
 			<div class="col-xs-12">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						Problems
+						<spring:message code="tableval.problems" />
 						<div class="badge pull-right">
 							<a data-toggle="collapse" href="#gProblems"><i
 								class="fa fa-chevron-up"></i></a>
@@ -135,7 +135,7 @@
 			<div class="col-xs-12">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						Contests
+						<spring:message code="tableval.contests" />
 						<div class="badge pull-right">
 							<a data-toggle="collapse" href="#gContests"><i
 								class="fa fa-chevron-up"></i></a>
@@ -174,7 +174,7 @@
 			<div class="col-xs-12">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						Submits
+						<spring:message code="tableval.submits" />
 						<div class="badge pull-right">
 							<a data-toggle="collapse" href="#gSubmits"><i
 								class="fa fa-chevron-up"></i></a>
@@ -200,7 +200,7 @@
 			<div class="col-xs-12">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						Misc
+						<spring:message code="tableval.misc" />
 						<div class="badge pull-right">
 							<a data-toggle="collapse" href="#gMisc"><i
 								class="fa fa-chevron-up"></i></a>
@@ -302,7 +302,7 @@
 			<div class="col-xs-12">
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						Configuration
+						<spring:message code="tableval.configuration" />
 						<div class="badge pull-right">
 							<a data-toggle="collapse" href="#gConfiguration"><i
 								class="fa fa-chevron-up"></i></a>

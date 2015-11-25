@@ -20,7 +20,7 @@
                 <a href="<c:url value="/admin/addinstitution.xhtml" />" class="btn btn-primary"><spring:message code="page.general.admin.manageinstitution.addnewinstitution"/></a>
             </div>
             <div class="form-group coj_float_rigth">                
-                <input type="text" placeholder="Search in name and code"
+                <input type="text" placeholder="<fmt:message key="page.general.admin.search" />"
                        class="form-control" name="pattern" value="${pattern}">
                 <input id="filter-button" type="submit" class="btn btn-primary"
                        value="<spring:message code="button.filter"/>">

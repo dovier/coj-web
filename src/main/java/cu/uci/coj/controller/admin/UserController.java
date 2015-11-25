@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.ContestDAO;
@@ -32,6 +33,7 @@ import cu.uci.coj.model.User;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.userValidator;
+import cu.uci.coj.utils.Notification;
 
 @Controller("userAdminController")
 @RequestMapping(value = "/admin")
@@ -116,7 +118,7 @@ public class UserController extends BaseController {
 	}
 
 	@RequestMapping(value = "/manageuser.xhtml", method = RequestMethod.POST)
-	public String manageUsers(Model model, User user, BindingResult result) {
+	public String manageUsers(Model model, User user, BindingResult result, RedirectAttributes redirectAttributes) {
 		user.setUid(userDAO.integer("select.uid.by.username",
 				user.getUsername()));
 		user.setTeam(userDAO.bool("is.team", user.getUsername()));
@@ -147,12 +149,13 @@ public class UserController extends BaseController {
 					"ABC123XYZ789"));
 		}
 		userDAO.updateUserByAdmin(user);
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
+                
 		if (!user.isTeam()) {
 			userDAO.clearUserAuthorities(user.getUsername());
 			userDAO.grantUserAuthority(user);
 		}
-		return "redirect:/admin/manageuser.xhtml?username="
-				+ user.getUsername();
+		return "redirect:/admin/manageusers.xhtml";
 	}
 
 	@RequestMapping(value = "/manageteams.xhtml", method = RequestMethod.GET)

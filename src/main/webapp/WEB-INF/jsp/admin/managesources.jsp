@@ -1,15 +1,20 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!-- <script type="text/javascript" src="<c:url value="/js/jquery.js" />">
 
-</script>
-<script type="text/javascript" src="<c:url value="/js/coj.js" />"></script>-->
 
 <h2 class="postheader">
     <spring:message code="page.general.admin.header" />
     : <spring:message code="psource.title" />	
 </h2>
 <div class="postcontent">
+
+    <c:if test="${message != null}">
+        <div class="alert alert-success alert-dismissable fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <i class="fa fa-check"></i><spring:message code="${message}" />
+        </div>                 
+    </c:if> 
+
     <form method="post" action="/admin/addsource.xhtml">
         <div class="form-group">
             <label class="control-label"><spring:message code="psource.newsource" />:</label> 
@@ -21,7 +26,7 @@
         </div>
         <input id="filter-button" type="submit" class="btn btn-primary"
                value="<spring:message code="button.add"/>">        
-    <form>
+    </form>
     <br />
 
     <div id="display-table-container"

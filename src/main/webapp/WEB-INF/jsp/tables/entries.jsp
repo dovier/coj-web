@@ -51,24 +51,26 @@
                     <div id="actions${entry.id}" class="pull-right">
                         <authz:authorize access="hasRole('ROLE_ADMIN')">
                             <a href="javascript:disableEntry(${entry.id});"
-                               data-toggle="tooltip" title="Hide entry"><i
-                                    class="fa fa-eye-slash"></i></a>
-                            </authz:authorize>
-                            <authz:authorize access="isAuthenticated()">
-                            <a data-toggle="tooltip" title="reply to user"
+                               data-toggle="tooltip" title="<spring:message code="messages.general.hideentry"/>">
+                                <i
+                                    class="fa fa-eye-slash"></i>                                
+                            </a>
+                        </authz:authorize>
+                        <authz:authorize access="isAuthenticated()">
+                            <a data-toggle="tooltip" title="<spring:message code="messages.general.replytouser"/>"
                                href="javascript:reply('@${entry.username} ');"><i
                                     class="fa fa-reply"></i></a>
-                            <a data-toggle="tooltip" title="mail user"
+                            <a data-toggle="tooltip" title="<spring:message code="messages.general.mailuser"/>"
                                href="<c:url value="/mail/composemail.xhtml?usernameto=${entry.username}"/>"><i
                                     class="fa fa-envelope"></i></a>
-                            <a data-toggle="tooltip" title="forward entry"
+                            <a data-toggle="tooltip" title="<spring:message code="messages.general.forwardentry"/>"
                                href="<c:url value="/forwardentry.xhtml?id=${entry.id}"/>"><i
                                     class="fa fa-mail-forward"></i></a>
                             </authz:authorize>
                             <authz:authorize access="isAuthenticated()">
                                 <c:if test="${not entry.voted and entry.username != principal.username}">
                                 <a id="thumbs-up${entry.id}" data-toggle="tooltip"
-                                   title="up vote entry" href="javascript:like(${entry.id});"><i
+                                   title="<spring:message code="messages.general.upvoteentry"/>" href="javascript:like(${entry.id});"><i
                                         class="fa fa-thumbs-o-up"></i></a>
                                 </c:if>
                             </authz:authorize>
@@ -85,7 +87,7 @@
                             <c:if
                                 test="${not entry.voted and entry.username != principal.username}">
                                 <a id="thumbs-down${entry.id}" data-toggle="tooltip"
-                                   title="down vote entry" href="javascript:dislike(${entry.id});"><i
+                                   title="<spring:message code="messages.general.downvoteentry"/>" href="javascript:dislike(${entry.id});"><i
                                         class="fa fa-thumbs-o-down"></i></a>
                                 </c:if>
                             </authz:authorize>
@@ -96,11 +98,11 @@
     </display:column>
 </display:table>
 <script>
-    $('img.avatar').error(function() {
+    $('img.avatar').error(function () {
         $(this).attr('src', '<c:url value="/images/default_avatar.png"/>');
     });
 
-    $(function() {
+    $(function () {
         $("[data-toggle='tooltip']").tooltip();
     });
 </script>

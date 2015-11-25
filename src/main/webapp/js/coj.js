@@ -12,7 +12,7 @@ function getInstitution() {
         url: "/user/getInstitution.xhtml",
         data: "country=" + id,
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
             instution.options[0] = new Option("None", -1);
             for (var i = 0; i < data.length; i++) {
                 instution.options[i + 1] = new Option(data[i].institution, data[i].id);
@@ -21,45 +21,44 @@ function getInstitution() {
     });
 }
 
-function like(id){
-	voting(id,"/user/like.json");
+function like(id) {
+    voting(id, "/user/like.json");
 }
 
-function dislike(id){
-	voting(id,"/user/dislike.json");
+function dislike(id) {
+    voting(id, "/user/dislike.json");
 }
 
-function voting(id,url){
-	$.ajax({
+function voting(id, url) {
+    $.ajax({
         type: "POST",
         url: url,
         data: "id=" + id,
         dataType: 'json',
-        success: function(data) {
-           var rating  = $("#rating" + id);
-           rating.removeClass();
-           if (data > 0)
-        	   rating.addClass("text-success");
-           else if (data < 0)
-        	   rating.addClass("text-danger");
-           rating.html(data);
-           
-           $("#thumbs-up"+ id).remove();
-           $("#thumbs-down"+ id).remove();
+        success: function (data) {
+            var rating = $("#rating" + id);
+            rating.removeClass();
+            if (data > 0)
+                rating.addClass("text-success");
+            else if (data < 0)
+                rating.addClass("text-danger");
+            rating.html(data);
+            $("#thumbs-up" + id).remove();
+            $("#thumbs-down" + id).remove();
         }
     });
 }
 
-function disableEntry(id){
-	alert(id);
-	$.ajax({
+function disableEntry(id) {
+    alert(id);
+    $.ajax({
         type: "POST",
         url: "/admin/disableentry.json",
         data: "id=" + id,
         dataType: 'json',
-        success: function(data) {
-           $("#entry"+ data.id).html("<i>" + data.text + "</i>");
-           $("#actions" + data.id).remove();
+        success: function (data) {
+            $("#entry" + data.id).html("<i>" + data.text + "</i>");
+            $("#actions" + data.id).remove();
         }
     });
 }
@@ -79,17 +78,17 @@ function updateBoard(last, course_id) {
         url: "/schoolar/updateboard.json",
         data: "last=" + last + "&course_id=" + course_id,
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
             var lastl = data[0].lastlog;
             var logs = data[0].logs;
-            if (last !== 0) {                
+            if (last !== 0) {
                 for (var i = 0; i < logs.length; i++) {
                     if (logs[i].message !== undefined) {
                         board.insertBefore(buildboardDiv(logs[i].username + " - " + logs[i].message), board.childNodes[0]);
                     }
                 }
             }
-            else{
+            else {
                 for (var i = 0; i < logs.length; i++) {
                     if (logs[i].message !== undefined) {
                         board.appendChild(buildboardDiv(logs[i].username + " - " + logs[i].message), board.childNodes[0]);
@@ -105,23 +104,18 @@ function createTr(course_id, chapter, name, id)
 {
     var tr = document.createElement("tr");
     tr.setAttribute("id", id);
-
     var tdname = document.createElement("td");
     tdname.innerHTML += name;
-
     var tdchap = document.createElement("td");
     tdchap.innerHTML += chapter;
-
     var tdaction = document.createElement("td");
     var lkrem = document.createElement("a");
     lkrem.setAttribute("onClick", "removeMaterial(" + course_id + "," + chapter + "," + id + ")");
     lkrem.innerHTML += "remove";
     tdaction.appendChild(lkrem);
-
     tr.appendChild(tdname);
     tr.appendChild(tdchap);
     tr.appendChild(tdaction);
-
     return tr;
 }
 
@@ -142,17 +136,15 @@ function changeCourse(course_id) {
     var ihours = document.getElementById("ihours");
     var iminutes = document.getElementById("iminutes");
     var iseconds = document.getElementById("iseconds");
-
     $.ajax({
         type: "POST",
         url: "/schoolar/getchapterinfo.json",
         data: "chapter=" + id + "&course_id=" + course_id,
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
             name.value = data[0].name;
             var problems = data[0].problems;
             var materials = data[0].materials;
-
             for (var i = 0; i < problems.length; i++) {
                 if (problems[i].title !== undefined) {
                     contests_problem.options[i] = new Option(problems[i].title, problems[i].pid);
@@ -218,7 +210,7 @@ function removeMaterial(courseid, chapter, id) {
         url: "/schoolar/removematerial.json",
         data: "chapter=" + chapter + "&course_id=" + courseid + "&content_id=" + id,
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
             mat_tbody.removeChild(document.getElementById(id));
             alert("Delete successfully");
         }
@@ -233,7 +225,7 @@ function getVirtualTemplates(style) {
         url: "/practice/getvirtualtemplates.json?style=" + style,
         data: "style=" + style,
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
             contests.options[0] = new Option("Select", 0);
             for (var i = 0; i < data.length; i++) {
                 contests.options[i + 1] = new Option(data[i].name, data[i].cid);
@@ -249,7 +241,7 @@ function saveDraft() {
         url: "/mail/savedraft.xhtml",
         data: $('#composeform').serialize(),
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
             notify.setAttribute("class", "notice");
             notify.innerHTML = data.message;
         }
@@ -313,7 +305,6 @@ function addOutput(add)
     tr.appendChild(td);
     tr.appendChild(td1);
     table.appendChild(tr);
-
 }
 
 function countChilds(element) {
@@ -338,7 +329,7 @@ function setProperties(element)
 
 }
 
-function selection(checkbox,elements)
+function selection(checkbox, elements)
 {
     var element = document.getElementById(checkbox);
     var ele = document.getElementsByName(elements);
@@ -367,123 +358,115 @@ function show(val) {
     switch (val)
     {
         case 1:
-            {
-                var one = document.getElementById("rejudge");
-                var tr = document.createElement("tr");
-                var td = document.createElement("td");
-                var input = document.createElement("input");
-                input.setAttribute("name", "submitid");
-                input.setAttribute("type", "text");
-                td.appendChild(input);
-                tr.appendChild(td);
-                one.appendChild(tr);
-                break;
-            }
+        {
+            var one = document.getElementById("rejudge");
+            var tr = document.createElement("tr");
+            var td = document.createElement("td");
+            var input = document.createElement("input");
+            input.setAttribute("name", "submitid");
+            input.setAttribute("type", "text");
+            td.appendChild(input);
+            tr.appendChild(td);
+            one.appendChild(tr);
+            break;
+        }
         case 2:
-            {
-                var one = document.getElementById("rejudge");
-                var tr = document.createElement("tr");
-                var td = document.createElement("td");
-                var input = document.createElement("input");
-                var input1 = document.createElement("input");
-                input.setAttribute("name", "sid1");
-                input.setAttribute("type", "text");
-                input1.setAttribute("name", "sid2");
-                input1.setAttribute("type", "text");
-                td.appendChild(input);
-                td.appendChild(input1);
-                tr.appendChild(td);
-                one.appendChild(tr);
-                break;
-            }
+        {
+            var one = document.getElementById("rejudge");
+            var tr = document.createElement("tr");
+            var td = document.createElement("td");
+            var input = document.createElement("input");
+            var input1 = document.createElement("input");
+            input.setAttribute("name", "sid1");
+            input.setAttribute("type", "text");
+            input1.setAttribute("name", "sid2");
+            input1.setAttribute("type", "text");
+            td.appendChild(input);
+            td.appendChild(input1);
+            tr.appendChild(td);
+            one.appendChild(tr);
+            break;
+        }
         case 3:
-            {
-                var one = document.getElementById("rejudge");
-                var tr = document.createElement("tr");
-                var td = document.createElement("td");
-                var input = document.createElement("input");
-                input.setAttribute("name", "pid");
-                input.setAttribute("type", "text");
-                td.appendChild(input);
-                tr.appendChild(td);
-                one.appendChild(tr);
-                break;
-            }
+        {
+            var one = document.getElementById("rejudge");
+            var tr = document.createElement("tr");
+            var td = document.createElement("td");
+            var input = document.createElement("input");
+            input.setAttribute("name", "pid");
+            input.setAttribute("type", "text");
+            td.appendChild(input);
+            tr.appendChild(td);
+            one.appendChild(tr);
+            break;
+        }
         case 4:
+        {
+            var array = new Array('Accepted', 'Wrong Answer', 'Presentation Error', 'Memory Limit Exceeded', 'Time Limit Exceeded', 'Output Limit Exceeded', 'Size Limit Exceeded', 'Invalid Function', 'Runtime Error', 'Compilation Error', 'Unqualified', 'Judging');
+            var select = document.createElement("select");
+            select.setAttribute("name", "status");
+            for (var i = 0; i < array.length; i++)
             {
-                var array = new Array('Accepted', 'Wrong Answer', 'Presentation Error', 'Memory Limit Exceeded', 'Time Limit Exceeded', 'Output Limit Exceeded', 'Size Limit Exceeded', 'Invalid Function', 'Runtime Error', 'Compilation Error', 'Unqualified', 'Judging');
-                var select = document.createElement("select");
-                select.setAttribute("name", "status");
-                for (var i = 0; i < array.length; i++)
-                {
-                    var option = document.createElement("option");
-                    option.innerHTML += array[i];
-                    select.appendChild(option);
-                }
-                var one = document.getElementById("rejudge");
-                one.appendChild(select);
-                break;
+                var option = document.createElement("option");
+                option.innerHTML += array[i];
+                select.appendChild(option);
             }
+            var one = document.getElementById("rejudge");
+            one.appendChild(select);
+            break;
+        }
         case 5:
+        {
+            var one = document.getElementById("rejudge");
+            var tr = document.createElement("tr");
+            var td = document.createElement("td");
+            var input = document.createElement("input");
+            var input1 = document.createElement("input");
+            input.setAttribute("name", "sid1");
+            input.setAttribute("type", "text");
+            input1.setAttribute("name", "sid2");
+            input1.setAttribute("type", "text");
+            td.appendChild(input);
+            td.appendChild(input1);
+            tr.appendChild(td);
+            one.appendChild(tr);
+            var tr = document.createElement("tr");
+            var td = document.createElement("td");
+            var input = document.createElement("input");
+            input.setAttribute("name", "pid");
+            input.setAttribute("type", "text");
+            td.appendChild(input);
+            tr.appendChild(td);
+            one.appendChild(tr);
+            var array = new Array('Accepted', 'Wrong Answer', 'Presentation Error', 'Memory Limit Exceeded', 'Time Limit Exceeded', 'Output Limit Exceeded', 'Size Limit Exceeded', 'Invalid Function', 'Runtime Error', 'Compilation Error', 'Unqualified', 'Judging');
+            var select = document.createElement("select");
+            select.setAttribute("name", "status");
+            for (var i = 0; i < array.length; i++)
             {
-                var one = document.getElementById("rejudge");
-
-                var tr = document.createElement("tr");
-                var td = document.createElement("td");
-                var input = document.createElement("input");
-                var input1 = document.createElement("input");
-                input.setAttribute("name", "sid1");
-                input.setAttribute("type", "text");
-                input1.setAttribute("name", "sid2");
-                input1.setAttribute("type", "text");
-                td.appendChild(input);
-                td.appendChild(input1);
-                tr.appendChild(td);
-                one.appendChild(tr);
-
-                var tr = document.createElement("tr");
-                var td = document.createElement("td");
-                var input = document.createElement("input");
-                input.setAttribute("name", "pid");
-                input.setAttribute("type", "text");
-                td.appendChild(input);
-                tr.appendChild(td);
-                one.appendChild(tr);
-
-                var array = new Array('Accepted', 'Wrong Answer', 'Presentation Error', 'Memory Limit Exceeded', 'Time Limit Exceeded', 'Output Limit Exceeded', 'Size Limit Exceeded', 'Invalid Function', 'Runtime Error', 'Compilation Error', 'Unqualified', 'Judging');
-                var select = document.createElement("select");
-                select.setAttribute("name", "status");
-                for (var i = 0; i < array.length; i++)
-                {
-                    var option = document.createElement("option");
-                    option.innerHTML += array[i];
-                    select.appendChild(option);
-                }
-                one.appendChild(select);
-                break;
+                var option = document.createElement("option");
+                option.innerHTML += array[i];
+                select.appendChild(option);
             }
+            one.appendChild(select);
+            break;
+        }
     }
 }
 
 function updMode(mod) {
 
-    $('#model_output').on('scroll', function() {
+    $('#model_output').on('scroll', function () {
         $('#user_output').scrollTop($(this).scrollTop());
     });
-    $('#user_output').on('scroll', function() {
+    $('#user_output').on('scroll', function () {
         $('#model_output').scrollTop($(this).scrollTop());
     });
-
     var mode = document.getElementById("mode").options[document.getElementById("mode").selectedIndex].id;
-
     $('#input').attr('readonly', mode == "inputgen");
-
     (mode == "modelsol") ? $('#lastdl').show() : $('#lastdl').hide();
-
     (mode != "inputgen") ? $('#output').show() : $('#output').hide();
     (mode != "inputgen") ? $('#outputlabel').show() : $('#outputlabel').hide();
     (mode != "inputgen") ? $('#inputfile').show() : $('#inputfile').hide();
-
     (mode == "customsol") ? $('#code').show() : $('#code').hide();
     (mode == "customsol") ? $('#codefile').show() : $('#codefile').hide();
     (mode == "customsol") ? $('#codelabel').show() : $('#codelabel').hide();
@@ -494,7 +477,6 @@ function updMode(mod) {
     (mode == "customsol") ? $('#comparison_model').show() : $('#comparison_model').hide();
     (mode == "customsol") ? $('#lang').show() : $('#lang').hide();
     (mode == "customsol") ? $('#langlabel').show() : $('#langlabel').hide();
-
 }
 
 function updSelect() {
@@ -530,19 +512,19 @@ function activate_editor(enable) {
         }
         editAreaLoader.init({
             id: "code"	// id of the textarea to transform
-                    ,
+            ,
             start_highlight: true
-                    ,
+            ,
             allow_toggle: true
-                    ,
+            ,
             language: "en"
-                    ,
+            ,
             syntax: lang
-                    ,
+            ,
             toolbar: "search, go_to_line, |, undo, redo, |, select_font, |, change_smooth_selection, highlight, reset_highlight, |, help"
-                    ,
+            ,
             syntax_selection_allow: "c,cpp,csharp,java,pas,perl,php,python,ruby,robotstxt"
-                    ,
+            ,
             show_line_colors: true
         });
     }
@@ -661,7 +643,7 @@ function unmarkfavorite(pid) {
         type: "get",
         url: "/24h/unmarkfavorite.xhtml",
         data: "pid=" + pid,
-        success: function(msg) {
+        success: function (msg) {
         }
     });
 }
@@ -671,7 +653,7 @@ function markfavorite(pid) {
         type: "get",
         url: "/24h/markasfavorite.xhtml",
         data: "pid=" + pid,
-        success: function(msg) {
+        success: function (msg) {
         }
     });
 }
@@ -683,7 +665,6 @@ function loadProblems(pid) {
         cancel: "select",
         connectWith: "ul"
     });
-
 //    $("#classifications, #problemClassifications").disableSelection();
     $("select").unbind();
 }
@@ -694,14 +675,14 @@ function loadProblemClassification(pid) {
     $("#classifications").sortable({
         cancel: "select",
         connectWith: "ul",
-        stop: function(event, ui) {
+        stop: function (event, ui) {
             var added = ui.item.parent().attr("id") == 'problemClassifications';
             if (added) {
                 $.ajax({
                     type: "POST",
                     url: "manageproblemclassification.xhtml",
                     data: "add&pid=" + pid + "&cid=" + ui.item.attr("id") + "&cpx=" + $("input[name='class" + ui.item.attr("id") + "']:checked").attr("value"),
-                    success: function(msg) {
+                    success: function (msg) {
 
                         $("input[name='class" + ui.item.attr("id") + "']").attr("disabled", "true");
                     }
@@ -709,17 +690,16 @@ function loadProblemClassification(pid) {
             }
         }
     });
-
     $("#problemClassifications").sortable({
         connectWith: "ul",
-        stop: function(event, ui) {
+        stop: function (event, ui) {
             var removed = ui.item.parent().attr("id") == 'classifications';
             if (removed) {
                 $.ajax({
                     type: "POST",
                     url: "manageproblemclassification.xhtml",
                     data: "rmb&pid=" + pid + "&cid=" + ui.item.attr("id"),
-                    success: function(msg) {
+                    success: function (msg) {
                         $("input[name='class" + ui.item.attr("id") + "']").removeAttr("disabled");
                     }
                 });
@@ -734,52 +714,52 @@ function showplagicoj(val) {
     switch (val)
     {
         case 1:
-            {
-                var one = document.getElementById("plagicoj");
-                var tr = document.createElement("tr");
-                var td = document.createElement("td");
-                var input = document.createElement("input");
-                var input1 = document.createElement("input");
-                input.setAttribute("name", "submitid1");
-                input.setAttribute("type", "text");
-                input1.setAttribute("name", "submitid2");
-                input1.setAttribute("type", "text");
-                td.appendChild(input);
-                td.appendChild(input1);
-                tr.appendChild(td);
-                one.appendChild(tr);
-                break;
-            }
+        {
+            var one = document.getElementById("plagicoj");
+            var tr = document.createElement("tr");
+            var td = document.createElement("td");
+            var input = document.createElement("input");
+            var input1 = document.createElement("input");
+            input.setAttribute("name", "submitid1");
+            input.setAttribute("type", "text");
+            input1.setAttribute("name", "submitid2");
+            input1.setAttribute("type", "text");
+            td.appendChild(input);
+            td.appendChild(input1);
+            tr.appendChild(td);
+            one.appendChild(tr);
+            break;
+        }
         case 2:
-            {
-                var one = document.getElementById("plagicoj");
-                var tr = document.createElement("tr");
-                var td = document.createElement("td");
-                var input = document.createElement("input");
-                var input1 = document.createElement("input");
-                input.setAttribute("name", "sid1");
-                input.setAttribute("type", "text");
-                input1.setAttribute("name", "sid2");
-                input1.setAttribute("type", "text");
-                td.appendChild(input);
-                td.appendChild(input1);
-                tr.appendChild(td);
-                one.appendChild(tr);
-                break;
-            }
+        {
+            var one = document.getElementById("plagicoj");
+            var tr = document.createElement("tr");
+            var td = document.createElement("td");
+            var input = document.createElement("input");
+            var input1 = document.createElement("input");
+            input.setAttribute("name", "sid1");
+            input.setAttribute("type", "text");
+            input1.setAttribute("name", "sid2");
+            input1.setAttribute("type", "text");
+            td.appendChild(input);
+            td.appendChild(input1);
+            tr.appendChild(td);
+            one.appendChild(tr);
+            break;
+        }
         case 3:
-            {
-                var one = document.getElementById("plagicoj");
-                var tr = document.createElement("tr");
-                var td = document.createElement("td");
-                var input = document.createElement("input");
-                input.setAttribute("name", "pid");
-                input.setAttribute("type", "text");
-                td.appendChild(input);
-                tr.appendChild(td);
-                one.appendChild(tr);
-                break;
-            }
+        {
+            var one = document.getElementById("plagicoj");
+            var tr = document.createElement("tr");
+            var td = document.createElement("td");
+            var input = document.createElement("input");
+            input.setAttribute("name", "pid");
+            input.setAttribute("type", "text");
+            td.appendChild(input);
+            tr.appendChild(td);
+            one.appendChild(tr);
+            break;
+        }
 
     }
 }
@@ -788,21 +768,28 @@ function updateClassification(id) {
     $.ajax({
         type: "GET",
         url: "/admin/updateclassifications.xhtml?classid=" + id + "&name=" + $("input[name='class" + id + "']").val(),
-        success: function() {
+        success: function () {
             alert("Classification successfully updated.");
         }
     });
 }
 
 function updateSource(id) {
-    $.ajax({
-        type: "POST",
-        url: "/admin/updatesource.xhtml",
-        data: "idSource=" + id + "&name=" + $("input[name='name" + id + "']").val()+"&author=" + $("input[name='author" + id + "']").val(),
-        success: function() {
-        	alert("Source successfully updated.");
-        }
-    });
+//    $.ajax({
+//        type: "POST",
+//        url: "/admin/updatesource.xhtml",
+//        data: "idSource=" + id + "&name=" + $("input[name='name" + id + "']").val() + "&author=" + $("input[name='author" + id + "']").val(),
+//        success: function () {
+////        	alert("Source successfully updated.");
+//            var mensaje = "<div class = \"alert alert-success alert-dismissable fade in\"> \n" +
+//                    "<button type=\"button\" class = \"close\" data-dismiss = \"alert\" aria-hidden = \"true\" > & times; </button> \n" +
+//                    "<i class=\"fa fa-check\"> </i><spring:message code=\"${message}\" /> </div> \n";                    
+//            $("#newmessage").html(mensaje);                  
+//            $("#display-table-container").load('/admin/tables/managesources.xhtml');
+//        }
+//    });
+    var _route = "/admin/updatesource.xhtml?" + "idSource=" + id + "&name=" + $("input[name='name" + id + "']").val() + "&author=" + $("input[name='author" + id + "']").val();    
+    window.location = _route;
 }
 
 function deleteSource(id) {
@@ -810,8 +797,8 @@ function deleteSource(id) {
         type: "POST",
         url: "/admin/deletesource.xhtml",
         data: "idSource=" + id,
-        success: function() {
-        	$("input[name='name" + id + "']").parent().parent().remove();
+        success: function () {
+            $("input[name='name" + id + "']").parent().parent().remove();
         }
     });
 }
@@ -820,7 +807,7 @@ function deleteClassification(id) {
     $.ajax({
         type: "GET",
         url: "/admin/deleteclassifications.xhtml?classid=" + id,
-        success: function() {
+        success: function () {
             $("input[name='class" + id + "']").parent().parent().remove();
             alert("Classification successfuly deleted.");
         }
