@@ -765,13 +765,15 @@ function showplagicoj(val) {
 }
 
 function updateClassification(id) {
-    $.ajax({
-        type: "GET",
-        url: "/admin/updateclassifications.xhtml?classid=" + id + "&name=" + $("input[name='class" + id + "']").val(),
-        success: function () {
-            alert("Classification successfully updated.");
-        }
-    });
+//    $.ajax({
+//        type: "GET",
+//        url: "/admin/updateclassifications.xhtml?classid=" + id + "&name=" + $("input[name='class" + id + "']").val(),
+//        success: function () {
+//            alert("Classification successfully updated.");
+//        }
+//    });
+    var _route = "/admin/updateclassifications.xhtml?classid=" + id + "&name=" + $("input[name='class" + id + "']").val();
+    window.location = _route;
 }
 
 function updateSource(id) {
@@ -788,7 +790,7 @@ function updateSource(id) {
 //            $("#display-table-container").load('/admin/tables/managesources.xhtml');
 //        }
 //    });
-    var _route = "/admin/updatesource.xhtml?" + "idSource=" + id + "&name=" + $("input[name='name" + id + "']").val() + "&author=" + $("input[name='author" + id + "']").val();    
+    var _route = "/admin/updatesource.xhtml?" + "idSource=" + id + "&name=" + $("input[name='name" + id + "']").val() + "&author=" + $("input[name='author" + id + "']").val();
     window.location = _route;
 }
 
