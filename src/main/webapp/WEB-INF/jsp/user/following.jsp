@@ -2,7 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
 
-<h2 class="postheader">Following</h2>
+<h2 class="postheader"></h2>
 <div id = "followingcontainer" class="row row-centered postcontent">
 
 </div>

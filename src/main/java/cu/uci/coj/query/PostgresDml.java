@@ -22,7 +22,7 @@ public class PostgresDml{
 		if (StringUtils.isEmpty(table))
 			return null;
 		String dml = "delete from " + table + " where ";
-		if (ArrayUtils.isEmpty(parameters))
+		if (!ArrayUtils.isEmpty(parameters))
 			for (Where parameter : parameters)
 				dml += parameter.toString();
 		return dml;

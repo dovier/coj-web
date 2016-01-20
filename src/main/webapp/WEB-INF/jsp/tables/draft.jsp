@@ -9,9 +9,13 @@
 	<display:column titleKey="tablehdr.date" headerClass="headdate">
 		<fmt:formatDate value="${mail.date}" pattern="yyyy-MM-dd HH:mm:ss" />
 	</display:column>
-	<display:column titleKey="tablehdr.delete">
-		<a href="<c:url value="deletemail.xhtml?draft=${mail.idmail}"/>"
-			title="<spring:message code="titval.delete" />"> <i
-			class="fa fa-trash"></i></a>
+	<display:column titleKey="tablehdr.actions">
+            <a href="#" onclick="confirm_delete('<c:url value="deletemail.xhtml?draft=${mail.idmail}"/>')"
+			data-toggle="tooltip" title="<spring:message code="titval.delete" />"> <i
+			  class="fa fa-trash"></i></a>
 	</display:column>
 </display:table>
+
+<script> 
+$("[data-toggle='tooltip']").tooltip();
+</script>

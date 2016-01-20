@@ -26,7 +26,7 @@
             </tr>
             <tr>
                 <td><spring:message code="fieldhdr.to" />:</td>
-                <td><form:input path="usernameto" size="40"/></td>
+                <td><form:input cssClass="form-control" path="usernameto" size="40"/></td>
                 <td><span class="label label-danger"><form:errors path="usernameto"/></span></td>
             </tr>
             <tr>                
@@ -58,7 +58,7 @@
             <tr>
                 <td><spring:message code="fieldhdr.subject" />:</td>
                 <td>
-                    <form:select path="pid">
+                    <form:select cssClass="form-control" path="pid">
                         <form:options items="${problems}" itemValue="pid" itemLabel="title"/>
                     </form:select>
                 </td>
@@ -69,7 +69,7 @@
                     <spring:message code="fieldhdr.response"/>:
                 </td>
                 <td>
-                    <select name="modes">
+                    <select class="form-control" name="modes">
                         <option value="4">CUSTOMIZED</option>
                         <option value="1">NO COMMENTS</option>
                         <option value="2">YES</option>
@@ -94,8 +94,8 @@
             </c:if>
 
         </table>
-        <input type="submit" value="<spring:message code="button.send" />" />
-        <input type="reset" value="<spring:message code="button.reset" />" />
+        <input class="btn btn-primary" type="submit" value="<spring:message code="button.send" />" />
+        <input class="btn btn-primary" type="reset" value="<spring:message code="button.reset" />" />
     </form:form>
 </div>
     

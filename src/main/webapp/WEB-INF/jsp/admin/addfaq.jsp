@@ -41,17 +41,20 @@
                 <div class="form-group">
                     <label class="control-label col-xs-3">
                         <spring:message code="addfaq.answer" />
+                    
                     </label>
-                    <a>
+                      <a>
                         <i data-toggle="tooltip" class="fa fa-asterisk"
                            title="<spring:message code="mandatory.field"/>">
                         </i>
                     </a>
                     <div class="col-xs-8">
-                        <form:textarea path="answer" id="answer" rows="15" cssStyle="width: 99%"/>
+                        <form:textarea path="answer" id="answer" rows="15" cssStyle="width: 99%"/> 
+                    
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="answer" /></span>
+                        <span class="label label-danger"><form:errors path="answer" /></span>  
+                     
                     </div>                    
                 </div>
             </authz:authorize>

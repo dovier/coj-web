@@ -32,7 +32,7 @@ public class FaqController extends BaseController {
     public String addFaq(Model model, @RequestParam(value = "id", required = false) Integer id) {
 
         model.addAttribute("faq", id == null ? new Faq() : utilDao.object("select.faq.by.id", Faq.class, id));
-        return "/admin/addfaq";
+        return "/admin/wbfaq/create";
     }
 
     @RequestMapping(value = "/admin/addfaq.xhtml", method = RequestMethod.POST)
@@ -40,12 +40,38 @@ public class FaqController extends BaseController {
         validator.validate(faq, errors);
         if (errors.hasErrors()) {
             model.addAttribute("faq", faq);
-            return "/admin/addfaq";
+            return "/admin/wbfaq/create";
         } else {
             utilDao.dml("insert.faq", faq.getAnswer(), faq.getQuestion());
             redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
             return "redirect:/admin/faqs.xhtml";
         }
+    }
+
+    /*NEW*/
+    @RequestMapping(value = "/admin/editfaq.xhtml", method = RequestMethod.GET)
+    public String editFaq(Model model, @RequestParam("id") Integer id){
+
+        Faq faq = utilDao.object("select.faq.by.id", Faq.class, id);
+        model.addAttribute("faq", faq);
+        return "/admin/wbfaq/edit";
+    }
+
+    /*NEW POST*/
+    @RequestMapping(value = "/admin/editfaq.xhtml", method = RequestMethod.POST)
+    public String editFaqPost(Model model, Faq faq, BindingResult errors, RedirectAttributes redirectAttributes){
+
+        validator.validate(faq, errors);
+
+        if (errors.hasErrors()){
+            model.addAttribute("faq", faq);
+            return "/admin/wbfaq/edit";
+        }
+
+        utilDao.dml("update.faq", faq.getAnswer(), faq.getQuestion(), faq.getId());
+        model.addAttribute("faq", faq);
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
+        return "redirect:/admin/faqs.xhtml";
     }
 
     @RequestMapping(value = "/general/faqs.xhtml", method = RequestMethod.GET)
@@ -60,7 +86,7 @@ public class FaqController extends BaseController {
     @RequestMapping(value = "/admin/faqs.xhtml", method = RequestMethod.GET)
     public String listFaqs(Locale locale, Model model) {
 
-        return "/admin/faqs";
+        return "/admin/wbfaq/list";
     }
 
     @RequestMapping(value = "/admin/tables/faqs.xhtml", method = RequestMethod.GET)
@@ -78,6 +104,14 @@ public class FaqController extends BaseController {
         utilDao.dml("delete.faq", id);
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
         return "redirect:/admin/faqs.xhtml";
+    }
+
+    @RequestMapping(value = "/admin/detailsfaq.xhtml", method = RequestMethod.GET)
+    public String detailsFaq(Model model, @RequestParam("id") Integer id) {
+
+        Faq faq = utilDao.object("select.faq.by.id", Faq.class, id);
+        model.addAttribute("faq", faq);
+        return "/admin/wbfaq/details";
     }
 
 }

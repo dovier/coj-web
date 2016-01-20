@@ -26,7 +26,7 @@
 
 	<definition name="admintemplate" template="/WEB-INF/tiles/theme.jsp">
 		<put-attribute name="statictitle" value="Caribbean Online Judge" />
-		<put-attribute name="title" value="pagetit.coj" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
 		<put-attribute name="sidebar" value="sidebar" />
 		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
@@ -204,33 +204,33 @@
 	</definition>
 
 	<definition name="/user/addentry" extends="template">
-		<put-attribute name="title" value="Add Entry" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/user/addentry.jsp" />
 	</definition>
 
 	<definition name="/admin/addfaq" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.faq" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/addfaq.jsp" />
 	</definition>
 
 	<definition name="/admin/notify" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.mailnotification" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/mailnotification.jsp" />
 	</definition>
 
 	<definition name="/admin/faqs" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.faq" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/faqs.jsp" />
 	</definition>
 
 	<definition name="/admin/addann" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.aaddannouncement" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/addann.jsp" />
 	</definition>
 	
 	<definition name="/admin/poll/manage" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.managepoll" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/poll/manage.jsp" />
 	</definition>
 
@@ -246,174 +246,174 @@
 	</definition>
 	
 	<definition name="/admin/managesources" extends="admintemplate">
-		<put-attribute name="title" value="Sources list" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/managesources.jsp" />
 	</definition>
 
 	<definition name="/admin/managecomments" extends="admintemplate">
-		<put-attribute name="title" value="Comments list" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/managecomments.jsp" />
 	</definition>
 
 	<definition name="/admin/entry" extends="admintemplate">
-		<put-attribute name="title" value="Entry" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/entry.jsp" />
 	</definition>
 
 	<definition name="/admin/manageentries" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.listentries" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/manageentries.jsp" />
 	</definition>
 
 	<definition name="/admin/manageann" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.aeannouncement" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/manageann.jsp" />
 	</definition>
 
 	<definition name="/admin/listnews" extends="admintemplate">
-		<put-attribute name="title" value="Add News" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/listnews.jsp" />
 	</definition>
 
 	<definition name="/admin/listann" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.amannouncement" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/listann.jsp" />
 	</definition>
 	
 	<definition name="/admin/poll/list" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.listpolls" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/poll/list.jsp" />
 	</definition>
 
 	<definition name="/admin/sessions" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.amannouncement" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/sessions.jsp" />
 	</definition>
 
 	<definition name="/admin/listlog" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.log" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/listlog.jsp" />
 	</definition>
 
 	<definition name="/admin/programminglanguages" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/programminglanguages.jsp" />
 	</definition>
 
 	<definition name="/admin/managelanguage" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/managelanguage.jsp" />
 	</definition>
 
 	<definition name="/admin/sendmail" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/sendmail.jsp" />
 	</definition>
 
 	<definition name="/admin/adminproblems" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/adminproblems.jsp" />
 	</definition>
 
 	<definition name="/admin/managesubmissions" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/managesubmissions.jsp" />
 	</definition>
 
 	<definition name="/admin/managecountries" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/managecountries.jsp" />
 	</definition>
 	<definition name="/admin/manageactivations" extends="admintemplate">
-		<put-attribute name="title" value="Manage Activations" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/manageactivations.jsp" />
 	</definition>
 
 	<definition name="/admin/managecountry" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/managecountry.jsp" />
 	</definition>
 
 	<definition name="/admin/manageinstitution" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/manageinstitution.jsp" />
 	</definition>
 
 	<definition name="/admin/globalflags" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/globalflags.jsp" />
 	</definition>
 
 	<definition name="/admin/managesubmission" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/managesubmission.jsp" />
 	</definition>
 
 	<definition name="/admin/contestrejudge" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/contestrejudge.jsp" />
 	</definition>
 
 	<definition name="/admin/contestsubmissions" extends="admintemplate">
-		<put-attribute name="title" value="Manage Contest Submissions" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/contestsubmissions.jsp" />
 	</definition>
 
 	<definition name="/admin/contestsubmission" extends="admintemplate">
-		<put-attribute name="title" value="Manage Contest Submissions" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/contestsubmission.jsp" />
 	</definition>
 
 	<definition name="/admin/manageusers" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/manageusers.jsp" />
 	</definition>
 
 	<definition name="/admin/manageuser" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/manageuser.jsp" />
 	</definition>
 
 	<definition name="/admin/manageteams" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/manageteams.jsp" />
 	</definition>
 
 	<definition name="/admin/admincontests" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.amcontests" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/admincontests.jsp" />
 	</definition>
 
 	<definition name="/admin/virtualcontests" extends="admintemplate">
-		<put-attribute name="title" value="Manage Virtual Contests" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/virtualcontests.jsp" />
 	</definition>
 	
 	<definition name="/admin/manageparsers" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.manageparsers" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/manageparsers.jsp" />
 	</definition>
 
 	<definition name="/admin/managecorrections" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.managecorrections" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/managecorrections.jsp" />
 	</definition>
@@ -720,28 +720,28 @@
 
 
 	<definition name="/admin/rejudge" extends="template">
-		<put-attribute name="title" value="Rejudge 24h" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/rejudge.jsp" />
 	</definition>
 
 	<definition name="/admin/globalaccessrules" extends="template">
-		<put-attribute name="title" value="Rejudge 24h" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/globalaccessrules.jsp" />
 	</definition>
 
 	<definition name="/admin/createteams" extends="template">
-		<put-attribute name="title" value="Create Teams" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/createteams.jsp" />
 	</definition>
 
 	<definition name="/admin/addcountry" extends="template">
-		<put-attribute name="title" value="Add Country" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/addcountry.jsp" />
 	</definition>
 
 	<definition name="/admin/addinstitution" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/addinstitution.jsp" />
 	</definition>
@@ -753,7 +753,7 @@
 	</definition>
 
 	<definition name="/admin/manageinstitutions" extends="admintemplate">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/manageinstitutions.jsp" />
 	</definition>
@@ -771,7 +771,7 @@
 	</definition>
 
 	<definition name="/admin/addproblem" extends="template">
-		<put-attribute name="title" value="Add Problem" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/addproblem.jsp" />
 	</definition>
 
@@ -796,102 +796,102 @@
 	</definition>
 
 	<definition name="/admin/createcontest" extends="template">
-		<put-attribute name="title" value="Create Contest" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/createcontest.jsp" />
 	</definition>
 
 	<definition name="/admin/contestproblems" extends="template">
-		<put-attribute name="title" value="Manage Contests Problems" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/contestproblems.jsp" />
 	</definition>
 
 
 	<definition name="/admin/baylorxml" extends="template">
-		<put-attribute name="title" value="Baylor XMl Export" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/baylorxml.jsp" />
 	</definition>
 
 	<definition name="/admin/contestproblemcolors" extends="template">
-		<put-attribute name="title" value="Manage Contests Problems Colors" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/contestproblemcolors.jsp" />
 	</definition>
 	
 	<definition name="/admin/importicpcusers" extends="template">
-		<put-attribute name="title" value="page.managecontest.link.iiu" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/importicpcusers.jsp" />
 	</definition>
 
 	<definition name="/admin/contestlanguages" extends="template">
-		<put-attribute name="title" value="Manage Contests Languages" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/contestlanguages.jsp" />
 	</definition>
 
 	<definition name="/admin/managecontest" extends="template">
-		<put-attribute name="title" value="pagetit.managecontest" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/managecontest.jsp" />
 	</definition>
 
 	<definition name="/admin/contestawards" extends="template">
-		<put-attribute name="title" value="Contest Awards" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/contestawards.jsp" />
 	</definition>
 
 
 	<definition name="/admin/contestglobalflags" extends="template">
-		<put-attribute name="title" value="Contest Global Flags" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/contestglobalflags.jsp" />
 	</definition>
 
 	<definition name="/admin/contestoverview" extends="template">
-		<put-attribute name="title" value="Contest Overview" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/contestoverview.jsp" />
 	</definition>
 	
 	<definition name="/admin/contestimg" extends="contesttemplate">
-		<put-attribute name="title" value="Contest Images" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/contestimg.jsp" />
 	</definition>
 
 	<definition name="/admin/uploadfile" extends="template">
-		<put-attribute name="title" value="Upload File" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/uploadfile.jsp" />
 	</definition>
 	<definition name="/admin/files" extends="template">
-		<put-attribute name="title" value="pagetit.files" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/files.jsp" />
 	</definition>
 
 	<definition name="/admin/globalsettings" extends="template">
-		<put-attribute name="title" value="Manage Contest Global Settings" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/globalsettings.jsp" />
 	</definition>
 
 	<definition name="/admin/contestusers" extends="template">
-		<put-attribute name="title" value="Manage Contest Users" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/contestusers.jsp" />
 	</definition>
 
 	<definition name="/admin/manageproblem" extends="template">
-		<put-attribute name="title" value="pagetit.manageproblem" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/manageproblem.jsp" />
 	</definition>
 	
 	<definition name="/admin/manageproblemI18N" extends="template">
-		<put-attribute name="title" value="pagetit.manageproblem" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/manageproblemI18N.jsp" />
 	</definition>
@@ -913,7 +913,7 @@
 	</definition>
 
 	<definition name="/admin/problemControl" extends="template">
-		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="/WEB-INF/jsp/problemControl.jsp" />
 	</definition>
 
@@ -1083,20 +1083,20 @@
 			<!-- PlagiCOJ -->
 
 	<definition name="/admin/manageplagicoj" extends="template">
-		<put-attribute name="title" value="Manage Plagiarism Detection" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/manageplagicoj.jsp" />
 	</definition>
 
 	<definition name="/admin/manageproblemclassification"
 		extends="template">
-		<put-attribute name="title" value="Manage Problem Classification" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/manageproblemclassification.jsp" />
 	</definition>
 
 	<definition name="/admin/manageclassifications" extends="template">
-		<put-attribute name="title" value="Manage Classification" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 			value="/WEB-INF/jsp/admin/manageclassifications.jsp" />
 	</definition>
@@ -1313,6 +1313,75 @@
 		<put-attribute name="form"
 			value="/WEB-INF/jsp/admin/wbcontest/form.jsp" />
 	</definition>
-	
+
+
+	<!--Definido por Alison-->
+
+	<!--SOURCE-->
+
+	<definition name="/admin/wbsource/list" extends="template">
+		<put-attribute name="title" value="pagetit.wproblem.wbsource.list" />
+		<put-attribute name="content"
+					   value="/WEB-INF/jsp/admin/wbsource/list.jsp" />
+	</definition>
+
+	<definition name="/admin/wbsource/details" extends="template">
+		<put-attribute name="title" value="pagetit.wproblem.wbsource.details" />
+		<put-attribute name="content"
+					   value="/WEB-INF/jsp/admin/wbsource/details.jsp" />
+	</definition>
+
+	<definition name="/admin/wbsource/create" extends="template">
+		<put-attribute name="title" value="pagetit.wproblem.wbsource.create" />
+		<put-attribute name="content" value="wbsourcecreate" />
+	</definition>
+
+	<definition name="wbsourcecreate" template="/WEB-INF/jsp/admin/wbsource/create.jsp">
+		<put-attribute name="form"
+					   value="/WEB-INF/jsp/admin/wbsource/form.jsp" />
+	</definition>
+
+	<definition name="/admin/wbsource/edit" extends="template">
+		<put-attribute name="title" value="pagetit.wproblem.wbsource.edit" />
+		<put-attribute name="content" value="wbsourceedit" />
+	</definition>
+
+	<definition name="wbsourceedit" template="/WEB-INF/jsp/admin/wbsource/edit.jsp">
+		<put-attribute name="form"
+					   value="/WEB-INF/jsp/admin/wbsource/form.jsp" />
+	</definition>
+
+	<!--FAQ-->
+	<definition name="/admin/wbfaq/list" extends="template">
+		<put-attribute name="title" value="pagetit.admin" />
+		<put-attribute name="content"
+					   value="/WEB-INF/jsp/admin/wbfaq/list.jsp" />
+	</definition>
+
+	<definition name="/admin/wbfaq/details" extends="template">
+		<put-attribute name="title" value="pagetit.admin" />
+		<put-attribute name="content"
+					   value="/WEB-INF/jsp/admin/wbfaq/details.jsp" />
+	</definition>
+
+	<definition name="/admin/wbfaq/create" extends="template">
+		<put-attribute name="title" value="pagetit.admin" />
+		<put-attribute name="content" value="wbfaqcreate" />
+	</definition>
+
+	<definition name="wbfaqcreate" template="/WEB-INF/jsp/admin/wbfaq/create.jsp">
+		<put-attribute name="form"
+					   value="/WEB-INF/jsp/admin/wbfaq/form.jsp" />
+	</definition>
+
+	<definition name="/admin/wbfaq/edit" extends="template">
+		<put-attribute name="title" value="pagetit.admin" />
+		<put-attribute name="content" value="wbfaqedit" />
+	</definition>
+
+	<definition name="wbfaqedit" template="/WEB-INF/jsp/admin/wbfaq/edit.jsp">
+		<put-attribute name="form"
+					   value="/WEB-INF/jsp/admin/wbfaq/form.jsp" />
+	</definition>
 
 </tiles-definitions>

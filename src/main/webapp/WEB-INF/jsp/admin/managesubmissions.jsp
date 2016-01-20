@@ -95,6 +95,7 @@
             </div>
         </form:form>
     </div>
+    <br />
     <div class="col-xs-12">
         <div id="display-table-container"
              data-reload-url="/admin/tables/managesubmissions.xhtml"></div>
@@ -103,91 +104,91 @@
 
 
 <script type="text/javascript"
-src="<c:url value="/js/ui/jquery-ui.min.js" />"></script>
 
 <script type="text/javascript"
-src="<c:url value="/js/ui-1.11.2/jquery-ui-timepicker-addon.js"/>"></script>
-<script type="text/javascript"
-src="<c:url value="/js/ui-1.11.2/jquery-ui-rangetimepicker-addon.js"/>"></script>
-<script type="text/javascript"
-src="<c:url value="/js/ui-1.11.2/jquery-migrate-1.0.0.js"/>"></script> 
+    src="<c:url value="/js/ui-1.11.2/jquery-ui-timepicker-addon.js"/>"></script>
+    <script type="text/javascript"
+    src="<c:url value="/js/ui-1.11.2/jquery-ui-rangetimepicker-addon.js"/>"></script>
+    <script type="text/javascript"
+    src="<c:url value="/js/ui-1.11.2/jquery-migrate-1.0.0.js"/>"></script> 
 
-<link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
-<script src="/js/bootstrap-dialog.min.js"></script>
-<script src="/js/admin/utility.js"></script>
+    <link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+    <script src="/js/bootstrap-dialog.min.js"></script>
+    <script src="/js/admin/utility.js"></script>
 
-<script>
-    var i18n = {};
-    i18n.title = "<spring:message code="message.confirm.rejudge.title"/>";
-    i18n.message = "<spring:message code="message.confirm.rejudge.body"/>";
-    i18n.btn_cancel = "<spring:message code="btn.text.cancel"/>";
-    i18n.btn_accept = "<spring:message code="btn.text.accept"/>";
-    function rejudge24h(sid) {
-        $.ajax({
-            type: "GET",
-            url: "/admin/24h/rejudge.json",
-            data: "sid=" + sid,
-            dataType: 'text',
+    <script>
+        var i18n = {};
+        i18n.title = "<spring:message code="message.confirm.rejudge.title"/>";
+        i18n.message = "<spring:message code="message.confirm.rejudge.body"/>";
+        i18n.btn_cancel = "<spring:message code="btn.text.cancel"/>";
+        i18n.btn_accept = "<spring:message code="btn.text.accept"/>";
+
+        function rejudge24h(sid) {
+            $.ajax({
+                type: "GET",
+                url: "/admin/24h/rejudge.json",
+                data: "sid=" + sid,
+                dataType: 'text',
+                success: function (data) {
+                }
+            });
+        }
+        function rejudgeContest(sid) {
+            $.ajax({
+                type: "GET",
+                url: "/admin/contest/rejudge.json",
+                data: "sid=" + sid,
+                dataType: 'text',
             success: function(data) {
-            }
-        });
-    }
-    function rejudgeContest(sid) {
-        $.ajax({
-            type: "GET",
-            url: "/admin/contest/rejudge.json",
-            data: "sid=" + sid,
-            dataType: 'text',
-            success: function(data) {
-            }
-        });
-    }
+                }
+            });
+        }
 
-    function toggle24h(sid) {
-        $.ajax({
-            type: "GET",
-            url: "/admin/24h/togglesub.json",
-            data: "sid=" + sid,
-            dataType: 'text',
-            success: function(data) {
-            }
-        });
-    }
-    function toggleContest(sid) {
-        $.ajax({
-            type: "GET",
-            url: "/admin/contest/togglesub.json",
-            data: "sid=" + sid,
-            dataType: 'text',
-            success: function(data) {
-            }
-        });
-    }
+        function toggle24h(sid) {
+            $.ajax({
+                type: "GET",
+                url: "/admin/24h/togglesub.json",
+                data: "sid=" + sid,
+                dataType: 'text',
+                success: function (data) {
+                }
+            });
+        }
+        function toggleContest(sid) {
+            $.ajax({
+                type: "GET",
+                url: "/admin/contest/togglesub.json",
+                data: "sid=" + sid,
+                dataType: 'text',
+                success: function (data) {
+                }
+            });
+        }
 
-    $('#rejudge').click(function() {
-        $('#form').attr('action', '/admin/rejudgesubmissions.xhtml');
-        $('#form').attr('method', 'post');
-    });
-
-    function count() {
-        $.ajax({
-            type: "GET",
-            url: "/admin/queuecount.json",
-            dataType: 'text',
-            success: function(data) {
-                $('#count').html(data);
-            },
-            complete: function(data) {
-
-            }
+        $('#rejudge').click(function () {
+            $('#form').attr('action', '/admin/rejudgesubmissions.xhtml');
+            $('#form').attr('method', 'post');
         });
 
-    }
-    ;
+        function count() {
+            $.ajax({
+                type: "GET",
+                url: "/admin/queuecount.json",
+                dataType: 'text',
+                success: function (data) {
+                    $('#count').html(data);
+                },
+                complete: function (data) {
 
-    $(function() {
-        setInterval(count, 2000);
-    });
+                }
+            });
 
-    $(initStandardFilterForm);
-</script>
+        }
+        ;
+
+        $(function () {
+            setInterval(count, 2000);
+        });
+
+        $(initStandardFilterForm);
+    </script>

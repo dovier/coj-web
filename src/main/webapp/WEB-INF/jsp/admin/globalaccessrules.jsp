@@ -14,13 +14,11 @@
     </c:if> 
     <form:form method="post" cssClass="form-inline" action="globalaccessrules.xhtml"
                commandName="rule">
-        <div class="form-group coj_float_left">                        
+        <div class="form-group coj_float_rigth">
+            <span class="label label-danger"><form:errors path="rule" cssClass="error" /></span>
             <form:input cssClass="form-control"  id="myrule" path="rule" />
             <input id="filter-button" type="submit" class="btn btn-primary"
                    value="<spring:message code="button.add"/>">            
-        </div>
-        <div class="error col-xs-8 col-xs-offset-3">
-            <span class="label label-danger"><form:errors path="rule" cssClass="error" /></span>
         </div>
     </form:form>    
 

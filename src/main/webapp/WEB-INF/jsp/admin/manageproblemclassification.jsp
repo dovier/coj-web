@@ -32,7 +32,7 @@ src="<c:url value="/js/ui/jquery.ui.sortable.min.js" />"></script>
             <!--            <label class="control-label" for="problemid"> <fmt:message
                 key="pclassifi.msgproblemid" /> 
         </label>-->
-            <input class="form-control" type="text" id="problemid"
+            <input class="form-control" type="text" id="problemid" maxlength="9"
                    name="pid" placeholder="<fmt:message key="pclassifi.msgproblemid" />"/>
             <input id="filter-button" type="submit" class="btn btn-primary"
                    value="<spring:message code="pclassifi.btnclassify"/>" />                       

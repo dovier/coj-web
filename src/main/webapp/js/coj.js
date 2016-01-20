@@ -242,8 +242,11 @@ function saveDraft() {
         data: $('#composeform').serialize(),
         dataType: 'json',
         success: function (data) {
-            notify.setAttribute("class", "notice");
-            notify.innerHTML = data.message;
+            //notify.setAttribute("class", "notice");
+            //$('#notice').show(50,callback);
+            //notify.innerHTML = data.message;
+            $('#notice').show();
+            $('#notice').html(i18n.maildraftsave);
         }
     });
 }
@@ -806,12 +809,14 @@ function deleteSource(id) {
 }
 
 function deleteClassification(id) {
-    $.ajax({
-        type: "GET",
-        url: "/admin/deleteclassifications.xhtml?classid=" + id,
-        success: function () {
-            $("input[name='class" + id + "']").parent().parent().remove();
-            alert("Classification successfuly deleted.");
-        }
-    });
+//    $.ajax({
+//        type: "GET",
+//        url: "/admin/deleteclassifications.xhtml?classid=" + id,
+//        success: function () {
+//            $("input[name='class" + id + "']").parent().parent().remove();
+//            alert("Classification successfuly deleted.");
+//        }
+//    });
+    var _route = "/admin/deleteclassifications.xhtml?classid=" + id;
+    window.location = _route;
 }

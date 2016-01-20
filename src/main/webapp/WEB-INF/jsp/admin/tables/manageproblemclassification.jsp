@@ -15,11 +15,11 @@
     </display:column>
     <display:column property="submitions" titleKey="tablehdr.sub"
                     sortable="true" sortProperty="submitions" sortName="total"
-                    autolink="true" headerClass="headsub" href="status.xhtml"
+                    autolink="true" headerClass="headsub" href="/24h/status.xhtml"
                     paramId="pid" paramProperty="pid" />
     <display:column property="ac" titleKey="tablehdr.ac" sortable="true"
                     sortProperty="ac" sortName="acc" headerClass="headacc"
-                    href="status.xhtml?status=ac" paramId="pid" paramProperty="pid" />
+                    href="/24h/status.xhtml?status=ac" paramId="pid" paramProperty="pid" />
     <display:column property="accp" titleKey="tablehdr.accpercent"
                     sortable="true" sortProperty="accp" sortName="accp"
                     headerClass="headpercent" />

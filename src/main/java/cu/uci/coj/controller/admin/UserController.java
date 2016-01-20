@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import cu.uci.coj.utils.Notification;
 
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.ContestDAO;
@@ -54,7 +56,7 @@ public class UserController extends BaseController {
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void wakeup(Model model, @RequestParam(value = "status") String status) {
 	}
-	
+
 	@RequestMapping(value = "/manageusers.xhtml", method = RequestMethod.GET)
 	public String listUsers(Model model, PagingOptions options,
 			@RequestParam(required = false, value = "pattern") String pattern) {
@@ -150,10 +152,13 @@ public class UserController extends BaseController {
 		}
 		userDAO.updateUserByAdmin(user);
                 redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
-                
+
 		if (!user.isTeam()) {
 			userDAO.clearUserAuthorities(user.getUsername());
 			userDAO.grantUserAuthority(user);
+		}
+		if (user.isTeam()) {
+			return "redirect:/admin/manageteams.xhtml";
 		}
 		return "redirect:/admin/manageusers.xhtml";
 	}
@@ -183,16 +188,16 @@ public class UserController extends BaseController {
 		model.addAttribute("locales",
 				utilDAO.objects("enabled.locale", Locale.class));
 		Team team = new Team();
-		List<Institution> institutions = institutionDAO
+			List<Institution> institutions = institutionDAO
 				.getEnabledInstitutionsByCountry_id(team.getCountry());
-		institutions.add(0, new Institution(-1, "NONE", "NONE INSTITUTION"));
+		//institutions.add(0, new Institution(-1, "NONE", "NONE INSTITUTION"));
 		model.addAttribute("institutions", institutions);
 		model.addAttribute(team);
 		return "/admin/createteams";
 	}
 
 	@RequestMapping(value = "/createteams.xhtml", method = RequestMethod.POST)
-	public String createTeams(Model model, Team team, BindingResult result) {
+	public String createTeams(Model model, Team team, BindingResult result, RedirectAttributes redirectAttributes) {
 		validator.validateTeam(team, result);
 		if (result.hasErrors()) {
 			model.addAttribute("contests",
@@ -212,6 +217,7 @@ public class UserController extends BaseController {
 			return "/admin/createteams";
 		}
 		userDAO.createTeams(team);
-		return "redirect:/admin/createteams.xhtml";
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
+		return "redirect:/admin/manageteams.xhtml";
 	}
 }

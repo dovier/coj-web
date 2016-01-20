@@ -25,6 +25,8 @@ import cu.uci.coj.query.Where;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
+import java.sql.Array;
+import javax.swing.JOptionPane;
 
 @Repository("submissionDAO")
 @Transactional
@@ -37,7 +39,7 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 	public boolean Solved(int uid, int pid) {
 		return bool("solved", uid, pid);
 	}
-
+ 
 	public String emailBySubmission(int sid) {
 		return string("user.by.bysubmit", sid);
 
@@ -249,7 +251,8 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 		final boolean logIn = loggedIn == null ? false : loggedIn;
 		final boolean ad = admin == null ? false : admin;
 		final String usrname = usern;
-
+                boolean lock;
+                
 		Query query = new Query("submition");
 		query.where(Where.eq("username", username),
 				Where.eq("language", language), Where.eq("status", status),
@@ -266,8 +269,15 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 				"language as lang", "testcase as FirstWaCase",
 				"average_case as avg_time_used"), SubmissionJudge.class,
 				query.arguments());
-		for (SubmissionJudge s : submissions) {
-			if (logIn && (ad || usrname.equals(s.getUsername()))) {
+                		for (SubmissionJudge s : submissions) {
+                                    lock=false;
+                                    List<Integer> obj=integers("problem.locked.all",usrname);
+                                    for(int i = 0; i < obj.size(); i++ ){
+                                        if(obj.get(i) == s.getPid()){
+                                            lock = true;
+                                        }
+                                    }
+			if (logIn && (ad || usrname.equals(s.getUsername()) || lock)) {
 				s.setAuthorize(true);
 			}
 			s.initialize();
@@ -670,4 +680,4 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 	public void updateDate(SubmissionJudge submit) {
 		submit.setDate(date("select date from submition where submit_id=?",submit.getSid()));
 	}
-}
+    }

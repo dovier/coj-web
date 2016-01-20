@@ -1,6 +1,6 @@
 function addInput() {
     var idx = $(".model-dataset").length;
-    var string = (idx > 1) ? "" : "New Datasets";
+    var string =  "";
     var html = "<div class=\"model-dataset margin-top-05 col-xs-12\">"
             + "<label class=\"control-label col-xs-3\">"
             + string

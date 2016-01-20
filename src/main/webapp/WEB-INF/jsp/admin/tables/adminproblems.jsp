@@ -34,15 +34,15 @@
         <display:column titleKey="tablehdr.actions">
         <a
             href="<c:url value="/admin/manageproblem.xhtml?pid=${problem.pid}"/>"
-            > <i title="<spring:message code="messages.general.edit"/>"
+            ><i title="<spring:message code="messages.general.edit"/>"
                                                                data-toggle="tooltip" class="fa fa-edit"></i></a>
         &nbsp;<a
             href="<c:url value="/admin/manageproblemI18N.xhtml?pid=${problem.pid}"/>"
-            > <i title="<spring:message code="messages.general.i18n"/>"
+            ><i title="<spring:message code="messages.general.i18n"/>"
                                                                data-toggle="tooltip" class="fa fa-language"></i></a>
         &nbsp;<a
             href="<c:url value="/admin/manageproblem.xhtml?pid=${problem.pid}"/>"
-            > <i title="<spring:message code="messages.general.normalize"/>"
+            ><i title="<spring:message code="messages.general.normalize"/>"
                                                                data-toggle="tooltip" class="fa fa-medkit"></i></a>
         </display:column>
     </display:table>

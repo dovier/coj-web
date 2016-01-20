@@ -19,7 +19,7 @@
                <fmt:message key="page.general.admin.addnewcountry" /></a>        
         </div>
         <div class="form-group coj_float_rigth">
-            <input type="text" placeholder="<fmt:message key="page.general.admin.search" />"
+            <input type="text" placeholder="<fmt:message key="page.general.admin.search.country" />"
                    class="form-control" name="pattern" value="${pattern}">
             <input id="filter-button" type="submit" class="btn btn-primary"
                    value="<spring:message code="button.filter"/>">

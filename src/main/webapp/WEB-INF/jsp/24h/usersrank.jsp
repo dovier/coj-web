@@ -7,10 +7,11 @@
 </h2>
 <div class="postcontent">
 	<!-- article-content -->
-	<form id="filter-form" class="form-inline">
+	<form id="filter-form" class="form-inline coj_float_rigth">
 
 			<div class="form-group">
-				<label><spring:message code="fieldhdr.searchusers" />:</label> <input
+                          <input placeholder="<spring:message code="fieldhdr.searchusersu" />"
+				 <input
 					type="text" name="pattern" value="${pattern}" class="form-control" /> <input
 					type="hidden" name="filter" value="${filter}" class="form-control"/>
 			</div>
@@ -26,8 +27,8 @@
 						<option value="true"><spring:message code="link.followed" /></option>
 					</select>
 				</div>
-			<div class="form-group">	
-			<input id="filter-button" type="submit" class="btn btn-primary"
+			<div class="form-group">
+                            <input id="filter-button" type="submit" class="btn btn-primary"
 				value="<spring:message code="button.filter"/>">
 		</div>
 
@@ -39,13 +40,13 @@
 		</c:when>
 	</c:choose>
 	<br />
-	<div style="clear: both; float: left">
+    <div style="clear: both; float: left">
 		<spring:message code="fieldhdr.logged" />
 		: ${logged}
 	</div>
-	<div class="col-xs-12">
+
 	 <div id="display-table-container" data-reload-url="/tables/usersrank.xhtml"></div>
-	 </div>
+
 	<!-- /content -->
 </div>
 <script>

@@ -27,7 +27,7 @@ public class WbContestValidator implements Validator {
 
 	@Override
 	public void validate(Object o, Errors errors) {
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "wboard.error.noname", "Field empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "wboard.error.noname", "wboard.error.empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "startDate", "wboard.error.nostartdate", "Field empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "endDate", "wboard.error.noenddate", "Field empty");
 		

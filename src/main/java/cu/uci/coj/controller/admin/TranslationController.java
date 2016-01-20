@@ -13,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import cu.uci.coj.utils.Notification;
 
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.ProblemDAO;
@@ -57,14 +59,16 @@ public class TranslationController extends BaseController {
 	}
 	
 	@RequestMapping(value="/managetranslations/check.xhtml", method=RequestMethod.POST)
-	String approveTranslations(Model model, Translation translation, Principal principal, BindingResult bindingResult, @RequestParam Integer id) {	
-		problemDAO.approveTranslation(translation, getUsername(principal));		
+	String approveTranslations(Model model, Translation translation, Principal principal, BindingResult bindingResult, @RequestParam Integer id, RedirectAttributes redirectAttributes) {	
+		problemDAO.approveTranslation(translation, getUsername(principal));
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
 		return "redirect:/admin/managetranslations.xhtml";
 	}	
 	
 	@RequestMapping(value="/managetranslations/delete.xhtml", method=RequestMethod.GET)
-	String deleteTranslation(@RequestParam Integer id) {
+	String deleteTranslation(@RequestParam Integer id, RedirectAttributes redirectAttributes) {
 		problemDAO.deleteTranslation(id);
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
 		return "redirect:/admin/managetranslations.xhtml";
 	}
 }

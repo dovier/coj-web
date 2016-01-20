@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import cu.uci.coj.utils.Notification;
 
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.AccountActivationDAO;
@@ -80,7 +82,7 @@ public class AccountActivationController extends BaseController {
 	private UserDAO userDAO;
 
 	@RequestMapping(value = "/admin/deleteactivation.xhtml", method = RequestMethod.GET)
-	public String delete(@RequestParam("key") String key) {
+	public String delete(@RequestParam("key") String key, RedirectAttributes redirectAttributes) {
 
 		try {
 			User user = baseDAO.object("select.user.activation.key",
@@ -93,6 +95,7 @@ public class AccountActivationController extends BaseController {
 			baseDAO.dml("delete.activationrecord", user.getAct_id());
 		} catch (EmptyResultDataAccessException e) {
 		}
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
 		return "redirect:/admin/manageactivations.xhtml";
 	}
 

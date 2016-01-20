@@ -2,7 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <h2 class="postheader">
-	<fmt:message key="addproblem.title" />
+	<fmt:message key="page.general.admin.header" />: <fmt:message key="addproblem.i18n" />
 </h2>
 <div class="row postcontent">
 	<div class="col-xs-12">
@@ -13,7 +13,10 @@
 					<form:input cssClass="form-control" path="pid" readonly="true"></form:input>
 					<span class="label label-danger"><form:errors path="pid" /></span>
 				</div>
-				<a><i class="fa fa-asterisk"></i></a>
+                                <a><i class="fa fa-asterisk" data-toggle="tooltip"
+                                      title="<spring:message code="mandatory.field"/>">
+                                    
+                                    </i></a>
 			</div>
 			<div class="form-group col-xs-12">
 				<ul class="nav nav-tabs">
@@ -32,11 +35,13 @@
 
 						<label class="control-label col-xs-3"><fmt:message
 								key="addproblem.name" /></label>
-						<div class="col-xs-8">
+                                                                                                
+                                                                                <div class="col-xs-8">
 							<form:input cssClass="form-control" path="title" />
 							<span class="label label-danger"><form:errors path="title" /></span>
 						</div>
-						<a><i class="fa fa-asterisk"></i></a>
+						<a><i class="fa fa-asterisk" data-toggle="tooltip"
+					title="<spring:message code="mandatory.field"/>"></i></a>
 					</div>
 
 					<div class="form-group col-xs-12">
@@ -73,12 +78,16 @@
 
 						<label class="control-label col-xs-3"><fmt:message
 								key="addproblem.name" /></label>
+                                               
+                                                
+                                        
 						<div class="col-xs-8">
 							<form:input cssClass="form-control" path="titleEs" />
 							<span class="label label-danger"><form:errors
 									path="titleEs" /></span>
 						</div>
-						<a><i class="fa fa-asterisk"></i></a>
+						<a><i class="fa fa-asterisk" data-toggle="tooltip"
+					title="<spring:message code="mandatory.field"/>"></i></a>
 					</div>
 
 					<div class="form-group col-xs-12">
@@ -119,7 +128,8 @@
 							<span class="label label-danger"><form:errors
 									path="titlePt" /></span>
 						</div>
-						<a><i class="fa fa-asterisk"></i></a>
+						<a><i class="fa fa-asterisk" data-toggle="tooltip"
+					title="<spring:message code="mandatory.field"/>"></i></a>
 					</div>
 					<div class="form-group col-xs-12">
 						<label class="control-label col-xs-3"><fmt:message
@@ -151,7 +161,7 @@
 			<div class="col-xs-12">
 				<div class="form-actions pull-right ">
 					<input class="btn btn-primary" type="submit" name="but"
-						value="Update" />
+						value="<spring:message code="button.update1"/>" />
 				</div>
 			</div>
 		</form:form>
@@ -168,4 +178,7 @@
 		});
 	});	
 	
+</script>
+<script>
+    $("[data-toggle='tooltip']").tooltip();
 </script>

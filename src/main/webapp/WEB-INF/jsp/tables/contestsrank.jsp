@@ -10,9 +10,9 @@
 	</display:column>
 	<display:column titleKey="tablehdr.country" headerClass="headcountry">
 		<img src="/images/countries/<c:url value="${user.country}"/>.png"
-			title="<c:url value="${user.country_desc}"/>"
+			data-toggle="tooltip" title="<c:url value="${user.country_desc}"/>"
 			alt="<c:url value="${user.country}"/>" />
-	</display:column>
+	</display:column>              
 	<display:column titleKey="tablehdr.contestant"
 		style="text-transform:none">
 		<a title="<c:out value="${user.nick}"/>"
@@ -38,3 +38,8 @@
 	<display:column property="percent" titleKey="tablehdr.accpercent"
 		headerClass="headpercent" />
 </display:table>
+<script>    
+$(function(){
+		$("[data-toggle='tooltip']").tooltip();	
+	});
+</script>             

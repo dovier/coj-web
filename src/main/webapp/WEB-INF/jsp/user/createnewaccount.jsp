@@ -1,8 +1,8 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
-<script type='text/javascript'
-	src="<c:url value="/js/jquery.js" />"></script>
+<!--<script type='text/javascript'
+	src="<c:url value="/js/jquery.js" />"></script>-->
 <script type='text/javascript' src="<c:url value="/js/coj.js" />"></script>
 
 <jsp:useBean id="now" class="java.util.Date" />
@@ -25,9 +25,9 @@
 					<span class="label label-danger"><form:errors
 							path="username" /></span>
 				</div>
-				<a><i class="fa fa-asterisk"
+				<a><i class="fa fa-asterisk" data-toggle="tooltip"
 					title="<spring:message code="mandatory.field"/>"></i></a>&nbsp;<a><i
-					class="fa fa-info-circle"
+					class="fa fa-info-circle" data-toggle="tooltip"
 					title="<spring:message code="infomsg.1"/>"></i></a>
 			</div>
 
@@ -41,9 +41,9 @@
 				<div class="error col-xs-8 col-xs-offset-3">
 					<span class="label label-danger"><form:errors path="nick" /></span>
 				</div>
-				<a><i class="fa fa-asterisk"
+				<a><i class="fa fa-asterisk" data-toggle="tooltip"
 					title="<spring:message code="mandatory.field"/>"></i></a>&nbsp;<a><i
-					class="fa fa-info-circle"
+					class="fa fa-info-circle" data-toggle="tooltip"
 					title="<spring:message code="infomsg.2"/>"></i></a>
 			</div>
 
@@ -57,9 +57,9 @@
 				<div class="error col-xs-8 col-xs-offset-3">
 					<span class="label label-danger"><form:errors path="name" /></span>
 				</div>
-				<a><i class="fa fa-asterisk"
+				<a><i class="fa fa-asterisk" data-toggle="tooltip"
 					title="<spring:message code="mandatory.field"/>"></i></a>&nbsp;<a><i
-					class="fa fa-info-circle"
+					class="fa fa-info-circle" data-toggle="tooltip"
 					title="<spring:message code="infomsg.3"/>"></i></a>
 			</div>
 
@@ -74,9 +74,9 @@
 					<span class="label label-danger"><form:errors
 							path="lastname" /></span>
 				</div>
-				<a><i class="fa fa-asterisk"
+				<a><i class="fa fa-asterisk" data-toggle="tooltip"
 					title="<spring:message code="mandatory.field"/>"></i></a>&nbsp;<a><i
-					class="fa fa-info-circle"
+					class="fa fa-info-circle" data-toggle="tooltip"
 					title="<spring:message code="infomsg.4"/>"></i></a>
 			</div>
 
@@ -142,9 +142,9 @@
 				<div class="error col-xs-8 col-xs-offset-3">
 					<span class="label label-danger"><form:errors path="country" /></span>
 				</div>
-				<a><i class="fa fa-asterisk"
+				<a><i class="fa fa-asterisk" data-toggle="tooltip"
 					title="<spring:message code="mandatory.field"/>"></i></a>&nbsp;<a><i
-					class="fa fa-info-circle"
+					class="fa fa-info-circle" data-toggle="tooltip"
 					title="<spring:message code="infomsg.5"/>"></i></a>
 			</div>
 
@@ -162,7 +162,7 @@
 					<span class="label label-danger"><form:errors
 							path="institution" /></span>
 				</div>
-				&nbsp;<a><i class="fa fa-info-circle"
+				&nbsp;<a><i class="fa fa-info-circle" data-toggle="tooltip"
 					title="<spring:message code="infomsg.5"/>"></i></a>
 			</div>
 
@@ -176,9 +176,9 @@
 					<span class="label label-danger"><form:errors
 							path="email" /></span>
 				</div>
-				<a><i class="fa fa-asterisk"
+				<a><i class="fa fa-asterisk" data-toggle="tooltip"
 					title="<spring:message code="mandatory.field"/>"></i></a>&nbsp;<a><i
-					class="fa fa-info-circle"
+					class="fa fa-info-circle" data-toggle="tooltip"
 					title="<spring:message code="infomsg.7"/>"></i></a>
 			</div>
 
@@ -191,8 +191,7 @@
 				<div class="error col-xs-8 col-xs-offset-3">
 					<form:errors path="cemail" />
 				</div>
-				<a><i class="fa fa-asterisk"
-					title="<spring:message code="mandatory.field"/>"></i></a>
+				
 			</div>
 
 			<div class="form-group">
@@ -282,9 +281,9 @@
 					<span class="label label-danger"><form:errors
 							path="password" /></span>
 				</div>
-				<a><i class="fa fa-asterisk"
+				<a><i class="fa fa-asterisk" data-toggle="tooltip"
 					title="<spring:message code="mandatory.field"/>"></i></a>&nbsp;<a><i
-					class="fa fa-info-circle"
+					class="fa fa-info-circle" data-toggle="tooltip"
 					title="<spring:message code="infomsg.8"/>"></i></a>
 			</div>
 
@@ -300,7 +299,7 @@
 					<span class="label label-danger"><form:errors
 							path="confirmPassword" /></span>
 				</div>
-				<a><i class="fa fa-asterisk"
+				<a><i class="fa fa-asterisk" data-toggle="tooltip"
 					title="<spring:message code="mandatory.field"/>"></i></a>
 			</div>
 
@@ -314,7 +313,7 @@
 					<span class="label label-danger"><form:errors
 							path="agreementcojtos" /></span>
 				</div>
-				<a><i class="fa fa-asterisk"
+				<a><i class="fa fa-asterisk" data-toggle="tooltip"
 					title="<spring:message code="mandatory.field"/>"></i></a>
 			</div>
 			<div class="form-actions pull-right">
@@ -331,4 +330,7 @@
 	if ($("#country option:selected").val() == "0") {
 		$('#inst').hide();
 	}
+</script>
+<script>
+    $("[data-toggle='tooltip']").tooltip();
 </script>

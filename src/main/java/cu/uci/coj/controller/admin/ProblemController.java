@@ -260,7 +260,7 @@ public class ProblemController extends BaseController {
         problemDAO.log("editing problem " + problem.getPid(), getUsername(principal));
         //return "redirect:/24h/problem.xhtml?pid=" + problem.getPid();
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());   
-        return "redirect:/admin/adminproblems";
+        return "redirect:/admin/adminproblems.xhtml";
     }
 
     public void handleFiles(Problem problem, HttpServletRequest request) {
@@ -324,7 +324,7 @@ public class ProblemController extends BaseController {
             return "/admin/adminproblems";
         }
 
-        Problem problem = problemDAO.object("select.problem.i18n", Problem.class, pid);
+        Problem problem = problemDAO.object("select.problem.i18n.1", Problem.class, pid);
 
         model.addAttribute("pid", pid);
         model.addAttribute(problem);

@@ -40,7 +40,7 @@ public class sendMailValidator implements Validator {
                     for (int i = 0; i < to.length; i++) {
                         String string = to[i].replaceAll(" ", "");
                         if (!userDAO.isUser(string)) {
-                            errors.rejectValue("usernameTo", "errormsg.40");
+                            errors.rejectValue("usernameTo", "general.error.userproblem");
                             break;
                         }
                     }

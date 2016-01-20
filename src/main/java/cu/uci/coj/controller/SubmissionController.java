@@ -66,7 +66,7 @@ public class SubmissionController extends BaseController {
 			@RequestParam(required = false, value = "pid") Integer pid,
 			@RequestParam(required = false, value = "status") String status,
 			@RequestParam(required = false, value = "planguage") String language) {
-
+            
 		String lang = submissionDAO.string(
 				"select language from language where key=?", language);
 		LinkedList<Status> statuslist = new LinkedList<Status>();
@@ -94,7 +94,7 @@ public class SubmissionController extends BaseController {
 			@RequestParam(required = false, value = "pid") Integer pid,
 			@RequestParam(required = false, value = "status") String status,
 			@RequestParam(required = false, value = "planguage") String language) {
-
+            
 		String lang = submissionDAO.string(
 				"select language from language where key=?", language);
 		int found = submissionDAO.countSubmissions(filter_user, lang, pid,

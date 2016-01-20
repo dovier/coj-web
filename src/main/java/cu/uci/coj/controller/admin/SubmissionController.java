@@ -133,7 +133,7 @@ public class SubmissionController extends BaseController {
 
 	@RequestMapping(value = "/managesubmission.xhtml", method = RequestMethod.POST)
 	public String manageSubmission(Principal principal, Model model,
-			SubmissionJudge submission, BindingResult result) {
+			SubmissionJudge submission, BindingResult result, RedirectAttributes redirectAttributes) {
 		validator.validate(submission, result);
 		if (result.hasErrors()) {
 			model.addAttribute("planguages",
@@ -153,8 +153,8 @@ public class SubmissionController extends BaseController {
 		submissionDAO.dml("insert.log",
 				"editing SubmissionJudge " + submission.getSid(),
 				getUsername(principal));
-		return "redirect:/admin/managesubmission.xhtml?sid="
-				+ submission.getSid();
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
+		return "redirect:/admin/managesubmissions.xhtml";
 	}
 
 	@RequestMapping(produces = "application/json", value = "/24h/rejudge.json", method = RequestMethod.GET, headers = { "Accept=application/json" })

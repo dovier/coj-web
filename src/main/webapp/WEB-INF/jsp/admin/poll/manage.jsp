@@ -108,14 +108,28 @@
                 </div>
             </div>
 
-            <div class="col-xs-12">
-                <div class="form-actions pull-right ">
-                    <input class="btn btn-primary" type="submit" name="submit"
-                           id="submit" value="<spring:message code="judge.register.submit.value"/>" /> <input
-                           class="btn btn-primary" type="reset" name="reset" id="reset"
-                           value="<spring:message code="judge.register.reset.value"/>" />
+            <c:if test="${poll.pid == null}">
+                <div class="col-xs-12">
+                    <div class="form-actions pull-right ">
+                        <input class="btn btn-primary" type="submit" name="submit"
+                               id="submit" value="<spring:message code="judge.register.submit.value"/>" /> <input
+                            class="btn btn-primary" type="reset" name="reset" id="reset"
+                            value="<spring:message code="judge.register.reset.value"/>" />
+                    </div>
                 </div>
-            </div>
+            </c:if>
+            <c:if test="${poll.pid != null}">
+                <div class="col-xs-12">
+                    <div class="form-actions pull-right ">
+                        <input class="btn btn-primary" type="submit" name="submit"
+                               id="submit" value="<spring:message code="judgeregister.update.value"/>" /> <input
+                            class="btn btn-primary" type="reset" name="reset" id="reset"
+                            value="<spring:message code="judge.register.reset.value"/>" />
+                    </div>
+                </div>
+            </c:if>
+
+
         </form:form>
 
     </div>

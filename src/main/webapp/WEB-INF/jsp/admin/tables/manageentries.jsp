@@ -18,18 +18,18 @@
 
     <display:column headerClass="headentries-actions"
                     titleKey="tablehdr.actions">
-        <a data-toggle="tooltip" title="Show entry"
+        <a data-toggle="tooltip" title='<spring:message code="tablehdr.show"/>'
            href="<c:url value="/admin/enableentry.xhtml?id=${n.id}"/>"> <i
                 class="fa fa-eye"></i></a>
-        <a data-toggle="tooltip" title="Send PM" href="<c:url value="/mail/composemail.xhtml?usernameto=${n.username}"/>">
+        <a data-toggle="tooltip" title='<spring:message code="messages.general.send"/>' href="<c:url value="/mail/composemail.xhtml?usernameto=${n.username}"/>">
             <i class="fa fa-envelope"></i></a>
-        <a data-toggle="tooltip" title="Edit entry"
+        <a data-toggle="tooltip" title="<spring:message code="tablehdr.edit"/>"
            href="<c:url value="javascript:edit(${n.id})"/>"> <i
                 class="fa fa-edit"></i></a>
         <a class="confirm-message"
-           data-confirm-title='<spring:message code="message.confirm.delete.hdr.entry"/>'
-           data-confirm-message='<spring:message code="message.confirm.delete.entry"/>'
-           data-confirm-type="delete" data-toggle="tooltip" title="Delete entry"
+           data-confirm-title='<spring:message code="tablehdr.delete"/>'
+           data-confirm-message='<spring:message code="tablehdr.delete"/>'
+           data-confirm-type="delete" data-toggle="tooltip" title="<spring:message code="tablehdr.delete"/>"
            href="#" onclick="confirm_delete('<c:url value="/admin/deleteentry.xhtml?id=${n.id}"/>')"> <i
                 class="fa fa-trash"></i></a>
         </display:column>

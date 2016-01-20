@@ -336,6 +336,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 				submit.getMinTimeUsed(), submit.getAvgTimeUsed(),
 				submit.getSid());
 
+		dml("update.contest.source.error",submit.getErrMsg(), submit.getSid());
+
 		boolean alreadySolved = false;
 		alreadySolved = bool("solved.contest.problem.bef", submit.getUid(),
 				submit.getPid(), contest.getCid(), submit.getSid());

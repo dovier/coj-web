@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.HtmlUtils;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import cu.uci.coj.utils.Notification;
 
 import cu.uci.coj.config.Config;
 import cu.uci.coj.controller.BaseController;
@@ -129,7 +131,7 @@ public class ContestController extends BaseController {
 
     @RequestMapping(value = "/managecontest.xhtml", method = RequestMethod.POST)
     public String manageContest(Model model, Contest contest,
-            BindingResult result) {
+            BindingResult result, RedirectAttributes redirectAttributes) {
         validator.manageContest(contest, result);
         if (result.hasErrors()) {
             model.addAttribute("styles", contestDAO.loadEnabledScoringStyles());
@@ -138,6 +140,7 @@ public class ContestController extends BaseController {
             return "/admin/managecontest";
         }
         contestDAO.updateContestManage(contest);
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return "redirect:/admin/managecontest.xhtml?cid=" + contest.getCid();
     }
 
@@ -154,7 +157,11 @@ public class ContestController extends BaseController {
 
     @RequestMapping(value = "/createcontest.xhtml", method = RequestMethod.POST)
     public String createContest(Model model, Contest contest,
-            BindingResult result) {
+            BindingResult result, RedirectAttributes redirectAttributes) {
+//        if (result.hasErrors()) {
+//           ObjectError o = result.getGlobalError();
+//           o.toString();
+//        }
         validator.validate(contest, result);
         if (result.hasErrors()) {
             model.addAttribute("contests", contestDAO.loadContestToImport());
@@ -169,6 +176,7 @@ public class ContestController extends BaseController {
         if (contest.getImportCid() != 0) {
             contestDAO.importContestData(contest);
         }
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
         return "redirect:/admin/managecontest.xhtml?cid=" + contest.getCid();
     }
 
@@ -182,7 +190,7 @@ public class ContestController extends BaseController {
 
     @RequestMapping(value = "/globalsettings.xhtml", method = RequestMethod.POST)
     public String globalSettings(Model model, Contest contest,
-            BindingResult result) {
+            BindingResult result, RedirectAttributes redirectAttributes) {
         validator.validateGlobalSettings(contest, result);
         if (result.hasErrors()) {
             model.addAttribute(contest);
@@ -190,6 +198,7 @@ public class ContestController extends BaseController {
         }
 
         contestDAO.updateContestGlobalSettings(contest);
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return "redirect:/admin/globalsettings.xhtml?cid=" + contest.getCid();
     }
 
@@ -223,10 +232,11 @@ public class ContestController extends BaseController {
     public String contestImages(Model model,
             SecurityContextHolderAwareRequestWrapper requestWrapper,
             Principal principal, Contest contest, HttpServletRequest request,
-            BindingResult result) {
+            BindingResult result, RedirectAttributes redirectAttributes) {
 
         handleFiles(contest.getCid(), request);
 
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return doContestImages(model, principal, requestWrapper,
                 contest.getCid());
     }
@@ -323,7 +333,7 @@ public class ContestController extends BaseController {
 
     @RequestMapping(value = "/contestproblems.xhtml", method = RequestMethod.POST)
     public String contestProblems(Model model, Locale locale, Contest contest,
-            BindingResult result) {
+            BindingResult result, RedirectAttributes redirectAttributes) {
         contest.setStyle(contestDAO.loadScoringStyle(contest.getCid()).getSid());
         validator.contestProblems(contest, result);
         if (result.hasErrors()) {
@@ -389,6 +399,7 @@ public class ContestController extends BaseController {
             } catch (Exception e) {
             }
         }
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return "redirect:/admin/contestproblems.xhtml?cid=" + contest.getCid();
     }
 
@@ -412,7 +423,8 @@ public class ContestController extends BaseController {
             @RequestParam MultipartFile schoolFile,
             @RequestParam MultipartFile siteFile,
             @RequestParam MultipartFile teamFile,
-            @RequestParam MultipartFile teamPersonFile) throws IOException {
+            @RequestParam MultipartFile teamPersonFile,
+            RedirectAttributes redirectAttributes) throws IOException {
 
         List<String> messages = contestService.importICPCUsers(prefix,
                 new String(personFile.getBytes()).split("\r\n"), new String(
@@ -430,6 +442,7 @@ public class ContestController extends BaseController {
 
         response.setHeader("Content-Disposition", "attachment; filename=\""
                 + prefix + "users");
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return builder.toString().getBytes("UTF-8");
     }
 
@@ -456,7 +469,7 @@ public class ContestController extends BaseController {
     public @ResponseBody
     byte[] baylorXml(Model model, Locale locale,
             HttpServletResponse response, MultipartFile xml,
-            @RequestParam("cid") Integer cid) throws IOException {
+            @RequestParam("cid") Integer cid, RedirectAttributes redirectAttributes) throws IOException {
         List<Map<String, Object>> maps = contestDAO.baylorXMLData(cid);
 
         maps.get(0).put("rank", 1);
@@ -520,12 +533,13 @@ public class ContestController extends BaseController {
 
         response.setHeader("Content-Disposition", "attachment; filename=\""
                 + xml.getOriginalFilename());
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return builder.toString().getBytes("UTF-8");
     }
 
     @RequestMapping(value = "/contestproblemcolors.xhtml", method = RequestMethod.POST)
     public String contestProblemColors(Model model, Locale locale,
-            String[] colors, Contest contest) {
+            String[] colors, Contest contest, RedirectAttributes redirectAttributes) {
 
         int idx = 0;
         List<Problem> problems = contestDAO.loadContestProblems(contest
@@ -534,6 +548,7 @@ public class ContestController extends BaseController {
             contestDAO.insertProblemColor(problem.getPid(), contest.getCid(),
                     colors[idx++]);
         }
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return "redirect:/admin/contestproblemcolors.xhtml?cid="
                 + contest.getCid();
     }
@@ -552,11 +567,12 @@ public class ContestController extends BaseController {
     }
 
     @RequestMapping(value = "/contestlanguages.xhtml", method = RequestMethod.POST)
-    public String contestLanguages(Model model, Contest contest) {
+    public String contestLanguages(Model model, Contest contest, RedirectAttributes redirectAttributes) {
 
         contestDAO
                 .insertLanguages(contest.getCid(), contest.getCurrlanguages());
 
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return "redirect:/admin/contestlanguages.xhtml?cid=" + contest.getCid();
     }
 
@@ -588,14 +604,15 @@ public class ContestController extends BaseController {
 
     @RequestMapping(value = "/contestawards.xhtml", method = RequestMethod.POST)
     public String contestAwards(Model model,
-            ContestAwardsFlags contestawardsflags) {
+            ContestAwardsFlags contestawardsflags, RedirectAttributes redirectAttributes) {
         contestAwardDAO.insertContestAwardsFlags(contestawardsflags);
 
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return contestAwards(model, contestawardsflags.getCid());
     }
 
     @RequestMapping(value = "/contestusers.xhtml", method = RequestMethod.POST)
-    public String contestUsers(Model model, Contest contest) {
+    public String contestUsers(Model model, Contest contest, RedirectAttributes redirectAttributes) {
         if (StringUtils.isEmpty(contest.getGroupd())) {
             contest.setGroupd("Overall");
         }
@@ -614,6 +631,7 @@ public class ContestController extends BaseController {
             contestDAO.dml("clear.contest.judges", contest.getCid());
             contestDAO.insertJudgesContest(contest);
         }
+        redirectAttributes.addFlashAttribute("message1", Notification.getSuccesfullUpdate());
         return "redirect:/admin/contestusers.xhtml?cid=" + contest.getCid();
     }
 
@@ -621,12 +639,13 @@ public class ContestController extends BaseController {
     public String deleteContestUsers(Model model,
             @RequestParam("cid") Integer cid,
             @RequestParam(required = false, value = "all") String all,
-            @RequestParam(required = false, value = "uid") Integer uid) {
+            @RequestParam(required = false, value = "uid") Integer uid, RedirectAttributes redirectAttributes) {
         if (all != null) {
             contestDAO.clearUsersContest(cid);
         } else {
             contestDAO.deleteUserContest(cid, new Integer(uid));
         }
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
         return "redirect:/admin/contestusers.xhtml?cid=" + cid;
     }
 
@@ -638,9 +657,11 @@ public class ContestController extends BaseController {
     }
 
     @RequestMapping(value = "/contestoverview.xhtml", method = RequestMethod.POST)
-    public String contestOverview(Model model, Contest contest) {
+    public String contestOverview(Model model, Contest contest, RedirectAttributes redirectAttributes) {
         contestDAO.dml("update.contest.overview", contest.getOverview(),
                 contest.getCid());
+
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return "redirect:/admin/contestoverview.xhtml?cid=" + contest.getCid();
     }
 
@@ -666,7 +687,7 @@ public class ContestController extends BaseController {
                 contestDAO
                         .dml("update.user.level",
                                 (usersFull.contains(users.get(i).getUid()) || maxLevel > levels) ? levels
-                                : (maxLevel + 1),
+                                        : (maxLevel + 1),
                                 users.get(i).getUid(), cid);
             }
         }

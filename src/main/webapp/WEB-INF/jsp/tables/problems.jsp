@@ -9,7 +9,7 @@
 				</c:when>
 				<c:otherwise>
                         ${problem.pid} <authz:authorize ifAllGranted="ROLE_USER">
-						<a href="markasfavorite.xhtml?pid=${problem.pid}" title="<spring:message code="titval.markasfavorite"/>"><i class="gold fa fa-star-o"></i></a>
+						<a href="markasfavorite.xhtml?pid=${problem.pid}" data-toggle="tooltip" title="<spring:message code="titval.markasfavorite"/>"><i class="gold fa fa-star-o"></i></a>
 					</authz:authorize>
 				</c:otherwise>
 			</c:choose>
@@ -34,3 +34,6 @@
 		<display:column property="accp" titleKey="tablehdr.accpercent" sortable="true" sortProperty="accp" sortName="accp" headerClass="headpercent" />
 		<display:column property="points" titleKey="tablehdr.score" sortable="true" sortProperty="accu" sortName="accu" headerClass="headpoint" />
 	</display:table>
+                      <script>  
+                         $("[data-toggle='tooltip']").tooltip();
+</script>

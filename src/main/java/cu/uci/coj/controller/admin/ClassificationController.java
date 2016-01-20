@@ -50,18 +50,21 @@ public class ClassificationController extends BaseController {
     @RequestMapping(value = "/addclassifications.xhtml", method = RequestMethod.POST)
     public String addClassifications(Model model, @RequestParam(required = false, value = "username") String filter_user, @RequestParam(required = false, value = "pid") Integer pid,
             @RequestParam(required = false, value = "status") String status, @RequestParam(required = false, value = "planguage") String language, PagingOptions options,
-            @RequestParam(required = true, value = "name") String name) {
+            @RequestParam(required = true, value = "name") String name, RedirectAttributes redirectAttributes) {
         problemDAO.insertClassification(name);
         IPaginatedList<ProblemClassification> classifications = problemDAO.getClassifications(options);
 
         model.addAttribute("classifications", classifications);
 
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
         return "redirect:/admin/manageclassifications.xhtml";
     }
 
     @RequestMapping(value = "/updateclassifications.xhtml", method = RequestMethod.GET)
-    public String updateClassifications(Model model, @RequestParam(required = true, value = "classid") Integer classid, @RequestParam(required = true, value = "name") String name, RedirectAttributes redirectAttributes) {
+    public String updateClassifications(Model model, @RequestParam(required = true, value = "classid") Integer classid, @RequestParam(required = true, value = "name") String name,
+            RedirectAttributes redirectAttributes) {
         problemDAO.updateClassification(classid, name);
+
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return "redirect:/admin/manageclassifications.xhtml";
     }
@@ -69,6 +72,7 @@ public class ClassificationController extends BaseController {
     @RequestMapping(value = "/deleteclassifications.xhtml", method = RequestMethod.GET)
     public String deleteClassifications(Model model, @RequestParam(required = true, value = "classid") Integer classid, RedirectAttributes redirectAttributes) {
         problemDAO.deleteClassification(classid);
+
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
         return "redirect:/admin/manageclassifications.xhtml";
     }
@@ -109,8 +113,7 @@ public class ClassificationController extends BaseController {
         }
 
         model.addAttribute("problems", problemDAO.findAllProblemsWithoutClassification(locale.getLanguage(), options));
-
-        return "redirect:/admin/manageproblemclassification.xhtml";
+        return "/admin/manageproblemclassification";
     }
 
     @RequestMapping(value = "/tables/manageproblemclassification.xhtml", method = RequestMethod.GET)

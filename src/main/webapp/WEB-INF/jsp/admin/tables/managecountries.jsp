@@ -21,7 +21,7 @@
                 </c:otherwise>
             </c:choose>
         </display:column>
-        <display:column titleKey="tablehdr.edit">
+        <display:column titleKey="tablehdr.actions">
         <a
             href="<c:url value="/admin/managecountry.xhtml?country_id=${country.id}"/>"
             ><i title="<spring:message code="messages.general.edit"/>"

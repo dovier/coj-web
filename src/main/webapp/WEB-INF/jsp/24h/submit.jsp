@@ -51,7 +51,7 @@
 				<div class="error col-xs-8 col-xs-offset-3">
 					<span class="label label-danger"><form:errors path="pid" /></span>
 				</div>
-				<a><i class="fa fa-asterisk"
+				<a><i data-toggle="tooltip" class="fa fa-asterisk"
 					title="<spring:message code="mandatory.field"/>"></i></a>
 			</div>
 			<div class="form-group">
@@ -77,18 +77,21 @@
 					</div>
 				</div>
 			</authz:authorize>
+                                <div class="clearfix" > </div>
 			<div class="form-group">
 				<label class="control-label col-xs-3"> <spring:message
 						code="fieldhdr.sourcecode" />
 				</label>
+                                
 				<div class="col-xs-8">
 					<input id="uploadfile" name="uploadfile" type="file" class="file"
 						data-show-upload="false">
 				</div>
 				<div class="error col-xs-8 col-xs-offset-3">
 					<span class="label label-danger"><form:errors path="code" /></span>
-				</div>
-				<a><i class="fa fa-asterisk"
+				</div>                               
+                                
+				<a><i data-toggle="tooltip" class="fa fa-asterisk"
 					title="<spring:message code="mandatory.field"/>"></i></a>
 			</div>
 			<div class="form-group">
@@ -129,3 +132,8 @@
 		removeIcon : '<i class="fa fa-trash"></i>'
 	});
 </script>
+<script>    
+$(function(){
+		$("[data-toggle='tooltip']").tooltip();	
+	});
+</script> 

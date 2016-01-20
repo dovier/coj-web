@@ -15,8 +15,7 @@
         </div>                 
     </c:if> 
     <form:form  method="post" cssClass="form-inline" action="/admin/addclassifications.xhtml">
-        <div class="form-group">
-            <label><spring:message code="pclassifi.newclassification"/>:</label>       
+        <div class="form-group coj_float_rigth">             
             <input class="form-control" type="text" placeholder="<spring:message code="pclassifi.newclassification"/>" name="name"/>            
             <input id="filter-button" type="submit" class="btn btn-primary"
                    value="<spring:message code="button.add"/>"> 
@@ -31,6 +30,17 @@
     $(document).ready(displayTableReload(""));
 </script>
 
+<link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+<script src="/js/bootstrap-dialog.min.js"></script>
+<script src="/js/admin/utility.js"></script>
+
+<script>
+    var i18n = {};
+    i18n.title      = "<spring:message code="message.confirm.delete.hdr.entry"/>";
+    i18n.message    = "<spring:message code="message.confirm.delete.entry"/>";
+    i18n.btn_cancel = "<spring:message code="btn.text.cancel"/>";
+    i18n.btn_accept = "<spring:message code="btn.text.accept"/>";
+</script>
 
 
 

@@ -19,17 +19,17 @@
 <c:if test="${group}">
     <c:if test="${contest.grouped}">
         <div class="row margin-top-05">
-            <div class="col-xs-1">
-                <a class="pull-right"
+            <div class="col-xs-2">
+                <a class="btn btn-primary"
                    href='<c:url value="/contest/cscoreboard.xhtml?cid=${contest.cid}&ungroup&refresh=${refresh == true}" />'>
                     <spring:message code="link.ungroup" />
                 </a>
             </div>
-            <div class="col-xs-11">
+            <div class="col-xs-10">
                 <span class="pull-right">
                     <form method="get" class="form-inline">
                         <select class="form-control" id="selGroup" name="selGroup">
-                            <option value="">All</option>
+                            <option value=""><spring:message code="tableval.all" /></option>
                             <c:forEach items="${cbGroups}" var="igroup">
                                 <c:if test="${igroup == selGroup}">
                                     <option selected="selected" value="${igroup}">${igroup}</option>
@@ -41,7 +41,7 @@
                         </select> <input type="hidden" value="${contest.cid}" name="cid" /> <input
                             type="hidden" value="${refresh == true}" name="refresh" /> <input
                             class="btn btn-primary" type="submit"
-                            value="<spring:message code="button.filter"/>" />
+                            value="<spring:message code='button.filter'/>" />
                     </form>
                 </span>
             </div>
@@ -101,12 +101,12 @@
                                     <c:when test="${user.online == true}">
                                         <sup><a  alt="logged" title="<spring:message code="altval.logged"/>"><i class="fa fa-plug"></i></a></sup>
                                     </c:when>
-                                    </c:choose> <span class="pull-right"> <img  
+                                </c:choose> <span class="pull-right"> <img  
                                         src="<c:url value="/images/countries/${user.country}"/>.png"
                                         title="<c:url value="${user.country_desc}"/>"
                                     alt="<c:url value="${user.country}"/>" /> <img class="school" 
-                                        src="<c:url value="/images/school/${user.institution}"/>.png"
-                                        title="<c:out value="${user.institution_desc}"/>"
+                                                                                   src="<c:url value="/images/school/${user.institution}"/>.png"
+                                                                                   title="<c:out value="${user.institution_desc}"/>"
                                     alt="<c:out value="${user.institution}"/>" />
                                 </span></td>
                                 <td><a
@@ -151,7 +151,7 @@
         <c:if test="${not empty users}">
             <div class="row margin-top-05">
                 <div class="col-xs-1">
-                    <a class="pull-right"
+                    <a class="btn btn-primary"
                        href='<c:url value="/contest/cscoreboard.xhtml?cid=${contest.cid}&group&refresh=${refresh == true}" />'>
                         <spring:message code="link.group" />
                     </a>
@@ -199,8 +199,8 @@
                                 src="<c:url value="/images/countries/${user.country}"/>.png"
                                 title="<c:url value="${user.country_desc}"/>"
                             alt="<c:url value="${user.country}"/>" /> <img class="school" 
-                                src="<c:url value="/images/school/${user.institution}"/>.png"
-                                title="<c:out value="${user.institution_desc}"/>"
+                                                                           src="<c:url value="/images/school/${user.institution}"/>.png"
+                                                                           title="<c:out value="${user.institution_desc}"/>"
                             alt="<c:out value="${user.institution}"/>" />
                         </span></td>
                         <td><a

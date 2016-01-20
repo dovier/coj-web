@@ -62,6 +62,8 @@ public interface ProblemDAO extends BaseDAO {
 
 	public int getPidByTitle(String title);
 
+	public ProblemSource getProblemSourceById(Integer pid);
+
 	public List<Language> getEnabledLanguagesByProblem(Integer pid);
 
 	public int countProblemContest(int cid);

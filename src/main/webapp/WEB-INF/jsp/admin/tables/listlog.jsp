@@ -1,7 +1,7 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
-<label><spring:message code="fieldhdr.totalfound" />: ${found}</label>
+<!--<label><spring:message code="fieldhdr.totalfound" />: ${found}</label>-->
 <display:table id="log" name="logs" class="volume" requestURI=""
 	decorator="cu.uci.coj.utils.tabledecorator.problemsTableDecorator">
 	<display:column property="id" headerClass="headid"

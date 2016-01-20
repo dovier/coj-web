@@ -24,4 +24,5 @@ public class Notification {
     public static String getSuccesfullRejudge() {
         return "infomsg.rejudge.success";
     }
+    public static String getInvalidService() {return  "infomsg.invalidservice.sucess";}
 }

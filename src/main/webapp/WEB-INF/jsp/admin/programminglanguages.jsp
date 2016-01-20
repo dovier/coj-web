@@ -23,8 +23,8 @@
         <th><fmt:message key="tablehdr.description"/></th>
         <th><fmt:message key="tablehdr.namebin"/></th>
         <th><fmt:message key="tablehdr.key"/></th>
-        <th><fmt:message key="tablehdr.enable"/></th>
-        <th><fmt:message key="tablehdr.edit"/></th>
+        <th><fmt:message key="tablehdr.enabled"/></th>
+        <th><fmt:message key="tablehdr.actions"/></th>
         </thead>
 
         <c:forEach items="${languages}" var="language">

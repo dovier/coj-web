@@ -829,6 +829,11 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 		return integer("submit.pid.title", title);
 	}
 
+	@Override
+	public ProblemSource getProblemSourceById(Integer pid) {
+		return object("select.problemsource.id", ProblemSource.class, pid);
+	}
+
 	@Transactional(readOnly = true)
 	public List<Language> getEnabledLanguagesByProblem(Integer pid) {
 
@@ -1363,7 +1368,9 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 
 	@Override
 	public void deleteClassification(Integer classid) {
-		dml.delete("classifications", Where.eq("id_classification", classid));
+//		dml.delete("classifications", Where.eq("id_classification", classid));
+		dml("classification.delete", classid);
+
 	}
 
 	@Override

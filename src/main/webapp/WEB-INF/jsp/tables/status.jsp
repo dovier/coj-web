@@ -23,7 +23,7 @@
 		paramId="username" paramProperty="username"
 		style="text-transform:none" />
 	<display:column property="pid" titleKey="tablehdr.prob"
-		headerClass="headprob" href="problem.xhtml" paramId="pid"
+		headerClass="headprob" href="/24h/problem.xhtml" paramId="pid"
 		paramProperty="pid" />
 	<display:column titleKey="tablehdr.judgment" headerClass="headjudgment">
 		<div id="status${submission.sid}">

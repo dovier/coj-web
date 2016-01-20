@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import cu.uci.coj.utils.Notification;
 
 import atg.taglib.json.util.JSONException;
 import atg.taglib.json.util.JSONObject;
@@ -198,25 +200,28 @@ public class MailController extends BaseController {
 	}
 
 	@RequestMapping(value = "/mail/deleteallmail.xhtml", method = RequestMethod.GET)
-	public String deleteAllMail(Principal principal, @RequestParam("delete") Integer delete) {
+	public String deleteAllMail(Principal principal, @RequestParam("delete") Integer delete, RedirectAttributes redirectAttributes) {
 
 		if (delete == 1) {
 			if (mailDAO.bool("has.mail.in", getUsername(principal))) {
 				mailDAO.dml("update.quote", getUsername(principal),getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 				mailDAO.dml("delete.user.mail.idto", getUsername(principal));
 			}
+                        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
 			return "redirect:/mail/inbox.xhtml";
 		} else if (delete == 2) {
 			if (mailDAO.bool("has.mail.out", getUsername(principal))) {
 				mailDAO.dml("update.quote", getUsername(principal),getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 				mailDAO.dml("delete.send.mail.username", getUsername(principal));
 			}
+                        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
 			return "redirect:/mail/outbox.xhtml";
 		} else if (delete == 3) {
 			if (mailDAO.bool("has.draft.out", getUsername(principal))) {
 				mailDAO.dml("update.quote", getUsername(principal),getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 				mailDAO.dml("delete.draft.mail.username", getUsername(principal));
 			}
+                        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
 			return "redirect:/mail/draft.xhtml";
 		}
 		return "/error/error";
@@ -224,20 +229,23 @@ public class MailController extends BaseController {
 
 	@RequestMapping(value = "/mail/deletemail.xhtml", method = RequestMethod.GET)
 	public String deletemail(Principal principal, @RequestParam(required = false, defaultValue = "0", value = "idmail") Integer idmail,
-			@RequestParam(required = false, defaultValue = "0", value = "send") Integer send, @RequestParam(required = false, defaultValue = "0", value = "draft") Integer draft) {
+			@RequestParam(required = false, defaultValue = "0", value = "send") Integer send, @RequestParam(required = false, defaultValue = "0", value = "draft") Integer draft, RedirectAttributes redirectAttributes) {
 
 		if (idmail != 0) {
 			mailDAO.dml("update.quote", getUsername(principal), getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 			mailDAO.dml("delete.user.mail.idmail", idmail, getUsername(principal));
-			return "redirect:/mail/inbox.xhtml";
+			redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
+                        return "redirect:/mail/inbox.xhtml";
 		} else if (send != 0) {
 			mailDAO.dml("update.quote", getUsername(principal), getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 			mailDAO.dml("delete.send.mail.idmail", send, getUsername(principal));
-			return "redirect:/mail/outbox.xhtml";
+			redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
+                        return "redirect:/mail/outbox.xhtml";
 		} else if (draft != 0) {
 			mailDAO.dml("update.quote", getUsername(principal), getUsername(principal), getUsername(principal), getUsername(principal), userDAO.integer("select.uid.by.username", getUsername(principal)));
 			mailDAO.dml("delete.draft.mail.iddraft", draft, getUsername(principal));
-			return "redirect:/mail/draft.xhtml";
+			redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
+                        return "redirect:/mail/draft.xhtml";
 		}
 		return "/error/error";
 	}

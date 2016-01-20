@@ -46,11 +46,7 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
                 <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="enabled" /></span>
                     </div>  
-                <a>
-                    <i data-toggle="tooltip" class="fa fa-asterisk"
-                       title="<spring:message code="mandatory.field"/>">
-                    </i>
-                </a>
+               
             </div>
 
             <!-- CONTEST OF ANNOUNCEMENT -->
@@ -67,11 +63,7 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
                 <div class="error col-xs-8 col-xs-offset-3">
                     <span class="label label-danger"><form:errors path="contest" /></span>
                 </div>
-                <a>
-                    <i data-toggle="tooltip" class="fa fa-asterisk"
-                       title="<spring:message code="mandatory.field"/>">
-                    </i>
-                </a>
+               
             </div>   
 
 

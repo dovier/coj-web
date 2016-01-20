@@ -10,7 +10,7 @@
             <!-- NAME OF VIEW -->
             <legend>
                 <spring:message code="page.general.admin.header" />
-                : <spring:message code="page.general.admin.manageinstitution" />
+                : <spring:message code="page.general.admin.manageinstitution.editinstitution" />
             </legend>
 
             <!-- ID OF INTITUTION -->
@@ -24,11 +24,7 @@
                 <div class="error col-xs-8 col-xs-offset-3">
                     <span class="label label-danger"><form:errors path="id" /></span>
                 </div>
-                <a>
-                    <i data-toggle="tooltip" class="fa fa-asterisk"
-                       title="<spring:message code="mandatory.field"/>">
-                    </i>
-                </a>
+                
             </div>
 
 
@@ -90,11 +86,7 @@
                            data-show-upload="false" accept="image/*"
                            data-show-caption="true">
                 </div>
-                <a>
-                    <i data-toggle="tooltip" class="fa fa-asterisk"
-                       title="<spring:message code="mandatory.field"/>">
-                    </i>
-                </a>
+               
             </div>
 
 
@@ -128,11 +120,7 @@
                 <div class="col-xs-8">
                     <form:checkbox path="enabled" />
                 </div>                    
-                <a>
-                    <i data-toggle="tooltip" class="fa fa-asterisk"
-                       title="<spring:message code="mandatory.field"/>">
-                    </i>
-                </a>
+                
             </div>
 
 
@@ -151,11 +139,7 @@
                 <div class="error col-xs-8 col-xs-offset-3">
                     <span class="label label-danger"><form:errors path="country_id" /></span>
                 </div>
-                <a>
-                    <i data-toggle="tooltip" class="fa fa-asterisk"
-                       title="<spring:message code="mandatory.field"/>">
-                    </i>
-                </a>
+               
             </div>            
 
             <div class="form-actions pull-right">

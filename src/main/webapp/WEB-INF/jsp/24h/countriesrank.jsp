@@ -7,13 +7,12 @@
 </h2>
 <div class="postcontent">
 	<!-- content -->
-	<form id="filter-form" class="form-inline">
+	<form id="filter-form" class="form-inline coj_float_rigth">
 		<div class="form-group">
-			<label><spring:message code="fieldhdr.searchcountries" />:</label> <input
-				type="text" name="pattern" value="${pattern}">
-			<div class="form-group">
-				<input id="filter-button" type="submit" class="btn btn-primary"
-					value="<spring:message code="button.filter"/>">
+	 <input placeholder="<spring:message code="fieldhdr.searchcountries" />"type="text" class="form-control" name="pattern" value="${pattern}">
+	          <div class="form-group">
+	                 <input id="filter-button" type="submit" class="btn btn-primary"
+		              value="<spring:message code="button.filter"/>">
 			</div>
 		</div>
 	</form>

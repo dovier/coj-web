@@ -11,6 +11,7 @@
 		<div class="col-xs-12">
 			<form action="/tables/status.xhtml" method="get" id="filter-form"
 				class="form-inline">
+                            <div class="coj_float_rigth">
 				<div class="form-group">
 					<c:choose>
 						<c:when test="${not empty filter.username}">
@@ -67,12 +68,13 @@
 					</select>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group" >
 					<input class="btn btn-primary" type="submit" id="filter-button"
 						value="<spring:message code="button.filter"/>" />
 				</div>
 			</form>
 		</div>
+                </div>
 	</div>
 
 	<div id="display-table-container"

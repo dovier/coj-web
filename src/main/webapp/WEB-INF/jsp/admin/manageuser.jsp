@@ -31,15 +31,11 @@
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="nick" /></span>
                     </div>
-                    <a>
-                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                    <a><i data-toggle="tooltip" class="fa fa-asterisk"
                            title="<spring:message code="mandatory.field"/>">
-                        </i>
-                    </a>
-                    <a>
-                        <i data-toggle="tooltip" class="fa fa-info-circle"
-                           title="<spring:message code="infomsg.2"/>"></i>
-                    </a>
+                        </i></a>
+                    <a><i data-toggle="tooltip" class="fa fa-info-circle"
+                           title="<spring:message code="infomsg.2"/>"></i></a>
                 </div>
             </authz:authorize>
 
@@ -55,12 +51,7 @@
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="update_nick" /></span>
                     </div>
-                    <a>
-                        <i data-toggle="tooltip" class="fa fa-asterisk"
-                           title="<spring:message code="mandatory.field"/>">
-                        </i>
-                    </a>
-                </div>
+                   </div>
             </authz:authorize>
 
             <!-- COUNTRY OF USER-->
@@ -82,12 +73,10 @@
                     <a>
                         <i data-toggle="tooltip" class="fa fa-asterisk"
                            title="<spring:message code="mandatory.field"/>">
-                        </i>
-                    </a>   
+                        </i></a>
                     <a>
                         <i data-toggle="tooltip" class="fa fa-info-circle"
-                           title="<spring:message code="infomsg.5"/>"></i>
-                    </a>
+                           title="<spring:message code="infomsg.5"/>"></i></a>
                 </div>
             </authz:authorize>
 
@@ -113,12 +102,10 @@
                     <a>
                         <i data-toggle="tooltip" class="fa fa-asterisk"
                            title="<spring:message code="mandatory.field"/>">
-                        </i>
-                    </a>  
+                        </i></a>
                     <a>
                         <i data-toggle="tooltip" class="fa fa-info-circle"
-                           title="<spring:message code="infomsg.6"/>"></i>
-                    </a>
+                           title="<spring:message code="infomsg.6"/>"></i></a>
                 </div>
             </authz:authorize>
 
@@ -138,12 +125,7 @@
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="locale" /></span>
                     </div>
-                    <a>
-                        <i data-toggle="tooltip" class="fa fa-asterisk"
-                           title="<spring:message code="mandatory.field"/>">
-                        </i>
-                    </a>
-                </div>
+                  </div>
             </authz:authorize>
 
             <!-- PROGRAMMING LANGUAGE OF USER-->
@@ -162,12 +144,7 @@
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="lid" /></span>
                     </div>
-                    <a>
-                        <i data-toggle="tooltip" class="fa fa-asterisk"
-                           title="<spring:message code="mandatory.field"/>">
-                        </i>
-                    </a>
-                </div>
+                  </div>
             </authz:authorize>
 
             <!-- PASSWORD OF USER-->
@@ -183,11 +160,7 @@
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="password" /></span>
                     </div>
-                    <a>
-                        <i data-toggle="tooltip" class="fa fa-asterisk"
-                           title="<spring:message code="mandatory.field"/>">
-                        </i>
-                    </a>
+                    
                     <a><i data-toggle="tooltip" class="fa fa-info-circle"
                           title="<spring:message code="infomsg.8"/>"></i>
                     </a>
@@ -207,12 +180,7 @@
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="confirmPassword" /></span>
                     </div>
-                    <a>
-                        <i data-toggle="tooltip" class="fa fa-asterisk"
-                           title="<spring:message code="mandatory.field"/>">
-                        </i>
-                    </a>
-                    <a><i data-toggle="tooltip" class="fa fa-info-circle"
+                                        <a><i data-toggle="tooltip" class="fa fa-info-circle"
                           title="<spring:message code="infomsg.8"/>"></i>
                     </a>
                 </div>
@@ -231,11 +199,7 @@
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="access_rule" /></span>
                     </div>
-                    <a>
-                        <i data-toggle="tooltip" class="fa fa-asterisk"
-                           title="<spring:message code="mandatory.field"/>">
-                        </i>
-                    </a>
+                    
                 </div>
             </authz:authorize>
 
@@ -267,11 +231,7 @@
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="access_rule" /></span>
                     </div>
-                    <a>
-                        <i data-toggle="tooltip" class="fa fa-asterisk"
-                           title="<spring:message code="mandatory.field"/>">
-                        </i>
-                    </a>
+                   
                 </div>
             </authz:authorize>
 
@@ -363,12 +323,10 @@
                         <a>
                             <i data-toggle="tooltip" class="fa fa-asterisk"
                                title="<spring:message code="mandatory.field"/>">
-                            </i>
-                        </a>
+                            </i></a>
                         <a>
                             <i data-toggle="tooltip" class="fa fa-info-circle"
-                               title="<spring:message code="infomsg.3"/>"></i>
-                        </a>
+                               title="<spring:message code="infomsg.3"/>"></i></a>
                     </div>
                 </authz:authorize>
 
@@ -388,12 +346,10 @@
                         <a>
                             <i data-toggle="tooltip" class="fa fa-asterisk"
                                title="<spring:message code="mandatory.field"/>">
-                            </i>
-                        </a>
+                            </i></a>
                         <a>
                             <i data-toggle="tooltip" class="fa fa-info-circle"
-                               title="<spring:message code="infomsg.4"/>"></i>
-                        </a>
+                               title="<spring:message code="infomsg.4"/>"></i></a>
                     </div>
                 </authz:authorize>
 
@@ -417,11 +373,7 @@
                         <div class="error col-xs-8 col-xs-offset-3">
                             <span class="label label-danger"><form:errors path="gender" /></span>
                         </div>
-                        <a>
-                            <i data-toggle="tooltip" class="fa fa-asterisk"
-                               title="<spring:message code="mandatory.field"/>">
-                            </i>
-                        </a>
+                       
                     </div>
                 </authz:authorize>
 
@@ -451,11 +403,7 @@
                                 </form:select>
                             </div>
                         </div>                                            
-                        <a>
-                            <i data-toggle="tooltip" class="fa fa-asterisk"
-                               title="<spring:message code="mandatory.field"/>">
-                            </i>
-                        </a>
+                       
                     </div>
                 </authz:authorize>
 
@@ -490,12 +438,10 @@
                         <a>
                             <i data-toggle="tooltip" class="fa fa-asterisk"
                                title="<spring:message code="mandatory.field"/>">
-                            </i>
-                        </a>
+                            </i></a>
                         <a>
                             <i data-toggle="tooltip" class="fa fa-info-circle"
-                               title="<spring:message code="infomsg.7"/>"></i>
-                        </a>                           
+                               title="<spring:message code="infomsg.7"/>"></i></a>
                     </div>
                 </authz:authorize>
 
@@ -572,10 +518,10 @@
                             <spring:message code="fieldhdr.roles" />
                         </label>
                         <div class="col-xs-8">
-                            <div class="col-xs-4">
+                            <div class="col-xs-6">
                                 <form:checkboxes cssClass="checkbox" path="authorities"
                                                  items="${authorities}" itemValue="authority"
-                                                 itemLabel="authority" delimiter="</div><div class='col-xs-4'>" />
+                                                 itemLabel="authority" delimiter="</div><div class='col-xs-6'>" />
                             </div>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">

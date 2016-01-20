@@ -13,9 +13,8 @@
 
 	<div>
 		<form action="myclarifications.xhtml" method="get">
-			<div class="form-group">
-				<label class="col-xs-4 control-label""><spring:message
-						code="fieldhdr.searchclarifications" /></label>
+			<div class="form-group coj_float_rigth">
+				<label class="col-xs-4 control-label""><spring:message code="fieldhdr.searchclarifications" /></label>
 				<div class="col-xs-4">
 					<input type="text" class="form-control" size="25" name="pattern"
 						value="${pattern}">

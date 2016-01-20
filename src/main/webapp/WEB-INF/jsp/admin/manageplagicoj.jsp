@@ -7,7 +7,7 @@
 <link type="text/css" href="<c:url value="/css/ui/jquery.ui.all.css"/>" rel="stylesheet" /> 
 <!-- Scripts -->
 <script  type="text/javascript" src="<c:url value="/js/coj.js" />"></script>
-<script  type="text/javascript" src="<c:url value="/js/jquery.js" />"> </script>
+<script  type="text/javascript" src="<c:url value="/js/jquery.js" />"></script>
 <script  type="text/javascript" src="<c:url value="/js/plagicoj.js" />"></script>
 
 <script  type="text/javascript" src="<c:url value="/js/ui/jquery.ui.core.min.js" />"></script>
@@ -28,113 +28,105 @@
 <!-- Content -->
 <h2 class="postheader">
     <spring:message code="page.general.admin.header" />
-	: <spring:message code="plagicoj.title" />
+    : <spring:message code="plagicoj.title" />
 </h2>
-<div class="postcontent">   
-    <div>
-        <form action="/plagicoj/plagicojinspectionresult.xhtml" method="post" name="leandro" >        
-            <div class="leftdiv">
-                <table class="plagicoj" id="plagicoj">
-                    <caption><fmt:message key="admin.plagicoj.detectionparameters"/></caption>
-                    <tr>
-                        <th><fmt:message key="admin.plagicoj.pivotsubmit"/>:</th><td><input type="text" name="submitid"></td>
-                    <tr>           
-                    <tr>
-                        <th><fmt:message key="admin.plagicoj.pid"/>:</th><td><input type="text" name="pid"></td>
-                    <tr>  
-                    <tr>
-                        <th><fmt:message key="admin.plagicoj.submitid"/>:</th><td><input type="text" name="submitid1"> / <input type="text" name="submitid2"></td>
-                    <tr>
-                    <tr>
-                        <th><fmt:message key="admin.plagicoj.range"/>:</th><td><input type="text" name="sid1"> / <input type="text" name="sid2"></td>
-                    <tr>
+<div class="postcontent"> 
+    <form action="/plagicoj/plagicojinspectionresult.xhtml" method="post" name="leandro">
+        <div class="row">
 
-                </table>
+            <div class="col-md-7">
+
+                <h5><fmt:message key="admin.plagicoj.detectionparameters"/></h5>
+
+                <div class="form-group form-inline">
+                    <input class="form-control" placeholder="<fmt:message key="admin.plagicoj.submitid"/>" type="text" name="submitid1"> / <input class="form-control" type="text" name="submitid2">
+                </div>
+                <div class="form-group form-inline">
+                    <input class="form-control" placeholder="<fmt:message key="admin.plagicoj.range"/>" type="text" name="sid1"> / <input class="form-control" type="text" name="sid2"></td>
+                </div>
+
+                <div class="form-group">
+                    <input class="form-control" placeholder="<fmt:message key="admin.plagicoj.pivotsubmit"/>" type="text" name="submitid">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" placeholder="<fmt:message key="admin.plagicoj.pid"/>" type="text" name="pid"></td>
+                </div>
             </div>
-            <div class="rigthdiv" >
-                <h5>Filters</h5>
-                <label class="control-label" for="onlyac">
+
+            <div class="col-md-5">
+
+                <h5><fmt:message key="admin.plagicoj.filters"/></h5>
+
+                <div class="form-group">
                     <input type="checkbox" id="onlyac" name="onlyac"/>
-                    <fmt:message key="admin.plagicoj.onlyac"/>                
-                </label>
-                <br>
-                <label class="control-label" for="matchlanguage">
+                    <fmt:message key="admin.plagicoj.onlyac"/>  
+                </div>
+                <div class="form-group">
                     <input type="checkbox" id="matchlanguage" name="matchlanguage"/>
-                    <fmt:message key="admin.plagicoj.matchlanguage"/>                
-                </label>
-                <br>
-                <label class="control-label" for="ownsubmission">
+                    <fmt:message key="admin.plagicoj.matchlanguage"/> 
+                </div>
+                <div class="form-group">
                     <input type="checkbox" id="ownsubmission" name="ownsubmission"/>
-                    <fmt:message key="admin.plagicoj.ownsubmission"/>                
-                </label><br>
-                <label class="control-label" for="sameuser">
+                    <fmt:message key="admin.plagicoj.ownsubmission"/>  
+                </div>
+                <div class="form-group">
                     <input type="checkbox" id="sameuser" name="sameuser"/>
-                    <fmt:message key="admin.plagicoj.sameuser"/>                
-                </label><br>
+                    <fmt:message key="admin.plagicoj.sameuser"/> 
+                </div>                
             </div>
-            <div class="buttons nofloat">
-                <input class="btn btn-primary" type="submit" value="<fmt:message key="admin.plagicoj.detect"/>" />
-                <input class="btn btn-primary" type="reset" value="<fmt:message key="admin.plagicoj.reset"/>" />
-            </div>
-        </form>
-    </div>
+
+        </div>
+
+        <div class="buttons nofloat">
+            <input class="btn btn-primary" type="submit" value="<fmt:message key="admin.plagicoj.detect"/>" />
+            <input class="btn btn-primary" type="reset" value="<fmt:message key="admin.plagicoj.reset"/>" />
+        </div>  
+    </form>    
     <div class="nofloat judgement">  
         <h4 >
             <spring:message code="pagehdr.24hjudgments"/>
         </h4>
         <form id="filter-form" class="form-inline">
-            <table class="login filters">
-                <tr class="filter">
-                    <td><spring:message code="fieldhdr.user"/>:</td>
-                    <td>
-                        <input type="text" name="username" value="${filter.username}" size="10"/>
-                    </td>
-                    <td><spring:message code="fieldhdr.prob"/>:</td>
-                    <td>
-                        <input type="text" name="abb" value="${filter.pid}" size="8"/>
-                    </td>
-                    <td><spring:message code="fieldhdr.judgment"/>:</td>
-                    <td>
-                        <select name="status" style="text-transform: lowercase;">
-                            <option value="All"><spring:message code="fieldhdr.all"/></option>
-                            <c:forEach items="${statuslist}" var="status">
-                                <c:choose>
-                                    <c:when test="${filter.current_status eq status.key}">
-                                        <option value="${status.key}" selected style="text-transform: lowercase;">${status.key}</option>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <option value="${status.key}" style="text-transform: lowercase;">${status.key}</option>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
-                        </select>
-                    </td>
-                    <td><spring:message code="fieldhdr.lang"/>:</td>
-                    <td>
-                        <select name="planguage" style="text-transform: lowercase;">
-                            <option value="All"><spring:message code="fieldhdr.all"/></option>
-                            <c:forEach items="${filter.languages}" var="language">
-                                <c:choose>
-                                    <c:when test="${filter.language eq language.key}">
-                                        <option value="${language.key}" selected style="text-transform: lowercase;">${language.language} (${language.descripcion})</option>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <option value="${language.key}" style="text-transform: lowercase;">${language.language} (${language.descripcion})</option>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
-                        </select>
-                    </td>
-                    <td>
-                        <input class="btn btn-primary" id="filter-button" type="submit" value="<spring:message code="button.filter"/>"/>
-                    </td>
-                </tr>
+            <div class="form-group coj_float_rigth">
+                <input type="text" class="form-control" placeholder="<spring:message code="fieldhdr.user"/>" name="username" value="${filter.username}" size="10"/>    
+                <input type="text" class="form-control" placeholder="<spring:message code="fieldhdr.prob"/>" name="abb" value="${filter.pid}" size="8"/>                
 
-            </table>
+                <select name="status" class="form-control" style="text-transform: lowercase;">
+                    <option value="judgment"><spring:message code="fieldhdr.judgment"/></option>
+                    <option value="All"><spring:message code="fieldhdr.all"/></option>
+                    <c:forEach items="${statuslist}" var="status">
+                        <c:choose>
+                            <c:when test="${filter.current_status eq status.key}">
+                                <option value="${status.key}" selected style="text-transform: lowercase;">${status.key}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="${status.key}" style="text-transform: lowercase;">${status.key}</option>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </select>
+
+                <select class="form-control" name="planguage" style="text-transform: lowercase;">
+                    <option value="lang"><spring:message code="fieldhdr.lang"/></option>
+                    <option value="All"><spring:message code="fieldhdr.all"/></option>
+                    <c:forEach items="${filter.languages}" var="language">
+                        <c:choose>
+                            <c:when test="${filter.language eq language.key}">
+                                <option value="${language.key}" selected style="text-transform: lowercase;">${language.language} (${language.descripcion})</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="${language.key}" style="text-transform: lowercase;">${language.language} (${language.descripcion})</option>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </select>
+
+                <input class="btn btn-primary" id="filter-button" type="submit" value="<spring:message code="button.filter"/>"/>
+            </div>            
         </form>    
 
         <div id="display-table-container" data-reload-url="/admin/tables/manageplagicoj.xhtml"></div>
-        
+
 
         <!-- /article-content -->
     </div>
@@ -144,5 +136,5 @@
 </div>
 <div id="checkerror" hidden="" title="<fmt:message key="admin.plagicoj.error"/>"><p><fmt:message key="admin.plagicoj.check"/></p></div>
 <script>
-$(initStandardFilterForm);
+    $(initStandardFilterForm);
 </script>

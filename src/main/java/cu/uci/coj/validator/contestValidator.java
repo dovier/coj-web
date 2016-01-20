@@ -42,7 +42,7 @@ public class contestValidator implements Validator {
         try {
             String empty = "errormsg.10";
             String invalid = "errormsg.9";
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "cid", empty);
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "cid", "general.error.empty");
             if (!errors.hasFieldErrors("cid") && contestDAO.bool("exist.contest", contest.getCid())) {
                 errors.rejectValue("cid",
                         "page.error.exist",
@@ -51,7 +51,7 @@ public class contestValidator implements Validator {
 
             if (contest.isImportData() && contest.getImportCid() <= 0) {
                 errors.rejectValue("importCid",
-                        invalid,
+                        "errormsg.60",
                         "At must 40 characters.");
             }
             if (contest.isImportData() && contest.getImports() == null) {
@@ -70,7 +70,7 @@ public class contestValidator implements Validator {
         contest.initdates();
         String empty = "errormsg.10";
         String invalid = "errormsg.9";
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", empty);
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "general.error.empty");
         if (contest.getRglimit().compareTo(contest.getEnddate()) > 0) {
             errors.rejectValue("rglimit",
                     "managecontest.error.rglimit.end",

@@ -23,11 +23,7 @@
                 <div class="error col-xs-8 col-xs-offset-3">
                     <span class="label label-danger"><form:errors path="id" /></span>
                 </div>
-                <a>
-                    <i data-toggle="tooltip" class="fa fa-asterisk"
-                       title="<spring:message code="mandatory.field"/>">
-                    </i>
-                </a>
+                
             </div>
 
             <!-- NAME OF COUNTRY -->
@@ -59,7 +55,7 @@
                     </label>
                     <div class="col-xs-8">
                         <form:input cssClass="form-control" path="zip" size="30"
-                                    maxlength="15"/>
+                                    maxlength="3"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="zip" /></span>
@@ -84,7 +80,7 @@
                                     maxlength="2"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="zip" /></span>
+                        <span class="label label-danger"><form:errors path="zip_two" /></span>
                     </div>
                     <a>
                         <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -107,11 +103,7 @@
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="website" /></span>
                     </div>
-                    <a>
-                        <i data-toggle="tooltip" class="fa fa-asterisk"
-                           title="<spring:message code="mandatory.field"/>">
-                        </i>
-                    </a>
+                    
                 </div>
             </authz:authorize>      
             
@@ -124,11 +116,7 @@
                 <div class="col-xs-8">
                     <form:checkbox path="enabled" />
                 </div>                    
-                <a>
-                    <i data-toggle="tooltip" class="fa fa-asterisk"
-                       title="<spring:message code="mandatory.field"/>">
-                    </i>
-                </a>
+             
             </div>
 
             <div class="form-actions pull-right">

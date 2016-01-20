@@ -7,7 +7,7 @@
     <display:column property="id" titleKey="tablehdr.id"
                     headerClass="headid" />
     <display:column titleKey="tablehdr.country" headerClass="headcountry">
-        <img src="/images/countries/<c:url value="${institution.czip}"/>.png"
+        <img src="/images/countries/<c:url value="${institution.czip}"/>.png"data-toggle="tooltip"
              title="<c:url value="${institution.cname}"/>"
              alt="<c:url value="${institution.czip}"/>" />
     </display:column>
@@ -27,7 +27,7 @@
                 </c:otherwise>
             </c:choose>
         </display:column>
-        <display:column titleKey="tablehdr.edit">
+        <display:column titleKey="tablehdr.actions">
         <a
             href="<c:url value="/admin/manageinstitution.xhtml?inst_id=${institution.id}"/>"
             >

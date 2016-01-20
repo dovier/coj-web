@@ -64,7 +64,7 @@ public class CountryDAOImpl extends BaseDAOImpl implements CountryDAO {
 	@Transactional(readOnly = true)
 	public IPaginatedList<Country> getCountry(String pattern, PagingOptions options) {
 		if (pattern != null) {
-			return paginated("country.pattern", Country.class, 30, options, "%" + pattern + "%", "%" + pattern + "%");
+			return paginated("countries.pattern", Country.class, 30, options, "%" + pattern + "%", "%" + pattern + "%");
 		}
 		return paginated("countries", Country.class, 30, options);
 	}

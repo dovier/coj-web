@@ -9,7 +9,7 @@
 
             <!-- NAME OF VIEW -->
             <legend>
-                <spring:message code="page.addinstitution.header" />
+                <spring:message code="page.general.admin.header" />: <spring:message code="page.addinstitution.header" />
             </legend>
 
             <!-- NAME OF INTITUTION -->
@@ -65,11 +65,7 @@
                                data-show-upload="false" accept="image/*"
                                data-show-caption="true">
                     </div>
-                    <a>
-                        <i data-toggle="tooltip" class="fa fa-asterisk"
-                           title="<spring:message code="mandatory.field"/>">
-                        </i>
-                    </a>
+                    
                 </div>
             </authz:authorize>
 
@@ -80,7 +76,7 @@
                         <spring:message code="page.addinstitution.website" />
                     </label>
                     <div class="col-xs-8">
-                        <form:input cssClass="form-control" path="website" size="30"
+                        <form:input cssClass="form-control" placeholder="http://" path="website" size="30"
                                     maxlength="70"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">

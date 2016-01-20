@@ -6,23 +6,33 @@ package cu.uci.coj.validator;
 
 import cu.uci.coj.dao.CountryDAO;
 import cu.uci.coj.model.Country;
+
 import javax.annotation.Resource;
+
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
- * @version Caribbean Online Judge(COJ) v2.0
  * @author Juan Carlos Lobaina Guzman & Jorge Luis Roque Alvarez
- * @since 2010-09-01
+ * @version Caribbean Online Judge(COJ) v2.0
  * @see http://coj.uci.cu
+ * @since 2010-09-01
  */
 @Component
 public class countryValidator implements Validator {
 
     @Resource
     private CountryDAO countryDAO;
+
+    private String STRING_PATTERN = "[a-zA-Z ]+";
+    private String STRING_PATTERN_SITIOWEB = "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\?=.-]*)*\\/?$";
+    private Pattern pattern;
+    private Matcher matcher;
 
     public CountryDAO getCountryDAO() {
         return countryDAO;
@@ -38,7 +48,6 @@ public class countryValidator implements Validator {
     }
 
     /**
-     *
      * @param o
      * @param errors
      */
@@ -49,6 +58,22 @@ public class countryValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "zip", "general.error.empty");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "zip_two", "general.error.empty");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "website", "general.error.empty");
+
+        pattern = Pattern.compile(STRING_PATTERN);
+        matcher = pattern.matcher(country.getZip_two());
+        if (!matcher.matches()) {
+            errors.rejectValue("zip_two", "general.error.onlyletters");
+        }
+
+        matcher = pattern.matcher(country.getName());
+        if (!matcher.matches()) {
+            errors.rejectValue("name", "general.error.onlyletters");
+        }
+        pattern = Pattern.compile(STRING_PATTERN_SITIOWEB);
+        matcher = pattern.matcher(country.getWebsite());
+        if (!matcher.matches()) {
+            errors.rejectValue("website", "website.containNonAddress");
+        }
         if (country.getName() != null && countryDAO.bool("exist.country.name", country.getName())) {
             errors.rejectValue("name",
                     "general.error.exist",
@@ -89,11 +114,27 @@ public class countryValidator implements Validator {
                         "Already Exists");
             }
 
+
             if (!cr2.getName().equals(country.getName()) && countryDAO.bool("exist.country.name", country.getName())) {
                 errors.rejectValue("name",
                         "general.error.exist",
                         "Already Exists");
             }
+        }
+        pattern = Pattern.compile(STRING_PATTERN);
+        matcher = pattern.matcher(country.getZip_two());
+        if (!matcher.matches()) {
+            errors.rejectValue("zip_two", "general.error.onlyletters");
+        }
+
+        matcher = pattern.matcher(country.getName());
+        if (!matcher.matches()) {
+            errors.rejectValue("name", "general.error.onlyletters");
+        }
+        pattern = Pattern.compile(STRING_PATTERN_SITIOWEB);
+        matcher = pattern.matcher(country.getWebsite());
+        if (!matcher.matches()) {
+            errors.rejectValue("website", "website.containNonAddress");
         }
 
         if (!errors.hasFieldErrors("zip") && country.getZip().length() > 8) {

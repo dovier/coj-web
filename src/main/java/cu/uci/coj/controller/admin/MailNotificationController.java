@@ -18,6 +18,8 @@ import cu.uci.coj.mail.MailService;
 import cu.uci.coj.model.MailNotification;
 import cu.uci.coj.utils.enums.NotificationMode;
 import cu.uci.coj.validator.MailNotificationValidator;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import cu.uci.coj.utils.Notification;
 
 @Controller("MailNotificationController")
 @RequestMapping
@@ -51,14 +53,20 @@ public class MailNotificationController extends BaseController {
     }
 
     @RequestMapping(value = "/admin/notify.xhtml", method = RequestMethod.POST)
-    public String notify(Locale locale, Model model, MailNotification mailNotification, BindingResult errors) {
+    public String notify(Locale locale, Model model, MailNotification mailNotification, BindingResult errors, RedirectAttributes redirectAttributes) {
         validator.validate(mailNotification, errors);
         if (errors.hasErrors()) {
             model.addAttribute("notification", mailNotification);
             return "/admin/notify";
         } else {
             List<String> emails = emailsList(NotificationMode.COJ, null);
-            mailService.sendBulkMessage(emails,100, mailNotification.getSubject(), mailNotification.getText(), false);
+            try {
+                mailService.sendBulkMessage(emails,100, mailNotification.getSubject(), mailNotification.getText(), false);
+            } catch (Exception e){
+                errors.rejectValue("subject", "infomsg.invalidservice.sucess");
+                model.addAttribute("notification", mailNotification);
+                return "/admin/notify";
+            }
             return "redirect:/admin/index.xhtml";
         }
     }

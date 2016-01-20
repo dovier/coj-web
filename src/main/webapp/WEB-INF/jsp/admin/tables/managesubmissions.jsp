@@ -9,7 +9,7 @@
     <display:column property="date" titleKey="tablehdr.date"
                     headerClass="headdate" />
     <display:column property="username" titleKey="tablehdr.user"
-                    headerClass="headuser" href="/user/useraccount.xhtml" paramId="uid"
+                    headerClass="headuser" href="/user/useraccount.xhtml" paramId="username"
                     paramProperty="username" style="text-transform:none" />
     <display:column property="pid" titleKey="tablehdr.prob"
                     headerClass="headprob" href="/24h/problem.xhtml" paramId="pid"
@@ -55,19 +55,17 @@
                 </c:otherwise>
             </c:choose>
         </display:column>
-        <display:column titleKey="tablehdr.edit">
+    <display:column titleKey="tablehdr.actions" headerClass="headrejudge">
         <a
-            href="<c:url value="managesubmission.xhtml?sid=${submission.sid}"/>"
-			title="<fmt:message key="messages.general.go"/>"><i
-			class="fa fa-edit"></i></a>
-    </display:column>
-    <display:column titleKey="tablehdr.rejudge" headerClass="headrejudge">
+                href="<c:url value="managesubmission.xhtml?sid=${submission.sid}"/>"
+                title="<fmt:message key="messages.general.edit"/>" data-toggle="tooltip"><i
+                class="fa fa-edit"></i></a>
         <c:if test="${submission.cid == 0}">
 			<a title="<spring:message code="tablehdr.rejudge"/>"
-				href="<c:url value="javascript:rejudge24h(${submission.sid})"/>"><i
+				href="<c:url value="javascript:rejudge24h(${submission.sid})"/>" data-toggle="tooltip"><i
 				class="fa fa-repeat"></i></a>&nbsp;
             <a title="<spring:message code="tablehdr.enable"/>"
-               href="<c:url value="javascript:toggle24h(${submission.sid})"/>">
+               href="<c:url value="javascript:toggle24h(${submission.sid})"/>" data-toggle="tooltip">
                 <c:if test="${submission.enabled}">
                     <i class="fa fa-eye-slash"></i>
                 </c:if> <c:if test="${not submission.enabled}">
@@ -77,10 +75,10 @@
         </c:if>
         <c:if test="${submission.cid!=0 }">
             <a title="<spring:message code="tablehdr.rejudge"/>"
-               href="<c:url value="javascript:rejudgeContest(${submission.sid})"/>"><i
+               href="<c:url value="javascript:rejudgeContest(${submission.sid})"/>" data-toggle="tooltip"><i
                     class="fa fa-repeat"></i></a>&nbsp;
             <a title="<spring:message code="tablehdr.enable"/>"
-               href="<c:url value="javascript:toggleContest(${submission.sid})"/>">
+               href="<c:url value="javascript:toggleContest(${submission.sid})"/>" data-toggle="tooltip">
                 <c:if test="${submission.enabled}">
                     <i class="fa fa-eye-slash"></i>
                 </c:if> <c:if test="${not submission.enabled}">

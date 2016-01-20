@@ -12,6 +12,12 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
 
 </h2>
 <div class="postcontent">
+    <c:if test="${message != null}">
+        <div class="alert alert-success alert-dismissable fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <i class="fa fa-check"></i><spring:message code="${message}" />
+        </div>                 
+    </c:if> 
     <div>
         <form id="filter-form" class="form-inline">
             <div class="form-group coj_float_rigth">
@@ -31,6 +37,7 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
         <span id="resendgood" class="hide label label-success notif"><spring:message
                 code="text.good" /></span>
     </div>
+    <br />
     <div id="display-table-container"
          data-reload-url="/admin/tables/manageactivations.xhtml"></div>
 </div>
