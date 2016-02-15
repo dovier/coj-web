@@ -37,6 +37,7 @@
 			<bean class="cu.uci.coj.utils.paging.PaginatedArgumentResolver" />
 		</mvc:argument-resolvers>
 	</mvc:annotation-driven>
+
 	<!--<mvc:resources mapping="/resources/**" location="/resources/" /> -->
 
 	<!--mvc:resources mapping="/css/**" location="/css/" /> <mvc:resources mapping="/images/**" 

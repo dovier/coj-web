@@ -5,6 +5,12 @@
 	<spring:message code="pagehdr.24hproblems" />
 </h2>
 <div class="postcontent">
+	<c:if test="${message != null}">
+	<div class="alert alert-success alert-dismissable fade in">
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<i class="fa fa-check"></i><spring:message code="${message}" />
+	</div>
+	</c:if>
 	<!-- content -->
 	<div class="row">
 		<div class="col-xs-12">
@@ -17,7 +23,7 @@
 						value="${pattern}">
 				</div>
 				<div class="form-group">
-					<select name="classification" class="form-control">
+					<select name="classification" class="form-control" data-toggle="tooltip" title="<spring:message code="filter.by.clasification"/>">
 						<option value="-1"><spring:message code="fieldhdr.all" /></option>
 						<c:forEach items="${classifications}" var="classif">
 							<option value="${classif.idClassification}"
@@ -26,7 +32,7 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<select class="form-control" name="complexity">
+					<select class="form-control" name="complexity" data-toggle="tooltip" title="<spring:message code="filter.by.complexity"/>">
 						<option value="-1"><spring:message code="fieldhdr.all" /></option>
 						<c:forEach begin="1" end="5" var="complex">
 							<option value="${complex}"

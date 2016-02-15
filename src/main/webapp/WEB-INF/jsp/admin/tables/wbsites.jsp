@@ -9,7 +9,7 @@
                     sortable="true" sortProperty="site" sortName="site" autolink="true"
                     headerClass="headfirst" href="details.xhtml" paramId="sid"
                     paramProperty="sid" />
-    <display:column titleKey="tablehdr.completed" headerClass="headsub">
+    <display:column titleKey="tablehdr.completed" headerClass="headedit">
         <c:choose>
             <c:when test="${site.completed}">
                 <span class="label label-success"><spring:message
@@ -21,7 +21,7 @@
                 </c:otherwise>
             </c:choose>
         </display:column>
-        <display:column titleKey="tablehdr.enabled" headerClass="headsub">
+        <display:column titleKey="tablehdr.enabled" headerClass="headedit">
             <c:choose>
                 <c:when test="${site.enabled}">
                 <span class="label label-success"><spring:message

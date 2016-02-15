@@ -7,10 +7,6 @@
 </h2>
 
 <div class="postcontent">
-	<a class="btn btn-primary mybutton" href='<c:url value="/admin/wboard/site/list.xhtml"/>'> <spring:message code="wboard.list.site"/> </a>
-	
-	<br />
-	<br />
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="panel panel-primary">
@@ -30,7 +26,7 @@
 						<spring:message code="fieldhdr.url" />							
 					</div>
 					<div class="col-xs-6 col-xs-offset-1">
-						${site.url}
+						<a href="${site.url}"> ${site.url}</a>
 					</div>
 					
 					<div class="col-xs-5">
@@ -45,10 +41,12 @@
 					</div>
 					<div class="col-xs-6 col-xs-offset-1">
 						<c:if test="${site.enabled}">
-							<i class="fa fa-check-square-o"></i>
+							<span class="label label-success"><fmt:message
+									key="page.general.yes" /></span>
 						</c:if>
 						<c:if test="${!site.enabled}">
-							<i class="fa fa-square-o"></i>
+							<span class="label label-danger"><fmt:message
+									key="page.general.no" /></span>
 						</c:if>
 					</div>
 			
@@ -57,10 +55,12 @@
 					</div>
 					<div class="col-xs-6 col-xs-offset-1">
 						<c:if test="${site.completed}">
-							<i class="fa fa-check-square-o"></i>
+							<span class="label label-success"><fmt:message
+									key="page.general.yes" /></span>
 						</c:if>
 						<c:if test="${!site.completed}">
-							<i class="fa fa-square-o"></i>
+							<span class="label label-danger"><fmt:message
+									key="page.general.no" /></span>
 						</c:if>
 					</div>
 			
@@ -79,6 +79,12 @@
 					</div>						
 				</div>
 			</div>
+
+			<div class="coj_float_rigth">
+				<a class="btn btn-primary" href="<c:url value="/admin/wboard/site/list.xhtml"/>">
+					<spring:message code="button.close"/>
+				</a>
+			</div>
 		</div>
-	</div>	
+	</div>
 </div>

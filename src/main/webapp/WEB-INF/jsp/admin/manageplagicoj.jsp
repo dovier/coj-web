@@ -80,6 +80,8 @@
         <div class="buttons nofloat">
             <input class="btn btn-primary" type="submit" value="<fmt:message key="admin.plagicoj.detect"/>" />
             <input class="btn btn-primary" type="reset" value="<fmt:message key="admin.plagicoj.reset"/>" />
+            <a class="btn btn-primary" href="<c:url value="/admin/index.xhtml"/>"><spring:message
+                    code="button.close"/></a>
         </div>  
     </form>    
     <div class="nofloat judgement">  

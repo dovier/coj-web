@@ -11,7 +11,7 @@ public class COJContextLoaderListener extends ContextLoaderListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
-		super.contextInitialized(event);
+		super.contextInitialized(event);                
 		ctx = ContextLoader.getCurrentWebApplicationContext();
 	}
 

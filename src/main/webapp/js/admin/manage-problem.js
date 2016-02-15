@@ -17,7 +17,7 @@ function addInput() {
         previewFileType: 'text',
         msgProgress: 'Loading {percent}%',
         browseClass: "btn btn-primary",
-        browseLabel: "Pick",
+        browseLabel: i18n.browseLabel,
         browseIcon: '<i class="fa fa-file"></i>&nbsp;',
         removeIcon: '<i class="fa fa-trash"></i>'
     }).on('fileloaded', function(event, file, previewId) {
@@ -30,7 +30,7 @@ function addInput() {
 ;
 
 $(function() {
-    $(".dataset,.file").fileinput({
+    $(".file").fileinput({
         maxFileSize: 5000000,
         allowedFileTypes: ['text'],
         removeClass: "btn btn-default",
@@ -39,18 +39,32 @@ $(function() {
         showPreview: 0,
         msgProgress: 'Loading {percent}%',
         browseClass: "btn btn-primary",
-        browseLabel: "Pick",
+        browseLabel: i18n.browseLabel,
         browseIcon: '<i class="fa fa-file-o"></i>&nbsp;',
         removeIcon: '<i class="fa fa-trash"></i>'
     });
 
-    $("#zipfile.file").fileinput({
+    $(".dataset").fileinput({
+        maxFileSize: 5000000,
+        allowedFileTypes: ['text'],
+        removeClass: "btn btn-default",
+        removeLabel: "Delete",
+        previewFileType: 'text',
+        showPreview: 0,
+        msgProgress: 'Loading {percent}%',
+        browseClass: "btn btn-primary",
+        browseLabel: i18n.browseLabel,
+        browseIcon: '<i class="fa fa-file-o"></i>&nbsp;',
+        removeIcon: '<i class="fa fa-trash"></i>'
+    });
+
+    $("#zipfile").fileinput({
         maxFileSize: 50000000,
         allowedFileTypes: ['object'],
         removeClass: "btn btn-default",
         msgProgress: 'Loading {percent}%',
         browseClass: "btn btn-danger",
-        browseLabel: "Pick",
+        browseLabel: i18n.browseLabel,
         browseIcon: '<i class="fa fa-file-o"></i>&nbsp;',
         removeIcon: '<i class="fa fa-trash"></i>'
     });

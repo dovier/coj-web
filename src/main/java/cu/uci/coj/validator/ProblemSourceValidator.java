@@ -1,5 +1,6 @@
 package cu.uci.coj.validator;
 
+import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.model.ProblemSource;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -15,6 +16,18 @@ import javax.annotation.Resource;
 @Component
 public class ProblemSourceValidator implements Validator {
 
+
+    @Resource
+    private ProblemDAO problemDAO;
+
+    public ProblemDAO getproblemDAO() {
+        return problemDAO;
+    }
+
+    public void setPollDAO(ProblemDAO problemDAO) {
+        this.problemDAO = problemDAO;
+    }
+
     @Override
     public boolean supports(Class<?> clazz) {
         return ProblemSource.class.isAssignableFrom(clazz);
@@ -24,8 +37,8 @@ public class ProblemSourceValidator implements Validator {
     public void validate(Object o, Errors errors) {
         ProblemSource problemSource = (ProblemSource) o;
         if (problemSource.getAuthor().isEmpty() && problemSource.getName().isEmpty()) {
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "general.error.empty");
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "author", "general.error.empty");
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "general.error.oneempty");
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "author", "general.error.oneempty");
         }
     }
 }

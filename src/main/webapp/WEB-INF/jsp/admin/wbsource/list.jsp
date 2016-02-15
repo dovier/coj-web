@@ -11,8 +11,7 @@
       type="text/css" media="screen"/>
 
 <h2 class="postheader">
-    <spring:message code="page.general.admin.header"/>
-    : <spring:message code="psource.title"/>
+    <spring:message code="page.general.admin.header"/>: <spring:message code="psource.title"/>
 </h2>
 
 <div class="postcontent">

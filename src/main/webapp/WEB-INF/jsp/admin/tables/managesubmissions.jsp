@@ -1,13 +1,18 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <display:table id="submission" name="submissions" class="volume"
                requestURI="" defaultsort="0" defaultorder="ascending">
     <display:column property="sid" titleKey="tablehdr.id"
                     headerClass="headid" href="/24h/submission.xhtml" paramId="id"
                     paramProperty="sid" />
-    <display:column property="date" titleKey="tablehdr.date"
-                    headerClass="headdate" />
+     <display:column titleKey="tablehdr.date"  headerClass="headdate">
+        <c:set value="${submission.date}" var="dateString" />
+        <fmt:parseDate value="${dateString}" var="dateObject"
+                        pattern="yyyy-MM-dd HH:mm:ss" />
+        <fmt:formatDate value="${dateObject }" pattern="yyyy-MM-dd HH:mm:ss" />
+    </display:column>
     <display:column property="username" titleKey="tablehdr.user"
                     headerClass="headuser" href="/user/useraccount.xhtml" paramId="username"
                     paramProperty="username" style="text-transform:none" />
@@ -64,14 +69,14 @@
 			<a title="<spring:message code="tablehdr.rejudge"/>"
 				href="<c:url value="javascript:rejudge24h(${submission.sid})"/>" data-toggle="tooltip"><i
 				class="fa fa-repeat"></i></a>&nbsp;
-            <a title="<spring:message code="tablehdr.enable"/>"
-               href="<c:url value="javascript:toggle24h(${submission.sid})"/>" data-toggle="tooltip">
+            <span class="toogle24h" title="<spring:message  code="tablehdr.enable"/>"
+               data-value="${submission.sid}" data-toggle="tooltip">
                 <c:if test="${submission.enabled}">
                     <i class="fa fa-eye-slash"></i>
                 </c:if> <c:if test="${not submission.enabled}">
 					<i class="fa fa-eye"></i>
                 </c:if>
-            </a>
+            </span>
         </c:if>
         <c:if test="${submission.cid!=0 }">
             <a title="<spring:message code="tablehdr.rejudge"/>"
@@ -90,5 +95,22 @@
 </display:table>
 
 <script>
+
     $("[data-toggle='tooltip']").tooltip();
+
+        $(".toogle24h").click(function(){
+                var sid = $(this).attr("data-value");
+                var _this = this;
+                $.ajax({
+                type: "GET",
+                    url: "/admin/24h/togglesub.json",
+                    data: "sid=" + sid,
+                    dataType: 'text',
+                    success: function (data) {
+                        var remove_class = data == "true"?'fa-eye-slash':'fa-eye';
+                        var add_class    = data == "true"?'fa-eye':'fa-eye-slash';
+                        $("i", $(_this)).addClass(add_class).removeClass(remove_class);
+                    }
+                });
+            });
 </script>

@@ -54,18 +54,18 @@
                     <div class="panel-heading">
                         ${igroup.name}
                         <c:if test="${showSaris}">
-                            <span class="badge"><a target="_blank"
+                            <span class="badge"><a target="_blank" data-toggle="tooltip"
                                                    href="<c:url value="/contest/saris.xhtml?cid=${contest.cid}&group=${igroup.name}" />"><i
                                         class="fa fa-flag-checkered"></i></a></span>
                         </c:if>
                         <div class="pull-right">
-                            <span class="badge"> <i class="fa fa-check-circle"></i>
+                            <span class="badge"> <i class="fa fa-check-circle" data-toggle="tooltip"></i>
                                 ${igroup.acs}
-                            </span> <span class="badge"> <i class="fa fa-group"></i>
+                            </span> <span class="badge"> <i class="fa fa-group" data-toggle="tooltip"></i>
                                 ${igroup.users.size()}
-                            </span> <span class="badge"> <i class="fa fa-clock-o"></i>
+                            </span> <span class="badge"> <i class="fa fa-clock-o" data-toggle="tooltip"></i>
                                 ${igroup.time}
-                            </span> <span class="badge"> <a data-toggle="collapse"
+                            </span> <span class="badge"> <a data-toggle="collapse" data-toggle="tooltip"
                                                             href="#group${igroup.id}"><i class="fa fa-chevron-up"></i></a>
                             </span>
                         </div>
@@ -99,17 +99,17 @@
                                     href="<c:url value="cuseraccount.xhtml?uid=${user.username}&cid=${contest.cid}"/>"><c:out
                                     value="${user.nick}" /></a> <c:choose>
                                     <c:when test="${user.online == true}">
-                                        <sup><a  alt="logged" title="<spring:message code="altval.logged"/>"><i class="fa fa-plug"></i></a></sup>
+                                        <sup><a  data-toggle="tooltip" alt="logged" title="<spring:message code="altval.logged"/>"><i class="fa fa-plug"></i></a></sup>
                                     </c:when>
-                                </c:choose> <span class="pull-right"> <img  
+                                </c:choose> <span class="pull-right"> <img data-toggle="tooltip"
                                         src="<c:url value="/images/countries/${user.country}"/>.png"
                                         title="<c:url value="${user.country_desc}"/>"
-                                    alt="<c:url value="${user.country}"/>" /> <img class="school" 
+                                    alt="<c:url value="${user.country}"/>" /> <img class="school" data-toggle="tooltip"
                                                                                    src="<c:url value="/images/school/${user.institution}"/>.png"
                                                                                    title="<c:out value="${user.institution_desc}"/>"
                                     alt="<c:out value="${user.institution}"/>" />
                                 </span></td>
-                                <td><a
+                                <td><a data-toggle="tooltip"
                                         href="<c:url value="/contest/cstatus.xhtml?cid=${contest.cid}&status=ac&username=${user.username}"/>">${user.acc}</a></td>
                                 <td>${user.penalty}</td>
                                 <c:forEach items="${user.problems}" var="problem">
@@ -151,7 +151,7 @@
         <c:if test="${not empty users}">
             <div class="row margin-top-05">
                 <div class="col-xs-1">
-                    <a class="btn btn-primary"
+                    <a class="btn btn-primary" data-toggle="tooltip"
                        href='<c:url value="/contest/cscoreboard.xhtml?cid=${contest.cid}&group&refresh=${refresh == true}" />'>
                         <spring:message code="link.group" />
                     </a>
@@ -195,10 +195,10 @@
                             <c:when test="${user.online == true}">
                                 <sup><a  alt="logged" title="<spring:message code="altval.logged"/>"><i class="fa fa-plug"></i></a></sup>
                             </c:when>
-                        </c:choose><span class="pull-right"> <img
+                        </c:choose><span class="pull-right"> <img data-toggle="tooltip"
                                 src="<c:url value="/images/countries/${user.country}"/>.png"
                                 title="<c:url value="${user.country_desc}"/>"
-                            alt="<c:url value="${user.country}"/>" /> <img class="school" 
+                            alt="<c:url value="${user.country}"/>" /> <img class="school" data-toggle="tooltip"
                                                                            src="<c:url value="/images/school/${user.institution}"/>.png"
                                                                            title="<c:out value="${user.institution_desc}"/>"
                             alt="<c:out value="${user.institution}"/>" />

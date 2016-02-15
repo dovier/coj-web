@@ -315,7 +315,7 @@ public class ProblemController extends BaseController {
 
     }
 
-    @RequestMapping(value = "/manageproblemI18N.xhtml", method = RequestMethod.GET)
+    @RequestMapping(value = "/normalizeproblem.xhtml", method = RequestMethod.GET)
     public String manageProblemI18N(Model model, Locale locale, Principal principal, SecurityContextHolderAwareRequestWrapper requestWrapper, @RequestParam("pid") Integer pid) {
         Integer uid = problemDAO.integer("select.uid.by.username", getUsername(principal));
 
@@ -355,6 +355,13 @@ public class ProblemController extends BaseController {
     public void deleteDatasets(@RequestParam(value = "pid") int pid) {
 
         utils.removeDatasets(pid);
+    }
+
+    @RequestMapping(produces = "application/json", value = "/normalizeproblem.json", method = RequestMethod.GET, headers = {"Accept=application/json"})
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void normalizeproblem(@RequestParam(value = "pid") int pid) {
+
+        utils.normalizeProblem(pid);
     }
 
     @RequestMapping(produces = "application/json", value = "/removedataset.json", method = RequestMethod.GET, headers = {"Accept=application/json"})

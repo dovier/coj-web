@@ -1320,19 +1320,19 @@
 	<!--SOURCE-->
 
 	<definition name="/admin/wbsource/list" extends="template">
-		<put-attribute name="title" value="pagetit.wproblem.wbsource.list" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 					   value="/WEB-INF/jsp/admin/wbsource/list.jsp" />
 	</definition>
 
 	<definition name="/admin/wbsource/details" extends="template">
-		<put-attribute name="title" value="pagetit.wproblem.wbsource.details" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content"
 					   value="/WEB-INF/jsp/admin/wbsource/details.jsp" />
 	</definition>
 
 	<definition name="/admin/wbsource/create" extends="template">
-		<put-attribute name="title" value="pagetit.wproblem.wbsource.create" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="wbsourcecreate" />
 	</definition>
 
@@ -1342,7 +1342,7 @@
 	</definition>
 
 	<definition name="/admin/wbsource/edit" extends="template">
-		<put-attribute name="title" value="pagetit.wproblem.wbsource.edit" />
+		<put-attribute name="title" value="pagetit.admin" />
 		<put-attribute name="content" value="wbsourceedit" />
 	</definition>
 

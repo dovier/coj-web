@@ -240,7 +240,7 @@
 	</fieldset>
 
 
-	<fieldset>
+	<fieldset style="margin-top: 20px">
 		<legend>
 			<spring:message code="fieldhdr.specificrules" />
 		</legend>

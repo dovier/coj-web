@@ -2,15 +2,15 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer = "16kb" autoFlush="true" %>
 
+<h2 class="postheader">
+    <fmt:message key="page.general.admin.header"/>: <fmt:message key="page.general.admin.globalflags"/>
+</h2
+
 <div class="row">
     <div class="col-xs-10">
         <form:form method="post" enctype="multipart/form-data"
                    commandName="globalFlags" cssClass="form-horizontal">
 
-            <!-- NAME OF VIEW -->
-            <legend>
-                <fmt:message key="page.general.admin.header"/>: <fmt:message key="page.general.admin.globalflags"/>
-            </legend>
 
             <c:if test="${message != null}">
                 <div class="alert alert-success alert-dismissable fade in">
@@ -97,6 +97,8 @@
             <div class="form-actions pull-right">
                 <input class="btn btn-primary" type="submit" name="submit"
                        id="submit" value="<spring:message code="judgeregister.update.value"/>" />
+                <a class="btn btn-primary" href="<c:url value="/admin/index.xhtml"/>"><spring:message
+                        code="button.close"/></a>
             </div>
 
         </form:form>

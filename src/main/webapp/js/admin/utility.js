@@ -23,6 +23,24 @@ function confirm_delete(_route) {
     return false;
 }
 
+function confirm_update() {
+
+    var dialog = new BootstrapDialog({
+        message: '<div>' + i18n.message + '</div>',
+        title: i18n.title,
+        buttons: [ {
+                label: i18n.btn_accept,
+                cssClass: 'btn-primary',
+                action: function(dialogItself) {
+                    dialogItself.close();
+                }
+            }]
+    });
+    dialog.realize();
+    dialog.open();
+    return false;
+}
+
 var currentForm;
 $("#rejudge").click(function() {
     currentForm = $(this).closest('form');
@@ -48,4 +66,8 @@ $("#rejudge").click(function() {
     dialog.realize();
     dialog.open();
     return false;
+});
+
+$(".alert-dismissable").fadeTo(2000, 500).slideUp(500, function () {
+    $(".alert-dismissable").alert('close');
 });

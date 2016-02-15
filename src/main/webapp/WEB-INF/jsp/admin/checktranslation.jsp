@@ -5,7 +5,7 @@
 	type="text/css" media="screen" />
 
 <h2 class="postheader">
-	<fmt:message key="pagetit.checktranslation" />
+	<spring:message code="page.general.admin.header" />: <fmt:message key="pagetit.checktranslation" />
 </h2>
 <div class="row postcontent">
 	<div class="col-xs-12">
@@ -76,7 +76,7 @@
 						value='<spring:message code="button.reset"/>' />
 						
 					<a class="btn btn-primary"
-						href="/admin/managetranslations.xhtml"><spring:message code="button.back"/></a>
+						href="/admin/managetranslations.xhtml"><spring:message code="button.close"/></a>
 				</div>
 			</div>
 		</form:form>

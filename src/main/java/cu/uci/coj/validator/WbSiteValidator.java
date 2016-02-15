@@ -5,6 +5,7 @@ import java.net.URL;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.validator.EmailValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -27,9 +28,10 @@ public class WbSiteValidator implements Validator {
 
 	@Override
 	public void validate(Object o, Errors errors) {
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "site", "wboard.error.nosite", "Field is empy.");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "timeanddateid", "wboard.error.notimeanddate", "Field is empty.");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "code", "wboard.error.nocode", "Field is empty.");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "site", "wbsite.error.empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "timeanddateid", "wbsite.error.empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "code", "wbsite.error.empty");
+		//ValidationUtils.rejectIfEmptyOrWhitespace(errors, "url", "wbsite.error.empty");
 		
 		
 		if(((WbSite)o).getTimeanddateid() < 1) {
@@ -37,17 +39,17 @@ public class WbSiteValidator implements Validator {
 		}
 		
 		if(wbSiteDAO.getSiteId(((WbSite)o).getSite()) != null) {
-			errors.rejectValue("site", "wboard.error.site.exists", "This site already exists.");
+			errors.rejectValue("site", "wboard.error.site.exists");
 		}
 		
 		if(((WbSite) o).getTimezone().equals("0")) {
-			errors.rejectValue("timezone", "wboard.error.notimezone", "Select a timezone.");
+			errors.rejectValue("timezone", "wboard.error.notimezone");
 		}		
 		
 		try {
 			new URL(((WbSite) o).getUrl());
 		} catch (MalformedURLException e) {
-			errors.rejectValue("url", "wboard.error.url.invalid", "Invalid url.");
+			errors.rejectValue("url", "wboard.error.url.invalid");
 		}
 	}
 	

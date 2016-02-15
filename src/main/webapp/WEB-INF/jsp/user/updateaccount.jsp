@@ -6,13 +6,14 @@
 <jsp:useBean id="now" class="java.util.Date" />
 <fmt:formatDate var="year" value="${now}" pattern="yyyy" />
 
+<h2 class="postheader">
+	<spring:message code="pagehdr.euaccount" />
+</h2>
+
 <div class="row">
 	<div class="col-xs-10">
 		<form:form method="post" enctype="multipart/form-data"
 			commandName="user" cssClass="form-horizontal">
-			<legend>
-				<spring:message code="pagehdr.euaccount" />
-			</legend>
 			<authz:authorize ifAnyGranted="ROLE_USER">
 				<div class="form-group">
 					<label class="control-label col-xs-3" for="imagefile">Avatar
@@ -410,16 +411,19 @@
 	</div>
 </div>
 <script>
+	var i18n = {};
+	i18n.file = "<spring:message code="message.filename"/>";
+
 	$("#avatar").fileinput({
 		maxFileSize : 35,
 		msgProgress : 'Loading {percent}%',
-		previewClass : 'avatar_preview',
+		previewClass : 'file_preview',
 		previewFileType : "image",
 		browseClass : "btn btn-primary",
-		browseLabel : "Pick Image",
+		browseLabel : "<spring:message code="message.pickimage"/>",
 		browseIcon : '<i class="fa fa-picture-o"></i>&nbsp;',
 		removeClass : "btn btn-default",
-		removeLabel : "Delete",
+		removeLabel : "<spring:message code="message.deleteimage"/>",
 		removeIcon : '<i class="fa fa-trash"></i>'
 	});
 	$("[data-toggle='tooltip']").tooltip();

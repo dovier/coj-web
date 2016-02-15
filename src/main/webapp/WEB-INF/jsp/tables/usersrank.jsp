@@ -13,15 +13,15 @@
 			alt="<c:url value="${user.country}"/>" />
 	</display:column>
 	<display:column titleKey="tablehdr.user" style="text-transform:none">
-		<a title="<c:out value="${user.nick}"/>"
+		<a title="<c:out value="${user.nick}"/>" data-toggle="tooltip"
 			href="<c:url value="/user/useraccount.xhtml?username=${user.username}"/>">
 			<c:out value="${user.username}" />
 		</a>
 		<c:if test="${user.online == true}">&nbsp;
-					<a alt="logged" title="<spring:message code="altval.logged"/>"><i
+					<a alt="logged" data-toggle="tooltip" title="<spring:message code="altval.logged"/>"><i
 				class="fa fa-plug"></i></a>
 		</c:if>
-		<span class="pull-right"> <i title="${user.status}"
+		<span class="pull-right"> <i title="${user.status}" data-toggle="tooltip"
 			class="fa fa-circle user${user.status}"> </i>
 		</span>
 	</display:column>

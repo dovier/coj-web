@@ -28,9 +28,7 @@
 <script>
     $("[data-toggle='tooltip']").tooltip();
 </script>
-<link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
-<script src="/js/bootstrap-dialog.min.js"></script>
-<script src="/js/admin/utility.js"></script>
+
 <script>
     var i18n = {};
     i18n.title = "<spring:message code="message.confirm.delete.hdr.entry"/>";

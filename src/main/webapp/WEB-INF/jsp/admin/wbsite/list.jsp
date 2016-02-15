@@ -5,8 +5,7 @@
       type="text/css" media="screen" />
 
 <h2 class="postheader">
-    <spring:message code="page.general.admin.header" />
-    : <spring:message code="page.header.admin.site.list" />
+    <spring:message code="page.general.admin.header" />: <spring:message code="page.header.admin.site.list" />
 </h2>
 <div class="postcontent">
     <c:if test="${message != null}">

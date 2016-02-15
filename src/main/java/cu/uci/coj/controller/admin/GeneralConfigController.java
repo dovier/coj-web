@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cu.uci.coj.model.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.userdetails.User;
@@ -35,12 +36,6 @@ import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.dao.BaseDAO;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.mail.MailNotificationService;
-import cu.uci.coj.model.Contest;
-import cu.uci.coj.model.GlobalFlags;
-import cu.uci.coj.model.IpAddress;
-import cu.uci.coj.model.Rule;
-import cu.uci.coj.model.Session;
-import cu.uci.coj.model.UploadFile;
 import cu.uci.coj.security.COJSessionRegistryImpl;
 import cu.uci.coj.utils.FileUtils;
 import cu.uci.coj.utils.HandlerInterceptorImpl;
@@ -143,7 +138,7 @@ public class GeneralConfigController extends BaseController {
     }
 
     @RequestMapping(value = "/expire.xhtml", method = RequestMethod.GET)
-    public String expireSession(Model model, @RequestParam("session") String sessionid) {
+    public String expireSession(Model model, @RequestParam("session") String sessionid, RedirectAttributes redirectAttributes) {
         boolean expire = true;
         Object[] principals = cojSessionRegistryImpl.getAllPrincipals().toArray();
         for (int i = 0; i < principals.length && expire; i++) {
@@ -158,6 +153,7 @@ public class GeneralConfigController extends BaseController {
                 }
             }
         }
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
         return "redirect:/admin/sessions.xhtml";
     }
 
@@ -269,6 +265,15 @@ public class GeneralConfigController extends BaseController {
     public String contestGlobalFlags(Model model, @RequestParam("cid") Integer cid) {
         GlobalFlags flags = baseDAO.object("load.global.flags", GlobalFlags.class);
         Contest contest = contestDAO.loadContestManage(cid);
+
+        //Verificar si el contest tienen asociados problemas (existen problemas = eproblem).
+        boolean eproblem = true;
+        List<Problem> problems = contestDAO.loadContestProblems(cid);
+        if (problems != null)
+            eproblem = !problems.isEmpty();
+
+        model.addAttribute("eproblem", eproblem);
+
         model.addAttribute(contest);
         model.addAttribute(flags);
         return "/admin/contestglobalflags";

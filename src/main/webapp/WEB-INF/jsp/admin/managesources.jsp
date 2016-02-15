@@ -5,10 +5,9 @@
 <script src="/js/bootstrap-dialog.min.js"></script>
 <script src="/js/admin/utility.js"></script>
 
-<h2 class="postheader">
-    <spring:message code="page.general.admin.header" />
-    : <spring:message code="psource.title" />	
-</h2>
+<%--<h2 class="postheader">
+    <spring:message code="page.general.admin.header"/>: <spring:message code="psource.title"/>
+</h2>--%>
 <div class="postcontent">
     <c:if test="${message != null}">
         <div class="alert alert-success alert-dismissable fade in">

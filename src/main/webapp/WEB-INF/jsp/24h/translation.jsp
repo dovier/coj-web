@@ -76,12 +76,9 @@
 
                     <div class="col-xs-12">
                         <div class="form-actions pull-right ">
-                            <input class="btn btn-primary confirm-message" type="submit" name="but"
-                                   value='<spring:message code="button.send" />'
-                                   data-confirm-title='<spring:message code="message.title"/>'
-                                   data-confirm-message='<spring:message code="message.translation.pending"/>'
-                                   data-confirm-type="message"
-                                   data-redirect="/24h/problems.xhtml" />
+                            <input class="btn btn-primary " type="submit" name="but"
+                                   value='<spring:message code="button.send" />' />
+                            <a href="/24h/problem.xhtml?pid=${problem.pid}" class="btn btn-primary"><spring:message code="btn.text.cancel" /> </a>
                         </div>
                     </div>
                 </form:form>
@@ -129,12 +126,9 @@
 
                     <div class="col-xs-12">
                         <div class="form-actions pull-right ">
-                            <input class="btn btn-primary confirm-message" type="submit" name="but"
-                                   value='<spring:message code="button.send" />'
-                                   data-confirm-title='<spring:message code="message.title"/>'
-                                   data-confirm-message='<spring:message code="message.translation.pending"/>'
-                                   data-confirm-type="message"
-                                   data-redirect="/24h/problems.xhtml" />
+                            <input class="btn btn-primary" type="submit" name="but"
+                                   value='<spring:message code="button.send" />'/>
+                            <a href="/24h/problem.xhtml?pid="${problem.pid}><spring:message code="btn.text.cancel" /> </a>
                         </div>
                     </div>
                 </form:form>
@@ -182,12 +176,9 @@
 
                     <div class="col-xs-12">
                         <div class="form-actions pull-right ">
-                            <input class="btn btn-primary confirm-message" type="submit" name="but"
-                                   value='<spring:message code="button.send" />'
-                                   data-confirm-title='<spring:message code="message.title"/>'
-                                   data-confirm-message='<spring:message code="message.translation.pending"/>'
-                                   data-confirm-type="message"
-                                   data-redirect="/24h/problems.xhtml" />
+                            <input class="btn btn-primary" type="submit" name="but"
+                                   value='<spring:message code="button.send" />' />
+                            <a href="/24h/problem.xhtml?pid="${problem.pid}><spring:message code="btn.text.cancel" /> </a>
                         </div>
                     </div>
                 </form:form>
@@ -203,12 +194,13 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
 
 <script>
     $(function () {
-        $("form.translation").each(function () {
+        /*$("form.translation").each(function () {
             $(this).submit(function (e) {
                 e.preventDefault();
                 $(this).ajaxSubmit();
+                return false;
             });
-        });
+        });*/
 
         $(".nav-tabs li").on("click", function () {
             $(".tab-pane").each(function () {
@@ -219,3 +211,15 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
 
     $("[data-toggle='tooltip']").tooltip();
 </script>
+
+<%--
+<link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+<script src="/js/bootstrap-dialog.min.js"></script>
+<script src="/js/admin/utility.js"></script>
+
+<script>
+    var i18n = {};
+    i18n.title      = "<spring:message code="message.title"/>";
+    i18n.message    = "<spring:message code="message.translation.pending"/>";
+    i18n.btn_accept = "<spring:message code="btn.text.accept"/>";
+</script>--%>

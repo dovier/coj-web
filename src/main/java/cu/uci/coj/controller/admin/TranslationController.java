@@ -61,14 +61,14 @@ public class TranslationController extends BaseController {
 	@RequestMapping(value="/managetranslations/check.xhtml", method=RequestMethod.POST)
 	String approveTranslations(Model model, Translation translation, Principal principal, BindingResult bindingResult, @RequestParam Integer id, RedirectAttributes redirectAttributes) {	
 		problemDAO.approveTranslation(translation, getUsername(principal));
-                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
+                redirectAttributes.addFlashAttribute("message", Notification.getAcceptedTranslate());
 		return "redirect:/admin/managetranslations.xhtml";
 	}	
 	
 	@RequestMapping(value="/managetranslations/delete.xhtml", method=RequestMethod.GET)
 	String deleteTranslation(@RequestParam Integer id, RedirectAttributes redirectAttributes) {
 		problemDAO.deleteTranslation(id);
-                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
+                redirectAttributes.addFlashAttribute("message", Notification.getRechazedTranslate());
 		return "redirect:/admin/managetranslations.xhtml";
 	}
 }

@@ -15,7 +15,7 @@
 
             <!-- NAME OF VIEW -->
             <legend>
-                <spring:message code="page.general.admin.header" />: <spring:message code="pagehdr.euaccount" />
+                <h2><spring:message code="page.general.admin.header" />: <spring:message code="pagehdr.euaccount" /></h2>
             </legend>
 
             <!-- NICKNAME OF USER-->
@@ -62,8 +62,7 @@
                     </label>
                     <!-- ADD ALL COUNTRIES -->
                     <div class="col-xs-8">
-                        <form:select path="country_id" id="country" cssClass="form-control" onchange="getInstitution();">
-                            <form:option value="0">none</form:option>
+                        <form:select path="country_id" id="country" cssClass="form-control" onchange="getInstitution();">                            
                             <form:options items="${countries}" itemValue="id" itemLabel="name" />
                         </form:select>
                     </div>                    
@@ -89,11 +88,18 @@
                     <!-- ADD ALL INSTITUTIONS -->
                     <div class="col-xs-8">
                         <form:select cssClass="form-control" path="institution_id" id="institution">
-                            <form:option value="0">
-                                <spring:message code="fieldval.none" />
-                            </form:option>
-                            <form:options items="${institutions}" itemLabel="name"
-                                          itemValue="id" />
+                            
+                            <c:forEach var="institution" items="${institutions}">      
+                                <c:set var="institution_name">
+                                    ${institution.name}                                    
+                                </c:set>
+                                <c:if test="${institution.name == 'NONE INSTITUTION'}">
+                                    <c:set var="institution_name">
+                                        <spring:message code="user.none.institution"/>
+                                    </c:set>
+                                </c:if>
+                                <form:option label="${institution_name}" value="${institution.id}"></form:option>
+                            </c:forEach>   
                         </form:select>
                     </div>                    
                     <div class="error col-xs-8 col-xs-offset-3">
@@ -542,6 +548,8 @@
                        id="submit" value="<spring:message code="button.edit"/>" /> <input
                        class="btn btn-primary" type="reset" name="reset" id="reset"
                        value="<spring:message code="button.reset"/>" />
+                <a class="btn btn-primary" href="<c:url value="/admin/manageusers.xhtml"/>"><spring:message
+                        code="button.close"/></a>
             </div>
 
         </form:form>

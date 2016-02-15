@@ -6,8 +6,12 @@ package cu.uci.coj.validator;
 
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.model.User;
+
+import java.util.Calendar;
 import java.util.Date;
 import javax.annotation.Resource;
+
+
 import org.hibernate.validator.constraints.impl.EmailValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -52,6 +56,14 @@ public class registrationValidator implements Validator {
             errors.rejectValue("username", "errormsg.18");
         }
 
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(user.getYear(), user.getMonth()-1, user.getDay());
+        Date date = calendar.getTime();
+
+        if (date.after(new Date())){
+            errors.rejectValue("year", "errormsg.61");
+        }
         if (user.getNick().length() < 3) {
             errors.rejectValue("nick", "errormsg.5");
         } else if (user.getNick().length() > 15) {

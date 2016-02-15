@@ -37,7 +37,7 @@
                                     maxlength="30"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="name" /></span>
+                        <span class="label label-danger"><form:errors path="name"/></span>
                     </div>
                     <a>
                         <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -122,6 +122,8 @@
             <div class="form-actions pull-right">
                 <input class="btn btn-primary" type="submit" name="submit"
                        id="submit" value="<spring:message code="judgeregister.update.value"/>" />
+                <a class="btn btn-primary" href="<c:url value="/admin/managecountries.xhtml"/>"><spring:message
+                        code="button.close"/></a>
             </div>
         </form:form>
     </div>

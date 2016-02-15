@@ -1,3 +1,4 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
@@ -15,12 +16,16 @@
 			href="<c:url value="cuseraccount.xhtml?uid=${submit.username}&cid=${contest.cid}"/>"><c:out
 				value="${submit.userNick}" /></a>
 	</display:column>
-	<display:column property="ddate" titleKey="tablehdr.date"
-		headerClass="headdate">
+	<display:column titleKey="tablehdr.date" headerClass="headdate">
+		<c:set var="newdate" value="${fn:substring(submit.ddate, 0, 19)}" />
+		${newdate}
 	</display:column>
 	<c:if test="${showBalloonMark}">
 		<display:column titleKey="tablehdr.actions" headerClass="headdate">
-			<a href="javascript:mark(${submit.sid});" title="Mark Balloon"><i class="fa fa-check-circle"></i></a>
+			<a href="javascript:mark(${submit.sid});" data-toggle="tooltip" title="<spring:message code="page.cballoontracker.markballoon" /> "><i class="fa fa-check-circle"></i></a>
 		</display:column>
 	</c:if>
 </display:table>
+<script>
+	$("[data-toggle='tooltip']").tooltip();
+</script>

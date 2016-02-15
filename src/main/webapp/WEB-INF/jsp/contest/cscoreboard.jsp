@@ -16,7 +16,7 @@
 </c:if>
 <div class="row">
 	<h2 class="postheader" style="clear: both">
-		<a class="linkheader"
+		<a class="linkheader" data-toggle="tooltip"
 			href="<c:url value="contestview.xhtml?cid=${contest.cid}"/>">${contest.name}</a>
 		<br />
 		<spring:message code="pagehdr.standings" />
@@ -25,27 +25,27 @@
 		<c:if test="${contest.running}">
 			<c:choose>
 				<c:when test="${refresh}">
-						<div class="label label-info"><i class="fa fa-info-circle"></i>
+						<div class="label label-info"><i class="fa fa-info-circle" data-toggle="tooltip"></i>
 							<spring:message code="text.vcstandings.3" />
 						</div>
 					<br />
 					<c:if test="${group}">
-						<a href="cscoreboard.xhtml?&cid=${contest.cid}">[Disable auto
+						<a href="cscoreboard.xhtml?&cid=${contest.cid}" data-toggle="tooltip">[Disable auto
 							refresh]</a>
 					</c:if>
 					<c:if test="${not group}">
-						<a href="cscoreboard.xhtml?&cid=${contest.cid}&ungroup">[Disable
+						<a href="cscoreboard.xhtml?&cid=${contest.cid}&ungroup" data-toggle="tooltip">[Disable
 							auto refresh]</a>
 					</c:if>
 				</c:when>
 				<c:otherwise>
 					<c:if test="${group}">
-						<a href="cscoreboard.xhtml?&cid=${contest.cid}&refresh=true">[Auto
+						<a href="cscoreboard.xhtml?&cid=${contest.cid}&refresh=true" data-toggle="tooltip">[Auto
 							refresh]</a>
 					</c:if>
 					<c:if test="${not group}">
 						<a
-							href="cscoreboard.xhtml?&cid=${contest.cid}&refresh=true&ungroup">[Auto
+							href="cscoreboard.xhtml?&cid=${contest.cid}&refresh=true&ungroup" data-toggle="tooltip">[Auto
 							refresh]</a>
 					</c:if>
 				</c:otherwise>
@@ -58,11 +58,11 @@
 		<tbody>
 			<tr>
 				<td><a
-					href="<c:url value="/contest/contestview.xhtml?cid=${contest.cid}" />"><i
+					href="<c:url value="/contest/contestview.xhtml?cid=${contest.cid}" />" data-toggle="tooltip"><i
 										class="fa fa-eye"></i>&nbsp;<spring:message
 							code="link.overview" /> </a></td>
 				<td><a
-					href="<c:url value="/contest/myclarifications.xhtml?cid=${contest.cid}"/>"><i
+					href="<c:url value="/contest/myclarifications.xhtml?cid=${contest.cid}"/>" data-toggle="tooltip"><i
 										class="fa fa-bullhorn"></i>&nbsp;<spring:message
 							code="link.clarifications" /> <sup><c:if test="${totalmsg != 0}">
 							<span class="label label-default">(${totalmsg})</span></c:if>
@@ -70,31 +70,30 @@
 							<span class="label label-danger">(${unread})</span>
 						</c:if></sup> </a></td>
 				<td><a
-					href="<c:url value="/contest/cproblems.xhtml?cid=${contest.cid}" />"><i
+					href="<c:url value="/contest/cproblems.xhtml?cid=${contest.cid}" />" data-toggle="tooltip"><i
 										class="fa fa-list"></i>&nbsp;<spring:message
 							code="link.problems" /> </a></td>
 				<authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
 					<c:choose>
 						<c:when test="${contest.running == true}">
 							<td><a
-								href="<c:url value="/contest/csubmit.xhtml?cid=${contest.cid}" />"><i
+								href="<c:url value="/contest/csubmit.xhtml?cid=${contest.cid}" />" data-toggle="tooltip"><i
 										class="fa fa-file-code-o"></i>&nbsp;<spring:message
 										code="link.submit" /></a></td>
 						</c:when>
 					</c:choose>
 				</authz:authorize>
 				<td><a
-					href="<c:url value="/contest/cstatus.xhtml?cid=${contest.cid}" />"><i
+					href="<c:url value="/contest/cstatus.xhtml?cid=${contest.cid}" />" data-toggle="tooltip"><i
 										class="fa fa-legal"></i>&nbsp;<spring:message
 							code="link.judgments" /></a></td>
 				<c:if test="${contest.past}">
 					<td><a
-						href="<c:url value="/contest/cawards.xhtml?cid=${contest.cid}" />"><i
-										class="fa fa-trophy"></i>&nbsp;<spring:message
-									code="link.cawards" /></span></a></td>
+						href="<c:url value="/contest/cawards.xhtml?cid=${contest.cid}" />" data-toggle="tooltip"><i
+										class="fa fa-trophy"></i>&nbsp;<spring:message code="link.cawards" /></a></td>
 				</c:if>
 				<td><a
-					href="<c:url value="/contest/cstatistics.xhtml?cid=${contest.cid}" />"><i
+					href="<c:url value="/contest/cstatistics.xhtml?cid=${contest.cid}" />" data-toggle="tooltip"><i
 										class="fa fa-bar-chart"></i>&nbsp;<spring:message
 							code="link.statistics" /></a></td>
 			</tr>

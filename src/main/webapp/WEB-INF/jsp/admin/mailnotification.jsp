@@ -2,16 +2,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@page buffer="16kb" autoFlush="true" %>
 
+<h2 class="postheader">
+    <spring:message code="page.general.admin.header"/>: <spring:message code="pagehdr.mailnotification"/>
+</h2>
+
 <div class="row">
     <div class="col-xs-10">
         <form:form method="post" enctype="multipart/form-data"
                    commandName="notification" cssClass="form-horizontal">
-
-            <!-- NAME OF VIEW -->
-            <legend>
-                <spring:message code="page.general.admin.header"/>
-                : <spring:message code="pagehdr.mailnotification"/>
-            </legend>
 
             <!-- SUBJECT OF MAIL -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
@@ -62,6 +60,8 @@
                 <input
                         class="btn btn-primary" type="reset" name="reset" id="reset"
                         value="<spring:message code="judge.register.reset.value"/>"/>
+                <a class="btn btn-primary" href="<c:url value="/admin/index.xhtml"/>"><spring:message
+                        code="button.close"/></a>
             </div>
 
         </form:form>

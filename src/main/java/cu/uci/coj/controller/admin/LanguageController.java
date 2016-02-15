@@ -54,8 +54,17 @@ public class LanguageController  extends BaseController {
             model.addAttribute(language);
             return "/admin/managelanguage";
         }
+        
+        boolean update = false;
+        
+        if(language.getLid() > 1 ){
+            update = true;
+        }
         baseDAO.dml("upsert.language",language.getLanguage(),language.getKey(),language.getName_bin(),language.isEnabled(),language.getDescripcion(),language.getLid(),language.getLanguage(),language.getKey(),language.getName_bin(),language.isEnabled(),language.getDescripcion());
-        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
+      
+       redirectAttributes.addFlashAttribute("message",update ? Notification.getSuccesfullUpdate(): Notification.getSuccesfullCreate());
+      
+        
         return "redirect:/admin/programminglanguages.xhtml";
     }
 }

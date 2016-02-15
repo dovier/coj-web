@@ -97,12 +97,13 @@
 			<div class="form-group">
 				<label class="control-label col-xs-3"><spring:message
 						code="fieldhdr.dob" /></label>
-				<div class="col-xs-2 col-xs-offset-2">
+				<div class="col-xs-2">
 					<form:select cssClass="form-control" path="year">
 						<c:forEach begin="1930" step="1" end="${year}" var="value">
 							<form:option value="${value}">${value}</form:option>
 						</c:forEach>
 					</form:select>
+
 				</div>
 				<div class="col-xs-2">
 					<form:select cssClass="form-control" path="month">
@@ -117,6 +118,10 @@
 							<form:option value="${value}">${value}</form:option>
 						</c:forEach>
 					</form:select>
+				</div>
+				<div class="error col-xs-8">
+					<span class="label label-danger"><form:errors
+							path="year" /></span>
 				</div>
 			</div>
 			<div class="form-group">
@@ -189,7 +194,7 @@
 					<form:input cssClass="form-control" path="cemail" size="30" />
 				</div>
 				<div class="error col-xs-8 col-xs-offset-3">
-					<form:errors path="cemail" />
+					<span class="label label-danger"><form:errors path="cemail" /></span>
 				</div>
 				
 			</div>

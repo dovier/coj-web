@@ -45,24 +45,24 @@ public class problemValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Problem problem = (Problem) o;
-        String empty = "errormsg.10";
+        String empty = "general.error.empty";
         String invalid = "errormsg.9";
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", empty);        
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "time", empty);
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "memory", empty);
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "fontsize", empty);
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "output", empty);
+       // ValidationUtils.rejectIfEmptyOrWhitespace(errors, "output", empty);
         if (problem.getTime() < 0) {
             errors.rejectValue("time",
                     invalid,
                     "At must 40 characters.");
         }
 
-        if (problem.isMultidata() && problem.getCasetimelimit() <= 0) {
+      /*  if (problem.isMultidata() && problem.getCasetimelimit() <= 0) {
             errors.rejectValue("casetimelimit",
                     invalid,
                     "At must 40 characters.");
-        }
+        }*/
 
         if (problem.getMemory() < 0) {
             errors.rejectValue("memory",

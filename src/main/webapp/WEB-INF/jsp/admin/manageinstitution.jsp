@@ -2,17 +2,15 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer = "16kb" autoFlush="true" %>
 
+<h2 class="postheader">
+    <spring:message code="page.general.admin.header" />: <spring:message code="page.general.admin.manageinstitution.editinstitution" />
+</h2>
+
 <div class="row">
     <div class="col-xs-10">
         <!-- enctype="multipart/form-data" -->
         <form:form method="post"
                    commandName="institution" cssClass="form-horizontal">
-            <!-- NAME OF VIEW -->
-            <legend>
-                <spring:message code="page.general.admin.header" />
-                : <spring:message code="page.general.admin.manageinstitution.editinstitution" />
-            </legend>
-
             <!-- ID OF INTITUTION -->
 
             <div class="form-group">
@@ -145,6 +143,8 @@
             <div class="form-actions pull-right">
                 <input class="btn btn-primary" type="submit" name="submit"
                        id="submit" value="<spring:message code="judgeregister.update.value"/>" />
+                <a class="btn btn-primary" href="<c:url value="/admin/manageinstitutions.xhtml"/>"><spring:message
+                        code="button.close"/></a>
             </div>
 
         </form:form>
@@ -155,7 +155,7 @@
     $("#logo").fileinput({
         maxFileSize: 35,
         msgProgress: 'Loading {percent}%',
-        previewClass: 'avatar_preview',
+        previewClass: 'file_preview',
         previewFileType: "image",
         browseClass: "btn btn-primary",
         browseLabel: "Pick Image",

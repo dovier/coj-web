@@ -11,7 +11,7 @@
     <div class="col-xs-10">
 
         <form:form method="post"
-                   commandName="wproblemSource" cssClass="form-horizontal">
+                   commandName="problemSource" cssClass="form-horizontal">
 
             <legend>
                 <spring:message code="page.general.admin.header" />: <spring:message code="page.header.admin.source.edit" />
@@ -24,6 +24,8 @@
                        id="submit" value="<spring:message code="button.edit"/>" /> <input
                     class="btn btn-primary" type="reset" name="reset" id="reset"
                     value="<spring:message code="button.reset"/>" />
+                <a class="btn btn-primary" href="<c:url value="/admin/managesources.xhtml"/>"><spring:message
+                        code="button.close"/></a>
             </div>
         </form:form>
 

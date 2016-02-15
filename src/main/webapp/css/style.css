@@ -114,7 +114,10 @@ img.achievement-image {
     box-shadow: 1px 1px 2px #999;
     vertical-align: middle;
 }
-
+.file_preview {
+    width: auto;
+    height: auto;
+}
 .avatar_preview {
     width: 180px;
     height: 160px;
@@ -1390,6 +1393,9 @@ img.grayed {
 .bginactive {
     background-color: #d9534f;
 }
+.bgnotactive {
+    background-color: #d9534f;
+}
 
 .fileicon {
     width:50px;
@@ -1511,6 +1517,7 @@ div.panel-heading .badge a {
     top:20%;
     margin-left: -300px;
     background-color: #FFFFFF;
+    border:1px solid #C0C0C0;
     z-index: 99999999;
 }
 

@@ -1,3 +1,5 @@
+/*Asegura que todos los alert se muestren solo 5 segundos*/
+
 function getInstitution() {
     var id = document.getElementById("country").value;
     if (id == 0) {
@@ -50,13 +52,23 @@ function voting(id, url) {
 }
 
 function disableEntry(id) {
-    alert(id);
     $.ajax({
         type: "POST",
         url: "/admin/disableentry.json",
         data: "id=" + id,
         dataType: 'json',
         success: function (data) {
+            BootstrapDialog.show({
+                title: i18n.title,
+                message: i18n.message,
+                buttons: [{
+                    label: i18n.btn_accept,
+                    cssClass: 'btn-primary',
+                    action: function (dialogItself) {
+                        dialogItself.close();
+                    }
+                }]
+            });
             $("#entry" + data.id).html("<i>" + data.text + "</i>");
             $("#actions" + data.id).remove();
         }
@@ -100,8 +112,7 @@ function updateBoard(last, course_id) {
     });
 }
 
-function createTr(course_id, chapter, name, id)
-{
+function createTr(course_id, chapter, name, id) {
     var tr = document.createElement("tr");
     tr.setAttribute("id", id);
     var tdname = document.createElement("td");
@@ -242,22 +253,26 @@ function saveDraft() {
         data: $('#composeform').serialize(),
         dataType: 'json',
         success: function (data) {
-            //notify.setAttribute("class", "notice");
-            //$('#notice').show(50,callback);
-            //notify.innerHTML = data.message;
+            /*notify.setAttribute("class", "notice");
+            $('#notice').show(50,callback);
+            notify.innerHTML = data.message;*/
+
             $('#notice').show();
-            $('#notice').html(i18n.maildraftsave);
+            /*var value = '<spring:message code=\"' + data.message + '\"/>';*/
+            $('#notice').html(data.message);
+
         }
     });
+
+    /*var _route = "/admin/updateclassifications.xhtml?classid=" + id + "&name=" + $("input[name='class" + id + "']").val();
+    window.location = _route;*/
 }
 
-function deleteFileIn(element)
-{
+function deleteFileIn(element) {
     document.getElementById('uploadinput').removeChild(document.getElementById("file_" + element));
 }
 
-function addOutputOld(id)
-{
+function addOutputOld(id) {
     var newid = eval(++id);
     var tr = document.createElement("tr");
     var td = document.createElement("td");
@@ -281,15 +296,13 @@ function addOutputOld(id)
     add.setAttribute("onClick", "addOutput(" + num + ")");
 }
 
-function deleteFile(element)
-{
+function deleteFile(element) {
     var tr = document.getElementById(element).parentNode.parentNode;
     tr.parentNode.removeChild(tr);
 }
 
 
-function addOutput(add)
-{
+function addOutput(add) {
     var div_father = document.getElementById(add);
     var table = div_father.getElementsByTagName("table")[0];
     var cant = countChilds(table);
@@ -314,30 +327,27 @@ function countChilds(element) {
     return element.childNodes.length;
 }
 
-function onCase() {
-    var child = document.getElementById("casecheck");
-    var dis = document.getElementById("casetime");
-    if (child.checked)
-    {
-        dis.removeAttribute("disabled");
-    }
-    else
-    {
-        dis.setAttribute("disabled", "");
-    }
+/*function onCase() {
+ var child = document.getElementById("casecheck");
+ var dis = document.getElementById("casetime");
+ if (child.checked)
+ {
+ dis.removeAttribute("disabled");
+ }
+ else
+ {
+ dis.setAttribute("disabled", "");
+ }
+ }*/
+
+function setProperties(element) {
+
 }
 
-function setProperties(element)
-{
-
-}
-
-function selection(checkbox, elements)
-{
+function selection(checkbox, elements) {
     var element = document.getElementById(checkbox);
     var ele = document.getElementsByName(elements);
-    if (element.checked)
-    {
+    if (element.checked) {
         for (var i = 0; i < ele.length; i++) {
             ele[i].checked = true;
         }
@@ -358,8 +368,7 @@ function removeAll() {
 }
 function show(val) {
     removeAll();
-    switch (val)
-    {
+    switch (val) {
         case 1:
         {
             var one = document.getElementById("rejudge");
@@ -408,8 +417,7 @@ function show(val) {
             var array = new Array('Accepted', 'Wrong Answer', 'Presentation Error', 'Memory Limit Exceeded', 'Time Limit Exceeded', 'Output Limit Exceeded', 'Size Limit Exceeded', 'Invalid Function', 'Runtime Error', 'Compilation Error', 'Unqualified', 'Judging');
             var select = document.createElement("select");
             select.setAttribute("name", "status");
-            for (var i = 0; i < array.length; i++)
-            {
+            for (var i = 0; i < array.length; i++) {
                 var option = document.createElement("option");
                 option.innerHTML += array[i];
                 select.appendChild(option);
@@ -444,8 +452,7 @@ function show(val) {
             var array = new Array('Accepted', 'Wrong Answer', 'Presentation Error', 'Memory Limit Exceeded', 'Time Limit Exceeded', 'Output Limit Exceeded', 'Size Limit Exceeded', 'Invalid Function', 'Runtime Error', 'Compilation Error', 'Unqualified', 'Judging');
             var select = document.createElement("select");
             select.setAttribute("name", "status");
-            for (var i = 0; i < array.length; i++)
-            {
+            for (var i = 0; i < array.length; i++) {
                 var option = document.createElement("option");
                 option.innerHTML += array[i];
                 select.appendChild(option);
@@ -496,8 +503,7 @@ function updSelect() {
     window.frames['frame_code'].editArea.execCommand('change_syntax', lang);
 }
 
-function toogle_editable(id)
-{
+function toogle_editable(id) {
     editAreaLoader.execCommand(id, 'set_editable', !editAreaLoader.execCommand(id, 'is_editable'));
 }
 
@@ -548,12 +554,10 @@ function SeleccionarRangosCourses() {
     SeleccionaRangos('contests_problem');
 }
 
-function SeleccionaRangos(elemento)
-{
+function SeleccionaRangos(elemento) {
     var element = document.getElementById(elemento);
     var n = element.length;
-    for (var i = 0; i < n; ++i)
-    {
+    for (var i = 0; i < n; ++i) {
         element[i].selected = 1;
     }
 }
@@ -601,7 +605,6 @@ function changeProblemsState() {
     toggleVisibility('virtual_contest_9', virtual_style);
     getVirtualTemplates(virtual_style == true ? 1 : 2);
 }
-
 
 
 function toggleVisibility(id_element, show) {
@@ -714,8 +717,7 @@ function loadProblemClassification(pid) {
 }
 function showplagicoj(val) {
     removeAllplagicoj();
-    switch (val)
-    {
+    switch (val) {
         case 1:
         {
             var one = document.getElementById("plagicoj");

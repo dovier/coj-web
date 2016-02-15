@@ -58,48 +58,63 @@ public class countryValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "zip", "general.error.empty");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "zip_two", "general.error.empty");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "website", "general.error.empty");
+        
+        
 
-        pattern = Pattern.compile(STRING_PATTERN);
-        matcher = pattern.matcher(country.getZip_two());
-        if (!matcher.matches()) {
-            errors.rejectValue("zip_two", "general.error.onlyletters");
-        }
-
-        matcher = pattern.matcher(country.getName());
-        if (!matcher.matches()) {
-            errors.rejectValue("name", "general.error.onlyletters");
-        }
-        pattern = Pattern.compile(STRING_PATTERN_SITIOWEB);
-        matcher = pattern.matcher(country.getWebsite());
-        if (!matcher.matches()) {
-            errors.rejectValue("website", "website.containNonAddress");
-        }
-        if (country.getName() != null && countryDAO.bool("exist.country.name", country.getName())) {
-            errors.rejectValue("name",
-                    "general.error.exist",
-                    "At must 40 characters.");
-        }
-        if (country.getZip() != null && countryDAO.bool("exist.country.zip", country.getZip())) {
-            errors.rejectValue("zip",
-                    "general.error.exist",
-                    "At must 40 characters.");
-        }
-
-        if (country.getZip() != null && country.getZip().length() > 8) {
-            errors.rejectValue("zip",
-                    "general.error.invalid",
-                    "At must 40 characters.");
-        } else if (country.getZip() != null) {
-            for (int i = 0; i < country.getZip().length(); i++) {
-                char c = country.getZip().charAt(i);
-                if (c < 'A' || c > 'Z') {
-                    errors.rejectValue("zip",
-                            "general.error.upper",
-                            "Upper case characters only");
-                    break;
-                }
+        if(!errors.hasFieldErrors("zip_two")){
+            pattern = Pattern.compile("[a-zA-Z]{2}");
+            matcher = pattern.matcher(country.getZip_two());
+            if (!matcher.matches()) {
+                errors.rejectValue("zip_two", "general.error.onlyletters");
             }
         }
+        
+
+        if(!errors.hasFieldErrors("name")){
+            pattern = Pattern.compile(STRING_PATTERN);
+            matcher = pattern.matcher(country.getName());
+            if (!matcher.matches()) {
+                errors.rejectValue("name", "general.error.onlyletters");
+            }
+        }
+        
+        if(!errors.hasFieldErrors("website")){
+            pattern = Pattern.compile(STRING_PATTERN_SITIOWEB);
+            matcher = pattern.matcher(country.getWebsite());
+            if (!matcher.matches()) {
+                errors.rejectValue("website", "website.containNonAddress");
+            }
+        }
+        if(!errors.hasFieldErrors("name")){
+            if (country.getName() != null && countryDAO.bool("exist.country.name", country.getName())) {
+                errors.rejectValue("name",
+                        "general.error.exist",
+                        "At must 40 characters.");
+            }
+        }
+        
+        if(!errors.hasFieldErrors("zip")){
+              if (country.getZip() != null && countryDAO.bool("exist.country.zip", country.getZip())) {
+                    errors.rejectValue("zip",
+                            "general.error.exist",
+                            "At must 40 characters.");
+                }
+        }
+      
+        if(!errors.hasFieldErrors("zip")){
+            if (country.getZip() != null && country.getZip().length() > 8) {
+                 errors.rejectValue("zip",
+                         "general.error.invalid",
+                         "At must 40 characters.");
+             } else if (country.getZip() != null) {
+                  pattern = Pattern.compile("[A-Z]{3}");
+                    matcher = pattern.matcher(country.getZip());
+                    if (!matcher.matches()) {
+                        errors.rejectValue("zip", "general.error.onlyletters");
+                    }
+             }
+        }
+        
     }
 
     public void validateUpdate(Object o, Errors errors) {
@@ -121,22 +136,27 @@ public class countryValidator implements Validator {
                         "Already Exists");
             }
         }
+        
         pattern = Pattern.compile(STRING_PATTERN);
         matcher = pattern.matcher(country.getZip_two());
         if (!matcher.matches()) {
             errors.rejectValue("zip_two", "general.error.onlyletters");
         }
-
-        matcher = pattern.matcher(country.getName());
-        if (!matcher.matches()) {
-            errors.rejectValue("name", "general.error.onlyletters");
+        
+        if (!errors.hasFieldErrors("name")) {
+            matcher = pattern.matcher(country.getName());
+            if (!matcher.matches()) {
+                errors.rejectValue("name", "general.error.onlyletters");
+            }
         }
+       
         pattern = Pattern.compile(STRING_PATTERN_SITIOWEB);
         matcher = pattern.matcher(country.getWebsite());
         if (!matcher.matches()) {
             errors.rejectValue("website", "website.containNonAddress");
         }
 
+        
         if (!errors.hasFieldErrors("zip") && country.getZip().length() > 8) {
             errors.rejectValue("zip",
                     "general.error.invalid",

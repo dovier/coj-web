@@ -41,7 +41,7 @@
             ><i title="<spring:message code="messages.general.i18n"/>"
                                                                data-toggle="tooltip" class="fa fa-language"></i></a>
         &nbsp;<a
-            href="<c:url value="/admin/manageproblem.xhtml?pid=${problem.pid}"/>"
+            href="#" id = "normalizeproblem"
             ><i title="<spring:message code="messages.general.normalize"/>"
                                                                data-toggle="tooltip" class="fa fa-medkit"></i></a>
         </display:column>

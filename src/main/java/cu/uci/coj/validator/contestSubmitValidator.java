@@ -72,7 +72,7 @@ public class contestSubmitValidator implements Validator {
             if (!errors.hasFieldErrors("pid") && !contestDAO.isProblemInContest(submit.getPid(), submit.getCid(), problemDAO.getCurrentLevel(userDAO.integer("select.uid.by.username",submit.getUsername()), submit.getCid()))) {
                 errors.rejectValue("pid", "errormsg.25");
             }
-            int problemSourceLimit = problemDAO.getSourceLimitByPid(submit.getPid());
+            int problemSourceLimit = problemDAO.getSourceLimitByPid(submit.getPid(),submit.getLid());
             
             if (submit.getCode().length() == 0 && submit.getUploadfile().getSize() <= 0) {
                 errors.rejectValue("code", "errormsg.27");

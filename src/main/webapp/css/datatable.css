@@ -5,7 +5,7 @@ table {
     background: #FFF;
     font: 14px Arial, Helvetica, Sans-Serif;
     color: #033;
-    text-align:center;        
+    text-align: center;
 }
 
 caption {
@@ -15,12 +15,12 @@ caption {
     padding: 1em 4px;
 }
 
-td, th {    
+td, th {
     line-height: 1.3em;
     border: 1px solid #F6F6F6;
 }
 
-.volume td,th{    
+.volume td, th {
     line-height: 1.3em;
     border: 1px solid #C0C0C0;
 }
@@ -28,13 +28,13 @@ td, th {
 th {
     background: #4C83C3;
     color: #fff;
-    font-weight:bold;
+    font-weight: bold;
     text-align: left;
     /*padding-right: .5em;*/
     vertical-align: top;
 }
 
-th.compiler{
+th.compiler {
     background: #4C83C3;
 }
 
@@ -45,9 +45,11 @@ thead th {
 th.sortable a {
     background-image: url("../images/arrow_off.png");
 }
+
 th.order1 a {
     background-image: url("../images/arrow_down.png");
 }
+
 th.order2 a {
     background-image: url("../images/arrow_up.png");
 }
@@ -60,10 +62,10 @@ th.sorted a, th.sortable a {
     color: white;
 }
 
-.odd{
-    background: #f1f1f1;        
+.odd {
+    background: #f1f1f1;
     border: 1px solid #C0C0C0;
-/*npenate*/    
+    /*npenate*/
     -moz-transition-property: background;
     -moz-transition-duration: 800ms;
     transition-property: background;
@@ -72,12 +74,12 @@ th.sorted a, th.sortable a {
     -o-transition-duration: 800ms;
     -webkit-transition-property: background;
     -webkit-transition-duration: 800ms;
-/*npenate*/    
+    /*npenate*/
 }
 
 tr {
     background: #FFFFFF;
-/*npenate*/
+    /*npenate*/
     -moz-transition-property: background;
     -moz-transition-duration: 1s;
     transition-property: background;
@@ -86,10 +88,10 @@ tr {
     -o-transition-duration: 1s;
     -webkit-transition-property: background;
     -webkit-transition-duration: 1s;
-/*npenate*/
+    /*npenate*/
 }
 
-.odd:hover  {
+.odd:hover {
     background: #FFFFEE;
 }
 
@@ -97,7 +99,7 @@ tr {
     background: #f6f6f6;
 }
 
-.virtual{
+.virtual {
     background: #D6E1FE;
 }
 
@@ -105,20 +107,25 @@ td a, td a:link {
     color: #325C91;
     text-decoration: none;
 }
+
 td a:visited {
     color: #466C8E;
 }
+
 td a:hover, td a:focus {
     color: #1E4C94;
     text-decoration: underline;
 }
+
 th a, td a:active {
     color: #fff;
 }
+
 tfoot th, tfoot td {
     background: #2C5755;
     color: #fff;
 }
+
 th + td {
     padding-left: .5em;
 }
@@ -127,10 +134,10 @@ tr:hover {
     background: #ffffee;
 }
 
-.login{
-    background:none;
-    border:none;
-    white-space : nowrap;
+.login {
+    background: none;
+    border: none;
+    white-space: nowrap;
     color: #4F5346;
     font-family: Tahoma, Arial, Helvetica, Sans-Serif;
     font-size: 11px;
@@ -141,11 +148,11 @@ tr:hover {
     text-align: left;
 }
 
-.login td{
+.login td {
     border: none;
 }
 
-.login tr{
+.login tr {
     border: none;
 }
 
@@ -153,16 +160,15 @@ tr:hover {
     background: none;
 }
 
-.volume{
+.volume {
     width: 100%;
     border-color: white;
     font-size: 14px;
     margin-top: 5px;
-    margin-bottom: 5px;    
+    margin-bottom: 5px;
 }
 
-.navigating
-{
+.navigating {
     border: none;
     text-align: center;
     font-size: 14px;
@@ -173,78 +179,77 @@ tr:hover {
     border: none;
 }
 
-.navigating div{
+.navigating div {
     text-align: center;
     border: none;
 }
 
-.navigating div{
+.navigating div {
     border: 1px solid #C0C0C0;
     background-color: #f1f1f1;
 }
 
-.orderby a{
+.orderby a {
     color: white;
 }
 
-table.pinfo{
+table.pinfo {
     border-collapse: collapse;
     border: 1px solid #C0C0C0;
     background-color: #F1F1F1;
     font: .9em/1.2em Georgia, "Times New Roman", Times, serif;
     color: #033;
     text-align: left;
-    width: 100%;    
-    font-size: 14px;        
+    width: 100%;
+    font-size: 14px;
 }
 
-.pinfo tr{
-    border: none;    
-}
-
-.pinfo td{
+.pinfo tr {
     border: none;
 }
 
-.pinfo tr:hover{
+.pinfo td {
+    border: none;
+}
+
+.pinfo tr:hover {
     background: none;
 }
 
-table.msgheader{
+table.msgheader {
     border-collapse: collapse;
     border: 1px solid #C0C0C0;
     background-color: #F1F1F1;
     font: .9em/1.2em Arial;
-    color: #033;    
+    color: #033;
     font-size: 12px;
-    width:100%;
+    width: 100%;
 }
 
-.msgheader tr{
+.msgheader tr {
     border: none;
     height: 20px;
 }
 
-.msgheader td{
-    border: none;   
+.msgheader td {
+    border: none;
 }
 
-.msgheader tr:hover{
+.msgheader tr:hover {
     background: none;
 }
 
-.createnewentry{
+.createnewentry {
     border: none;
     background: none;
     border-collapse: separate;
     font-size: 14px;
     text-align: left;
-    margin:auto;
-    width:95%;
+    margin: auto;
+    width: 95%;
 }
 
-
-.createnewuser{
+.createnewuser {
     border: none;
     background: none;
     border-collapse: separate;
@@ -252,19 +257,20 @@ table.msgheader{
     text-align: left;
 }
 
-.createnewuser td{
+.createnewuser td {
     padding: 8px;
     border: none;
 }
-.createnewuser tr{
+
+.createnewuser tr {
     border: none;
 }
 
-.createnewuser tr:hover{
+.createnewuser tr:hover {
     background: none;
 }
 
-.userinfo{
+.userinfo {
     border: none;
     background: none;
     border-collapse: separate;
@@ -272,346 +278,350 @@ table.msgheader{
     text-align: left;
 }
 
-.compiler{
+.compiler {
     border: none;
-    background: none;    
+    background: none;
     font-size: 14px;
     text-align: center;
 }
 
-.userinfo td{
-    border: none;    
-}
-.userinfo tr{
+.userinfo td {
     border: none;
 }
 
-.userinfo tr:hover{
+.userinfo tr {
+    border: none;
+}
+
+.userinfo tr:hover {
     background: none;
 }
 
-
-.ACM{
+.ACM {
     font-size: 12px;
     background-color: white;
 }
 
-.ACM .team{
-    text-align: left;    
+.ACM .team {
+    text-align: left;
 }
 
-.scoreboradstatus{
+.scoreboradstatus {
     font-size: 12px;
     background-color: white;
     width: 100%;
     height: 25px;
 }
 
-.scoreboradstatus td{
+.scoreboradstatus td {
     padding-left: 10px;
 }
 
-
-td.school, td.country{
+td.school, td.country {
     vertical-align: middle;
     width: 30px;
 }
 
-img.school, img.country{
+img.school, img.country {
     height: 28px;
     width: 28px;
 }
 
 .ACM td {
-    border:1px solid #CCCCCC;
-    padding:3px 5px 0;
-    text-align:center;
+    border: 1px solid #CCCCCC;
+    padding: 3px 5px 0;
+    text-align: center;
 }
 
-.WA{
+.WA {
     background-color: #FF9999;
     color: black;
 }
 
-.ACC{
+.ACC {
     background-color: #99FF99;
     color: black;
 }
-.subWA{
+
+.subWA {
     color: #FF1111;
 }
 
-.subAC{
+.subAC {
     color: #00BA0E;
 }
 
-.subPEN{
+.subPEN {
     color: #9999FFe;
 }
 
-.PEN{
+.PEN {
     color: #1111FF;
 }
 
-.PEN{
+.PEN {
     background-color: #9999FF;
     color: black;
 }
 
-.FS{
+.FS {
     background-color: #008800;
     color: white;
     font-weight: bold;
 }
 
-.FPS{
+.FPS {
     background-color: orange;
     color: black;
 }
 
-.headrk{
+.headrk {
     width: 50px;
     text-align: center;
 }
 
-.headcountry{
+.text-overflow {
+    word-wrap: break-word;
+}
+
+.headcountry {
     width: 65px;
     text-align: center;
 }
 
-.headuser{
+.headuser {
     width: 60px;
     text-align: center;
 }
 
-.headacc{
+.headacc {
     width: 55px;
     text-align: center;
 }
 
-.headsub{
+.headsub {
     width: 60px;
     text-align: center;
 }
 
-.headcontests{
+.headcontests {
     width: 90px;
     text-align: center;
 }
 
 .headentries-actions {
-	width: 75px;
-    text-align: center;
-}
-
-.headscore{
-    width: 70px;
-    text-align: center;
-}
-
-.headpercent{
-    width: 70px;
-    text-align: center;
-}
-
-.headschools{
-    width: 105px;
-    text-align: center;    
-}
-
-.headusers{
     width: 75px;
     text-align: center;
 }
 
-table.ACM th a.linkheader{
+.headscore {
+    width: 70px;
+    text-align: center;
+}
+
+.headpercent {
+    width: 70px;
+    text-align: center;
+}
+
+.headschools {
+    width: 105px;
+    text-align: center;
+}
+
+.headusers {
+    width: 75px;
+    text-align: center;
+}
+
+table.ACM th a.linkheader {
     color: #FFFFFF;
 }
 
 .ACM {
-	width:100%;
+    width: 100%;
 }
 
-
-.contestlanguages{
+.contestlanguages {
     border: none;
     background: none;
     font-size: 12px;
     text-align: left;
 }
 
-.contestlanguages td{
+.contestlanguages td {
     padding: 2px;
     border: none;
 }
 
-.contestlanguages tr{
+.contestlanguages tr {
     border: none;
 }
 
-.contestlanguages tr:hover{
+.contestlanguages tr:hover {
     background: none;
 }
 
-.headid{
+.headid {
     width: 45px;
     text-align: center;
 }
 
-.headidp{
+.headactions {
+    width: 80px;
+    text-align: center;
+}
+
+.headidp {
     width: 60px;
     text-align: center;
 }
 
-.headsolved{
+.headsolved {
     width: 65px;
     text-align: center;
 }
 
-
-.headuser{
+.headuser {
     width: 85px;
     text-align: center;
 }
 
-.headsub{
+.headsub {
     width: 60px;
     text-align: center;
 }
 
-.headscore{
+.headscore {
     width: 75px;
     text-align: center;
 }
 
-.headpoint{
+.headpoint {
     width: 95px;
     text-align: center;
 }
 
-.headfirst-no-remaining{
+.headfirst-no-remaining {
     width: 70%;
     text-align: center;
 }
 
-.headfirst-remaining{
+.headfirst-remaining {
     width: 60%;
     text-align: center;
 }
 
-.headpercent{
+.headpercent {
     width: 70px;
     text-align: center;
 }
 
-.headedit{
-    width: 10px;
+.headedit {
+    width: 10%;
     text-align: center;
 }
 
-.headtime{
+.headtime {
     width: 50px;
     text-align: center;
 }
 
-.headmem{
+.headmem {
     width: 45px;
     text-align: center;
 }
 
-.headsize{
+.headsize {
     width: 43px;
     text-align: center;
 }
 
-.headrejudge{
-	width:30px;
-	text-align:center;
+.headrejudge {
+    width: 30px;
+    text-align: center;
 }
 
-.headlang{
+.headlang {
     width: 45px;
     text-align: center;
 }
 
-.headdate{
+.headdate {
     width: 75px;
-    text-align: center;    
+    text-align: center;
 }
 
-.headprob{
+.headprob {
     width: 90px;
     text-align: center;
     padding-left: 2px;
     padding-right: 2px;
 }
 
-.headjudgment{
+.headjudgment {
     width: 150px;
 }
 
-.headfrom{
+.headfrom {
     width: 100px;
 }
 
-.headto{
+.headto {
     width: 100px;
 }
 
-
-.languageslected{
+.languageslected {
     background-color: #ddffdd;
 }
 
-.contestlanguages{
+.contestlanguages {
     border: none;
     background: none;
     font-size: 14px;
     text-align: left;
 }
 
-.contestlanguages td{
+.contestlanguages td {
     padding: 3px;
     border: none;
 }
 
-.contestlanguages tr{
+.contestlanguages tr {
     border: none;
 }
 
-.contestlanguages tr:hover{
+.contestlanguages tr:hover {
     background: none;
 }
 
-.contestsetting{
+.contestsetting {
     border: none;
     background: none;
     font-size: 14px;
     text-align: left;
 }
 
-.contestsetting td{
+.contestsetting td {
     padding: 4px;
     border: none;
 }
 
-.contestsetting tr{
+.contestsetting tr {
     border: none;
 }
 
-.contestsetting tr:hover{
+.contestsetting tr:hover {
     background: none;
 }
 
-.colheader{
+.colheader {
     background: none repeat scroll 0 0 #4C83C3;
-    color:#FFFFFF;
+    color: #FFFFFF;
     font-weight: bold;
 }
 
-
-
-td.pages a,strong{
+td.pages a, strong {
     margin-left: 20px;
     margin-right: 20px;
 }

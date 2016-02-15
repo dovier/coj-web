@@ -13,7 +13,7 @@ import cu.uci.coj.utils.paging.PagingOptions;
 import java.util.List;
 
 public interface ProblemDAO extends BaseDAO {
-	public int getSourceLimitByPid(int pid);
+	public int getSourceLimitByPid(int pid, int lid);
 
 	public void checkProblemCreated();
 

@@ -3,6 +3,7 @@ package cu.uci.coj.controller.admin;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import cu.uci.coj.utils.Interceptor;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,11 @@ public class AccountActivationController extends BaseController {
 	@RequestMapping(value = "/admin/manageactivations.xhtml", method = RequestMethod.GET)
 	public String listCountries(Model model, PagingOptions options,
 			@RequestParam(required = false, value = "pattern") String pattern) {
+
+
+		int count = baseDAO.integer("count.select.activations");
+		if (count > 0)
+			model.addAttribute("isactivation", true);
 		return "/admin/manageactivations";
 	}
 

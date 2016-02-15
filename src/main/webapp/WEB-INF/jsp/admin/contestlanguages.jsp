@@ -4,7 +4,7 @@
 
 
 <h2 class="postheader">
-    <fmt:message key="page.header.admin.managecontest" />
+    <fmt:message key="page.general.admin.header" />: <fmt:message key="page.managecontest.link.ml" />
 </h2>
 <div class="postcontent">
     <ul class="nav nav-pills">
@@ -20,9 +20,11 @@
         <li><a
                 href="<c:url  value="contestproblems.xhtml?cid=${contest.cid}"/>"><fmt:message
                     key="page.managecontest.link.mp" /></a></li>
-        <li><a
-                href="<c:url value="contestproblemcolors.xhtml?cid=${contest.cid}"/>"><fmt:message
-                    key="page.managecontest.link.mpc" /></a></li>
+        <c:if test="${eproblem}">
+            <li><a
+                    href="<c:url value="contestproblemcolors.xhtml?cid=${contest.cid}"/>"><fmt:message
+                    key="page.managecontest.link.mpc"/></a></li>
+        </c:if>
         <li><a
                 href="<c:url value="importicpcusers.xhtml?cid=${contest.cid}"/>"><fmt:message
                     key="page.managecontest.link.iiu" /></a></li>
@@ -62,8 +64,14 @@
             </div>
         </fieldset>
         <br />
+        <div class="pull-right">
         <input type="submit" name="but" class="btn btn-primary"
                value="<spring:message code="button.update"/>" />
+        <a class="btn btn-primary" href="<c:url value="/admin/admincontests.xhtml"/>"><spring:message code="button.close"/></a>
+        </div>
         <br />
     </form:form>
+    <div class="clearfix"></div>
 </div>
+
+<script src="/js/admin/utility.js"></script>

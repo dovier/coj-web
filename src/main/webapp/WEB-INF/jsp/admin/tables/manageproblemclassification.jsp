@@ -29,7 +29,7 @@
     <display:column titleKey="tablehdr.actions">
         <a href="/admin/manageproblemclassification.xhtml?pid=${problem.pid}"
            ><i title="<fmt:message key="pclassifi.btneditclasify"/>"
-                 data-toggle="tooltip" class="fa fa-check"></i></a>
+                 data-toggle="tooltip" class="fa fa-bookmark"></i></a>
 <!--        <a
             href="<c:url value="/admin/manageuser.xhtml?username=${user.username}" />"
             ><i title="<spring:message code="messages.general.edit"/>"

@@ -3,9 +3,7 @@
 
 
 <h2 class="postheader">
-	<spring:message code="page.general.admin.header" />
-	:
-	<spring:message code="page.24h.problems.header" />
+	<spring:message code="page.general.admin.header" />: <spring:message code="page.24h.problems.header" />
 </h2>
 <div class="postcontent">
 <c:if test="${message != null}">
@@ -35,6 +33,26 @@
 	<div id="display-table-container"
 		data-reload-url="/admin/tables/adminproblems.xhtml"></div>
 </div>
+
+<script src="/js/admin/utility.js"></script>
+
 <script>
 $(initStandardFilterForm);
+
+$("#normalizeproblem").click(normalizeproblem)
+function normalizeproblem(){
+    var pid = $("#pid").val();
+    $.ajax({
+        type: "GET",
+        url: "/admin/normalizeproblem.json",
+        data: {
+            "pid":pid
+        },
+        datatype: "test",
+        success: function(data){
+
+        }
+    })
+};
+
 </script>

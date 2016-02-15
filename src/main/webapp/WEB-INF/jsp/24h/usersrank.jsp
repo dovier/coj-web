@@ -35,14 +35,12 @@
 	</form>
 	<c:choose>
 		<c:when test="${search == true}">
-			<label><spring:message code="fieldhdr.totalfound" />:
-				${found}</label>
+			<label><spring:message code="fieldhdr.totalfound" />:${found}</label>
 		</c:when>
 	</c:choose>
 	<br />
     <div style="clear: both; float: left">
-		<spring:message code="fieldhdr.logged" />
-		: ${logged}
+		<spring:message code="fieldhdr.logged" />: ${logged}
 	</div>
 
 	 <div id="display-table-container" data-reload-url="/tables/usersrank.xhtml"></div>

@@ -65,7 +65,7 @@
 		<div class="pull-right servertime">
 				
 				<fmt:formatDate value="${now}" dateStyle="long" />
-				.
+				-
 				<fmt:formatDate value="${now}" pattern="HH:mm:ss" type="time" />
 		</div>
 		<div class="pull-left">

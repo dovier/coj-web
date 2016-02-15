@@ -1,16 +1,16 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<h2 class="postheader">
+    <spring:message code="page.general.admin.header" />: <spring:message code="page.menu.admin.createcontest" />
+</h2>
+
 
 <div class="row">
     <div class="col-xs-10">
         <form:form method="post" enctype="multipart/form-data"
                    commandName="contest" cssClass="form-horizontal">
 
-            <!-- NAME OF VIEW -->
-            <legend>
-                <spring:message code="page.general.admin.header" />: <spring:message code="page.menu.admin.createcontest" />
-            </legend>
 
             <!-- ID OF CONTEST -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
@@ -166,6 +166,7 @@
                        id="submit" value="<spring:message code="judge.register.submit.value"/>" /> <input
                        class="btn btn-primary" type="reset" name="reset" id="reset"
                        value="<spring:message code="judge.register.reset.value"/>" />
+                <a class="btn btn-primary" href="<c:url value="/admin/admincontests.xhtml"/>"><spring:message code="button.close"/></a>
             </div>
 
         </form:form>

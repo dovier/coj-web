@@ -85,6 +85,15 @@ public class ContestController extends BaseController {
     @Resource
     private ContestService contestService;
 
+    private boolean withProblems(int cid){
+        //Verificar si el contest tienen asociados problemas (existen problemas = eproblem).
+        List<Problem> problems = contestDAO.loadContestProblems(cid);
+        if (problems != null)
+            return  !problems.isEmpty();
+
+        return false;
+    }
+
     @RequestMapping(value = "/virtualcontests.xhtml", method = RequestMethod.GET)
     public String listVirtuals(Model model, PagingOptions options) {
 
@@ -125,6 +134,7 @@ public class ContestController extends BaseController {
     public String manageContest(Model model, @RequestParam Integer cid) {
         Contest contest = contestDAO.loadContestManage(cid);
         model.addAttribute("styles", contestDAO.loadEnabledScoringStyles());
+        model.addAttribute("eproblem", withProblems(cid));
         model.addAttribute(contest);
         return "/admin/managecontest";
     }
@@ -177,12 +187,13 @@ public class ContestController extends BaseController {
             contestDAO.importContestData(contest);
         }
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
-        return "redirect:/admin/managecontest.xhtml?cid=" + contest.getCid();
+        return "redirect:/admin/admincontests.xhtml";
     }
 
     @RequestMapping(value = "/globalsettings.xhtml", method = RequestMethod.GET)
     public String globalSettings(Model model, @RequestParam("cid") Integer cid) {
         Contest contest = contestDAO.loadContestGlobalSettings(cid);
+        model.addAttribute("eproblem", withProblems(cid));
         model.addAttribute("style", contestDAO.loadScoringStyle(cid));
         model.addAttribute(contest);
         return "/admin/globalsettings";
@@ -225,6 +236,7 @@ public class ContestController extends BaseController {
         contest.setCid(cid);
         model.addAttribute("contest", contest);
         model.addAttribute("images", utils.getContestImages(cid));
+        model.addAttribute("eproblem", withProblems(cid));
         return "/admin/contestimg";
     }
 
@@ -328,6 +340,7 @@ public class ContestController extends BaseController {
             integers.add(i + 1);
         }
         model.addAttribute("levels", integers);
+        model.addAttribute("eproblem", withProblems(cid));
         return "/admin/contestproblems";
     }
 
@@ -406,6 +419,7 @@ public class ContestController extends BaseController {
     @RequestMapping(value = "/importicpcusers.xhtml", method = RequestMethod.GET)
     public String importICPCUsers(Model model, @RequestParam Integer cid) {
         model.addAttribute("cid", cid);
+        model.addAttribute("eproblem", withProblems(cid));
         return "/admin/importicpcusers";
     }
 
@@ -452,6 +466,13 @@ public class ContestController extends BaseController {
         Contest contest = contestDAO.loadContestForProblems(cid);
         List<Problem> problems = contestDAO.loadContestProblems(contest
                 .getCid());
+
+        if (problems == null)
+            return "redirect:/admin/managecontest.xhtml?cid=" + contest.getCid();
+
+        if (problems.isEmpty())
+            return "redirect:/admin/managecontest.xhtml?cid=" + contest.getCid();
+
         contest.setProblems(problems);
         model.addAttribute(contest);
         model.addAttribute("problems", problems);
@@ -462,6 +483,7 @@ public class ContestController extends BaseController {
     public String baylorxml(Model model, Locale locale,
             @RequestParam("cid") Integer cid) {
         model.addAttribute("cid", cid);
+        model.addAttribute("eproblem", withProblems(cid));
         return "/admin/baylorxml";
     }
 
@@ -562,7 +584,7 @@ public class ContestController extends BaseController {
         contest.setLanguages(contestDAO.getContestLanguages(contest.getCid()));
         contest.initCurrlang();
         model.addAttribute("languages", utilDAO.getEnabledProgramingLanguages());
-
+        model.addAttribute("eproblem", withProblems(cid));
         return "/admin/contestlanguages";
     }
 
@@ -589,6 +611,7 @@ public class ContestController extends BaseController {
         model.addAttribute("btusers", userDAO.loadBalloonUsersOffContest(contest));
         model.addAttribute("alljudges",
                 userDAO.loadJudgesOffContest(contest.getCid()));
+        model.addAttribute("eproblem", withProblems(cid));
         return "/admin/contestusers";
     }
 
@@ -599,6 +622,7 @@ public class ContestController extends BaseController {
         ContestAwardsFlags flags = contestAwardDAO.loadContestAwardsFlags(cid);
         model.addAttribute(contest);
         model.addAttribute("contestawardsflags", flags);
+        model.addAttribute("eproblem", withProblems(cid));
         return "/admin/contestawards";
     }
 
@@ -653,6 +677,7 @@ public class ContestController extends BaseController {
     public String contestOverview(Model model, @RequestParam("cid") Integer cid) {
         Contest contest = contestDAO.getContestForOverview(cid);
         model.addAttribute(contest);
+        model.addAttribute("eproblem", withProblems(cid));
         return "/admin/contestoverview";
     }
 

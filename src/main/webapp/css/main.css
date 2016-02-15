@@ -1,3 +1,6 @@
+textarea{
+    resize: none;
+}
 .rate{
     width: 15px;
     height: 15px;

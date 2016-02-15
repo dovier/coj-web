@@ -1,19 +1,18 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="/WEB-INF/jsp/include/include.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <script  type="text/javascript"
 src="<c:url value="/js/WYSIWYG/source.js" />"></script>
 
+<h2 class="postheader">
+    <spring:message code="page.general.admin.header" />: <spring:message code="pagehdr.aeannouncement" />
+</h2>
 
 <div class="row">
     <div class="col-xs-10">
         <form:form method="post" enctype="multipart/form-data"
                    commandName="announcement" cssClass="form-horizontal">
-
-            <!-- NAME OF VIEW -->
-            <legend>
-                <spring:message code="page.general.admin.header" />: <spring:message code="pagehdr.aeannouncement" />
-            </legend>
             
             <!-- ID OF ANNOUNCEMENT -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
@@ -84,6 +83,7 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
                        id="submit" value="<spring:message code="button.edit"/>" /> <input
                        class="btn btn-primary" type="reset" name="reset" id="reset"
                        value="<spring:message code="button.reset"/>" />
+                <a href="/admin/listann.xhtml" class="btn btn-primary"><spring:message code="button.close" /></a>
             </div>
         </form:form>
     </div>

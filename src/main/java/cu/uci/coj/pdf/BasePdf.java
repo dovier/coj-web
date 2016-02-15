@@ -13,6 +13,7 @@ import com.itextpdf.text.html.simpleparser.HTMLWorker;
 import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
@@ -114,6 +115,8 @@ public abstract class BasePdf {
 
         html = html.replace("&#8804;", "&lt;=");
 
+        html = procesarHtmlImage(html);
+
         String buffer = "";
         while (html.contains("\n")) {
             buffer += html.substring(0, html.indexOf("\n") + 1);
@@ -130,5 +133,37 @@ public abstract class BasePdf {
         buffer = buffer.replace("<table", "<table width=80%");
 
         return buffer;
+    }
+
+    private String procesarHtmlImage(String html) {
+        System.out.println(html);
+        String server = "http://coj.uci.cu";
+        int idxFImg = 0;
+        String tagImg = "<img src = \"";
+        int idxIImg = html.indexOf(tagImg, 0);
+        while (idxIImg != -1) {
+            boolean fin = false;
+            int idxISrc = idxIImg + (tagImg.length());
+            int idxFSrc = idxIImg + (tagImg.length() + 1);
+            for (int i = idxISrc; !fin && i < html.length(); i++) {
+                if (html.charAt(i) == '"') {
+                    idxFSrc = i;
+                }
+
+                if (html.substring(i, i + 3).equals("\"/>")) {
+                    fin = true;
+                    idxFImg = i + 3;
+                }
+            }
+
+            String srcVal = html.substring(idxISrc, idxFSrc);
+            html = html.replace(srcVal, server + srcVal);
+            System.out.println(html);
+            idxFImg += server.length();
+
+            idxIImg = html.indexOf(tagImg, idxFImg);
+        }
+
+        return html;
     }
 }

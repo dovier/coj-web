@@ -150,12 +150,12 @@
 										code="tableval.rcontests" /></a>
 							</div>
 
-							<div class="col-xs-4">
+							<%--<div class="col-xs-4">
 								<a href="<c:url value="virtualcontests.xhtml" />"
 									title="<spring:message code="titval.manage"/>"><i
 									class="fa fa-gear"></i>&nbsp;<spring:message
 										code="tableval.vcontests" /></a>
-							</div>
+							</div>--%>
 
 							<div class="col-xs-4">
 								<a href="<c:url value="manageteams.xhtml" />"
@@ -370,6 +370,11 @@
 		</div>
 	</authz:authorize>
 </div>
+
+<script>
+	$("[data-toggle='tooltip']").tooltip();
+</script>
+
 <script>
 	$("a.status").on("click", function(event) {
 		var caller = $(this);

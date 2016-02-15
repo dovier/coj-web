@@ -112,25 +112,30 @@
 </div>
 
 <script>
+	$("#uploadfile").fileinput({
+		maxFileSize : 100,
+		allowedFileTypes : [ 'text', 'object' ],
+		removeClass : "btn btn-default",
+		removeLabel : "<spring:message code="tablehdr.delete"/>",
+		previewFileType : 'text',
+		msgProgress : 'Loading {percent}%',
+		browseClass : "btn btn-primary",
+
+		browseLabel : "<spring:message code="message.filename"/>",
+		browseIcon : '<i class="fa fa-file"></i>&nbsp;',
+		removeIcon : '<i class="fa fa-trash"></i>',
+		msgValidationError: "<spring:message code="message.filename.uploaderror"/>",
+		msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>'
+	});
+</script>
+
+<script>
 	var enable = $
 	{
 		enableadveditor
 	};
 	activate_editor(enable);
 
-	$("#uploadfile").fileinput({
-		maxFileSize : 100,
-		allowedFileTypes : [ 'text', 'object' ],
-		removeClass : "btn btn-default",
-		removeLabel : "Delete",
-		previewFileType : 'text',
-		msgProgress : 'Loading {percent}%',
-		browseClass : "btn btn-primary",
-
-		browseLabel : "Pick File",
-		browseIcon : '<i class="fa fa-file"></i>&nbsp;',
-		removeIcon : '<i class="fa fa-trash"></i>'
-	});
 </script>
 <script>    
 $(function(){

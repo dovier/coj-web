@@ -68,7 +68,7 @@ public class institutionValidator implements Validator {
         }
 
         // input string conatains characters only
-        if (!(institution.getName() != null && institution.getName().isEmpty())) {
+        if (!errors.hasFieldErrors("name")) {
             pattern = Pattern.compile(STRING_PATTERN);
             matcher = pattern.matcher(institution.getName());
             if (!matcher.matches()) {
@@ -76,12 +76,12 @@ public class institutionValidator implements Validator {
             }
         }
 
-        if (institution.getName() != null && institutionDAO.existInstitutionNameByCountry(institution.getName(), institution.getCountry_id())) {
+        if (!errors.hasFieldErrors("name") && institutionDAO.existInstitutionNameByCountry(institution.getName(), institution.getCountry_id())) {
             errors.rejectValue("name",
                     "general.error.exist",
                     "At must 40 characters.");
         }
-        if (institution.getZip() != null && institutionDAO.existInstitutionZip(institution.getZip())) {
+        if (!errors.hasFieldErrors("zip") && institutionDAO.existInstitutionZip(institution.getZip())) {
             errors.rejectValue("zip",
                     "general.error.exist",
                     "At must 40 characters.");
@@ -93,27 +93,18 @@ public class institutionValidator implements Validator {
                     "At must 40 characters.");
         }
 
-        if (institution.getZip() != null && institution.getZip().length() > 8) {
+        if (!errors.hasFieldErrors("zip") && institution.getZip().length() > 8) {
             errors.rejectValue("zip",
                     "general.error.invalid",
                     "At must 40 characters.");
-        } else if (institution.getZip() != null) {
+        } else if (!errors.hasFieldErrors("zip")) {
             pattern = Pattern.compile(ZIP_PATTERN);
             matcher = pattern.matcher(institution.getZip());
             if (!matcher.matches()) {
                 errors.rejectValue("zip",
                         "general.error.upper",
                         "Upper case characters only");
-            }
-           /* for (int i = 0; i < institution.getZip().length(); i++) {
-                char c = institution.getZip().charAt(i);
-                if ((c < 'A' || c > 'Z') && c != '-') {
-                    errors.rejectValue("zip",
-                            "general.error.upper",
-                            "Upper case characters only");
-                    break;
-                }*/
-//            }
+            }       
         }
     }
 
@@ -124,7 +115,7 @@ public class institutionValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "website", "general.error.empty");
 
         // input string conatains characters only
-        if (!(institution.getName() != null && institution.getName().isEmpty())) {
+        if (!errors.hasFieldErrors("name")) {
             pattern = Pattern.compile(STRING_PATTERN);
             matcher = pattern.matcher(institution.getName());
             if (!matcher.matches()) {
@@ -133,7 +124,7 @@ public class institutionValidator implements Validator {
         }
 
         // input string conatains valid website address
-        if (!(institution.getWebsite() != null && institution.getWebsite().isEmpty())) {
+        if (!errors.hasFieldErrors("website")) {
             pattern = Pattern.compile(WEBSITE_PATTERN);
             matcher = pattern.matcher(institution.getWebsite());
             if (!matcher.matches()) {
@@ -142,38 +133,29 @@ public class institutionValidator implements Validator {
         }
 
 
-        if (institution.getName() != null && institutionDAO.bool("exist.inst.name.but", institution.getName(), institution.getId())) {
+        if (!errors.hasFieldErrors("name") && institutionDAO.bool("exist.inst.name.but", institution.getName(), institution.getId())) {
             errors.rejectValue("name",
                     "general.error.exist",
                     "At must 40 characters.");
         }
-        if (institution.getZip() != null && institutionDAO.existInstitutionZipBut(institution.getZip(), institution.getId())) {
+        if (!errors.hasFieldErrors("zip") && institutionDAO.existInstitutionZipBut(institution.getZip(), institution.getId())) {
             errors.rejectValue("zip",
                     "general.error.exist",
                     "At must 40 characters.");
         }
 
-        if (institution.getZip() != null && institution.getZip().length() > 8) {
+        if (!errors.hasFieldErrors("zip") && institution.getZip().length() > 8) {
             errors.rejectValue("zip",
                     "general.error.invalid",
                     "At must 40 characters.");
-        } else if (institution.getZip() != null) {
+        } else if (!errors.hasFieldErrors("zip")) {
             pattern = Pattern.compile(ZIP_PATTERN);
             matcher = pattern.matcher(institution.getZip());
             if (!matcher.matches()) {
                 errors.rejectValue("zip",
                         "general.error.upper",
                         "Upper case characters only");
-            }
-           /* for (int i = 0; i < institution.getZip().length(); i++) {
-                char c = institution.getZip().charAt(i);
-                if ((c < 'A' || c > 'Z') && c != '-') {
-                    errors.rejectValue("zip",
-                            "general.error.upper",
-                            "Upper case characters only");
-                    break;
-                }
-            }*/
+            }           
         }
     }
 }

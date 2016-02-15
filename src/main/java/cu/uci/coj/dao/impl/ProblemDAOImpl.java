@@ -48,8 +48,8 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 	@Resource
 	ContributionDAO contributionDAO;
 
-	public int getSourceLimitByPid(int pid) {
-		return integer(0, "select fontsize from problem where pid=?", pid);
+	public int getSourceLimitByPid(int pid,int lid) {
+		return integer(0, "select max_source_code_lenght from problem_limits where problem_id=? and language_id = ?", pid,lid);
 	}
 
 	@Override

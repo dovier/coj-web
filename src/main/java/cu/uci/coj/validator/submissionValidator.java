@@ -35,8 +35,22 @@ public class submissionValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "memoryUsed", empty);
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "code", empty);
 
-		int problemSourceLimit = problemDAO.getSourceLimitByPid(submit.getPid());
+		int problemSourceLimit = problemDAO.getSourceLimitByPid(submit.getPid(),submit.getLid());
+
 		if (submit.getCode().length() == 0 && submit.getUploadfile().getSize() <= 0) {
+			errors.rejectValue("code", "errormsg.27");
+		} else if (submit.getCode().length() == 0 && !utils.supportExtension(submit.getUploadfile().getOriginalFilename())) {
+			errors.rejectValue("code", "errormsg.29");
+		} else if (submit.getCode().length() == 0) {
+			try {
+				submit.setCode(new String(submit.getUploadfile().getBytes()));
+			} catch (IOException e) {
+				e.printStackTrace();
+				errors.rejectValue("code", "Exception uploading file");
+			}
+		}
+
+		/*if (submit.getCode().length() == 0 && submit.getUploadfile().getSize() <= 0) {
 			errors.rejectValue("code", "errormsg.27");
 		} else if (submit.getCode().length() > problemSourceLimit || submit.getUploadfile().getSize() > problemSourceLimit) {
 			errors.rejectValue("code", "errormsg.28");
@@ -49,7 +63,7 @@ public class submissionValidator implements Validator {
 				e.printStackTrace();
 				errors.rejectValue("code", "Exception uploading file");
 			}
-		}
+		}*/
 
 		if (!errors.hasErrors()) {
 			try {

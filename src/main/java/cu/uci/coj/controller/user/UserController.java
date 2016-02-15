@@ -12,6 +12,7 @@ import java.util.Random;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import cu.uci.coj.utils.Notification;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -57,6 +58,7 @@ import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.forgottenValidator;
 import cu.uci.coj.validator.registrationValidator;
 import cu.uci.coj.validator.userValidator;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(value = "/user")
@@ -470,7 +472,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/forgottenpassword.xhtml", method = RequestMethod.POST)
-    public String forgottenPassword(Model model, User user, java.util.Locale locale, BindingResult bindingResult) {
+    public String forgottenPassword(Model model, User user, java.util.Locale locale, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         forgottenValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
             return "/user/forgottenpassword";
@@ -510,7 +512,14 @@ public class UserController extends BaseController {
             }
             String subject = messageSource.getMessage("mail.pass.recover.subject", new Object[0], java.util.Locale.ENGLISH);
             String msg = messageSource.getMessage("forgotten.password", new Object[]{this.passcode}, locale);
-            mailNotificationService.sendForgottenPasswordEmail(user.getEmail(), subject, msg);
+            try {
+                mailNotificationService.sendForgottenPasswordEmail(user.getEmail(), subject, msg);
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullSendMail());
+            } catch (Exception e){
+                redirectAttributes.addFlashAttribute("message", Notification.getNotSuccesfullSendMail());
+                redirectAttributes.addFlashAttribute("errorcreate", true);
+                return "redirect:/user/forgottenpassword.xhtml";
+            }
         }
         model.addAttribute(user);
         return "redirect:/user/forgottensuccess.xhtml?change=" + change;

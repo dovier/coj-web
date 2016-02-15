@@ -18,7 +18,7 @@
         <span class="label label-danger"><form:errors path="name"/></span>
     </div>
     <a><i data-toggle="tooltip" class="fa fa-asterisk"
-          title="<spring:message code="mandatory.field"/>"></i></a>
+          title="<spring:message code="onemandatory.field"/>"></i></a>
 </div>
 <div class="form-group">
     <label class="control-label col-xs-3"><spring:message code="psource.author" /></label>
@@ -28,8 +28,8 @@
     <div class="error col-xs-8 col-xs-offset-3">
         <span class="label label-danger"><form:errors path="author" /></span>
     </div>
-    <a><i data-toggle="tooltip" class="fa fa-asterisk"
-          title="<spring:message code="mandatory.field"/>"></i></a>
+    <%--<a><i data-toggle="tooltip" class="fa fa-asterisk"
+          title="<spring:message code="mandatory.field"/>"></i></a>--%>
 </div>
 
 <script>

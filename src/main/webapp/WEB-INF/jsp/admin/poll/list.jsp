@@ -5,9 +5,10 @@
 <script src="/js/bootstrap-dialog.min.js"></script>
 <script src="/js/admin/utility.js"></script>
 
-<legend>
-    <spring:message code="page.general.admin.header" />: <spring:message code="pagetit.listpolls" />
-</legend>
+<h2 class="postheader">
+    <spring:message code="page.general.admin.header"/>: <spring:message code="pagetit.listpolls" />
+</h2>
+
 <div class="postcontent">
     <c:if test="${message != null}">
         <div class="alert alert-success alert-dismissable fade in">

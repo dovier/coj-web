@@ -3,10 +3,15 @@
 
 
 <h2 class="postheader">
-    <spring:message code="page.general.admin.header" />
-    : <spring:message code="pagehdr.amcontests" />
+    <spring:message code="page.general.admin.header" />: <spring:message code="pagehdr.amcontests" />
 </h2>
 <div class="postcontent">
+    <c:if test="${message != null}">
+        <div class="alert alert-success alert-dismissable fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <i class="fa fa-check"></i><spring:message code="${message}"/>
+        </div>
+    </c:if>
     <div class="row">
         <div class="col-xs-12">
             <form action="/admin/tables/admincontests.xhtml" method="get" id="filter-form" class="form-inline">
@@ -43,6 +48,9 @@
 
     <div id="display-table-container" data-reload-url="/admin/tables/admincontests.xhtml"></div>
 </div>
+
+<script src="/js/admin/utility.js"></script>
+
 <script>
     $(initStandardFilterForm);
 </script>

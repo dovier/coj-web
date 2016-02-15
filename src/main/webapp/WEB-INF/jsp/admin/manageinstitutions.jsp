@@ -3,8 +3,7 @@
 
 
 <h2 class="postheader">
-    <fmt:message key="page.general.admin.header" />
-    : <fmt:message key="page.general.admin.manageinstitutions" />
+    <fmt:message key="page.general.admin.header" />: <fmt:message key="page.general.admin.manageinstitutions" />
 </h2>
 <div class="postcontent">
     <c:if test="${message != null}">

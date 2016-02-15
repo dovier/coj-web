@@ -27,12 +27,7 @@
             title="<spring:message code="messages.general.delete"/>"><i 
                 class="fa fa-trash"></i></a>
         </display:column>
-  
     </display:table>
-
-<link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
-<script src="/js/bootstrap-dialog.min.js"></script>
-<script src="/js/admin/utility.js"></script>
 
 <script>
     var i18n = {};

@@ -49,7 +49,7 @@ public class WbSiteDAOImpl extends BaseDAOImpl implements WbSiteDAO {
 	@Override
 	@Transactional(readOnly = true)
 	public List<WbSite> getSiteList() {
-		return objects("wbsite.list", WbSite.class);
+		return objects("wbsite.list.enabled", WbSite.class);
 	}
 
 	@Override

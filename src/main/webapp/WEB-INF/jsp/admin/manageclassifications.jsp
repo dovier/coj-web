@@ -4,15 +4,25 @@
 <script  type="text/javascript" src="<c:url value="/js/coj.js" />"></script>-->
 
 <h2 class="postheader">
-    <spring:message code="page.general.admin.header" />
-    : <spring:message code="pclassifi.title" />    
+    <spring:message code="page.general.admin.header" />: <spring:message code="pclassifi.title" />    
 </h2>
 <div class="postcontent">
     <c:if test="${message != null}">
-        <div class="alert alert-success alert-dismissable fade in">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <i class="fa fa-check"></i><spring:message code="${message}" />
-        </div>                 
+        <c:choose>
+            <c:when test="${errorcreate}">
+                <div class="alert alert-danger alert-dismissable fade in">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <i class="fa fa-check"></i><spring:message code="${message}" />
+                </div>
+            </c:when>
+
+            <c:otherwise>
+                <div class="alert alert-success alert-dismissable fade in">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <i class="fa fa-check"></i><spring:message code="${message}" />
+                </div>
+            </c:otherwise>
+        </c:choose>
     </c:if> 
     <form:form  method="post" cssClass="form-inline" action="/admin/addclassifications.xhtml">
         <div class="form-group coj_float_rigth">             

@@ -1,3 +1,4 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="/WEB-INF/jsp/include/include.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@page buffer="16kb" autoFlush="true" %>
@@ -11,7 +12,9 @@
     <display:column property="nick" titleKey="tablehdr.nick"
                     href="/user/useraccount.xhtml" paramId="username"
                     paramProperty="username"/>
-    <display:column property = "rgdate" titleKey="tablehdr.date" headerClass="headdate">
+    <display:column titleKey="tablehdr.date" headerClass="headdate">
+        <c:set var="newdate" value="${fn:substring(user.rgdate, 0, 19)}" />
+        ${newdate}
 
     </display:column>
 
@@ -48,6 +51,8 @@
             data-toggle="tooltip" class="fa fa-edit"></i></a>
     </display:column>
 </display:table>
+
+<script src="/js/admin/utility.js"></script>
 
 <script>
     $("[data-toggle='tooltip']").tooltip();

@@ -49,14 +49,11 @@
                     </div>
                 </authz:authorize>
                 <authz:authorize access="${entry.adminEnabled}">
-                    <div id="entry${entry.id}" class="text-justify">${entry.text}</div>
+                    <div id="entry${entry.id}" class="text-justify text-overflow">${entry.text}</div>
                     <div id="actions${entry.id}" class="pull-right">
                         <authz:authorize access="hasRole('ROLE_ADMIN')">
                             <a href="javascript:disableEntry(${entry.id});"
-                               data-toggle="tooltip" title="<spring:message code="messages.general.hideentry"/>">
-                                <i
-                                        class="fa fa-eye-slash"></i>
-                            </a>
+                               data-toggle="tooltip" title="<spring:message code="messages.general.hideentry"/>"><i class="fa fa-eye-slash"></i></a>
                         </authz:authorize>
                         <authz:authorize access="isAuthenticated()">
                             <a data-toggle="tooltip" title="<spring:message code="messages.general.replytouser"/>"

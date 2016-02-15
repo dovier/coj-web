@@ -13,26 +13,26 @@
 
                         &nbsp;<a
                             href="<c:url value="composemail.xhtml?reply=${usermail.idmail}"/>"
-                            class="mailheader"><i class="fa fa-mail-reply"></i><spring:message
+                            class="mailheader"><i class="fa fa-mail-reply"></i> <spring:message
                                 code="link.reply" />&nbsp;&nbsp;&nbsp;</a>
                         <a
                             href="<c:url value="composemail.xhtml?reply=${usermail.idmail}&all=true"/>"
-                            class="mailheader"><i class="fa fa-mail-reply-all"></i><spring:message
+                            class="mailheader"><i class="fa fa-mail-reply-all"></i> <spring:message
                                 code="link.replyall" />&nbsp;&nbsp;&nbsp;</a>
                         <a
                             href="<c:url value="composemail.xhtml?reply=${usermail.idmail}&fwd=true"/>"
-                            class="mailheader"><i class="fa fa-mail-forward"></i><spring:message
+                            class="mailheader"><i class="fa fa-mail-forward"></i> <spring:message
                                 code="link.forward" />&nbsp;&nbsp;&nbsp;</a>
                         <a
                             href="<c:url value="markunread.xhtml?idmail=${usermail.idmail}"/>"
-                            class="mailheader"><i class="fa fa-envelope-o"></i><spring:message
+                            class="mailheader"><i class="fa fa-envelope-o"></i> <spring:message
                                 code="link.markunread" />&nbsp;&nbsp;&nbsp;</a>
                         <a
                             href="<c:url value="deletemail.xhtml?idmail=${usermail.idmail}"/>"
-                            class="mailheader"><i class="fa fa-trash"></i><spring:message
+                            class="mailheader"><i class="fa fa-trash"></i> <spring:message
                                 code="link.delete" />&nbsp;&nbsp;&nbsp;</a>
                         <a href="<c:url value="inbox.xhtml"/>"
-                           class="mailheader"><i class="fa fa-close"></i><spring:message
+                           class="mailheader"><i class="fa fa-close"></i> <spring:message
                                 code="link.close" />&nbsp;&nbsp;&nbsp;</a>
 
                     </div>
@@ -41,12 +41,12 @@
                         <tr>
                             <td style="align: right" width="10%"><b><spring:message
                                         code="fieldhdr.from" />:</b></td>
-                            <td style="padding-left: 20px;" style="align:left">${usermail.id_from}</td>
+                            <td style="padding-left: 20px; display: inherit;" style="align:left">${usermail.id_from}</td>
                         </tr>
                         <tr>
                             <td style="align: right"><b><spring:message
                                         code="fieldhdr.to" />:</b></td>
-                            <td style="padding-left: 20px;" style="align:left">
+                            <td style="padding-left: 20px; display: inherit;" style="align:left">
                                 <c:forEach
                                     items="${usermail.to}" var="to">
                                     ${to}
@@ -55,13 +55,13 @@
                         <tr>
                             <td style="align: right"><b><spring:message
                                         code="fieldhdr.received" />:</b></td>
-                            <td style="padding-left: 20px;" style="align:left"><fmt:formatDate
+                            <td style="padding-left: 20px; display: inherit;" style="align:left"><fmt:formatDate
                                     pattern="yyyy-MM-dd HH:mm:ss" value="${usermail.date}" /></td>
                         </tr>
                         <tr>
                             <td style="align: right"><b><spring:message
                                         code="fieldhdr.subject" />:</b></td>
-                            <td style="padding-left: 20px;" style="align:left"><c:out
+                            <td style="padding-left: 20px; display: inherit;" style="align:left"><c:out
                                     value="${usermail.title}" /></td>
                         </tr>
                     </table>

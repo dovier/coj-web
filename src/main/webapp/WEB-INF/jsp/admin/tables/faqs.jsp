@@ -8,11 +8,11 @@
     <display:column property="question" titleKey="tablehdr.question"
                     paramId="question" paramProperty="question"/>
     <display:column titleKey="tablehdr.actions">
-        <a class="details"
+       <%-- <a class="details"
            data-toggle="tooltip"
            href="<c:url value="/admin/detailsfaq.xhtml?id=${faq.id}"/>"
            title="<spring:message code="messages.general.details"/>"><i
-                class="fa fa-eye"></i></a>
+                class="fa fa-eye"></i></a>--%>
         <a href="<c:url value="/admin/editfaq.xhtml?id=${faq.id}"/>"> <i
                 title="<spring:message code="messages.general.edit"/>" data-toggle="tooltip"
                 class="fa fa-edit"></i></a>

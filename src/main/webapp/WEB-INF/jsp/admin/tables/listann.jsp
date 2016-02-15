@@ -1,3 +1,4 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
@@ -5,9 +6,16 @@
                decorator="cu.uci.coj.utils.tabledecorator.problemsTableDecorator">
     <display:column property="aid" titleKey="tablehdr.id"
                     headerClass="headid" />
-    <display:column property="content" titleKey="tablehdr.content" />
-    <display:column property="date" titleKey="tablehdr.date"
-                    headerClass="headdate" />
+    <display:column property="content" titleKey="tablehdr.content" style="width:55%"/>
+    <display:column titleKey="tablehdr.date"
+                    headerClass="headdate" >
+        <%--property="date"--%>
+        <%--${ann.date}--%>
+        <%--#{ann.date.concat(ann.date)}--%>
+        <%--<fmt:formatDate value="${ann.date}" pattern="dd-MON-yyyy"/>--%>
+        <c:set var="newdate" value="${fn:substring(ann.date, 0, 19)}" />
+        ${newdate}
+    </display:column>
     <display:column titleKey="tablehdr.contest">
         <c:choose>
             <c:when test="${ann.contest ne '0'}">

@@ -18,6 +18,8 @@ public class Notification {
     public static String getSuccesfullUpdate() {
         return "infomsg.update.success";
     }
+    public static String getSuccesfull(){return "infomsg.success";}
+    public static String getNotSuccesfull(){return "infomsg.notsuccess";}
     public static String getSuccesfullDelete() {
         return "infomsg.delete.success";
     }
@@ -25,4 +27,15 @@ public class Notification {
         return "infomsg.rejudge.success";
     }
     public static String getInvalidService() {return  "infomsg.invalidservice.sucess";}
+    public static String getNotSuccesfullCreate() {
+        return "infomsg.notcreate.success";
+    }
+    public static String getSuccesfullTranslate() {return  "infomsg.translate.sucess";}
+    
+    public static String getAcceptedTranslate() {return  "infomsg.translate.acepted";}
+    public static String getRechazedTranslate() {return  "infomsg.translate.reject";}
+    
+    public static String getSuccesfullSendMail() {return  "infomsg.sendmessage.sucess";}
+    public static String getNotSuccesfullSendMail() {return  "infomsg.notsendmessage.sucess";}
+
 }

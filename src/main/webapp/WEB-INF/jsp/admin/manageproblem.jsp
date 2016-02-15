@@ -140,28 +140,52 @@
                             <div class="row">
                                 <div class="col-lg-3">
                                     <label for="memoryLimit"><spring:message code="addproblem.memory(B)"/></label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="maxCaseExecutionTime"><spring:message
+                                            code="addproblem.caseexecutiontime(MS)"/></label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="maxTotalExecutionTime"><spring:message
+                                            code="addproblem.totalexecutiontime(MS)"/></label>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="maxSourceCodeLenght"><spring:message
+                                            code="addproblem.sourcecodelenght(B)"/></label>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3">
+
 
                                     <div class="input-group">
-                                        <input type="text" id="memoryLimit"
-                                               placeholder="<spring:message code="addproblem.maxmemory"/>"
-                                               class="form-control" data-toggle="unit-selector">
+                                            <%--   <input type="text" id="memoryLimit"
+                                                      placeholder="<spring:message code="addproblem.maxmemory"/>"
+                                                      class="form-control" data-toggle="unit-selector">--%>
+                                        <form:input type="text" id="memoryLimit"
+                                                    cssClass="form-control max-memory"
+                                                    data-toggle="unit-selector"
+                                                    path="limits[0].maxMemory"/>
                                             <span class="input-group-btn">
-                                                <button id="btn-max-memory" class="btn btn-default" type="button"
+                                                <button id="btn-max-memory" class="btn btn-primary" type="button"
                                                         onclick="applyLimit(this, '.max-memory')"><spring:message
                                                         code="addproblem.apply"/></button>
                                             </span>
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
-                                    <label for="maxCaseExecutionTime"><spring:message
-                                            code="addproblem.caseexecutiontime(MS)"/></label>
+
 
                                     <div class="input-group">
-                                        <input type="text" id="maxCaseExecutionTime"
-                                               placeholder="<spring:message code="addproblem.maxcaseexecutiontime"/>"
-                                               class="form-control">
+                                            <%--<input type="text" id="maxCaseExecutionTime"
+                                                   placeholder="<spring:message code="addproblem.maxcaseexecutiontime"/>"
+                                                   class="form-control">--%>
+                                        <form:input type="text" id="maxCaseExecutionTime"
+                                                    cssClass="form-control max-case-execution-time"
+                                                    path="limits[0].maxCaseExecutionTime"/>
                                             <span class="input-group-btn">
-                                                <button id="btn-max-case-execution-time" class="btn btn-default"
+                                                <button id="btn-max-case-execution-time" class="btn btn-primary"
                                                         type="button"
                                                         onclick="applyLimit(this, '.max-case-execution-time')">
                                                     <spring:message code="addproblem.apply"/></button>
@@ -169,15 +193,17 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
-                                    <label for="maxTotalExecutionTime"><spring:message
-                                            code="addproblem.caseexecutiontime(MS)"/></label>
+
 
                                     <div class="input-group" id="popover-container">
-                                        <input type="text" id="maxTotalExecutionTime"
-                                               placeholder="<spring:message code="addproblem.maxtotalexecutiontime"/>"
-                                               class="form-control">
+                                            <%-- <input type="text" id="maxTotalExecutionTime"
+                                                    placeholder="<spring:message code="addproblem.maxtotalexecutiontime"/>"
+                                                    class="form-control">--%>
+                                        <form:input type="text" id="maxTotalExecutionTime"
+                                                    cssClass="form-control max-total-execution-time"
+                                                    path="limits[0].maxTotalExecutionTime"/>
                                             <span class="input-group-btn">
-                                                <button id="btn-max-total-execution-time" class="btn btn-default"
+                                                <button id="btn-max-total-execution-time" class="btn btn-primary"
                                                         type="button"
                                                         onclick="applyLimit(this, '.max-total-execution-time')">
                                                     <spring:message code="addproblem.apply"/></button>
@@ -185,15 +211,20 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
-                                    <label for="maxSourceCodeLenght"><spring:message
-                                            code="addproblem.sourcecodelenght(B)"/></label>
+
 
                                     <div class="input-group">
-                                        <input type="text" id="maxSourceCodeLenght"
-                                               placeholder="<spring:message code="addproblem.maxsourcecodelenght"/>"
-                                               class="form-control" data-toggle="unit-selector">
+                                            <%--  <input type="text"
+                                                     placeholder="<spring:message code="addproblem.maxsourcecodelenght"/>"
+                                                     class="form-control" data-toggle="unit-selector">--%>
+
+                                        <form:input type="text" id="maxSourceCodeLenght"
+                                                    cssClass="form-control max-memory"
+                                                    data-toggle="unit-selector"
+                                                    path="limits[0].maxSourceCodeLenght"
+                                        />
                                             <span class="input-group-btn">
-                                                <button id="btn-max-source-code-lenght" class="btn btn-default"
+                                                <button id="btn-max-source-code-lenght" class="btn btn-primary"
                                                         type="button"
                                                         onclick="applyLimit(this, '.max-source-code-lenght')">
                                                     <spring:message code="addproblem.apply"/></button>
@@ -207,7 +238,7 @@
                                            name="use-miltipliers"><spring:message code="addproblem.multipliers"/>
                                 </label>
                             </div>
-                            <button type="button" class="btn btn-default" onclick="applyAllLimit()">
+                            <button type="button" class="btn btn-primary" onclick="applyAllLimit()">
                                 <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span><spring:message
                                     code="addproblem.applyall"/>
                             </button>
@@ -324,36 +355,38 @@
             </div>
         </div>
     </div>
-    <%-- <div class="alert alert-danger col-xs-6" role="alert">The following limits are deprecated but, for now, you have to fill it.</div>
-     <div class="form-group col-xs-12">
-         <label class="control-label col-xs-3"> <fmt:message
-                 key="addproblem.casechk" />
-         </label>
-         <div class="col-xs-8">
-             <form:checkbox cssClass="checkbox" path="multidata"
-                            onchange="onCase();" id="casecheck" />
-         </div>
-     </div>
+    <%--<div class="alert alert-danger col-xs-6" role="alert">The following limits are deprecated but, for now, you have to fill it.</div>--%>
+    <div class="form-group col-xs-12">
+        <label class="control-label col-xs-3"> <fmt:message
+                key="addproblem.casechk"/>
+        </label>
 
-     <div class="form-group col-xs-12">
+        <div class="col-xs-8">
+            <form:checkbox cssClass="checkbox" path="multidata"
+                           onchange="onCase();" id="casecheck"/>
+        </div>
+    </div>
+
+    <%-- <div class="form-group col-xs-12">
          <label class="control-label col-xs-3"><fmt:message
-                 key="addproblem.casetime" /> <b>(MS)</b></label>
+                 key="addproblem.casetime"/> <b>(MS)</b></label>
+
          <div class="col-xs-8">
              <c:choose>
                  <c:when test="${problem.multidata == true}">
                      <form:input cssClass="form-control" path="casetimelimit"
-                                 id="casetime" onclick="" />
+                                 id="casetime" onclick=""/>
                  </c:when>
                  <c:otherwise>
                      <form:input cssClass="form-control" path="casetimelimit"
-                                 id="casetime" disabled="true" />
+                                 id="casetime" disabled="true"/>
                  </c:otherwise>
              </c:choose>
-             <span class="label label-danger"><form:errors
-                     path="casetimelimit" /></span>
+              <span class="label label-danger"><form:errors
+                      path="casetimelimit"/></span>
          </div>
-     </div>
-     <div class="form-group col-xs-12">
+     </div>--%>
+  <%--   <div class="form-group col-xs-12">
          <label class="control-label col-xs-3"><fmt:message
                  key="addproblem.time" /> <b>(MS)</b></label>
          <div class="col-xs-8">
@@ -392,6 +425,9 @@
             <form:checkbox cssClass="checkbox" path="enabled"/>
         </div>
     </div>
+
+    <%--Dos primeros input file de la vista--%>
+
     <div class="form-group col-xs-12" id="inputfiles">
         <label class="control-label col-xs-3"><fmt:message
                 key="addproblem.inputgen"/></label>
@@ -460,6 +496,8 @@
                     <div class="model-dataset margin-top-05 col-xs-12">
                         <label class="control-label col-xs-3"><spring:message code="addproblem.ZIP"/></label>
 
+                      <%--File de los zip--%>
+
                         <div class="col-xs-4">
                             <input id="zipfile" name="zipfile" type="file" class="file"
                                    data-show-upload="false"/>
@@ -468,9 +506,11 @@
                 </div>
 
                 <div id="" class="margin-top-05 col-xs-12">
-                    <label class="control-label col-xs-12"><spring:message code="addproblem.datasets.new"/></label>
+                   <label class="control-label col-xs-12"><spring:message code="addproblem.datasets.new"/></label>
                 </div>
+                <%--En este div van los files para escoger los ficheros, se programa en javascript--%>
                 <div id="datasets" class="form-group margin-top-05"></div>
+
                 <div class="form-group col-xs-12">
                     <div class="margin-top-05 pull-right form-actions">
                         <input class="btn btn-primary" type="button"
@@ -486,7 +526,12 @@
     <div class="form-group col-xs-12">
         <label class="control-label col-xs-3"> <fmt:message
                 key="page.advancedcfg.languages"/>
+                <a><i data-toggle="tooltip" class="fa fa-asterisk"
+                        title="<spring:message code="mandatory.field"/>">
+             </i></a>
         </label>
+        
+            
 
         <div class="col-xs-9 contestlanguages">
             <div class='col-xs-4'>
@@ -499,8 +544,10 @@
                                  items="${languages}" itemValue="lid" itemLabel="descripcion"
                                  delimiter="</div><div class='col-xs-4'>"/>
             </div>
+            <div class="col-xs-9" >
                 <span class="label label-danger"><form:errors
                         path="languages"/></span>
+                </div>
         </div>
     </div>
     <c:if test="${showpsetters == true}">
@@ -522,6 +569,7 @@
                                      items="${psetters}" itemValue="uid" itemLabel="username"
                                      delimiter="</div><div class='col-xs-3'>"/>
                 </div>
+              
                     <span class="label label-danger"><form:errors
                             path="psetters"/></span>
             </div>
@@ -537,6 +585,7 @@
                 <input class="btn btn-primary" type="submit" name="but"
                        value="<spring:message code="button.create"/>"/>
             </c:if>
+            <a href="/admin/adminproblems.xhtml" class="btn btn-primary"><spring:message code="button.close" /></a>
         </div>
     </div>
     </div>
@@ -573,4 +622,46 @@ $('[data-toggle="unit-selector"]').unitSelector()
 </script>-->
 <script>
     $("[data-toggle='tooltip']").tooltip();
+</script>
+
+<script>
+   /* $('#zipfile').inputFileText({
+        text: "<spring:message code="message.filename"/>"
+    });*/
+
+   $(".file").fileinput({
+       maxFileSize: 5000000,
+       allowedFileTypes: ['text'],
+       removeClass: "btn btn-default",
+       removeLabel: "Delete",
+       previewFileType: 'text',
+       showPreview: 0,
+       msgProgress: 'Loading {percent}%',
+       browseClass: "btn btn-primary",
+       browseLabel: "<spring:message code="message.filename"/>",
+       browseIcon: '<i class="fa fa-file-o"></i>&nbsp;',
+       removeIcon: '<i class="fa fa-trash"></i>',
+       uploadLabel:"<spring:message code="fieldhdr.uploadfile"/>",
+       msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
+       msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>'
+   });
+
+    $("#zipfile").fileinput({
+        maxFileSize: 50000000,
+        allowedFileTypes: ['object'],
+        removeClass: "btn btn-default",
+        msgProgress: 'Loading {percent}%',
+        browseClass: "btn btn-danger",
+        browseLabel: "<spring:message code="message.filename"/>",
+        browseIcon: '<i class="fa fa-file-o"></i>&nbsp;',
+        removeIcon: '<i class="fa fa-trash"></i>',
+        uploadLabel:"<spring:message code="fieldhdr.uploadfile"/>",
+        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
+        msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>'
+    });
+</script>
+
+<script>
+    var i18n = {};
+    i18n.browseLabel = "<spring:message code="message.filename"/>";
 </script>

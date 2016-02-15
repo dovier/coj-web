@@ -64,6 +64,8 @@
                        id="submit" value="<spring:message code="judge.register.submit.value"/>" /> <input
                        class="btn btn-primary" type="reset" name="reset" id="reset"
                        value="<spring:message code="judge.register.reset.value"/>" />
+                <a class="btn btn-primary" href="<c:url value="/admin/faqs.xhtml"/>"><spring:message
+                        code="button.close"/></a>
             </div>
         </form:form>
     </div>

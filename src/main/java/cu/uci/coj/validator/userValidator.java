@@ -98,7 +98,7 @@ public class userValidator implements Validator {
         }
 
         user.setDob(new Date(user.getYear() - 1900, user.getMonth() - 1, user.getDay()));
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nick", "errormsg.10");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nick", "mandatory.field");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "access_rule", "errormsg.10");
         if (user.getCountry_id() == 0) {
             errors.rejectValue("country", "judge.register.error.country");

@@ -26,17 +26,17 @@
                     <spring:message code="fieldhdr.details"/>
                 </div>
                 <div id="details" class="panel-body">
-                    <div class="col-xs-5">
+                    <div class="col-xs-2">
                         <spring:message code="psource.newsource"/>
                     </div>
-                    <div class="col-xs-6 col-xs-offset-1">
+                    <div class="col-xs-10">
                         ${wproblemSource.name}
                     </div>
 
-                    <div class="col-xs-5">
+                    <div class="col-xs-2">
                         <spring:message code="psource.author"/>
                     </div>
-                    <div class="col-xs-6 col-xs-offset-1">
+                    <div class="col-xs-10">
                         ${wproblemSource.author}
                     </div>
 

@@ -8,10 +8,7 @@
 <link rel="stylesheet" href="<c:url value="/css/confirm-message.css"/>"
 	type="text/css" media="screen" />
 
-<h2 class="postheader">
-	<fmt:message key="page.general.admin.header" />
-	<spring:message code="text.managecorrections" />
-</h2>
+<h2 class="postheader"><fmt:message key="page.general.admin.header" /><spring:message code="text.managecorrections" /></h2>
 
 <button id="parseall" class="btn btn-primary " type="button">
 	<fmt:message key="text.correctall" />

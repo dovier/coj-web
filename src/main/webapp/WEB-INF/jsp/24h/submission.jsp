@@ -86,7 +86,7 @@
 			class="fa fa-edit"></i>&nbsp;<spring:message code="link.edit" /></a> <a
 			href="/24h/downloadsource.xhtml?sid=${submission.sid}"><i
 			class="fa fa-save"></i>&nbsp;<spring:message code="link.download" /></a>
-		<a href="/mail/composemail.xhtml?usernameto=dovier;ymondelo20;jasoria"
+		<a href="/mail/composemail.xhtml?usernameto=dovier;ybroche"<%-- usuario de yonny con problemas ymondelo20;--%>
 			title="<spring:message code="link.fraud"/>"><i
 			class="red fa fa-minus-circle"></i>&nbsp;<spring:message
 				code="link.fraud" /></a>

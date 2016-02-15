@@ -102,7 +102,7 @@
             </div>
 
             <div class="form-group">
-                <label class="control-label col-xs-3"><spring:message code="fieldhdr.enabled" /></label>
+                <label class="control-label col-xs-3"><spring:message code="fieldhdr.enabled.poll" /></label>
                 <div class="col-xs-8">
                     <form:checkbox cssClass="checkbox" path="enabled" />
                 </div>
@@ -115,6 +115,8 @@
                                id="submit" value="<spring:message code="judge.register.submit.value"/>" /> <input
                             class="btn btn-primary" type="reset" name="reset" id="reset"
                             value="<spring:message code="judge.register.reset.value"/>" />
+                        <a class="btn btn-primary" href="<c:url value="/admin/poll/list.xhtml"/>"><spring:message
+                                code="button.close"/></a>
                     </div>
                 </div>
             </c:if>
@@ -125,6 +127,8 @@
                                id="submit" value="<spring:message code="judgeregister.update.value"/>" /> <input
                             class="btn btn-primary" type="reset" name="reset" id="reset"
                             value="<spring:message code="judge.register.reset.value"/>" />
+                        <a class="btn btn-primary" href="<c:url value="/admin/poll/list.xhtml"/>"><spring:message
+                                code="button.close"/></a>
                     </div>
                 </div>
             </c:if>

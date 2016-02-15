@@ -229,9 +229,6 @@ public class ClarificationController extends BaseController {
             String string = list[i];
             if (string != null && !string.isEmpty()) {
                 users.add(string);
-            } else {
-                result.rejectValue("usernameto", "sendclarification.error.usernotexist");
-                return "/contest/sendclarification";
             }
         }
         Map<String, String> sended = new HashMap<String, String>();

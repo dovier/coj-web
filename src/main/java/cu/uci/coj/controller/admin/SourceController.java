@@ -32,7 +32,7 @@ public class SourceController extends BaseController {
 
     @RequestMapping(value = "/addsource.xhtml", method = RequestMethod.GET)
     public String createSite(Model model) {
-        model.addAttribute("wproblemSource", new ProblemSource());
+        model.addAttribute("problemSource", new ProblemSource());
         return "/admin/wbsource/create";
     }
 
@@ -45,7 +45,7 @@ public class SourceController extends BaseController {
         problemSourceValidator.validate(problemSource, result);
 
         if (result.hasErrors()){
-            model.addAttribute("wproblemSource", problemSource);
+            model.addAttribute(problemSource);
             return "/admin/wbsource/create";
         }
 
@@ -76,7 +76,7 @@ public class SourceController extends BaseController {
     public String updateSources(Model model, @RequestParam(required = true, value = "idSource") Integer idSource) {
 
         ProblemSource problemSource = problemDAO.getProblemSourceById(idSource);
-        model.addAttribute("wproblemSource", problemSource);
+        model.addAttribute("problemSource", problemSource);
         return "/admin/wbsource/edit";
     }
 

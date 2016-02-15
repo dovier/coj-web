@@ -210,8 +210,7 @@ public class UserController extends BaseController {
 					utilDAO.objects("enabled.locale", Locale.class));
 			List<Institution> institutions = institutionDAO
 					.getEnabledInstitutionsByCountry_id(team.getCountry());
-			institutions
-					.add(0, new Institution(-1, "NONE", "NONE INSTITUTION"));
+			//institutions.add(0, new Institution(-1, "NONE", "NONE INSTITUTION"));
 			model.addAttribute("institutions", institutions);
 			model.addAttribute(team);
 			return "/admin/createteams";

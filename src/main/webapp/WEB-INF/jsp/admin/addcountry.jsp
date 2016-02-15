@@ -9,7 +9,7 @@
 
             <!-- NAME OF VIEW -->
             <legend>
-                <spring:message code="page.general.admin.header"/>: <spring:message code="page.addcountry.header"/>
+               <h2> <spring:message code="page.general.admin.header"/>: <spring:message code="page.addcountry.header"/></h2>
             </legend>
 
             <!-- NAME OF COUNTRY -->
@@ -106,6 +106,8 @@
                        id="submit" value="<spring:message code="judge.register.submit.value"/>"/> <input
                     class="btn btn-primary" type="reset" name="reset" id="reset"
                     value="<spring:message code="judge.register.reset.value"/>"/>
+                <a class="btn btn-primary" href="<c:url value="/admin/managecountries.xhtml"/>"><spring:message
+                        code="button.close"/></a>
             </div>
         </form:form>
     </div>

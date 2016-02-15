@@ -14,7 +14,7 @@
             </legend>
 
             <!-- ID OF LANGUAGE -->
-
+<%--
             <div class="form-group">
                 <label class="control-label col-xs-3"><spring:message code="tablehdr.id"/></label>
 
@@ -26,7 +26,7 @@
                     <span class="label label-danger"><form:errors path="lid"/></span>
                 </div>
 
-            </div>
+            </div>--%>
 
             <!-- NAME OF LANGUAGE -->
 
@@ -127,12 +127,16 @@
                 <div class="form-actions pull-right">
                     <input class="btn btn-primary" type="submit" name="submit"
                            id="submit" value="<spring:message code="button.create"/>"/>
+                    <a class="btn btn-primary" href="<c:url value="/admin/programminglanguages.xhtml"/>"><spring:message
+                            code="button.close"/></a>
                 </div>
             </c:if>
             <c:if test="${language.lid != 0}">
                 <div class="form-actions pull-right">
                     <input class="btn    btn-primary" type="submit" name="submit"
                            id="submit" value="<spring:message code="button.edit"/>"/>
+                    <a class="btn btn-primary" href="<c:url value="/admin/programminglanguages.xhtml"/>"><spring:message
+                            code="button.close"/></a>
                 </div>
             </c:if>
             <%--  <div class="form-actions pull-right">

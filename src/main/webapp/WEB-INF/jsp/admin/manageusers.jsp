@@ -3,8 +3,7 @@
 
 
 <h2 class="postheader">
-    <fmt:message key="page.general.admin.header" />
-    : <fmt:message key="page.general.admin.users" />
+    <fmt:message key="page.general.admin.header" />: <fmt:message key="page.general.admin.users" />
 </h2>
 <div class="postcontent">
     <c:if test="${message != null}">
@@ -27,6 +26,9 @@
     <div id="display-table-container"
          data-reload-url="/admin/tables/manageusers.xhtml"></div>
 </div>
+
+<script src="/js/admin/utility.js"></script>
+
 <script>
     $(initStandardFilterForm);
 </script>

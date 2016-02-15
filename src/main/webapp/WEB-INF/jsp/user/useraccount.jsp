@@ -313,7 +313,7 @@
                             <spring:message code="fieldhdr.achievements" />
                             <div class="badge pull-right">
                                 <a data-toggle="collapse" href="#achievements"><i
-                                        class="fa fa-chevron-up"></i></a>
+                                        class="fa fa-chevron-down"></i></a>
                             </div>
                         </div>
                         <div id="achievements" class="panel-body collapse">
@@ -348,7 +348,7 @@
                             <div class="pull-right">
                                 <div class="badge">
                                     <a data-toggle="collapse" href="#entries"><i
-                                            class="fa fa-chevron-up"></i></a>
+                                            class="fa fa-chevron-down"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -437,7 +437,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="stats" class="panel-body collapse">
+                        <div id="stats" class="panel-body collapse in">
                             <div class="row row-centered no-gutters">
                                 <div class="col-xs-12">
                                     <c:if test="${userclassif.count > 0}">
@@ -557,7 +557,7 @@
                                 <span class="badge">${user.solved}</span>
                                 <div class="badge pull-right">
                                     <a data-toggle="collapse" href="#probsACC"><i
-                                            class="fa fa-chevron-up"></i></a>
+                                            class="fa fa-chevron-down"></i></a>
                                 </div>
                             </div>
                             <div id="probsACC" class="panel-body collapse">
@@ -583,7 +583,7 @@
                                 <span class="badge">${user.unsolved}</span>
                                 <div class="badge pull-right">
                                     <a data-toggle="collapse" href="#probsWA"><i
-                                            class="fa fa-chevron-up"></i></a>
+                                            class="fa fa-chevron-down"></i></a>
                                 </div>
                             </div>
                             <div id="probsWA" class="panel-body collapse">
@@ -617,6 +617,10 @@
         $('.fa-chevron-up').click(function() {
             $(this).toggleClass('fa-chevron-up');
             $(this).toggleClass('fa-chevron-down');
+        });
+        $('.fa-chevron-down').click(function() {
+            $(this).toggleClass('fa-chevron-down');
+            $(this).toggleClass('fa-chevron-up');
         });
 
         $("[data-toggle='tooltip']").tooltip();

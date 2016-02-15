@@ -84,7 +84,7 @@
                 </c:forEach>
                 <thead>
                     <tr>
-                        <th><spring:message code="tablehdr.total" /></th>
+                        <td><spring:message code="tablehdr.total" /></td>
                         <td><a
                                 href="<c:url value="cstatus.xhtml?cid=${contest.cid}&status=ac"/>"><c:out
                                     value="${stat.acc}" /></a></td>
@@ -129,7 +129,7 @@
                 <div class="col-xs-5">
                     <select id="username" class="form-control"
                             onchange="javascript:callback();">
-                        <option selected="selected" value="">All Users</option>
+                        <option selected="selected" value=""><spring:message code="contest.statics.all.users" /></option>
                         <c:forEach items="${contest.users}" var="user">
                             <option value="${user.username}">${user.nick}</option>
                         </c:forEach>

@@ -5,8 +5,7 @@
 <link rel="stylesheet" href="<c:url value="/css/confirm-message.css"/>" type="text/css" media="screen" />
 
 <h2 class="postheader">
-    <fmt:message key="page.general.admin.header" />
-    : <fmt:message key="page.general.admin.manageentries" />
+    <fmt:message key="page.general.admin.header" />: <fmt:message key="page.general.admin.manageentries" />
 </h2>
 <div class="postcontent">
     <c:if test="${message != null}">

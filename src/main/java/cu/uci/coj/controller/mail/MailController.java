@@ -2,14 +2,13 @@ package cu.uci.coj.controller.mail;
 
 import java.security.Principal;
 import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,6 +41,9 @@ public class MailController extends BaseController {
 	@Resource
 	private MailNotificationService MailNotificationService;
 
+	@Autowired
+	private MessageSource messageSource;
+
 	private String sendMail(Mail mail) {
 		int size = mail.getContent().getBytes().length + mail.getTitle().getBytes().length;
 
@@ -56,7 +58,13 @@ public class MailController extends BaseController {
 				if (mailDAO.bool("check.quota", size, to)) {
 					int idmail = mailDAO.insertInternalEmail(mail, string, size);
 					mail.setIdmail(idmail);
-					MailNotificationService.sendNewPrivateMessageNotification(mail, string);
+					try {
+						MailNotificationService.sendNewPrivateMessageNotification(mail, string);
+					} catch (Exception e){
+						//Si con alguno de los usuarios da error, captar aqui
+						return "error" + string;
+					}
+
 				} else
 					return to;
 			}
@@ -128,8 +136,9 @@ public class MailController extends BaseController {
 	}
 
 	@RequestMapping(value = "/mail/composemail.xhtml", method = RequestMethod.POST)
-	public String composeMail(Model model, Principal principal, Mail mail, BindingResult errors) {
+	public String composeMail(Model model, Principal principal, Mail mail, BindingResult errors, RedirectAttributes redirectAttributes, Locale locale) {
 
+		mail.setUsernameTo(mail.getUsernameTo().replace(" ", ""));
 		sendmailValidator.validate(mail, errors);
 
 		if (errors.hasErrors()) {
@@ -142,9 +151,22 @@ public class MailController extends BaseController {
 		// inbox del remitente, o si no hay espacio en el inbox de algun
 		// receptor, se devuelve el nombre de ese receptor
 		String result = sendMail(mail);
+
 		model.addAttribute("receiverInboxOverflow", null);
 		model.addAttribute("inboxOverflow", false);
+
 		if (result != null) {
+
+			if (result.contains("error")){
+				//obtener el usuario que presenta algun error
+				/*errors.rejectValue("usernameTo", "errormsg.51" + result.replace("error", ""));*/
+				/*redirectAttributes.addFlashAttribute("usernameerror", messageSource.getMessage("errormsg.51", null, locale) + " " + result.replace("error", ""));*/
+				/*redirectAttributes.addFlashAttribute(mail);*/
+				model.addAttribute("receiverInboxOverflow", result.replace("error", ""));
+				model.addAttribute(mail);
+				redirectAttributes.addFlashAttribute("usernameerror", messageSource.getMessage("errormsg.59", null, locale) + " " + result.replace("error", " "));
+				return "redirect:/mail/composemail.xhtml";
+			}
 
 			if (result == "")
 				model.addAttribute("inboxOverflow", true);
@@ -152,6 +174,8 @@ public class MailController extends BaseController {
 				model.addAttribute("receiverInboxOverflow", result);
 			return "/mail/composemail";
 		}
+
+		redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullSendMail());
 
 		if (mail.isRedirectInbox()) {
 			return "redirect:/mail/inbox.xhtml";
@@ -294,16 +318,18 @@ public class MailController extends BaseController {
 	}
 
 	@RequestMapping(value = "/mail/savedraft.xhtml", method = RequestMethod.POST)
-	public String saveDrafts(Model model, Principal principal, Mail mail) {
+	public String saveDrafts(Model model, Principal principal, Mail mail, Locale locale) {
 		JSONObject msg = new JSONObject();
 		String message = "";
+		/*WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());*/
 		if (mail.getContent() == null || mail.getContent().isEmpty()) {
-			message = "There is nothing to save";
+			/*message = AppContext.getApplicationContext().getMessage("errormsg.49", null, Locale.getDefault());*/
+			message = messageSource.getMessage("errormsg.49", null, locale);
 		} else {
 			int size = mail.getContent().getBytes().length + mail.getTitle().getBytes().length;
 			mailDAO.dml("insert.draft", principal.getName(), mail.getContent(), mail.getTitle(), size);
-			mailDAO.dml("update.quote", principal.getName(), principal.getName(),principal.getName(), principal.getName(), userDAO.idByUsername(principal.getName()));
-			message = "Draft Saved";
+			mailDAO.dml("update.quote", principal.getName(), principal.getName(), principal.getName(), principal.getName(), userDAO.idByUsername(principal.getName()));
+			message = messageSource.getMessage("errormsg.48", null, locale);
 		}
 		try {
 			msg.accumulate("message", message);

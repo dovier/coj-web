@@ -5,10 +5,14 @@ import java.io.FileInputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cu.uci.coj.utils.Notification;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -25,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import cu.uci.coj.config.Config;
 import cu.uci.coj.controller.BaseController;
 import cu.uci.coj.utils.FileUtils;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @Scope(value = "session")
@@ -38,6 +43,10 @@ public class FileSystemController extends BaseController {
 
 	private Set<File> cutFiles;
 	private Set<File> copiedFiles;
+
+    private String STRING_PATTERN_CL = "[a-zA-Z0-9\\s]+";
+    private Pattern pattern;
+    private Matcher matcher;
 
 	@PostConstruct
 	public void init() {
@@ -140,7 +149,7 @@ public class FileSystemController extends BaseController {
 
 	private void doDownload(HttpServletResponse response, File file,String dir)
 			throws Exception {
-		
+
 		response.setHeader("Content-Disposition", "attachment; filename=\""
 				+ dir);
 		// si es un archivo, se descarga
@@ -149,49 +158,79 @@ public class FileSystemController extends BaseController {
 					response.getOutputStream());
 	}
 
+    @RequestMapping(value = "/errorFileRedirectPage.xhtml", method = RequestMethod.GET)
+    public String errorRedirectPage(HttpServletRequest request, Model model)
+    {
+        model.addAttribute("sizeexceeded", true);
+        return "/admin/files";
+    }
+
 	@RequestMapping(value = "/list.xhtml", method = RequestMethod.POST)
 	public String upload(Model model, MultipartFile file, String[] files,
-			String folder) throws Exception {
+                         String folder, RedirectAttributes redirectAttributes) throws Exception {
 
-		if (StringUtils.hasText(folder)) {
+		int cont = 0;
+
+        pattern = Pattern.compile(STRING_PATTERN_CL);
+        matcher = pattern.matcher(folder);
+
+        if (matcher.matches()) {
+            File folderToSave = new File(currentDir, folder);
+            folderToSave.mkdir();
+            cont++;
+        }
+
+        /*if (StringUtils.hasText(folder)) {
 			// no lleva codificacion UTF-8
 			File folderToSave = new File(currentDir, folder);
 			folderToSave.mkdir();
-		}
+		}*/
 
 		if (!file.isEmpty()) {
 			File fileToSave = current(file.getOriginalFilename());
 			file.transferTo(fileToSave);
+            cont++;
 		}
+
+        if (cont == 0){
+            /*se redirecciona y se envia un error de ambos campos estan vacios*/
+            redirectAttributes.addFlashAttribute("message", Notification.getNotSuccesfull());
+            redirectAttributes.addFlashAttribute("anerror", true);
+            return "redirect:/admin/files/list.xhtml";
+        }
+
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
 		return "redirect:/admin/files/list.xhtml";
 	}
 
 	@RequestMapping(value = "/cut.xhtml", method = RequestMethod.GET)
-	public String cut(Model model, @RequestParam(value = "f") String dir)
+	public String cut(Model model, @RequestParam(value = "f") String dir, RedirectAttributes redirectAttributes)
 			throws Exception {
 
 		File file = current(dir);
 
 		copiedFiles.clear();
 		cutFiles.add(file);
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfull());
 		return "redirect:/admin/files/list.xhtml";
 	}
 
 	@RequestMapping(value = "/copy.xhtml", method = RequestMethod.GET)
-	public String copy(Model model, @RequestParam(value = "f") String dir)
+	public String copy(Model model, @RequestParam(value = "f") String dir, RedirectAttributes redirectAttributes)
 			throws Exception {
 
 		File file = current(dir);
 
 		cutFiles.clear();
 		copiedFiles.add(file);
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfull());
 		return "redirect:/admin/files/list.xhtml";
 	}
 
 	@RequestMapping(value = "/paste.xhtml", method = RequestMethod.GET)
 	public String paste(
-			Model model,
-			@RequestParam(required = false, defaultValue = "/", value = "f") String dir)
+            Model model,
+            @RequestParam(required = false, defaultValue = "/", value = "f") String dir, RedirectAttributes redirectAttributes)
 			throws Exception {
 
 		File file = current(dir);
@@ -217,12 +256,13 @@ public class FileSystemController extends BaseController {
 			cutFiles.clear();
 			copiedFiles.clear();
 		}
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfull());
 		return "redirect:/admin/files/list.xhtml";
 	}
 
 	@RequestMapping(value = "/clear.xhtml", method = RequestMethod.GET)
 	public String clearSelected(Model model,
-			@RequestParam(value = "f") String dir) throws Exception {
+                                @RequestParam(value = "f") String dir, RedirectAttributes redirectAttributes) throws Exception {
 
 		File file = current(dir);
 		Iterator<File> cIt = cutFiles.iterator();
@@ -239,16 +279,24 @@ public class FileSystemController extends BaseController {
 		if (cIt.hasNext())
 			copiedFiles.remove(cFile);
 
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfull());
 		return "redirect:/admin/files/list.xhtml";
 	}
 
 	@RequestMapping(value = "/delete.xhtml", method = RequestMethod.GET)
-	public String delete(Model model, @RequestParam(value = "f") String dir)
+	public String delete(Model model, @RequestParam(value = "f") String dir, RedirectAttributes redirectAttributes)
 			throws Exception {
+        try {
+            File file = current(dir);
+            org.apache.commons.io.FileUtils.deleteQuietly(file);
+            doUnshare(dir);
+        } catch (Exception e){
+            redirectAttributes.addFlashAttribute("message", Notification.getNotSuccesfull());
+            redirectAttributes.addFlashAttribute("anerror", true);
+            return "redirect:/admin/files/list.xhtml";
+        }
 
-		File file = current(dir);
-		org.apache.commons.io.FileUtils.deleteQuietly(file);
-		doUnshare(dir);
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullDelete());
 		return "redirect:/admin/files/list.xhtml";
 	}
 

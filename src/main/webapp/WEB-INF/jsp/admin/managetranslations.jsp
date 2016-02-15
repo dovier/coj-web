@@ -4,8 +4,7 @@
 <link rel="stylesheet" href="<c:url value="/css/confirm-message.css"/>" type="text/css" media="screen" />
 
 <h2 class="postheader">
-    <fmt:message key="page.general.admin.header" />
-    : <fmt:message key="tablehdr.translations" />
+    <fmt:message key="page.general.admin.header" />: <fmt:message key="tablehdr.translations" />
 </h2>
 <div class="postcontent">
     <!-- article-content -->   

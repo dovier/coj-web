@@ -25,6 +25,8 @@
                        id="submit" value="<spring:message code="button.edit"/>" /> <input
                     class="btn btn-primary" type="reset" name="reset" id="reset"
                     value="<spring:message code="button.reset"/>" />
+                <a class="btn btn-primary" href="<c:url value="/admin/faqs.xhtml"/>"><spring:message
+                        code="button.close"/></a>
             </div>
         </form:form>
 

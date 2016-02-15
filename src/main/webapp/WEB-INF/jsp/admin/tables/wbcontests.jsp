@@ -10,7 +10,7 @@
                     paramProperty="id" />
 
     <display:column titleKey="tablehdr.status" headerClass="headsub"
-                    sortable="true" sortProperty="startdate" sortName="startdate">
+                    sortable="false" sortProperty="startdate" sortName="startdate">
         <c:choose>
             <c:when test="${contest.startDate > now}">
                 <span class="label label-danger"><spring:message

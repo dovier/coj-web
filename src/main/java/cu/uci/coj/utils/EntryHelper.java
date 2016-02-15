@@ -37,7 +37,7 @@ public class EntryHelper {
 		 * Entry.class); for (Entry e : entries) { preProcessEntry(e);
 		 * entryDAO.updateEntry(e); }
 		 */
-	}	
+	}
 	
 	public Map<String, String> getEmoties() {
 		return emoties;

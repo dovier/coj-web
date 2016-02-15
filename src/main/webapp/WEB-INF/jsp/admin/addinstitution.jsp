@@ -2,6 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer = "16kb" autoFlush="true" %>
 
+
 <div class="row">
     <div class="col-xs-10">
         <form:form method="post" enctype="multipart/form-data"
@@ -121,6 +122,8 @@
                        id="submit" value="<spring:message code="judge.register.submit.value"/>" /> <input
                        class="btn btn-primary" type="reset" name="reset" id="reset"
                        value="<spring:message code="judge.register.reset.value"/>" />
+                <a class="btn btn-primary" href="<c:url value="/admin/manageinstitutions.xhtml"/>"><spring:message
+                        code="button.close"/></a>
             </div>
 
         </form:form>
@@ -131,13 +134,13 @@
     $("#logo").fileinput({
         maxFileSize: 35,
         msgProgress: 'Loading {percent}%',
-        previewClass: 'avatar_preview',
+        previewClass: 'file_preview',
         previewFileType: "image",
         browseClass: "btn btn-primary",
-        browseLabel: "Pick Image",
+        browseLabel : "<spring:message code="message.pickimage"/>",
         browseIcon: '<i class="fa fa-picture-o"></i>&nbsp;',
         removeClass: "btn btn-default",
-        removeLabel: "Delete",
+        removeLabel: "<spring:message code="message.deleteimage"/>",
         removeIcon: '<i class="fa fa-trash"></i>'
     });
     $("[data-toggle='tooltip']").tooltip();
