@@ -6,6 +6,8 @@ import java.security.Principal;
 import javax.annotation.Resource;
 
 import cu.uci.coj.dao.impl.InstitutionDAOImpl;
+import org.apache.commons.validator.UrlValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -72,7 +74,7 @@ public class InstitutionController  extends BaseController {
 			FileUtils.saveToFile(logo, Config.getProperty("base.upload.dir.logo"), institution.getZip() + ".png");
         
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
-        return "redirect:/admin/manageinstitutions.xhtml?pattern=" + institution.getName();
+        return "redirect:/admin/manageinstitutions.xhtml";
     }
 
     @RequestMapping(value = "/manageinstitution.xhtml", method = RequestMethod.GET)

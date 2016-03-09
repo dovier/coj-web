@@ -6,10 +6,10 @@
         <display:column titleKey="tablehdr.access">
             <c:choose>
                 <c:when test="${contest.registration eq 2}">
-                <a title="<spring:message code="altval.private"/>"><i class="fa fa-lock fa-lg"></i></a>
+                <a title="<spring:message code="altval.private"/>" data-toggle="tooltip"><i class="fa fa-lock fa-lg"></i></a>
                 </c:when>
                 <c:otherwise>
-                    <a title="<spring:message code="altval.open"/>"><i class="fa fa-unlock fa-lg"></i></a>
+                    <a title="<spring:message code="altval.open"/>" data-toggle="tooltip"><i class="fa fa-unlock fa-lg"></i></a>
                 </c:otherwise>
             </c:choose>
         </display:column>
@@ -25,3 +25,7 @@
             </a>
         </display:column>
     </display:table>
+
+<script>
+    $("[data-toggle='tooltip']").tooltip();
+</script>

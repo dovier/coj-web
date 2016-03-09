@@ -11,14 +11,14 @@ import java.util.regex.Pattern;
  * @version Caribbean Online Judge(COJ) v2.0
  * @author Juan Carlos Lobaina Guzman & Jorge Luis Roque Alvarez
  * @since 2010-09-01
- * @see http://coj.uci.cu
+ * @see \http://coj.uci.cu
  */
 
 public class IpAddress {
 
-    private Pattern pattern;
-    private Matcher matcher;
-    private static final String IPADDRESS_PATTERN =
+    private static final String IPADDRESS_PATTERN = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|\\*)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|\\*)$";
+
+    private static final String IPADDRESS_PATTERN2 =
             "^([01]?\\d\\d?|2[0-4]\\d|25[0-5]) | \\*\\."
             + "([01]?\\d\\d?|2[0-4]\\d|25[0-5]) | \\*\\."
             + "([01]?\\d\\d?|2[0-4]\\d|25[0-5]) | \\*\\."
@@ -45,12 +45,22 @@ public class IpAddress {
                 continue;
             int val = -1;
             try {
-                val = Integer.valueOf(ar[i]);                
+                val = Integer.valueOf(ar[i]);
             } catch (Exception e) {
             }
             if(val < 0 || val > 254)
                 return false;
         }
+        return true;
+    }
+
+    public static boolean vallidateIP(final String ip) {
+        if (!ip.equals("*")) {
+            Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
+            Matcher matcher = pattern.matcher(ip);
+            return matcher.matches();
+        }
+
         return true;
     }
 }

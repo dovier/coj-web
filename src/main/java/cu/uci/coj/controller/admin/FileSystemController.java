@@ -62,6 +62,7 @@ public class FileSystemController extends BaseController {
 		return new File(currentDir, new String(dir.getBytes(), "UTF-8"));
 	}
 
+
 	@RequestMapping(value = "/list.xhtml", method = RequestMethod.GET)
 	public String download(
 			Model model,
@@ -112,8 +113,13 @@ public class FileSystemController extends BaseController {
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void share(HttpServletResponse response,
 			@RequestParam("file") String file) throws Exception {
+
+		String sFichero = current(file).getAbsolutePath();
+		File fichero = new File(sFichero);
+		long size = fichero.length();
+
 		baseDAO.dml("insert.shared.file", file, current(file).getAbsolutePath()
-				.substring(publicDir.getAbsolutePath().length() + 1));
+				.substring(publicDir.getAbsolutePath().length() + 1),size);
 	}
 
 	@RequestMapping(value = "/unshare.xhtml", method = RequestMethod.GET)
@@ -267,16 +273,23 @@ public class FileSystemController extends BaseController {
 		File file = current(dir);
 		Iterator<File> cIt = cutFiles.iterator();
 		File cFile = null;
-		while (cIt.hasNext() && file.equals(cFile = cIt.next()))
-			;
-		if (cIt.hasNext())
+		boolean found = false;
+
+		while (cIt.hasNext() && !found){
+			found = file.equals(cFile = cIt.next());
+		}
+
+		if (found)
 			cutFiles.remove(cFile);
 
 		cIt = copiedFiles.iterator();
 		cFile = null;
-		while (cIt.hasNext() && file.equals(cFile = cIt.next()))
-			;
-		if (cIt.hasNext())
+		found = false;
+
+		while (cIt.hasNext() && !found){
+			found = file.equals(cFile = cIt.next());
+		}
+		if (found)
 			copiedFiles.remove(cFile);
 
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfull());

@@ -94,20 +94,20 @@
             </authz:authorize>
 
             <!-- LANGUAGUE OF SUBMISSION -->
-            <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
-                <div class="form-group" style="display: none">
-                    <label class="control-label col-xs-3">
-                        <spring:message code="judge.register.language" />
-                    </label>
-                    <div class="col-xs-8">
-                        <form:input cssClass="form-control" path="lang" size="30"
-                                    maxlength="70" readonly="true"/>
-                    </div>
-                    <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="lang" /></span>
-                    </div>
-                </div>
-            </authz:authorize>
+            <%--<authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">--%>
+                <%--<div class="form-group" style="display: none">--%>
+                    <%--<label class="control-label col-xs-3">--%>
+                        <%--<spring:message code="judge.register.language" />--%>
+                    <%--</label>--%>
+                    <%--<div class="col-xs-8">--%>
+                        <%--<form:input cssClass="form-control" path="lang" size="30"--%>
+                                    <%--maxlength="70" readonly="true"/>--%>
+                    <%--</div>--%>
+                    <%--<div class="error col-xs-8 col-xs-offset-3">--%>
+                        <%--<span class="label label-danger"><form:errors path="lang" /></span>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+            <%--</authz:authorize>--%>
 
             <%--<!-- LANGUAGUE OF SUBMISSION -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">

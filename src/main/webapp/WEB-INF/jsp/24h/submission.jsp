@@ -86,7 +86,7 @@
 			class="fa fa-edit"></i>&nbsp;<spring:message code="link.edit" /></a> <a
 			href="/24h/downloadsource.xhtml?sid=${submission.sid}"><i
 			class="fa fa-save"></i>&nbsp;<spring:message code="link.download" /></a>
-		<a href="/mail/composemail.xhtml?usernameto=dovier;ybroche"<%-- usuario de yonny con problemas ymondelo20;--%>
+		<a href="/mail/composemail.xhtml?usernameto=dovier;ybroche&title=Denuncia de fraude&content=ID: ${submission.sid} - PROB: ${submission.pid} - USER: ${submission.username}"<%-- usuario de yonny con problemas ymondelo20;--%>
 			title="<spring:message code="link.fraud"/>"><i
 			class="red fa fa-minus-circle"></i>&nbsp;<spring:message
 				code="link.fraud" /></a>
@@ -95,6 +95,12 @@
 		<textarea cols="" rows="" id="code" name="code"
 			style="height: 410px; width: 100%; text-align: justify;" readonly><c:out
 				value="${submission.code}" /></textarea>
+	</div>
+	<div class="coj_float_rigth">
+		<a href="/24h/status.xhtml" class="btn btn-primary"><spring:message code="button.close" /></a>
+	</div>
+	<div class="clearfix">
+
 	</div>
 </div>
 <script type="text/javascript">

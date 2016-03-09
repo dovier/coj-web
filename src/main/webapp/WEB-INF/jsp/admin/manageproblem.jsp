@@ -386,31 +386,31 @@
                       path="casetimelimit"/></span>
          </div>
      </div>--%>
-  <%--   <div class="form-group col-xs-12">
-         <label class="control-label col-xs-3"><fmt:message
-                 key="addproblem.time" /> <b>(MS)</b></label>
-         <div class="col-xs-8">
-             <form:input cssClass="form-control" path="time" />
-             <span class="label label-danger"><form:errors path="time" /></span>
+    <%--   <div class="form-group col-xs-12">
+           <label class="control-label col-xs-3"><fmt:message
+                   key="addproblem.time" /> <b>(MS)</b></label>
+           <div class="col-xs-8">
+               <form:input cssClass="form-control" path="time" />
+               <span class="label label-danger"><form:errors path="time" /></span>
 
-         </div>
-     </div>
-     <div class="form-group col-xs-12">
-         <label class="control-label col-xs-3"><fmt:message
-                 key="addproblem.memory" /> (B)</label>
-         <div class="col-xs-8">
-             <form:input cssClass="form-control" path="memory" />
-             <span class="label label-danger"><form:errors path="memory" /></span>
-         </div>
-     </div>
-     <div class="form-group col-xs-12">
-         <label class="control-label col-xs-3"><fmt:message
-                 key="addproblem.source" /> (B)</label>
-         <div class="col-xs-8">
-             <form:input cssClass="form-control" path="fontsize" />
-             <span class="label label-danger"><form:errors path="fontsize" /></span>
-         </div>
-     </div>--%>
+           </div>
+       </div>
+       <div class="form-group col-xs-12">
+           <label class="control-label col-xs-3"><fmt:message
+                   key="addproblem.memory" /> (B)</label>
+           <div class="col-xs-8">
+               <form:input cssClass="form-control" path="memory" />
+               <span class="label label-danger"><form:errors path="memory" /></span>
+           </div>
+       </div>
+       <div class="form-group col-xs-12">
+           <label class="control-label col-xs-3"><fmt:message
+                   key="addproblem.source" /> (B)</label>
+           <div class="col-xs-8">
+               <form:input cssClass="form-control" path="fontsize" />
+               <span class="label label-danger"><form:errors path="fontsize" /></span>
+           </div>
+       </div>--%>
     <div class="form-group col-xs-12">
         <label class="control-label col-xs-3"><spring:message code="addproblem.inhabilitado24h"/></label>
 
@@ -455,19 +455,23 @@
                 </div>
             </div>
             <div id="gDatasets" class="panel-body collapse in">
-                <div class="form-group">
+                <c:if test="${datasets[0]!=null}">
+
                     <div class="margin-top-05 col-xs-12">
+
+
                         <label class="control-label col-xs-3"><fmt:message
                                 key="addproblem.existing.datasets"/></label>
 
-                        <div id="datasets-container" class="col-xs-8">
-                            <c:forEach items="${datasets}" varStatus="loop">
-                                <div id="${datasets[loop.index]}-container"
-                                     class="margin-top-05 col-xs-4">
-                                    <div class="input-group">
-                                        <input readonly="readonly" name="${datasets[loop.index]}"
-                                               class="form-control" value="${datasets[loop.index]}"/><span
-                                            class="input-group-btn"> <!-- 		<a class="btn btn-primary"
+                        <div id="datasets-container" class="col-xs-9">
+                            <div class="row">
+                                <c:forEach items="${datasets}" varStatus="loop">
+                                    <div id="${datasets[loop.index]}-container"
+                                         class="margin-top-05 col-xs-4">
+                                        <div class="input-group">
+                                            <input readonly="readonly" name="${datasets[loop.index]}"
+                                                   class="form-control" value="${datasets[loop.index]}"/><span
+                                                class="input-group-btn"> <!-- 		<a class="btn btn-primary"
                                                                    href="/datasets/${pid}/${datasets[loop.index]}">
                                                                    <i class="fa fa-download"></i>
                                                            </a> -->
@@ -476,27 +480,30 @@
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </span>
+                                        </div>
                                     </div>
-                                </div>
-                            </c:forEach>
-                        </div>
-                        <div class="form-group col-xs-12">
-                            <div class="margin-top-05 pull-right form-actions">
-                                <input class="btn btn-primary confirm-message" type="button"
-                                       id="deleteall"
-                                       value='<fmt:message key="addproblem.deleteall" />'
-                                       data-confirm-title='<spring:message code="message.title"/>'
-                                       data-confirm-message='Delete all datasets'
-                                       data-confirm-type="delete" data-redirect="#"/>
+                                </c:forEach>
                             </div>
                         </div>
+                            <%-- <div class="form-group col-xs-12">
+                                 <div class="margin-top-05 pull-right form-actions">
+                                     <input class="btn btn-primary confirm-message" type="button"
+                                            id="deleteall"
+                                            value='<fmt:message key="addproblem.deleteall" />'
+                                            data-confirm-title='<spring:message code="message.title"/>'
+                                            data-confirm-message='Delete all datasets'
+                                            data-confirm-type="delete" data-redirect="#"/>
+                                 </div>
+                             </div>--%>
                     </div>
-                </div>
+
+
+                </c:if>
                 <div class="form-group">
                     <div class="model-dataset margin-top-05 col-xs-12">
                         <label class="control-label col-xs-3"><spring:message code="addproblem.ZIP"/></label>
 
-                      <%--File de los zip--%>
+                            <%--File de los zip--%>
 
                         <div class="col-xs-4">
                             <input id="zipfile" name="zipfile" type="file" class="file"
@@ -506,13 +513,13 @@
                 </div>
 
                 <div id="" class="margin-top-05 col-xs-12">
-                   <label class="control-label col-xs-12"><spring:message code="addproblem.datasets.new"/></label>
+                    <label class="control-label col-xs-12"><spring:message code="addproblem.datasets.new"/></label>
                 </div>
-                <%--En este div van los files para escoger los ficheros, se programa en javascript--%>
+                    <%--En este div van los files para escoger los ficheros, se programa en javascript--%>
                 <div id="datasets" class="form-group margin-top-05"></div>
 
-                <div class="form-group col-xs-12">
-                    <div class="margin-top-05 pull-right form-actions">
+                <div class="col-md-12">
+                    <div class="margin-top-05  pull-right col-md-4">
                         <input class="btn btn-primary" type="button"
                                style="margin: right" id="add" onclick="javascript:addInput();"
                                value='<fmt:message key="addproblem.addinput" />'/>
@@ -526,12 +533,11 @@
     <div class="form-group col-xs-12">
         <label class="control-label col-xs-3"> <fmt:message
                 key="page.advancedcfg.languages"/>
-                <a><i data-toggle="tooltip" class="fa fa-asterisk"
-                        title="<spring:message code="mandatory.field"/>">
-             </i></a>
+            <a><i data-toggle="tooltip" class="fa fa-asterisk"
+                  title="<spring:message code="mandatory.field"/>">
+            </i></a>
         </label>
-        
-            
+
 
         <div class="col-xs-9 contestlanguages">
             <div class='col-xs-4'>
@@ -544,10 +550,10 @@
                                  items="${languages}" itemValue="lid" itemLabel="descripcion"
                                  delimiter="</div><div class='col-xs-4'>"/>
             </div>
-            <div class="col-xs-9" >
+            <div class="col-xs-9">
                 <span class="label label-danger"><form:errors
                         path="languages"/></span>
-                </div>
+            </div>
         </div>
     </div>
     <c:if test="${showpsetters == true}">
@@ -579,13 +585,13 @@
         <div class="form-actions pull-right ">
             <c:if test="${problem.pid != 0}">
                 <input class="btn btn-primary" type="submit" name="but"
-                       value="<spring:message code="button.update"/>"/>
+                       value="<spring:message code="button.edit"/>"/>
             </c:if>
             <c:if test="${problem.pid == 0}">
                 <input class="btn btn-primary" type="submit" name="but"
                        value="<spring:message code="button.create"/>"/>
             </c:if>
-            <a href="/admin/adminproblems.xhtml" class="btn btn-primary"><spring:message code="button.close" /></a>
+            <a href="/admin/adminproblems.xhtml" class="btn btn-primary"><spring:message code="button.close"/></a>
         </div>
     </div>
     </div>
@@ -625,37 +631,38 @@ $('[data-toggle="unit-selector"]').unitSelector()
 </script>
 
 <script>
-   /* $('#zipfile').inputFileText({
-        text: "<spring:message code="message.filename"/>"
-    });*/
+    /* $('#zipfile').inputFileText({
+     text: "<spring:message code="message.filename"/>"
+     });*/
 
-   $(".file").fileinput({
-       maxFileSize: 5000000,
-       allowedFileTypes: ['text'],
-       removeClass: "btn btn-default",
-       removeLabel: "Delete",
-       previewFileType: 'text',
-       showPreview: 0,
-       msgProgress: 'Loading {percent}%',
-       browseClass: "btn btn-primary",
-       browseLabel: "<spring:message code="message.filename"/>",
-       browseIcon: '<i class="fa fa-file-o"></i>&nbsp;',
-       removeIcon: '<i class="fa fa-trash"></i>',
-       uploadLabel:"<spring:message code="fieldhdr.uploadfile"/>",
-       msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
-       msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>'
-   });
+    $(".file").fileinput({
+        maxFileSize: 5000000,
+        allowedFileTypes: ['text'],
+        removeClass: "btn btn-default",
+        removeLabel: "tablehdr.delete",
+        previewFileType: 'text',
+        showPreview: 0,
+        msgProgress: 'Loading {percent}%',
+        browseClass: "btn btn-primary",
+        browseLabel: "<spring:message code="message.filename"/>",
+        browseIcon: '<i class="fa fa-file-o"></i>&nbsp;',
+        removeIcon: '<i class="fa fa-trash"></i>',
+        uploadLabel: "<spring:message code="fieldhdr.uploadfile"/>",
+        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
+        msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>'
+    });
 
     $("#zipfile").fileinput({
         maxFileSize: 50000000,
         allowedFileTypes: ['object'],
         removeClass: "btn btn-default",
+        removeLabel: "tablehdr.delete",
         msgProgress: 'Loading {percent}%',
         browseClass: "btn btn-danger",
         browseLabel: "<spring:message code="message.filename"/>",
         browseIcon: '<i class="fa fa-file-o"></i>&nbsp;',
         removeIcon: '<i class="fa fa-trash"></i>',
-        uploadLabel:"<spring:message code="fieldhdr.uploadfile"/>",
+        uploadLabel: "<spring:message code="fieldhdr.uploadfile"/>",
         msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>'
     });

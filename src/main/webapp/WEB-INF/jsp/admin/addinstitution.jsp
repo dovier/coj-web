@@ -10,7 +10,7 @@
 
             <!-- NAME OF VIEW -->
             <legend>
-                <spring:message code="page.general.admin.header" />: <spring:message code="page.addinstitution.header" />
+                <h2><spring:message code="page.general.admin.header" />: <spring:message code="page.addinstitution.header" /></h2>
             </legend>
 
             <!-- NAME OF INTITUTION -->
@@ -138,10 +138,10 @@
         previewFileType: "image",
         browseClass: "btn btn-primary",
         browseLabel : "<spring:message code="message.pickimage"/>",
-        browseIcon: '<i class="fa fa-picture-o"></i>&nbsp;',
+        browseIcon: '<i data-toggle="tooltip" class="fa fa-picture-o"></i>&nbsp;',
         removeClass: "btn btn-default",
         removeLabel: "<spring:message code="message.deleteimage"/>",
-        removeIcon: '<i class="fa fa-trash"></i>'
+        removeIcon: '<i data-toggle="tooltip" class="fa fa-trash"></i>'
     });
     $("[data-toggle='tooltip']").tooltip();
 </script>

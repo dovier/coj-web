@@ -171,6 +171,8 @@
 					title="<spring:message code="infomsg.5"/>"></i></a>
 			</div>
 
+			<input type="hidden" name="noneInstitution" value='<spring:message code="user.none.institution" />'/>
+
 			<div class="form-group">
 				<label class="control-label col-xs-3"><spring:message
 						code="fieldhdr.email" /></label>

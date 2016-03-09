@@ -2,8 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <h2 class="postheader">
-    <spring:message code="page.general.admin.header" />
-	: <spring:message code="pagehdr.sessions" />    
+    <spring:message code="page.general.admin.header" />: <spring:message code="pagehdr.sessions" />
 </h2>
 
 <div class="postcontent">
@@ -15,6 +14,13 @@
 	</c:if>
 
 	<div id="display-table-container" data-reload-url="/admin/tables/sessions.xhtml"></div>
+
+	<div class="coj_float_rigth">
+		<a href="/admin/index.xhtml" class="btn btn-primary">
+			<spring:message code="button.close" />
+		</a>
+	</div>
+	<div class="clearfix"></div>
 </div>
 
 <link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />

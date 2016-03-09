@@ -23,6 +23,14 @@
     <a href="<c:url value="/admin/addfaq.xhtml" />" class="btn btn-primary"><fmt:message key="page.faqs.add"/></a>
 
     <div id="display-table-container" data-reload-url="/admin/tables/faqs.xhtml"></div>
+
+    <div class="coj_float_rigth">
+        <a href="/admin/index.xhtml" class="btn btn-primary">
+            <spring:message code="button.close" />
+        </a>
+    </div>
+    <div class="clearfix"></div>
+
 </div>
 <script>
     $(document).ready(displayTableReload("?page=1"));

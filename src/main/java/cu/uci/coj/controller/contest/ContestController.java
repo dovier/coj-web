@@ -110,6 +110,9 @@ public class ContestController extends BaseController {
 		return "/tables/cballoontracker";
 	}
 
+	/*
+    * RF96 Ver descripción del concurso
+    * */
 	@RequestMapping(value = "/contest/contestview.xhtml", method = RequestMethod.GET)
 	public String ContestView(Model model, PagingOptions options,
 			@RequestParam("cid") Integer cid) {
@@ -123,12 +126,18 @@ public class ContestController extends BaseController {
 		return "/contest/contestview";
 	}
 
+	/*
+    * RF73 Listar concursos pasados
+    * */
 	@RequestMapping(value = "/contest/past.xhtml", method = RequestMethod.GET)
 	public String PastList(Model model, PagingOptions options,
 			@RequestParam(value = "pattern", required = false) String pattern) {
 		return "/contest/past";
 	}
 
+	/*
+    * RF73 Listar concursos pasados
+    * */
 	@RequestMapping(value = "/tables/past.xhtml", method = RequestMethod.GET)
 	public String tablesPastList(Model model, PagingOptions options,
 			@RequestParam(value = "pattern", required = false) String pattern) {
@@ -138,22 +147,34 @@ public class ContestController extends BaseController {
 		return "/tables/past";
 	}
 
+	/*
+    * RF72 Listar concursos en ejecución
+    * */
 	@RequestMapping(value = "/contest/running.xhtml", method = RequestMethod.GET)
 	public String RunningList(Model model, PagingOptions options) {
 		return "/contest/running";
 	}
 
+	/*
+    * RF72 Listar concursos en ejecución
+    * */
 	@RequestMapping(value = "/tables/running.xhtml", method = RequestMethod.GET)
 	public String tablesRunningList(Model model, PagingOptions options) {
 		model.addAttribute("contests", contestDAO.getRunningContests(options));
 		return "/tables/running";
 	}
 
+	/*
+    * RF151 Listar concursos próximos
+    * */
 	@RequestMapping(value = "/contest/coming.xhtml", method = RequestMethod.GET)
 	public String ComingList(Model model, PagingOptions options) {
 		return "/contest/coming";
 	}
 
+	/*
+    * RF151 Listar concursos próximos
+    * */
 	@RequestMapping(value = "/tables/coming.xhtml", method = RequestMethod.GET)
 	public String tablesComingList(Model model, PagingOptions options) {
 		model.addAttribute("contests", contestDAO.getComingContests(options));

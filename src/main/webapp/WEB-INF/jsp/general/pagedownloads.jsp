@@ -1,6 +1,6 @@
-<%@include file="/WEB-INF/jsp/include/include.jsp"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page buffer="16kb" autoFlush="true"%>
+<%@include file="/WEB-INF/jsp/include/include.jsp" %>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@page buffer="16kb" autoFlush="true" %>
 <ul class="pager">
 		<c:if test="${files.pageNumber != 1}">
 			<li class="previous"><a
@@ -22,6 +22,8 @@
 						href="<c:url value='/downloads/${files.list[loop.index].path}'/>">
 						<c:out value="${files.list[loop.index].name}" />
 					</a>
+                    <div class="clearfix"></div>
+                        <i>${files.list[loop.index].size} kB</i>
 				</div>
 			</div>
 		<c:if test="${loop.index+1 < files.list.size()}">
@@ -35,6 +37,8 @@
 						href="<c:url value='/downloads/${files.list[loop.index+1].path}'/>">
 						<c:out value="${files.list[loop.index+1].name}" />
 					</a>
+                    <div class="clearfix"></div>
+                        <i>${files.list[loop.index].size} kB</i>
 				</div>
 			</div>
 		</c:if>

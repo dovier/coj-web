@@ -6,18 +6,20 @@ package cu.uci.coj.validator;
 
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.model.Contest;
+
 import java.util.Iterator;
 import javax.annotation.Resource;
+
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 /**
- * @version Caribbean Online Judge(COJ) v2.0
  * @author Juan Carlos Lobaina Guzman & Jorge Luis Roque Alvarez
- * @since 2010-09-01
+ * @version Caribbean Online Judge(COJ) v2.0
  * @see http://coj.uci.cu
+ * @since 2010-09-01
  */
 @Component
 public class contestValidator implements Validator {
@@ -42,7 +44,10 @@ public class contestValidator implements Validator {
         try {
             String empty = "errormsg.10";
             String invalid = "errormsg.9";
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "cid", "general.error.empty");
+            if (!errors.hasFieldErrors("cid")) {
+
+                ValidationUtils.rejectIfEmptyOrWhitespace(errors, "cid", "general.error.empty");
+            }
             if (!errors.hasFieldErrors("cid") && contestDAO.bool("exist.contest", contest.getCid())) {
                 errors.rejectValue("cid",
                         "page.error.exist",

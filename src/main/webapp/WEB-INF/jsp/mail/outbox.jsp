@@ -3,20 +3,17 @@
 <%@page buffer="16kb" autoFlush="true" %>
 
 
-<h2 class="postheader">
-    <spring:message code="pagehdr.mailsent"/>
-</h2>
+<h2 class="postheader"><spring:message code="pagehdr.mailsent"/></h2>
 
 <div class="postcontent">
     <c:if test="${message != null}">
         <div class="alert alert-success alert-dismissable fade in">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <i class="fa fa-check"></i><spring:message code="${message}"/>
+            <i class="fa fa-check"></i> <spring:message code="${message}"/>
         </div>
     </c:if>
     <center>
-        <spring:message code="fieldhdr.usage"/>
-        :
+        <spring:message code="fieldhdr.usage"/>:
         <fmt:formatNumber value="${mail.percent}" minFractionDigits="2"
                           maxFractionDigits="2"/>
         % (${mail.consumed_quote}
@@ -26,11 +23,14 @@
         )
     </center>
     <div class="panel panel-primary">
-        &nbsp;<a href="<c:url value="composemail.xhtml"/>" data-toggle="tooltip"><i
-            class="fa fa-pencil"></i><spring:message code="link.compose"/></a>
-        &nbsp;<a onclick="confirm_delete('<c:url value="deleteallmail.xhtml?delete=2"/>')"
-                 href="#"
-    ><i class="fa fa-trash"></i><spring:message code="link.delall"/></a>
+        &nbsp;
+        <a href="<c:url value="composemail.xhtml"/>" data-toggle="tooltip">
+            <i class="fa fa-pencil"></i> <spring:message code="link.compose"/>
+        </a>
+        &nbsp;
+        <a onclick="confirm_delete('<c:url value="deleteallmail.xhtml?delete=2"/>')" href="#">
+            <i class="fa fa-trash"></i> <spring:message code="link.delall"/>
+        </a>
     </div>
 
     <div id="display-table-container"

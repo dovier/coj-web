@@ -91,32 +91,31 @@
                 <c:choose>
                     <c:when test="${contest.style eq 0}">
                         <tr>
-                            <td><span class="label label-danger">Undefined
-                                    Property</span></td>
+                            <td><span class="label label-danger"><spring:message code="messages.general.undefinedproperty"/> </span></td>
                         </tr>
                     </c:when>
                     <c:when test="${contest.style eq 1}">
                         <tr>
                             <td><fmt:message key="page.globalsettings.acm.penal"/></td>
-                            <td><form:input path="penalty" cssClass="form-control"/></td>
+                            <td><form:input path="penalty" id="penalty" maxlength="9" cssClass="form-control"/></td>
                             <td><span class="label label-danger"><form:errors
                                     path="penalty"/></span></td>
                         </tr>
                         <tr>
                             <td><fmt:message key="page.globalsettings.acm.frtime"/></td>
-                            <td><form:input path="frtime" cssClass="form-control"/></td>
+                            <td><form:input path="frtime" id="frtime" maxlength="9" cssClass="form-control"/></td>
                             <td><span class="label label-danger"><form:errors
                                     path="frtime"/></span></td>
                         </tr>
                         <tr>
                             <td><fmt:message key="page.globalsettings.acm.dead"/></td>
-                            <td><form:input path="deadtime" cssClass="form-control"/></td>
+                            <td><form:input path="deadtime" id="deadtime" maxlength="9" cssClass="form-control"/></td>
                             <td><span class="label label-danger"><form:errors
                                     path="deadtime"/></span></td>
                         </tr>
                         <tr>
                             <td><fmt:message key="page.globalsettings.acm.unfreeze"/></td>
-                            <td><form:input path="unfreeze_time" cssClass="form-control"/></td>
+                            <td><form:input path="unfreeze_time" id="unfreeze_time" maxlength="9" cssClass="form-control"/></td>
                             <td><span class="label label-danger"><form:errors
                                     path="unfreeze_time"/></span></td>
                         </tr>
@@ -125,7 +124,7 @@
                     <c:when test="${contest.style eq 2}">
                         <tr>
                             <td><fmt:message key="page.globalsettings.ioi.task"/></td>
-                            <td><form:input path="ioimark"/></td>
+                            <td><form:input path="ioimark" id="ioimark" maxlength="9" /></td>
                             <td><span class="label label-danger"><form:errors
                                     path="ioimark"/></span></td>
                         </tr>
@@ -134,7 +133,7 @@
                     <c:when test="${contest.style eq 3}">
                         <tr>
                             <td><fmt:message key="page.globalsettings.free.points"/></td>
-                            <td><form:input path="ppoints" cssClass="form-control"/></td>
+                            <td><form:input path="ppoints" id="ppoints" maxlength="9" cssClass="form-control"/></td>
                             <td><span class="label label-danger"><form:errors
                                     path="ppoints"/></span></td>
                         </tr>
@@ -143,28 +142,28 @@
                     <c:when test="${contest.style eq 4}">
                         <tr>
                             <td><spring:message code="fieldhdr.levels"/></td>
-                            <td><form:input path="levels" cssClass="form-control"/></td>
+                            <td><form:input path="levels" id="levels" maxlength="9" cssClass="form-control"/></td>
                             <td><span class="label label-danger"><form:errors
                                     path="levels"/></span></td>
                         </tr>
 
                         <tr>
                             <td><spring:message code="fieldhdr.acbylevels"/></td>
-                            <td><form:input path="acbylevels" cssClass="form-control"/></td>
+                            <td><form:input path="acbylevels" id="acbylevels" maxlength="9" cssClass="form-control"/></td>
                             <td><span class="label label-danger"><form:errors
                                     path="acbylevels"/></span></td>
                         </tr>
 
                         <tr>
                             <td><spring:message code="fieldhdr.aclimit"/></td>
-                            <td><form:input path="aclimit" cssClass="form-control"/></td>
+                            <td><form:input path="aclimit" id="aclimit" maxlength="9" cssClass="form-control"/></td>
                             <td><span class="label label-danger"><form:errors
                                     path="aclimit"/></span></td>
                         </tr>
 
                         <tr>
                             <td><spring:message code="fieldhdr.pointsbyproblem"/></td>
-                            <td><form:input path="ppoints" cssClass="form-control"/></td>
+                            <td><form:input path="ppoints" id="ppoints" maxlength="9" cssClass="form-control"/></td>
                             <td><span class="label label-danger"><form:errors
                                     path="ppoints"/></span></td>
                         </tr>
@@ -252,19 +251,19 @@
             <table class="contestlanguages">
                 <tr>
                     <td><fmt:message key="page.general.gold"/></td>
-                    <td><form:input path="gold" cssClass="form-control"/></td>
+                    <td><form:input path="gold" id="gold" maxlength="9" cssClass="form-control"/></td>
                     <td><span class="label label-danger"><form:errors
                             path="gold"/></span></td>
                 </tr>
                 <tr>
                     <td><fmt:message key="page.general.silver"/></td>
-                    <td><form:input path="silver" cssClass="form-control"/></td>
+                    <td><form:input path="silver" id="silver" maxlength="9" cssClass="form-control"/></td>
                     <td><span class="label label-danger"><form:errors
                             path="silver"/></span></td>
                 </tr>
                 <tr>
                     <td><fmt:message key="page.general.bronze"/></td>
-                    <td><form:input path="bronze" cssClass="form-control"/></td>
+                    <td><form:input path="bronze" id="bronze" maxlength="9" cssClass="form-control"/></td>
                     <td><span class="label label-danger"><form:errors
                             path="bronze"/></span></td>
                 </tr>
@@ -272,7 +271,7 @@
         </fieldset>
         <div class="pull-right">
             <input type="submit" name="but" class="btn btn-primary"
-                   value="<spring:message code="button.update"/>"/>
+                   value="<spring:message code="button.edit"/>"/>
             <a class="btn btn-primary" href="<c:url value="/admin/admincontests.xhtml"/>"><spring:message
                     code="button.close"/></a>
         </div>
@@ -280,6 +279,23 @@
 
     <div class="clearfix"></div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#penalty').numeric();
+        $('#frtime').numeric();
+        $('#deadtime').numeric();
+        $('#unfreeze_time').numeric();
+        $('#gold').numeric();
+        $('#silver').numeric();
+        $('#bronze').numeric();
+        $('#ppoints').numeric();
+        $('#ioimark').numeric();
+        $('#levels').numeric();
+        $('#acbylevels').numeric();
+        $('#aclimit').numeric();
+    });
+</script>
 
 
 <script src="/js/admin/utility.js"></script>

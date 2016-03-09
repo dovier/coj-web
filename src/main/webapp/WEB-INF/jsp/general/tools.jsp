@@ -9,19 +9,25 @@
     <!-- article-content -->
 
     <ul>
-    <!-- 
+    <!--
         <li>
             <a href="/datagen/datasets.xhtml?mode=customsol"><spring:message code="text.tools.1"/></a>
         </li>
          -->
-        <li>
+        <%--<li>
             <a href="/services/specification.xhtml"><spring:message code="text.tools.2"/></a>
-        </li>
+        </li>--%>
         <li>
             <a href="<c:url value="/wboard/contests.xhtml"/>">COJboard</a>
         </li>
         <li>
             <a href="/poll/list.xhtml"><spring:message code="text.tools.3"/></a>
+        </li>
+        <li>
+            <a href="/downloads/COJ_Manual_Usuario.pdf"><spring:message code="text.tools.5"/></a>
+        </li>
+        <li>
+            <a href="<c:url value="/general/mapsite.xhtml"/>"><spring:message code="text.tools.6"/></a>
         </li>
     </ul>
     <!-- /article-content -->

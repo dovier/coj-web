@@ -1,18 +1,21 @@
 package cu.uci.coj.controller.admin;
 
+import java.io.IOException;
 import java.security.Principal;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ClassUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cu.uci.coj.config.Config;
@@ -32,6 +35,7 @@ import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.submissionValidator;
 import cu.uci.coj.utils.Notification;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller("ContestSubmissionController")
 @RequestMapping(value = "/admin")
@@ -51,6 +55,9 @@ public class SubmissionController extends BaseController {
     @Resource
     private Utils utils;
 
+    /*
+   * RF19 Rejuzgar concurso
+   * */
     @RequestMapping(value = "/managesubmissions.xhtml", method = RequestMethod.GET)
     public String allSubmissions(Model model, Filter filter,
                                  PagingOptions options) {
@@ -71,9 +78,17 @@ public class SubmissionController extends BaseController {
         return "/admin/managesubmissions";
     }
 
+    /*
+   * RF19 Rejuzgar concurso
+   * */
     @RequestMapping(value = "/tables/managesubmissions.xhtml", method = RequestMethod.GET)
-    public String tableSubmissions(Model model, Filter filter,
+    public String tableSubmissions(Model model, Filter filter, /*@RequestParam(required=false, value="username") String username,
+                                   @RequestParam(required=false, value="startDate") Date startDate, @RequestParam(required=false, value="endDate") Date endDate,
+                                   @RequestParam(required=false, value="cid") Integer cid, @RequestParam(required=false, value="startSid") Integer startSid,
+                                   @RequestParam(required=false, value="endSid") Integer endSid, @RequestParam(required=false, value="pid") Integer pid,
+                                   @RequestParam(required=false, value="status") String status, @RequestParam(required=false, value="language") String language,*/
                                    PagingOptions options) {
+        /*Filter filter = new Filter(startDate, endDate, username, cid, status, language, pid, submissionDAO.getEnabledLanguages(), language);*/
         int found = submissionDAO.countSubmissionsAdmin(filter);
         if (found != 0) {
             IPaginatedList<SubmissionJudge> submissions = submissionDAO
@@ -83,10 +98,23 @@ public class SubmissionController extends BaseController {
         return "/admin/tables/managesubmissions";
     }
 
+    /*
+   * RF19 Rejuzgar concurso
+   * */
     @RequestMapping(value = "/rejudgesubmissions.xhtml", method = RequestMethod.POST)
-    public String rejudgeSubmissions(Model model, Filter filter,
-                                     PagingOptions options, RedirectAttributes redirectAttributes) {
+    public String rejudgeSubmissions(Model model, @Valid @ModelAttribute("filter") Filter filter, /**//*@RequestParam(required=false, defaultValue = "", value="username") String username,
+                                     @RequestParam(required=false, value="startDate", defaultValue = "0") Date startDate, @RequestParam(required=false, value="endDate", defaultValue = "0") Date endDate,
+                                     @RequestParam(required=false, value="cid") Integer cid, @RequestParam(required=false, value="startSid") Integer startSid,
+                                     @RequestParam(required=false, value="endSid") Integer endSid, @RequestParam(required=false, value="pid") Integer pid,
+                                     @RequestParam(required=false, value="status") String status, @RequestParam(required=false, value="language") String language,*/
+                                     PagingOptions options, RedirectAttributes redirectAttributes, BindingResult bindingResult) {
+        /*Filter filter = new Filter(startDate, endDate, username, cid, status, language, pid, submissionDAO.getEnabledLanguages(), language);*/
+        if (bindingResult.hasErrors()){
+            //
+        }
+
         int found = submissionDAO.countSubmissionsAdmin(filter);
+
         if (found != 0) {
             IPaginatedList<SubmissionJudge> submissions = submissionDAO
                     .getSubmissionsAdmin(filter, found, options, true);
@@ -263,5 +291,23 @@ public class SubmissionController extends BaseController {
         submissionDAO.updateContestSubmission(submission);
         return "redirect:/admin/contestsubmission.xhtml?sid="
                 + submission.getSid();
+    }
+
+    @ExceptionHandler(TypeMismatchException.class)
+    public RedirectView handleIOExceptionN(TypeMismatchException e, HttpServletRequest request) {
+        RedirectView redirectView = new RedirectView("/admin/errorsubmissionRedirectPage.xhtml");
+        redirectView.addStaticAttribute("errorMessage", e.getMessage());
+        return redirectView;
+    }
+
+    @RequestMapping(value = "/errorsubmissionRedirectPage.xhtml", method = RequestMethod.GET)
+    public String errorRedirectPageN(HttpServletRequest request, Model model) {
+        model.addAttribute("notint", true);
+        return "/admin/tables/managesubmissions";
+    }
+
+    @ExceptionHandler(IOException.class)
+    public String handleIOException(IOException ex, HttpServletRequest request) {
+        return ClassUtils.getShortName(ex.getClass());
     }
 }

@@ -35,10 +35,13 @@
                         <td style="width: 70%;">
                             <form:textarea cssClass="form-control" path="description"/>
                         </td>
+                        <td><a><i data-toggle="tooltip" class="fa fa-asterisk"
+                                  title="<spring:message code="mandatory.field"/>"></i></a></td>
                         <td><span class="label label-danger"><form:errors path="description"/></span></td>
                     </tr>
                 </table>
-                <div class = "pull-right">
+                <div class="clearfix"></div>
+                <div class = "pull-right margin-top-05">
                     <input class="btn btn-primary" type="submit" value="<spring:message code="button.send" />"/>
                     <input class="btn btn-primary" type="reset" value="<spring:message code="button.reset" />"/>
                     <a class="btn btn-primary" href="<c:url value="/contest/myclarifications.xhtml?cid=${contest.cid}"/>"><spring:message code="button.close"/></a>
@@ -52,3 +55,6 @@
     </form:form>
     <div class="clearfix"></div>
 </div>
+<script>
+    $("[data-toggle='tooltip']").tooltip();
+</script>

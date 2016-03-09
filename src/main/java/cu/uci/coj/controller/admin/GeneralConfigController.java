@@ -100,7 +100,10 @@ public class GeneralConfigController extends BaseController {
 
     @RequestMapping(value = "/globalaccessrules.xhtml", method = RequestMethod.POST)
     public String globalAccessRules(Model model, Rule rule, BindingResult result, RedirectAttributes redirectAttributes) {
-        if (!IpAddress.validate(rule.getRule())) {
+        String ruleStr = rule.getRule();
+        if (ruleStr.equals("*.*.*.*"))
+            ruleStr = "*";
+        if (!IpAddress.vallidateIP(ruleStr)) {
             result.rejectValue("rule", "errormsg.36");
             model.addAttribute("rules", baseDAO.objects("load.access.rules", Rule.class));
             return "/admin/globalaccessrules";
@@ -170,7 +173,7 @@ public class GeneralConfigController extends BaseController {
 
     @RequestMapping(value = "/uploadfile.xhtml", method = RequestMethod.GET)
     public String uploadFile(Model model, Principal principal, @RequestParam(value = "action", required = false) String action,
-            @RequestParam(value = "dir", required = false, defaultValue = "/") String dir) throws Exception {
+                             @RequestParam(value = "dir", required = false, defaultValue = "/") String dir) throws Exception {
 
         boolean backFlag = true;
 
@@ -186,12 +189,12 @@ public class GeneralConfigController extends BaseController {
             } else {
                 FileUtils.deleteDirectory(file);
             }
-			// eventManager.publish(EventType.LOGGABLE_ACTION,
+            // eventManager.publish(EventType.LOGGABLE_ACTION,
             // "msg:deleting File " + dir + ";username:"
             // +getUsername(principal));
         } else if ("refresh".equals(action)) {
             if (!currentDir.equals(Config.getProperty("base.upload.dir"))) {
-				// currentDir = currentDir.substring(0,
+                // currentDir = currentDir.substring(0,
                 // currentDir.lastIndexOf("/"));
                 backFlag = true;
             } else {
@@ -295,7 +298,7 @@ public class GeneralConfigController extends BaseController {
 
         HandlerInterceptorImpl.setMaintenanceMode(globalFlags.isMaintenanceMode());
         mailNotificationService.setDisabledMailNotificationFlag(globalFlags.isMailNotificationDisabled());
-		// lo cargamos de bd para mantener el maintenance mode de la misma
+        // lo cargamos de bd para mantener el maintenance mode de la misma
         // manera en la que esta. Esto no se puede configurar deesde contest
         GlobalFlags flags = baseDAO.object("load.global.flags", GlobalFlags.class);
 

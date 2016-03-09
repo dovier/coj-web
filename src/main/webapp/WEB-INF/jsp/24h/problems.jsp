@@ -14,7 +14,7 @@
 	<!-- content -->
 	<div class="row">
 		<div class="col-xs-12">
-			<form id="filter-form" class="form-inline">
+			<form id="filter-form" class="form-inline coj_float_rigth" >
 				<div class="form-group">
 					<input
 						placeholder="<spring:message
@@ -54,12 +54,13 @@
 					</div>
 				</authz:authorize>
 				<div class="form-group">
-					<input id="filter-button" type="submit" class="btn btn-primary"
+					<input id="filter-button" type="submit" class="btn btn-primary form-control"
 						value="<spring:message code="button.filter"/>">
 				</div>
 			</form>
 		</div>
 	</div>
+	<div class="clearfix"></div>
 	<div class="row">
 		<div class="col-xs-12">
 			<div id="display-table-container"

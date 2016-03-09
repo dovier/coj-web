@@ -125,7 +125,8 @@
 
                 <input class="btn btn-primary" id="filter-button" type="submit" value="<spring:message code="button.filter"/>"/>
             </div>            
-        </form>    
+        </form>
+        <div class="clearfix"></div>
 
         <div id="display-table-container" data-reload-url="/admin/tables/manageplagicoj.xhtml"></div>
 

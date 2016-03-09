@@ -8,6 +8,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import javax.annotation.Resource;
+import javax.persistence.AssociationOverride;
 
 /**
  * Created by alison on 14/01/16.
@@ -36,9 +37,27 @@ public class ProblemSourceValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         ProblemSource problemSource = (ProblemSource) o;
-        if (problemSource.getAuthor().isEmpty() && problemSource.getName().isEmpty()) {
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "general.error.oneempty");
+
+        String author = ((ProblemSource) o).getAuthor().replace(" ", "");
+        String name = ((ProblemSource) o).getName().replace(" ", "");
+        if (author.isEmpty() && name.isEmpty()) {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "author", "general.error.oneempty");
+
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "general.error.oneempty");
         }
+
+    }
+
+    public void validateUpdate(Object o, Errors errors) {
+        ProblemSource problemSource = (ProblemSource) o;
+
+        String author = ((ProblemSource) o).getAuthor().replaceAll(" ", "");
+        String name = ((ProblemSource) o).getName().replaceAll(" ", "");
+        if (author.isEmpty() && name.isEmpty()) {
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "author", "general.error.oneempty");
+
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "general.error.oneempty");
+        }
+
     }
 }

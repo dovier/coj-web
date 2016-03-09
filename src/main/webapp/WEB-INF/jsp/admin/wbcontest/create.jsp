@@ -1,11 +1,13 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<h2 class="postheader">
+<legend>
+<h2>
     <spring:message code="page.general.admin.header" />:
     <spring:message code="page.header.admin.wbcontest.create" />
 </h2>
 
+</legend>
 <div class="row">
     <div class="col-xs-10">
 

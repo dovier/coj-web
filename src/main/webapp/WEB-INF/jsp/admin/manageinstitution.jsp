@@ -1,11 +1,13 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page buffer = "16kb" autoFlush="true" %>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@page buffer="16kb" autoFlush="true" %>
 
-<h2 class="postheader">
-    <spring:message code="page.general.admin.header" />: <spring:message code="page.general.admin.manageinstitution.editinstitution" />
-</h2>
-
+<legend>
+    <h2 class="postheader">
+        <spring:message code="page.general.admin.header"/>: <spring:message
+            code="page.general.admin.manageinstitution.editinstitution"/>
+    </h2>
+</legend>
 <div class="row">
     <div class="col-xs-10">
         <!-- enctype="multipart/form-data" -->
@@ -15,14 +17,15 @@
 
             <div class="form-group">
                 <label class="control-label col-xs-3">ID</label>
+
                 <div class="col-xs-8">
                     <form:input cssClass="form-control" path="id" size="30"
                                 maxlength="15" readonly="true"/>
                 </div>
                 <div class="error col-xs-8 col-xs-offset-3">
-                    <span class="label label-danger"><form:errors path="id" /></span>
+                    <span class="label label-danger"><form:errors path="id"/></span>
                 </div>
-                
+
             </div>
 
 
@@ -30,14 +33,15 @@
 
             <div class="form-group">
                 <label class="control-label col-xs-3">
-                    <spring:message code="page.addcountry.name" />
+                    <spring:message code="page.addcountry.name"/>
                 </label>
+
                 <div class="col-xs-8">
                     <form:input cssClass="form-control" path="name" size="30"
                                 maxlength="70"/>
                 </div>
                 <div class="error col-xs-8 col-xs-offset-3">
-                    <span class="label label-danger"><form:errors path="name" /></span>
+                    <span class="label label-danger"><form:errors path="name"/></span>
                 </div>
                 <a>
                     <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -51,14 +55,15 @@
 
             <div class="form-group">
                 <label class="control-label col-xs-3">
-                    <spring:message code="page.addinstitution.acronym" />
+                    <spring:message code="page.addinstitution.acronym"/>
                 </label>
+
                 <div class="col-xs-8">
                     <form:input cssClass="form-control" path="zip" size="30"
                                 maxlength="15"/>
                 </div>
                 <div class="error col-xs-8 col-xs-offset-3">
-                    <span class="label label-danger"><form:errors path="zip" /></span>
+                    <span class="label label-danger"><form:errors path="zip"/></span>
                 </div>
                 <a>
                     <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -69,22 +74,24 @@
 
 
             <!-- LOGO OF INTITUTION (CHECK)-->
-            <div class="form-group" >                
+            <div class="form-group">
                 <label class="control-label col-xs-3"></label>
+
                 <div class="col-xs-8">
-                    <img src="/images/school/${institution.zip}.png" >
+                    <img src="/images/school/${institution.zip}.png">
                 </div>
             </div>
 
-            <div class="form-group">                    
+            <div class="form-group">
                 <label class="control-label col-xs-3" for="imagefile">Logo
-                    (120x120, &lt;35KB)</label>                   
+                    (120x120, &lt;35KB)</label>
+
                 <div class="col-xs-8">
                     <input id="logo" name="logo" type="file" class="file"
                            data-show-upload="false" accept="image/*"
                            data-show-caption="true">
                 </div>
-               
+
             </div>
 
 
@@ -92,14 +99,15 @@
 
             <div class="form-group">
                 <label class="control-label col-xs-3">
-                    <spring:message code="page.addinstitution.website" />
+                    <spring:message code="page.addinstitution.website"/>
                 </label>
+
                 <div class="col-xs-8">
                     <form:input cssClass="form-control" path="website" size="30"
                                 maxlength="70"/>
                 </div>
                 <div class="error col-xs-8 col-xs-offset-3">
-                    <span class="label label-danger"><form:errors path="website" /></span>
+                    <span class="label label-danger"><form:errors path="website"/></span>
                 </div>
                 <a>
                     <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -113,12 +121,13 @@
 
             <div class="form-group">
                 <label class="control-label col-xs-3">
-                    <spring:message code="judge.register.enabled" />
+                    <spring:message code="judge.register.enabled"/>
                 </label>
+
                 <div class="col-xs-8">
-                    <form:checkbox path="enabled" />
-                </div>                    
-                
+                    <form:checkbox path="enabled"/>
+                </div>
+
             </div>
 
 
@@ -126,23 +135,26 @@
 
             <div class="form-group">
                 <label class="control-label col-xs-3">
-                    <spring:message code="judge.register.country" />
+                    <spring:message code="judge.register.country"/>
                 </label>
                 <!-- ADD ALL COUNTRIES AND SELECT THE OWNER -->
                 <div class="col-xs-8">
                     <form:select cssClass="form-control" path="country_id">
-                        <form:options items="${countries}" itemValue="id" itemLabel="name" />
+                        <form:options items="${countries}" itemValue="id" itemLabel="name"/>
                     </form:select>
                 </div>
                 <div class="error col-xs-8 col-xs-offset-3">
-                    <span class="label label-danger"><form:errors path="country_id" /></span>
+                    <span class="label label-danger"><form:errors path="country_id"/></span>
                 </div>
-               
-            </div>            
+
+            </div>
 
             <div class="form-actions pull-right">
                 <input class="btn btn-primary" type="submit" name="submit"
-                       id="submit" value="<spring:message code="judgeregister.update.value"/>" />
+                       id="submit" value="<spring:message code="button.edit"/>"/>
+                <input
+                        class="btn btn-primary" type="reset" name="reset" id="reset"
+                        value="<spring:message code="judge.register.reset.value"/>"/>
                 <a class="btn btn-primary" href="<c:url value="/admin/manageinstitutions.xhtml"/>"><spring:message
                         code="button.close"/></a>
             </div>

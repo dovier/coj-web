@@ -129,7 +129,7 @@ function callback() {
 				        {
 				            label: "General",
 				            fillColor: "#4c83c3",
-				            data: [${graph.acc}, ${graph.ce}, ${graph.ivf}, ${graph.mle}, 
+				            data: [${graph.acc}, ${graph.ce}, ${graph.ivf}, ${graph.mle},
 									${graph.ole}, ${graph.pe}, ${graph.rte},
 									${graph.tle}, ${graph.wa},${graph.total}]
 				        }
@@ -139,6 +139,14 @@ function callback() {
 };
 
 function topCallback() {
+	//i18n datasets
+	var i = 0;
+
+	/*for(value in ${classif}){
+     alert(value);
+	}*/
+
+
 	var data = {
 		    labels: ${classif.labels},
 		    datasets: [

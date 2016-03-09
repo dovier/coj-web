@@ -1,10 +1,11 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<h2 class="postheader">
+<legend>
+<h2 class="">
     <spring:message code="page.general.admin.header" />: <spring:message code="page.menu.admin.createcontest" />
 </h2>
-
+</legend>
 
 <div class="row">
     <div class="col-xs-10">
@@ -174,4 +175,23 @@
 </div>
 <script>
     $("[data-toggle='tooltip']").tooltip();
+
+    $("#imports1").click(function () {
+        var checked = $(this).attr('checked');
+        if (checked == undefined) {
+            $(this).attr('checked', 'checked');
+            $("#imports2").prop('checked', 'checked');
+            $("#imports3").prop('checked', 'checked');
+            $("#imports4").prop('checked', 'checked');
+            $("#imports5").prop('checked', 'checked');
+            $("#imports6").prop('checked', 'checked');
+        } else {
+            $(this).removeAttr('checked');
+            $("#imports2").removeAttr('checked');
+            $("#imports3").removeAttr('checked');
+            $("#imports4").removeAttr('checked');
+            $("#imports5").removeAttr('checked');
+            $("#imports6").removeAttr('checked');
+        }
+    });
 </script>

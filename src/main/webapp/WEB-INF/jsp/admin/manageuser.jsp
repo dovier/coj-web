@@ -1,12 +1,12 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page buffer = "16kb" autoFlush="true" %>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@page buffer="16kb" autoFlush="true" %>
 
-<!--<script type='text/javascript' src="<c:url value="/js/jquery.js" />"></script>-->
+<!--<script type='text/javascript' src="<c:url value="/js/jquery.js"/>"></script>-->
 <script type='text/javascript' src="<c:url value="/js/coj.js" />"></script>
 
-<jsp:useBean id="now" class="java.util.Date" />
-<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
+<jsp:useBean id="now" class="java.util.Date"/>
+<fmt:formatDate var="year" value="${now}" pattern="yyyy"/>
 
 <div class="row">
     <div class="col-xs-10">
@@ -14,28 +14,38 @@
                    commandName="user" cssClass="form-horizontal">
 
             <!-- NAME OF VIEW -->
-            <legend>
-                <h2><spring:message code="page.general.admin.header" />: <spring:message code="pagehdr.euaccount" /></h2>
-            </legend>
+            <c:if test="${user.team == true}">
+                <legend>
+                    <h2><spring:message code="page.general.admin.header"/>: <spring:message
+                            code="pagehdr.euaccount.team"/></h2>
+                </legend>
+            </c:if>
+            <c:if test="${user.team == false}">
+                <legend>
+                    <h2><spring:message code="page.general.admin.header"/>: <spring:message
+                            code="pagehdr.euaccount"/></h2>
+                </legend>
+            </c:if>
 
             <!-- NICKNAME OF USER-->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
                     <label class="control-label col-xs-3">
-                        <spring:message code="fieldhdr.nname" />
+                        <spring:message code="fieldhdr.nname"/>
                     </label>
+
                     <div class="col-xs-8">
-                        <form:input cssClass="form-control" path="nick" size="30"
-                                    maxlength="50"/>
+                        <form:input cssClass="form-control" path="nick"
+                                    maxlength="15"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="nick" /></span>
+                        <span class="label label-danger"><form:errors path="nick"/></span>
                     </div>
                     <a><i data-toggle="tooltip" class="fa fa-asterisk"
-                           title="<spring:message code="mandatory.field"/>">
-                        </i></a>
+                          title="<spring:message code="mandatory.field"/>">
+                    </i></a>
                     <a><i data-toggle="tooltip" class="fa fa-info-circle"
-                           title="<spring:message code="infomsg.2"/>"></i></a>
+                          title="<spring:message code="infomsg.2"/>"></i></a>
                 </div>
             </authz:authorize>
 
@@ -43,31 +53,33 @@
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
                     <label class="control-label col-xs-3">
-                        <spring:message code="fieldhdr.modnickname" />
+                        <spring:message code="fieldhdr.modnickname"/>
                     </label>
+
                     <div class="col-xs-8">
-                        <form:checkbox path="update_nick" />
+                        <form:checkbox path="update_nick"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="update_nick" /></span>
+                        <span class="label label-danger"><form:errors path="update_nick"/></span>
                     </div>
-                   </div>
+                </div>
             </authz:authorize>
 
             <!-- COUNTRY OF USER-->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
                     <label class="control-label col-xs-3">
-                        <spring:message code="fieldhdr.country" />
+                        <spring:message code="fieldhdr.country"/>
                     </label>
                     <!-- ADD ALL COUNTRIES -->
                     <div class="col-xs-8">
-                        <form:select path="country_id" id="country" cssClass="form-control" onchange="getInstitution();">                            
-                            <form:options items="${countries}" itemValue="id" itemLabel="name" />
+                        <form:select path="country_id" id="country" cssClass="form-control"
+                                     onchange="getInstitution();">
+                            <form:options items="${countries}" itemValue="id" itemLabel="name"/>
                         </form:select>
-                    </div>                    
+                    </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="country" /></span>
+                        <span class="label label-danger"><form:errors path="country"/></span>
                     </div>
                     <a>
                         <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -83,15 +95,15 @@
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
                     <label class="control-label col-xs-3">
-                        <spring:message code="fieldhdr.institution" />
+                        <spring:message code="fieldhdr.institution"/>
                     </label>
                     <!-- ADD ALL INSTITUTIONS -->
                     <div class="col-xs-8">
                         <form:select cssClass="form-control" path="institution_id" id="institution">
-                            
-                            <c:forEach var="institution" items="${institutions}">      
+
+                            <c:forEach var="institution" items="${institutions}">
                                 <c:set var="institution_name">
-                                    ${institution.name}                                    
+                                    ${institution.name}
                                 </c:set>
                                 <c:if test="${institution.name == 'NONE INSTITUTION'}">
                                     <c:set var="institution_name">
@@ -99,11 +111,11 @@
                                     </c:set>
                                 </c:if>
                                 <form:option label="${institution_name}" value="${institution.id}"></form:option>
-                            </c:forEach>   
+                            </c:forEach>
                         </form:select>
-                    </div>                    
+                    </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="institution" /></span>
+                        <span class="label label-danger"><form:errors path="institution"/></span>
                     </div>
                     <a>
                         <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -119,54 +131,63 @@
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
                     <label class="control-label col-xs-3">
-                        <spring:message code="fieldhdr.defaultguilang" />
+                        <spring:message code="fieldhdr.defaultguilang"/>
                     </label>
                     <!-- ADD ALL LANGUAGES -->
                     <div class="col-xs-8">
                         <form:select path="locale" cssClass="form-control">
                             <form:options items="${locales}" itemLabel="description"
-                                          itemValue="lid" />
+                                          itemValue="lid"/>
                         </form:select>
-                    </div>                    
-                    <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="locale" /></span>
                     </div>
-                  </div>
+                    <div class="error col-xs-8 col-xs-offset-3">
+                        <span class="label label-danger"><form:errors path="locale"/></span>
+                    </div>
+                    <a>
+                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                           title="<spring:message code="mandatory.field"/>">
+                        </i></a>
+                </div>
             </authz:authorize>
 
             <!-- PROGRAMMING LANGUAGE OF USER-->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
                     <label class="control-label col-xs-3">
-                        <spring:message code="fieldhdr.defaultproglang" />
+                        <spring:message code="fieldhdr.defaultproglang"/>
                     </label>
                     <!-- ADD ALL LANGUAGES -->
                     <div class="col-xs-8">
                         <form:select path="lid" cssClass="form-control">
                             <form:options items="${planguages}" itemLabel="descripcion"
-                                          itemValue="lid" />
+                                          itemValue="lid"/>
                         </form:select>
-                    </div>                    
-                    <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="lid" /></span>
                     </div>
-                  </div>
+                    <div class="error col-xs-8 col-xs-offset-3">
+                        <span class="label label-danger"><form:errors path="lid"/></span>
+                    </div>
+                    <a>
+                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                           title="<spring:message code="mandatory.field"/>">
+                        </i></a>
+                </div>
             </authz:authorize>
 
             <!-- PASSWORD OF USER-->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
                     <label class="control-label col-xs-3">
-                        <spring:message code="fieldhdr.npassword" />
+                        <spring:message code="fieldhdr.npassword"/>
                     </label>
+
                     <div class="col-xs-8">
                         <form:password cssClass="form-control" path="password" size="30"
                                        maxlength="50"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="password" /></span>
+                        <span class="label label-danger"><form:errors path="password"/></span>
                     </div>
-                    
+
                     <a><i data-toggle="tooltip" class="fa fa-info-circle"
                           title="<spring:message code="infomsg.8"/>"></i>
                     </a>
@@ -177,16 +198,17 @@
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
                     <label class="control-label col-xs-3">
-                        <spring:message code="fieldhdr.cpassword" />
+                        <spring:message code="fieldhdr.cpassword"/>
                     </label>
+
                     <div class="col-xs-8">
                         <form:password cssClass="form-control" path="confirmPassword" size="30"
                                        maxlength="50"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="confirmPassword" /></span>
+                        <span class="label label-danger"><form:errors path="confirmPassword"/></span>
                     </div>
-                                        <a><i data-toggle="tooltip" class="fa fa-info-circle"
+                    <a><i data-toggle="tooltip" class="fa fa-info-circle"
                           title="<spring:message code="infomsg.8"/>"></i>
                     </a>
                 </div>
@@ -196,16 +218,21 @@
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
                     <label class="control-label col-xs-3">
-                        <spring:message code="fieldhdr.accessrule" />
+                        <spring:message code="fieldhdr.accessrule"/>
                     </label>
+
                     <div class="col-xs-8">
                         <form:input cssClass="form-control" path="access_rule" size="30"
                                     maxlength="50"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="access_rule" /></span>
+                        <span class="label label-danger"><form:errors path="access_rule"/></span>
                     </div>
-                    
+                    <a>
+                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                           title="<spring:message code="mandatory.field"/>">
+                        </i></a>
+
                 </div>
             </authz:authorize>
 
@@ -213,14 +240,15 @@
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
                     <label class="control-label col-xs-3">
-                        <spring:message code="fieldhdr.enabled" />
+                        <spring:message code="fieldhdr.enabled"/>
                     </label>
+
                     <div class="col-xs-8">
-                        <form:checkbox path="enabled" />
+                        <form:checkbox path="enabled"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="enabled" /></span>
-                    </div>                    
+                        <span class="label label-danger"><form:errors path="enabled"/></span>
+                    </div>
                 </div>
             </authz:authorize>
 
@@ -228,16 +256,17 @@
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
                     <label class="control-label col-xs-3">
-                        <spring:message code="fieldhdr.banreason" />
+                        <spring:message code="fieldhdr.banreason"/>
                     </label>
+
                     <div class="col-xs-8">
                         <form:textarea cols="80" rows="5" id="banReason" path="banReason"
                                        cssClass="form-control"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
-                        <span class="label label-danger"><form:errors path="access_rule" /></span>
+                        <span class="label label-danger"><form:errors path="banReason"/></span>
                     </div>
-                   
+
                 </div>
             </authz:authorize>
 
@@ -249,15 +278,16 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.tcoach" />
+                            <spring:message code="fieldhdr.tcoach"/>
                         </label>
+
                         <div class="col-xs-8">
                             <form:input cssClass="form-control" path="coach" size="30"
                                         maxlength="50"/>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="coach" /></span>
-                        </div>                        
+                            <span class="label label-danger"><form:errors path="coach"/></span>
+                        </div>
                     </div>
                 </authz:authorize>
 
@@ -265,15 +295,16 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.tmember" />
+                            <spring:message code="fieldhdr.tmember"/>
                         </label>
+
                         <div class="col-xs-8">
                             <form:input cssClass="form-control" path="user_1" size="30"
                                         maxlength="50"/>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="user_1" /></span>
-                        </div>                        
+                            <span class="label label-danger"><form:errors path="user_1"/></span>
+                        </div>
                     </div>
                 </authz:authorize>
 
@@ -281,15 +312,16 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.tmember" />
+                            <spring:message code="fieldhdr.tmember"/>
                         </label>
+
                         <div class="col-xs-8">
                             <form:input cssClass="form-control" path="user_2" size="30"
                                         maxlength="50"/>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="user_2" /></span>
-                        </div>                        
+                            <span class="label label-danger"><form:errors path="user_2"/></span>
+                        </div>
                     </div>
                 </authz:authorize>
 
@@ -297,15 +329,16 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.tmember" />
+                            <spring:message code="fieldhdr.tmember"/>
                         </label>
+
                         <div class="col-xs-8">
                             <form:input cssClass="form-control" path="user_3" size="30"
                                         maxlength="50"/>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="user_3" /></span>
-                        </div>                        
+                            <span class="label label-danger"><form:errors path="user_3"/></span>
+                        </div>
                     </div>
                 </authz:authorize>
 
@@ -317,14 +350,15 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.fname" />
+                            <spring:message code="fieldhdr.fname"/>
                         </label>
+
                         <div class="col-xs-8">
                             <form:input cssClass="form-control" path="name" size="30"
                                         maxlength="50"/>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="name" /></span>
+                            <span class="label label-danger"><form:errors path="name"/></span>
                         </div>
                         <a>
                             <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -340,14 +374,15 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.lname" />
+                            <spring:message code="fieldhdr.lname"/>
                         </label>
+
                         <div class="col-xs-8">
                             <form:input cssClass="form-control" path="lastname" size="30"
                                         maxlength="50"/>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="lastname" /></span>
+                            <span class="label label-danger"><form:errors path="lastname"/></span>
                         </div>
                         <a>
                             <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -363,23 +398,27 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.gender" />
+                            <spring:message code="fieldhdr.gender"/>
                         </label>
                         <!-- ADD ALL GENDERS -->
                         <div class="col-xs-8">
                             <form:select path="gender" cssClass="form-control">
                                 <form:option value="1">
-                                    <spring:message code="fieldval.male" />
+                                    <spring:message code="fieldval.male"/>
                                 </form:option>
                                 <form:option value="2">
-                                    <spring:message code="fieldval.female" />
+                                    <spring:message code="fieldval.female"/>
                                 </form:option>
                             </form:select>
-                        </div>                    
-                        <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="gender" /></span>
                         </div>
-                       
+                        <div class="error col-xs-8 col-xs-offset-3">
+                            <span class="label label-danger"><form:errors path="gender"/></span>
+                        </div>
+                        <a>
+                            <i data-toggle="tooltip" class="fa fa-asterisk"
+                               title="<spring:message code="mandatory.field"/>">
+                            </i></a>
+
                     </div>
                 </authz:authorize>
 
@@ -387,7 +426,7 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.dob" />
+                            <spring:message code="fieldhdr.dob"/>
                         </label>
                         <!-- ADD DATE -->
                         <div class="col-xs-8">
@@ -408,8 +447,8 @@
                                     </c:forEach>
                                 </form:select>
                             </div>
-                        </div>                                            
-                       
+                        </div>
+
                     </div>
                 </authz:authorize>
 
@@ -417,14 +456,15 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.sdob" />
+                            <spring:message code="fieldhdr.sdob"/>
                         </label>
+
                         <div class="col-xs-8">
-                            <form:checkbox path="showdob" />
+                            <form:checkbox path="showdob"/>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="showdob" /></span>
-                        </div>                    
+                            <span class="label label-danger"><form:errors path="showdob"/></span>
+                        </div>
                     </div>
                 </authz:authorize>
 
@@ -432,14 +472,15 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.email" />
+                            <spring:message code="fieldhdr.email"/>
                         </label>
+
                         <div class="col-xs-8">
                             <form:input cssClass="form-control" path="email" size="30"
                                         maxlength="50"/>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="email" /></span>
+                            <span class="label label-danger"><form:errors path="email"/></span>
                         </div>
                         <a>
                             <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -455,14 +496,15 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.notifcontest" />
+                            <spring:message code="fieldhdr.notifcontest"/>
                         </label>
+
                         <div class="col-xs-8">
-                            <form:checkbox path="contestNotifications" />
+                            <form:checkbox path="contestNotifications"/>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="contestNotifications" /></span>
-                        </div>                    
+                            <span class="label label-danger"><form:errors path="contestNotifications"/></span>
+                        </div>
                     </div>
                 </authz:authorize>
 
@@ -470,14 +512,15 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.notifproblem" />
+                            <spring:message code="fieldhdr.notifproblem"/>
                         </label>
+
                         <div class="col-xs-8">
-                            <form:checkbox path="problemNotifications" />
+                            <form:checkbox path="problemNotifications"/>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="problemNotifications" /></span>
-                        </div>                    
+                            <span class="label label-danger"><form:errors path="problemNotifications"/></span>
+                        </div>
                     </div>
                 </authz:authorize>
 
@@ -485,14 +528,15 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.notifsubmit" />
+                            <spring:message code="fieldhdr.notifsubmit"/>
                         </label>
+
                         <div class="col-xs-8">
-                            <form:checkbox path="submissionNotifications" />
+                            <form:checkbox path="submissionNotifications"/>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="submissionNotifications" /></span>
-                        </div>                    
+                            <span class="label label-danger"><form:errors path="submissionNotifications"/></span>
+                        </div>
                     </div>
                 </authz:authorize>
 
@@ -500,14 +544,15 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.mailquota" /> (<spring:message code="fieldval.bytes" />)
+                            <spring:message code="fieldhdr.mailquota"/> (<spring:message code="fieldval.bytes"/>)
                         </label>
+
                         <div class="col-xs-8">
                             <form:input cssClass="form-control" path="mail_quote" size="30"
                                         maxlength="50"/>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="mail_quote" /></span>
+                            <span class="label label-danger"><form:errors path="mail_quote"/></span>
                         </div>
                         <a>
                             <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -521,17 +566,18 @@
                 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                     <div class="form-group">
                         <label class="control-label col-xs-3">
-                            <spring:message code="fieldhdr.roles" />
+                            <spring:message code="fieldhdr.roles"/>
                         </label>
+
                         <div class="col-xs-8">
                             <div class="col-xs-6">
                                 <form:checkboxes cssClass="checkbox" path="authorities"
                                                  items="${authorities}" itemValue="authority"
-                                                 itemLabel="authority" delimiter="</div><div class='col-xs-6'>" />
+                                                 itemLabel="authority" delimiter="</div><div class='col-xs-6'>"/>
                             </div>
                         </div>
                         <div class="error col-xs-8 col-xs-offset-3">
-                            <span class="label label-danger"><form:errors path="authorities" /></span>
+                            <span class="label label-danger"><form:errors path="authorities"/></span>
                         </div>
                         <a>
                             <i data-toggle="tooltip" class="fa fa-asterisk"
@@ -545,11 +591,17 @@
 
             <div class="form-actions pull-right">
                 <input class="btn btn-primary" type="submit" name="submit"
-                       id="submit" value="<spring:message code="button.edit"/>" /> <input
-                       class="btn btn-primary" type="reset" name="reset" id="reset"
-                       value="<spring:message code="button.reset"/>" />
-                <a class="btn btn-primary" href="<c:url value="/admin/manageusers.xhtml"/>"><spring:message
-                        code="button.close"/></a>
+                       id="submit" value="<spring:message code="button.edit"/>"/> <input
+                    class="btn btn-primary" type="reset" name="reset" id="reset"
+                    value="<spring:message code="button.reset"/>"/>
+                <c:if test="${user.team == false}">
+                    <a class="btn btn-primary" href="<c:url value="/admin/manageusers.xhtml"/>"><spring:message
+                            code="button.close"/></a>
+                </c:if>
+                <c:if test="${user.team == true}">
+                    <a class="btn btn-primary" href="<c:url value="/admin/manageteams.xhtml"/>"><spring:message
+                            code="button.close"/></a>
+                </c:if>
             </div>
 
         </form:form>

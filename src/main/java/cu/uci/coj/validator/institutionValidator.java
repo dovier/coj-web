@@ -10,6 +10,7 @@ import cu.uci.coj.model.Institution;
 import javax.annotation.Resource;
 
 
+import org.apache.commons.validator.UrlValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -18,10 +19,12 @@ import org.springframework.validation.Validator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * @author Juan Carlos Lobaina Guzman & Jorge Luis Roque Alvarez
  * @version Caribbean Online Judge(COJ) v2.0
- * @see http://coj.uci.cu
+ * @see //coj.uci.cu
  * @since 2010-09-01
  */
 @Component
@@ -33,9 +36,15 @@ public class institutionValidator implements Validator {
     private Pattern pattern;
     private Matcher matcher;
 
-    private static final String STRING_PATTERN = "[a-zA-Z ]+";
-    private String WEBSITE_PATTERN = "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\?=.-]*)*\\/?$";
+    private static final String STRING_PATTERN = "[a-zA-Záéíóú ]+";
+    private String WEBSITE_PATTERN = "^(http(?:s)?\\:\\/\\/[a-zA-Z0-9]+(?:(?:\\.|\\-)[a-zA-Z0-9]+)+(?:\\:\\d+)?(?:\\/[\\w\\-]+)*(?:\\/?|\\/\\w+\\.[a-zA-Z]{2,4}(?:\\?[\\w]+\\=[\\w\\-]+)?)?(?:\\&[\\w]+\\=[\\w\\-]+)*)$";
     private String ZIP_PATTERN = "[0-9A-Z/-]+";
+
+    //private String URLREGEX = "^(http(?:s)?\\:\\/\\/[a-zA-Z0-9]+(?:(?:\\.|\\-)[a-zA-Z0-9]+)+(?:\\:\\d+)?(?:\\/[\\w\\-]+)*(?:\\/?|\\/\\w+\\.[a-zA-Z]{2,4}(?:\\?[\\w]+\\=[\\w\\-]+)?)?(?:\\&[\\w]+\\=[\\w\\-]+)*)$";
+
+            /*"\\b(https?|ftp|file|ldap)://"
+            + "[-A-Za-z0-9+&@#/%?=~_|!:,.;]"
+            + "*[-A-Za-z0-9+&@#/%=~_|]";*/
 
     public InstitutionDAO getInstitutionDAO() {
         return institutionDAO;
@@ -53,18 +62,28 @@ public class institutionValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         Institution institution = (Institution) o;
+        UrlValidator urlValidator = new UrlValidator(); //ver como inyectar este objeto
+
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "general.error.empty");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "zip", "general.error.empty");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "website", "general.error.empty");
 
 
-        // input string conatains valid website address
+        // input string contains valid website address
         if (!(institution.getWebsite() != null && institution.getWebsite().isEmpty())) {
-            pattern = Pattern.compile(WEBSITE_PATTERN);
+            /*if (!urlValidator.isValid(institution.getWebsite())){
+                errors.rejectValue("website", "website.containNonAddress");
+            }*/
+
+            if (!institution.getWebsite().matches(WEBSITE_PATTERN)){
+                errors.rejectValue("website", "website.containNonAddress");
+            }
+
+            /*pattern = Pattern.compile(WEBSITE_PATTERN);
             matcher = pattern.matcher(institution.getWebsite());
             if (!matcher.matches()) {
                 errors.rejectValue("website", "website.containNonAddress");
-            }
+            }*/
         }
 
         // input string conatains characters only
@@ -98,6 +117,7 @@ public class institutionValidator implements Validator {
                     "general.error.invalid",
                     "At must 40 characters.");
         } else if (!errors.hasFieldErrors("zip")) {
+
             pattern = Pattern.compile(ZIP_PATTERN);
             matcher = pattern.matcher(institution.getZip());
             if (!matcher.matches()) {

@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
@@ -27,13 +28,11 @@ import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.multiaction.InternalPathMethodNameResolver;
+import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.HtmlUtils;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import cu.uci.coj.utils.Notification;
@@ -85,11 +84,11 @@ public class ContestController extends BaseController {
     @Resource
     private ContestService contestService;
 
-    private boolean withProblems(int cid){
+    private boolean withProblems(int cid) {
         //Verificar si el contest tienen asociados problemas (existen problemas = eproblem).
         List<Problem> problems = contestDAO.loadContestProblems(cid);
         if (problems != null)
-            return  !problems.isEmpty();
+            return !problems.isEmpty();
 
         return false;
     }
@@ -117,19 +116,28 @@ public class ContestController extends BaseController {
         return "redirect:/admin/virtualcontests.xhtml";
     }
 
+    /*
+    * RF17 Listar concursos
+    * */
     @RequestMapping(value = "/admincontests.xhtml", method = RequestMethod.GET)
     public String listContests(Model model, PagingOptions options) {
         return "/admin/admincontests";
     }
 
+    /*
+    * RF157 Filtrar el listado de concursos
+    * */
     @RequestMapping(value = "/tables/admincontests.xhtml", method = RequestMethod.GET)
     public String tablesListContests(Model model, PagingOptions options, @RequestParam(required = false) String access,
-            @RequestParam(required = false) String enabled, @RequestParam(required = false, defaultValue = "all") String status) {
+                                     @RequestParam(required = false) String enabled, @RequestParam(required = false, defaultValue = "all") String status) {
         IPaginatedList<Contest> contests = contestDAO.loadContests(options, access, enabled, status);
         model.addAttribute("contests", contests);
         return "/admin/tables/admincontests";
     }
 
+    /*
+   * RF22 Editar concurso
+   * */
     @RequestMapping(value = "/managecontest.xhtml", method = RequestMethod.GET)
     public String manageContest(Model model, @RequestParam Integer cid) {
         Contest contest = contestDAO.loadContestManage(cid);
@@ -139,9 +147,12 @@ public class ContestController extends BaseController {
         return "/admin/managecontest";
     }
 
+    /*
+   * RF22 Editar concurso
+   * */
     @RequestMapping(value = "/managecontest.xhtml", method = RequestMethod.POST)
     public String manageContest(Model model, Contest contest,
-            BindingResult result, RedirectAttributes redirectAttributes) {
+                                BindingResult result, RedirectAttributes redirectAttributes) {
         validator.manageContest(contest, result);
         if (result.hasErrors()) {
             model.addAttribute("styles", contestDAO.loadEnabledScoringStyles());
@@ -154,6 +165,9 @@ public class ContestController extends BaseController {
         return "redirect:/admin/managecontest.xhtml?cid=" + contest.getCid();
     }
 
+    /*
+    * RF18 Adicionar concurso
+    * */
     @RequestMapping(value = "/createcontest.xhtml", method = RequestMethod.GET)
     public String createContest(Model model) {
         Contest contest = new Contest();
@@ -165,9 +179,12 @@ public class ContestController extends BaseController {
         return "/admin/createcontest";
     }
 
+    /*
+   * RF18 Adicionar concurso
+   * */
     @RequestMapping(value = "/createcontest.xhtml", method = RequestMethod.POST)
     public String createContest(Model model, Contest contest,
-            BindingResult result, RedirectAttributes redirectAttributes) {
+                                BindingResult result, RedirectAttributes redirectAttributes) {
 //        if (result.hasErrors()) {
 //           ObjectError o = result.getGlobalError();
 //           o.toString();
@@ -201,9 +218,12 @@ public class ContestController extends BaseController {
 
     @RequestMapping(value = "/globalsettings.xhtml", method = RequestMethod.POST)
     public String globalSettings(Model model, Contest contest,
-            BindingResult result, RedirectAttributes redirectAttributes) {
+                                 BindingResult result, RedirectAttributes redirectAttributes) {
         validator.validateGlobalSettings(contest, result);
         if (result.hasErrors()) {
+            model.addAttribute("eproblem", withProblems(contest.getCid()));
+            /*model.addAttribute("style", contestDAO.loadScoringStyle(contest.getCid()));*/
+            contest.setStyle(contestDAO.loadScoringStyle(contest.getCid()).getSid());
             model.addAttribute(contest);
             return "/admin/globalsettings";
         }
@@ -424,14 +444,13 @@ public class ContestController extends BaseController {
     }
 
     @RequestMapping(value = "/importicpcusers.xhtml", method = RequestMethod.POST)
-    public @ResponseBody
-    byte[] importICPCUsers(
+    public String importICPCUsers(
             Model model,
             HttpServletResponse response,
             Contest contest,
             Locale locale,
             @RequestParam("cid") Integer cid,
-            @RequestParam(value = "warmupCid", required = false) Integer warmupCid,
+            @RequestParam(value = "warmupCid", required = false) String warmupCids,
             @RequestParam("prefix") String prefix,
             @RequestParam MultipartFile personFile,
             @RequestParam MultipartFile schoolFile,
@@ -439,6 +458,22 @@ public class ContestController extends BaseController {
             @RequestParam MultipartFile teamFile,
             @RequestParam MultipartFile teamPersonFile,
             RedirectAttributes redirectAttributes) throws IOException {
+
+        if (personFile == null || schoolFile == null || siteFile == null || teamFile == null || teamPersonFile == null) {
+            model.addAttribute("cid", cid);
+            model.addAttribute("eproblem", withProblems(cid));
+            redirectAttributes.addFlashAttribute("messagerror", Notification.getNotSuccesfull());
+            return "redirect:/admin/importicpcusers.xhtml?cid=" + contest.getCid();
+        }
+        int warmupCid =0;
+        try {
+           warmupCid = Integer.parseInt(warmupCids);
+        }catch (Exception e){
+            model.addAttribute("cid", cid);
+            model.addAttribute("eproblem", withProblems(cid));
+            redirectAttributes.addFlashAttribute("messagerror", Notification.getNotSuccesfull());
+            return "redirect:/admin/importicpcusers.xhtml?cid=" + contest.getCid();
+        }
 
         List<String> messages = contestService.importICPCUsers(prefix,
                 new String(personFile.getBytes()).split("\r\n"), new String(
@@ -457,12 +492,12 @@ public class ContestController extends BaseController {
         response.setHeader("Content-Disposition", "attachment; filename=\""
                 + prefix + "users");
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
-        return builder.toString().getBytes("UTF-8");
+        return "/admin/importicpcusers";
     }
 
     @RequestMapping(value = "/contestproblemcolors.xhtml", method = RequestMethod.GET)
     public String contestProblemColors(Model model, Locale locale,
-            @RequestParam("cid") Integer cid) {
+                                       @RequestParam("cid") Integer cid) {
         Contest contest = contestDAO.loadContestForProblems(cid);
         List<Problem> problems = contestDAO.loadContestProblems(contest
                 .getCid());
@@ -481,17 +516,23 @@ public class ContestController extends BaseController {
 
     @RequestMapping(value = "/baylorxml.xhtml", method = RequestMethod.GET)
     public String baylorxml(Model model, Locale locale,
-            @RequestParam("cid") Integer cid) {
+                            @RequestParam("cid") Integer cid) {
         model.addAttribute("cid", cid);
         model.addAttribute("eproblem", withProblems(cid));
         return "/admin/baylorxml";
     }
 
     @RequestMapping(value = "/baylorxml.xhtml", method = RequestMethod.POST)
-    public @ResponseBody
-    byte[] baylorXml(Model model, Locale locale,
-            HttpServletResponse response, MultipartFile xml,
-            @RequestParam("cid") Integer cid, RedirectAttributes redirectAttributes) throws IOException {
+    public
+    String baylorXml(Model model, Locale locale,
+                     HttpServletResponse response, MultipartFile xml,
+                     @RequestParam("cid") Integer cid, RedirectAttributes redirectAttributes) throws IOException {
+        if (xml.isEmpty()){
+            model.addAttribute("cid", cid);
+            model.addAttribute("eproblem", withProblems(cid));
+            redirectAttributes.addFlashAttribute("messagerror", Notification.getNotSuccesfull());
+            return "redirect:/admin/baylorxml.xhtml?cid=" + cid;
+        }
         List<Map<String, Object>> maps = contestDAO.baylorXMLData(cid);
 
         maps.get(0).put("rank", 1);
@@ -510,7 +551,7 @@ public class ContestController extends BaseController {
             } else if (cMap.get("accepted").equals(maps.get(i).get("accepted"))
                     && cMap.get("penalty").equals(maps.get(i).get("penalty"))
                     && cMap.get("last_time").equals(
-                            maps.get(i).get("last_time"))) {
+                    maps.get(i).get("last_time"))) {
                 maps.get(i).put("rank", cMap.get("rank"));
             } else {
                 maps.get(i).put("rank", i + 1);
@@ -527,8 +568,8 @@ public class ContestController extends BaseController {
             int i = 0;
             while (i < maps.size()
                     && !(line.contains("TeamName=\""
-                            + HtmlUtils.htmlEscape(maps.get(i).get("nick")
-                                    .toString()) + "\"") || line
+                    + HtmlUtils.htmlEscape(maps.get(i).get("nick")
+                    .toString()) + "\"") || line
                     .contains("TeamName=\""
                             + maps.get(i).get("nick").toString()
                             + "\""))) {
@@ -547,7 +588,7 @@ public class ContestController extends BaseController {
                         + maps.get(i).get("accepted") + "\"");
                 line = line.replace("LastProblemTime=\"0\"",
                         "LastProblemTime=\"" + maps.get(i).get("last_time")
-                        + "\"");
+                                + "\"");
                 line = line + "\n";
             }
             builder.append(line);
@@ -556,12 +597,12 @@ public class ContestController extends BaseController {
         response.setHeader("Content-Disposition", "attachment; filename=\""
                 + xml.getOriginalFilename());
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
-        return builder.toString().getBytes("UTF-8");
+        return "/admin/baylorxml";
     }
 
     @RequestMapping(value = "/contestproblemcolors.xhtml", method = RequestMethod.POST)
     public String contestProblemColors(Model model, Locale locale,
-            String[] colors, Contest contest, RedirectAttributes redirectAttributes) {
+                                       String[] colors, Contest contest, RedirectAttributes redirectAttributes) {
 
         int idx = 0;
         List<Problem> problems = contestDAO.loadContestProblems(contest
@@ -628,7 +669,7 @@ public class ContestController extends BaseController {
 
     @RequestMapping(value = "/contestawards.xhtml", method = RequestMethod.POST)
     public String contestAwards(Model model,
-            ContestAwardsFlags contestawardsflags, RedirectAttributes redirectAttributes) {
+                                ContestAwardsFlags contestawardsflags, RedirectAttributes redirectAttributes) {
         contestAwardDAO.insertContestAwardsFlags(contestawardsflags);
 
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
@@ -661,9 +702,9 @@ public class ContestController extends BaseController {
 
     @RequestMapping(value = "/deleteusercontest.xhtml", method = RequestMethod.GET)
     public String deleteContestUsers(Model model,
-            @RequestParam("cid") Integer cid,
-            @RequestParam(required = false, value = "all") String all,
-            @RequestParam(required = false, value = "uid") Integer uid, RedirectAttributes redirectAttributes) {
+                                     @RequestParam("cid") Integer cid,
+                                     @RequestParam(required = false, value = "all") String all,
+                                     @RequestParam(required = false, value = "uid") Integer uid, RedirectAttributes redirectAttributes) {
         if (all != null) {
             contestDAO.clearUsersContest(cid);
         } else {
@@ -690,6 +731,9 @@ public class ContestController extends BaseController {
         return "redirect:/admin/contestoverview.xhtml?cid=" + contest.getCid();
     }
 
+    /*
+   * RF20 Repuntear concurso
+   * */
     @RequestMapping(value = "/repoint.xhtml", method = RequestMethod.GET)
     public String repointContest(Model model, @RequestParam("cid") Integer cid)
             throws IOException {
@@ -721,8 +765,8 @@ public class ContestController extends BaseController {
 
     @RequestMapping(value = "/unlock.xhtml", method = RequestMethod.GET)
     public String unfreezeContest(Model model,
-            SecurityContextHolderAwareRequestWrapper requestWrapper,
-            @RequestParam("cid") Integer cid) throws IOException {
+                                  SecurityContextHolderAwareRequestWrapper requestWrapper,
+                                  @RequestParam("cid") Integer cid) throws IOException {
         Contest contest = contestDAO.loadContest(cid);
         if (requestWrapper.isUserInRole(Roles.ROLE_ADMIN) && contest.isPast()) {
             // se cambian las banderas block y unfreeze auto del contest a
@@ -735,8 +779,8 @@ public class ContestController extends BaseController {
 
     @RequestMapping(value = "/lock.xhtml", method = RequestMethod.GET)
     public String freezeContest(Model model,
-            SecurityContextHolderAwareRequestWrapper requestWrapper,
-            @RequestParam("cid") Integer cid) throws IOException {
+                                SecurityContextHolderAwareRequestWrapper requestWrapper,
+                                @RequestParam("cid") Integer cid) throws IOException {
         Contest contest = contestDAO.loadContest(cid);
         if (requestWrapper.isUserInRole(Roles.ROLE_ADMIN) && contest.isPast()) {
             // se cambian las banderas block y unfreeze auto del contest a
@@ -748,7 +792,7 @@ public class ContestController extends BaseController {
 
     @RequestMapping(value = "/removeproblemcontest.xhtml", method = RequestMethod.GET)
     public String removeContestProblem(Model model,
-            @RequestParam("cid") Integer cid, @RequestParam("pid") Integer pid) {
+                                       @RequestParam("cid") Integer cid, @RequestParam("pid") Integer pid) {
         contestDAO.removeProblemContest(cid, pid);
         return "redirect:/admin/contestproblems.xhtml?cid=" + cid;
     }

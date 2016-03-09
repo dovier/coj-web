@@ -25,7 +25,7 @@
                         <div class="col-xs-2">
                             <div class="avatar_preview">
 
-                                    <img class="avatar img-responsive" src="<c:url value="../images/avatars/${user.username}" />" />
+                                    <img alt="avatar" class="avatar img-responsive" data-toggle="tooltip" title="${user.username}" src="<c:url value="../images/avatars/${user.username}" />" />
 
                             </div>
                         </div>
@@ -383,7 +383,7 @@
                                             <a
                                                 href="<c:url value="/user/useraccount.xhtml?username=${lastEntry.username}"/>">${lastEntry.username}</a>
                                         </div>
-                                        <div class="text-justify">${lastEntry.text}</div>
+                                        <div class="text-left">${lastEntry.text}</div>
                                         <div class="pull-left">
                                             <fmt:formatDate value="${lastEntry.date}"
                                                             pattern="yyyy-MM-dd HH:mm:ss" />

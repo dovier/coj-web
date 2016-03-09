@@ -1,5 +1,6 @@
 package cu.uci.coj.model;
 
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.List;
 

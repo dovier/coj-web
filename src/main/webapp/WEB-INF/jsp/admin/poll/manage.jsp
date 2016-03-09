@@ -124,7 +124,7 @@
                 <div class="col-xs-12">
                     <div class="form-actions pull-right ">
                         <input class="btn btn-primary" type="submit" name="submit"
-                               id="submit" value="<spring:message code="judgeregister.update.value"/>" /> <input
+                               id="submit" value="<spring:message code="button.edit"/>" /> <input
                             class="btn btn-primary" type="reset" name="reset" id="reset"
                             value="<spring:message code="judge.register.reset.value"/>" />
                         <a class="btn btn-primary" href="<c:url value="/admin/poll/list.xhtml"/>"><spring:message

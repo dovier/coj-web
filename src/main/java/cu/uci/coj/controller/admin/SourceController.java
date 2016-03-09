@@ -37,14 +37,18 @@ public class SourceController extends BaseController {
     }
 
     @RequestMapping(value = "/addsource.xhtml", method = RequestMethod.POST)
-    public String addSources(Model model, @RequestParam(required = false, value = "username") String filter_user, @RequestParam(required = false, value = "pid") Integer pid,
-                             @RequestParam(required = false, value = "status") String status, @RequestParam(required = false, value = "planguage") String language,
-                             PagingOptions options, @RequestParam(required = true, value = "name") String name,
+    public String addSources(Model model,
+                             @RequestParam(required = false, value = "username") String filter_user,
+                             @RequestParam(required = false, value = "pid") Integer pid,
+                             @RequestParam(required = false, value = "status") String status,
+                             @RequestParam(required = false, value = "planguage") String language,
+                             PagingOptions options,
+                             @RequestParam(required = true, value = "name") String name,
                              @RequestParam(required = true, value = "author") String author, ProblemSource problemSource, BindingResult result, RedirectAttributes redirectAttributes) {
 
         problemSourceValidator.validate(problemSource, result);
 
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             model.addAttribute(problemSource);
             return "/admin/wbsource/create";
         }
@@ -71,7 +75,6 @@ public class SourceController extends BaseController {
     }
 
 
-
     @RequestMapping(value = "/updatesource.xhtml", method = RequestMethod.GET)
     public String updateSources(Model model, @RequestParam(required = true, value = "idSource") Integer idSource) {
 
@@ -81,8 +84,18 @@ public class SourceController extends BaseController {
     }
 
     @RequestMapping(value = "/updatesource.xhtml", method = RequestMethod.POST)
-    public String updateSourcesPost(Model model, @RequestParam(required = true, value = "idSource") Integer idSource, @RequestParam(required = true, value = "name") String name,
-                                @RequestParam(required = true, value = "author") String author, RedirectAttributes redirectAttributes) {
+    public String updateSourcesPost(Model model,
+                                    @RequestParam(required = true, value = "idSource") Integer idSource,
+                                    @RequestParam(required = true, value = "name") String name,
+                                    @RequestParam(required = true, value = "author") String author,
+                                    ProblemSource problemSource, BindingResult result, RedirectAttributes redirectAttributes) {
+        problemSourceValidator.validateUpdate(problemSource,result);
+        if (result.hasErrors()) {
+            model.addAttribute(problemSource);
+            return "/admin/wbsource/edit";
+        }
+
+
         problemDAO.updateProblemSource(idSource, name, author);
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return "redirect:/admin/managesources.xhtml";

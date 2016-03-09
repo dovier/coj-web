@@ -40,9 +40,16 @@
         </div>
     </c:if>
     <br/>
-<div class="clearfix"></div>
+
+    <div class="clearfix"></div>
     <div id="display-table-container"
          data-reload-url="/admin/tables/manageactivations.xhtml"></div>
+    <div class="coj_float_rigth">
+        <a href="/admin/index.xhtml" class="btn btn-primary">
+            <spring:message code="button.close" />
+        </a>
+    </div>
+    <div class="clearfix"></div>
 </div>
 
 <link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>

@@ -1,3 +1,11 @@
+/*Permite que los formularios salgan con el primer campo selecionadolisto para escribir*/
+$(function () {
+    $(window).load(function () {
+        $(':input:visible:enabled:first').focus();
+    });
+})
+
+
 /*Asegura que todos los alert se muestren solo 5 segundos*/
 
 function getInstitution() {
@@ -15,7 +23,8 @@ function getInstitution() {
         data: "country=" + id,
         dataType: 'json',
         success: function (data) {
-            instution.options[0] = new Option("None", -1);
+            var none = $('[name="noneInstitution"]').val();
+            instution.options[0] = new Option(none, -1);
             for (var i = 0; i < data.length; i++) {
                 instution.options[i + 1] = new Option(data[i].institution, data[i].id);
             }
@@ -45,8 +54,11 @@ function voting(id, url) {
             else if (data < 0)
                 rating.addClass("text-danger");
             rating.html(data);
+            $(".tooltip").css({display: "none"});
+
             $("#thumbs-up" + id).remove();
             $("#thumbs-down" + id).remove();
+
         }
     });
 }
@@ -254,18 +266,26 @@ function saveDraft() {
         dataType: 'json',
         success: function (data) {
             /*notify.setAttribute("class", "notice");
-            $('#notice').show(50,callback);
-            notify.innerHTML = data.message;*/
-
-            $('#notice').show();
+             $('#notice').show(50,callback);
+             notify.innerHTML = data.message;*/
             /*var value = '<spring:message code=\"' + data.message + '\"/>';*/
-            $('#notice').html(data.message);
+            var tmp = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>"
+            tmp += "<i class=\"fa fa-check\"></i> " + data.message;
 
+            $('.label-drafts').html("(" + data.cantDraftsUser + ")");
+
+            $('#notice').html(tmp);
+            $('#notice').css("height", "50px");
+            $('#notice').css("padding", "15px");
+            $('#notice').show();
+
+            $("#notice").fadeTo(2000, 500).slideUp(500, function () {
+            });
         }
     });
 
     /*var _route = "/admin/updateclassifications.xhtml?classid=" + id + "&name=" + $("input[name='class" + id + "']").val();
-    window.location = _route;*/
+     window.location = _route;*/
 }
 
 function deleteFileIn(element) {
@@ -691,6 +711,13 @@ function loadProblemClassification(pid) {
                     success: function (msg) {
 
                         $("input[name='class" + ui.item.attr("id") + "']").attr("disabled", "true");
+
+                        var tmp = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>"
+                        tmp += "<i class=\"fa fa-check\"></i> " + i18n.message;
+                        $('#infoinsert').html(tmp);
+                        $('#infoinsert').show();
+                        $("#infoinsert").fadeTo(2000, 500).slideUp(500, function () {
+                        });
                     }
                 });
             }
@@ -707,6 +734,13 @@ function loadProblemClassification(pid) {
                     data: "rmb&pid=" + pid + "&cid=" + ui.item.attr("id"),
                     success: function (msg) {
                         $("input[name='class" + ui.item.attr("id") + "']").removeAttr("disabled");
+
+                        var tmp = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>"
+                        tmp += "<i class=\"fa fa-check\"></i> " + i18n.message;
+                        $('#infoinsert').html(tmp);
+                        $('#infoinsert').show();
+                        $("#infoinsert").fadeTo(2000, 500).slideUp(500, function () {
+                        });
                     }
                 });
             }
@@ -821,4 +855,25 @@ function deleteClassification(id) {
 //    });
     var _route = "/admin/deleteclassifications.xhtml?classid=" + id;
     window.location = _route;
+}
+
+function subzoom() {
+    $(document).ready(function () {
+        $('*').each(function () {
+            var k = parseInt($(this).css('font-size'));
+            var redSize = ((k * 90) / 100);
+            $(this).css('font-size', redSize);
+        });
+    });
+}
+
+function addzoom() {
+    $(document).ready(function () {
+        $('*').each(function () {
+            var k = parseInt($(this).css('font-size'));
+            var redSize = ((k * 110) / 100);
+            $(this).css('font-size', redSize);
+
+        });
+    });
 }

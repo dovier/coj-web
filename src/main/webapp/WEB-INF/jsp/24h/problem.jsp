@@ -290,6 +290,9 @@
 								value="${recomm.pid}" /></a>
 					</c:forEach>
 				</div>
+				<div class="coj_float_rigth">
+					<a href="/24h/problems.xhtml" class="btn btn-primary"><spring:message code="button.close" /></a>
+				</div>
 			</div>
 		</div>
 	</c:if>

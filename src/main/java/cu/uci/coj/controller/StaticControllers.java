@@ -37,6 +37,11 @@ public class StaticControllers extends BaseController {
 	public String processTools() throws FileNotFoundException {
 		return "/general/tools";
 	}
+
+	@RequestMapping(value = "/general/mapsite.xhtml", method = RequestMethod.GET)
+	public String processMapSite() throws FileNotFoundException {
+		return "/general/mapsite";
+	}
 	
 	
 	@RequestMapping(value = "/general/maintenance.xhtml", method = RequestMethod.GET)

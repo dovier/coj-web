@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.stereotype.Controller;
@@ -103,7 +102,7 @@ public class EntryController extends BaseController {
     }
 
     @RequestMapping(value = "/index.xhtml", method = RequestMethod.POST)
-    public String addEntry(HttpServletRequest request, Principal principal, Locale locale, Model model, PagingOptions options, Entry entry, BindingResult errors) {
+    public String addEntry(HttpServletRequest request, Principal principal, Locale locale, Model model, PagingOptions options, Entry entry, BindingResult errors, RedirectAttributes redirectAttributes) {
         entriesValidator.validate(entry, errors);
         if (errors.hasErrors()) {
             model.addAttribute("emoties", entryHelper.getEmoties().entrySet());
@@ -113,6 +112,7 @@ public class EntryController extends BaseController {
             preProcessEntry(entry);
             entryDAO.addEntry(entry, request.isUserInRole(Roles.ROLE_ADMIN), principal.getName());
         }
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreateEntry());
         return "redirect:/index.xhtml";
     }
 
@@ -228,16 +228,17 @@ public class EntryController extends BaseController {
     public String tableEntries(Principal principal, Model model, PagingOptions options, @RequestParam(value = "entries", required = false, defaultValue = "users") String entryFilter) {
 
         IPaginatedList<Entry> entries;
-        if (principal != null) {
-            if ("users".equals(entryFilter))
-                entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options, userDAO.idByUsername(principal.getName()));
-            else if ("following".equals(entryFilter))
-                entries = entryDAO.paginated("select.followed.entries", Entry.class, 10, options, userDAO.idByUsername(principal.getName()));
-            else
-                entries = entryDAO.paginated("select.cojboard.entries", Entry.class, 10, options, userDAO.idByUsername(principal.getName()));
-        } else {
+
+        if ("users".equals(entryFilter) && principal!= null)
+            entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options, userDAO.idByUsername(principal.getName()));
+        else if ("following".equals(entryFilter) && principal!= null)
+            entries = entryDAO.paginated("select.followed.entries", Entry.class, 10, options, userDAO.idByUsername(principal.getName()));
+        else if ("cojboard".equals(entryFilter) && principal!= null)
+            entries = entryDAO.paginated("select.cojboard.entries", Entry.class, 10, options, userDAO.idByUsername(principal.getName()));
+        else if ("users".equals(entryFilter))
             entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options, 0);
-        }
+        else
+            entries = entryDAO.paginated("select.cojboard.entries", Entry.class, 10, options, 0);
         model.addAttribute("entries", entries);
 
         return "tables/entries";

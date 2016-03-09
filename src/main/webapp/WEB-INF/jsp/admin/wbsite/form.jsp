@@ -21,7 +21,7 @@
     <label class="control-label col-xs-3"><spring:message
             code="fieldhdr.url" /></label>
     <div class="col-xs-8">
-        <form:input cssClass="form-control" path="url" size="50"/>
+        <form:input cssClass="form-control" path="url" placeholder="http://" size="50"/>
     </div>
     <div class="error col-xs-8 col-xs-offset-3">
         <span class="label label-danger"><form:errors path="url" /></span>

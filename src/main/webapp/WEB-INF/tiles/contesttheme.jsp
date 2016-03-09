@@ -16,6 +16,7 @@
 <meta name="keywords"
 	content="coj, caribbean, programming, contest, online, judge, problems" />
 <meta name="robots" content="index, about" />
+<meta http-equiv="X-Frame-Options" content="deny"/>
 <title>
 	<%
 		try {
@@ -66,11 +67,23 @@
 	src="<c:url value="/js/bootstrap-maxlength.min.js"/>"></script>
 <script type="text/javascript"
 	src="<c:url value="/js/jquery.form.js" />"></script>
+	<script type="text/javascript"
+			src="<c:url value="/js/jquery.numeric.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/script.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/coj.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/displayTables.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/countdown.js"/>"></script>
 </head>
+
+<c:set var="idpage">
+	<tiles:getAsString name="idpage"/>
+</c:set>
+<%
+	ServletContext context = request.getSession().getServletContext();
+	String idpage = (String) pageContext.getAttribute("idpage");
+	context.setAttribute("idpage", idpage);
+%>
+
 <body>
 	<div id="main">
 		<div class="sheet">
