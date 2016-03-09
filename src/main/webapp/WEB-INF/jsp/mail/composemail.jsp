@@ -1,6 +1,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="/WEB-INF/jsp/include/include.jsp" %>
-<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page buffer="16kb" autoFlush="true" %>
 
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
@@ -38,7 +38,7 @@
     </div>
 </c:if>
 
-<form:form method="POST" class="form-horizontal" commandName="mail" id="composeform">
+<form:form method="POST" class="form-horizontal" commandName="mail" id="composeform" acceptCharset="UTF-8">
 
     <div class="form-group">
         <label class="col-md-1 control-label"><spring:message code="fieldhdr.to"/>:</label>
@@ -55,10 +55,8 @@
                     <c:set var="tos" value="${tos};${item_to}"/>
                 </c:if>
             </c:forTokens>
-
-
-            <%--<form:input path="usernameTo" class="form-control"/>--%>
-                <input class="form-control" value="${tos}" name="usernameTo"/>
+                <%--<form:input path="usernameTo" class="form-control"/>--%>
+            <input class="form-control" value="${tos}" name="usernameTo"/>
         </div>
 
         <div class="col-xs-8 col-xs-offset-1">
@@ -79,8 +77,9 @@
 
     <div class="form-group">
 
-        <div class="col-md-10  col-md-offset-1"><form:textarea path="content" rows="15" id="code"
-                                                               cssClass="des"/></div>
+        <div class="col-md-10  col-md-offset-1">
+            <form:textarea path="content" rows="15" id="code" cssClass="des"/>
+        </div>
     </div>
 
     <div class="col-md-offset-1"><span class="label label-danger"><form:errors
@@ -90,12 +89,13 @@
         <input type="reset" class="btn btn-primary" value="<spring:message code="button.reset" />"/>
         <input type="button" class="btn btn-primary" value="<spring:message code="button.savedraft" />"
                onclick="saveDraft()"/>
-        <a href="<c:url value="/mail/inbox.xhtml"/>" class="mailheader btn btn-primary">&nbsp;<spring:message code="link.close"/></a>
+        <a href="<c:url value="/mail/inbox.xhtml"/>" class="mailheader btn btn-primary">&nbsp;<spring:message
+                code="link.close"/></a>
     </div>
 
     <br/>
 
-    <div id="notice" align="center" class="alert alert-info" style="display:  none">
+    <div id="notice" align="center" class="alert alert-info" style="display:none">
 
     </div>
 

@@ -16,12 +16,12 @@
             </div>
             <div class="col-xs-9 ">
                 <authz:authorize access="${!entry.adminEnabled}">
-                    <div class="text-justify">
+                    <div class="text-left">
                         <i><fmt:message key="entry.pending.approval"/></i>
                     </div>
                 </authz:authorize>
                 <authz:authorize access="${entry.adminEnabled}">
-                    <div class="text-justify">${entry.text}</div>
+                    <div class="text-left">${entry.text}</div>
                 </authz:authorize>
                 <div class="pull-right">
                  <%--   <authz:authorize access="isAuthenticated()">

@@ -96,15 +96,16 @@
 
             <div class="form-actions pull-right">
                 <input class="btn btn-primary" type="submit" name="submit"
-                       id="submit" value="<spring:message code="judgeregister.update.value"/>" />
+                       id="submit" value="<spring:message code="button.edit"/>" />
                 <a class="btn btn-primary" href="<c:url value="/admin/index.xhtml"/>"><spring:message
                         code="button.close"/></a>
             </div>
 
+
         </form:form>
     </div>
 </div>
-
+<div class="clearfix"></div>
 <script>
     $("[data-toggle='tooltip']").tooltip();
 </script>

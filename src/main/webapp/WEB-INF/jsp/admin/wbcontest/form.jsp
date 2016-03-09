@@ -24,7 +24,7 @@
     <label class="control-label col-xs-3"><spring:message
             code="fieldhdr.url" /></label>
     <div class="col-xs-8">
-        <form:input cssClass="form-control" path="url" size="50"/>
+        <form:input cssClass="form-control" placeholder="http://" path="url" size="50"/>
     </div>
     <div class="error col-xs-8 col-xs-offset-3">
         <span class="label label-danger"><form:errors path="url" /></span>
@@ -74,6 +74,8 @@
     <div class="error col-xs-8 col-xs-offset-3">
         <span class="label label-danger"><form:errors path="sid" /></span>
     </div>
+    <a><i data-toggle="tooltip" class="fa fa-asterisk"
+          title="<spring:message code="mandatory.field"/>"></i></a>
     </div>
 
 

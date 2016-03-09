@@ -9,6 +9,7 @@
 <div class="postcontent">
 	<h3>
 		<spring:message code="fieldhdr.statsjudgments" />
+	</h3>
 		<authz:authorize ifAllGranted="ROLE_USER">
 			<c:if test="${problem.solved == true}">
 				<div style="clear: both; float: right">
@@ -19,18 +20,17 @@
 						<c:otherwise>
 							<form action="lockproblem.xhtml" onsubmit="return checkLock()"
 								method="post">
-								<input type="hidden" value="${problem.pid}" name="pid" /> <input
-									type="submit"
-									value="<spring:message code="button.lockmysols"/>"> <a><i
-									data-toggle="tooltip" class="fa fa-info-circle"
-									title="<spring:message code="text.bestsolutions.2"/>"></i></a>
+								<a><i data-toggle="tooltip" class="fa fa-info-circle"
+								   title="<spring:message code="text.bestsolutions.2"/>"></i></a>
+								<input type="hidden" value="${problem.pid}" name="pid" />
+								<input type="submit" class="btn btn-primary" value="<spring:message code="button.lockmysols"/>">
 							</form>
 						</c:otherwise>
 					</c:choose>
 				</div>
 			</c:if>
 		</authz:authorize>
-	</h3>
+
 	<div class="row">
 		<div class="col-xs-12">
 			<table class="volume" border="1px">
@@ -82,11 +82,13 @@
 			</div>
 		</div>
 	</div>
+
 	<div id="display-table-container" data-reload-url="/tables/bestsolutions.xhtml"></div> 
 </div>
 
 <script type="text/javascript" src="<c:url value="/js/Chart.min.js"/>"></script>
 <script type="text/javascript">
+	$("[data-toggle='tooltip']").tooltip();
     function checkLock(){
         var answer = confirm ("<spring:message code="imfomsg.bestsolutions.3"/>");
         if(!answer)

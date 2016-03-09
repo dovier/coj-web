@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cu.uci.coj.model.UserClassificationStats;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -71,8 +72,12 @@ public class StatisticsController extends BaseController  {
     public String TrainingModuleStatistics(Model model) {
         model.addAttribute("stat", baseDAO.object("statistics.total.status", Stats.class));
         model.addAttribute("statistics", baseDAO.objects("training.statistics", Language.class));
+
+
         model.addAttribute("graph",createDataset("statistics.status"));
-        model.addAttribute("classif",userDAO.getTotalClassifications());
+
+        UserClassificationStats ucs = userDAO.getTotalClassifications();
+        model.addAttribute("classif",ucs);
         return "/24h/statistics";
     }
 
@@ -96,6 +101,9 @@ public class StatisticsController extends BaseController  {
         return "/contest/cstatistics";
     }
 
+    /*
+    * RF97 Ver estadísticas de concursos
+    * */
     @RequestMapping(value = "/contest/globalstatistics.xhtml", method = RequestMethod.GET)
     public String GlobalContestStatistics(Model model) {
         model.addAttribute("stat", baseDAO.object("statistics.global.total.status", Stats.class));

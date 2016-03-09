@@ -22,6 +22,13 @@
     <div id="display-table-container"
          data-reload-url="/admin/tables/wbsites.xhtml"></div>
 
+    <div class="coj_float_rigth">
+        <a href="/admin/index.xhtml" class="btn btn-primary">
+            <spring:message code="button.close" />
+        </a>
+    </div>
+    <div class="clearfix"></div>
+
 </div>
 
 <script>

@@ -11,7 +11,7 @@
 
             <!-- NAME OF VIEW -->
             <legend>
-                <spring:message code="page.general.admin.header"/>: <spring:message code="judge.createteams.title"/>
+                <h2><spring:message code="page.general.admin.header"/>: <spring:message code="judge.createteams.title"/></h2>
             </legend>
 
             <!-- USERNAME OF TEAM -->
@@ -22,8 +22,8 @@
                     </label>
 
                     <div class="col-xs-8">
-                        <form:input cssClass="form-control" path="username" size="30"
-                                    maxlength="70"/>
+                        <form:input cssClass="form-control" path="username"
+                                    maxlength="15"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="username"/></span>
@@ -50,6 +50,11 @@
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="nick"/></span>
                     </div>
+                    <a>
+                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                           title="<spring:message code="mandatory.field"/>">
+                        </i>
+                    </a>
                     <a>
                         <i data-toggle="tooltip" class="fa fa-info-circle"
                            title="<spring:message code="infomsg.2"/>"></i>
@@ -113,7 +118,9 @@
                         <span class="label label-danger"><form:errors path="confirmPassword"/></span>
                     </div>
                     <a>
-
+                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                           title="<spring:message code="mandatory.field"/>">
+                        </i>
                     </a>
                 </div>
             </authz:authorize>
@@ -158,6 +165,11 @@
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="country"/></span>
                     </div>
+                    <a>
+                        <i data-toggle="tooltip" class="fa fa-asterisk"
+                           title="<spring:message code="mandatory.field"/>">
+                        </i>
+                    </a>
                     <a>
                         <i data-toggle="tooltip" class="fa fa-info-circle"
                            title="<spring:message code="infomsg.5"/>"></i>

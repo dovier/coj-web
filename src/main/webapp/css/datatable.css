@@ -21,7 +21,7 @@ td, th {
 }
 
 .volume td, th {
-    line-height: 1.3em;
+    line-height: 1.5em;
     border: 1px solid #C0C0C0;
 }
 
@@ -172,7 +172,7 @@ tr:hover {
     border: none;
     text-align: center;
     font-size: 14px;
-    margin: 10px 0px 8px 0px;
+    margin: 25px 0px 10px 0px;
     background: #FFFFFF;
     padding: 40px;
     width: 100%;
@@ -378,10 +378,6 @@ img.school, img.country {
 .headrk {
     width: 50px;
     text-align: center;
-}
-
-.text-overflow {
-    word-wrap: break-word;
 }
 
 .headcountry {
@@ -624,4 +620,88 @@ table.ACM th a.linkheader {
 td.pages a, strong {
     margin-left: 20px;
     margin-right: 20px;
+}
+
+.headtable-1 {
+    width: 5%;
+}
+
+.headtable-2 {
+    width: 10%;
+}
+
+.headtable-3 {
+    width: 15%;
+}
+
+.headtable-4 {
+    width: 20%;
+}
+
+.headtable-5 {
+    width: 25%;
+}
+
+.headtable-6 {
+    width: 30%;
+}
+
+.headtable-7 {
+    width: 35%;
+}
+
+.headtable-8 {
+    width: 40%;
+}
+
+.headtable-9 {
+    width: 45%;
+}
+
+.headtable-10 {
+    width: 50%;
+}
+
+.headtable-11 {
+    width: 55%;
+}
+
+.headtable-12 {
+    width: 60%;
+}
+
+.headtable-13 {
+    width: 65%;
+}
+
+.headtable-14 {
+    width: 70%;
+}
+
+.headtable-15 {
+    width: 75%;
+}
+
+.headtable-16 {
+    width: 80%;
+}
+
+.headtable-17 {
+    width: 85%;
+}
+
+.headtable-18 {
+    width: 90%;
+}
+
+.headtable-19 {
+    width: 95%;
+}
+
+.headtable-20 {
+    width: 100%;
+}
+
+.toogle24h {
+    cursor: pointer;
 }

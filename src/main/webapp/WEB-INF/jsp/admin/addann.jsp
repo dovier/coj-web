@@ -22,7 +22,7 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
                         <spring:message code="fieldhdr.content" />
                     </label>                    
                     <div class="col-xs-8">
-                        <form:textarea path="content" />
+                        <form:textarea path="content"/>
                     </div>
                     <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="content" /></span>
@@ -36,12 +36,12 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
             </authz:authorize>
 
             <!-- ENABLED OF ANNOUNCEMENT -->
-            <div class="form-group">
+            <div class="form-group" style="margin-top: 100px;">
                 <label class="control-label col-xs-3">
                     <spring:message code="fieldhdr.enabled" />
                 </label>
                 <div class="col-xs-8">
-                    <form:checkbox path="enabled" />
+                    <form:checkbox path="enabled"/>
                 </div>    
                 <div class="error col-xs-8 col-xs-offset-3">
                         <span class="label label-danger"><form:errors path="enabled" /></span>
@@ -69,9 +69,9 @@ src="<c:url value="/js/WYSIWYG/source.js" />"></script>
 
             <div class="form-actions pull-right">
                 <input class="btn btn-primary" type="submit" name="submit"
-                       id="submit" value="<spring:message code="judge.add.submit.value"/>" /> <input
-                       class="btn btn-primary" type="reset" name="reset" id="reset"
-                       value="<spring:message code="judge.register.reset.value"/>" />
+                           id="submit" value="<spring:message code="judge.add.submit.value"/>" /> <input
+                           class="btn btn-primary" type="reset" name="reset" id="reset"
+                           value="<spring:message code="judge.register.reset.value"/>" />
                 <a href="/admin/listann.xhtml" class="btn btn-primary"><spring:message code="button.close" /></a>
             </div>
         </form:form>

@@ -11,13 +11,15 @@
                     <c:choose>
                         <c:when test="${entry.username=='COJboard'}">
                             <a href="<c:url value="/wboard/contests.xhtml"/>">
-                                <img class="avatar img-responsive"
+                                <img alt="avatar" class="avatar img-responsive"
+                                     title = "${entry.username}" data-toggle="tooltip"
                                      src="<c:url value="/images/avatars/${entry.username}"/>"/>
                             </a>
                         </c:when>
                         <c:otherwise>
                             <a href="<c:url value="/user/useraccount.xhtml?username=${entry.username}"/>">
-                                <img class="avatar img-responsive"
+                                <img alt="avatar" class="avatar img-responsive"
+                                     title = "${entry.username}" data-toggle="tooltip"
                                      src="<c:url value="/images/avatars/${entry.username}"/>"/>
                             </a>
                         </c:otherwise>
@@ -44,12 +46,12 @@
                     </small>
                 </div>
                 <authz:authorize access="${!entry.adminEnabled}">
-                    <div id="entry${entry.id}" class="text-justify">
+                    <div id="entry${entry.id}" class="text-left">
                         <i><fmt:message key="entry.pending.approval"/></i>
                     </div>
                 </authz:authorize>
                 <authz:authorize access="${entry.adminEnabled}">
-                    <div id="entry${entry.id}" class="text-justify text-overflow">${entry.text}</div>
+                    <div id="entry${entry.id}" class="text-left text-overflow">${entry.text}</div>
                     <div id="actions${entry.id}" class="pull-right">
                         <authz:authorize access="hasRole('ROLE_ADMIN')">
                             <a href="javascript:disableEntry(${entry.id});"

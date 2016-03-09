@@ -13,6 +13,7 @@
         <meta name="description" content="Caribbean Online Judge (COJ)" />
         <meta name="keywords" content="coj, caribbean, programming, contest, online, judge, problems" />
         <meta name="robots" content="index, about" />
+        <meta http-equiv="X-Frame-Options" content="deny"/>
         <title>
             <%
                 try {

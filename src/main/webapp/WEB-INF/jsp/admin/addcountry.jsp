@@ -15,15 +15,15 @@
             <!-- NAME OF COUNTRY -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
-                    <label class="control-label col-xs-3">
+                    <label class="control-label col-xs-4">
                         <spring:message code="page.addcountry.name"/>
                     </label>
 
-                    <div class="col-xs-8">
+                    <div class="col-xs-7">
                         <form:input cssClass="form-control" path="name" size="30"
                                     maxlength="70"/>
                     </div>
-                    <div class="error col-xs-8 col-xs-offset-3">
+                    <div class="error col-xs-7 col-xs-offset-4">
                         <span class="label label-danger"><form:errors path="name"/></span>
                     </div>
                     <a>
@@ -37,15 +37,15 @@
             <!-- ACRONYM OF COUNTRY -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
-                    <label class="control-label col-xs-3">
+                    <label class="control-label col-xs-4">
                         <spring:message code="page.addcountry.zip"/>
                     </label>
 
-                    <div class="col-xs-8">
+                    <div class="col-xs-7">
                         <form:input cssClass="form-control" path="zip" size="30"
-                                    maxlength="15"/>
+                                    maxlength="3"/>
                     </div>
-                    <div class="error col-xs-8 col-xs-offset-3">
+                    <div class="error col-xs-7 col-xs-offset-4">
                         <span class="label label-danger"><form:errors path="zip"/></span>
                     </div>
                     <a>
@@ -60,15 +60,15 @@
             <!-- TWO LETTER OF COUNTRY -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
-                    <label class="control-label col-xs-3">
+                    <label class="control-label col-xs-4">
                         <spring:message code="page.addcountry.twozip"/>
                     </label>
 
-                    <div class="col-xs-8">
+                    <div class="col-xs-7">
                         <form:input cssClass="form-control" path="zip_two" size="30"
                                     maxlength="2"/>
                     </div>
-                    <div class="error col-xs-8 col-xs-offset-3">
+                    <div class="error col-xs-7 col-xs-offset-4">
                         <span class="label label-danger"><form:errors path="zip_two"/></span>
                     </div>
                     <a>
@@ -82,15 +82,15 @@
             <!-- WEB OF COUNTRY -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">
-                    <label class="control-label col-xs-3">
+                    <label class="control-label col-xs-4">
                         <spring:message code="page.addcountry.website"/>
                     </label>
 
-                    <div class="col-xs-8">
+                    <div class="col-xs-7">
                         <form:input cssClass="form-control" path="website" size="30"
-                                    maxlength="70"/>
+                                    maxlength="70" placeholder="http://"/>
                     </div>
-                    <div class="error col-xs-8 col-xs-offset-3">
+                    <div class="error col-xs-7 col-xs-offset-4">
                         <span class="label label-danger"><form:errors path="website"/></span>
                     </div>
                     <a>

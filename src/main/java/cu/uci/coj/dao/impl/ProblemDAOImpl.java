@@ -400,7 +400,10 @@ public class ProblemDAOImpl extends BaseDAOImpl implements ProblemDAO {
 
 	@Override
 	public int countProblemWithoutClassifications() {
-		return integer("count.problems.12");
+		//Se debe mejorar la consulta para que devuelva un count (int)
+		List<Problem> problems = objects("count.problems.13", Problem.class);
+		return problems.size();
+		/*return integer("count.problems.12");*/
 	}
 
 	@Transactional(readOnly = true)

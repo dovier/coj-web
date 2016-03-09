@@ -114,4 +114,17 @@
     <error-code>404</error-code>
     <location>/error/error.xhtml?error=2</location>
   </error-page>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name><strong>restricted methods</strong></web-resource-name>
+      <url-pattern>/*</url-pattern>
+      <http-method>PUT</http-method>
+      <http-method>DELETE</http-method>
+      <http-method>OPTIONS</http-method>
+      <http-method>TRACE</http-method>
+    </web-resource-collection>
+    <auth-constraint />
+  </security-constraint>
+
 </web-app>

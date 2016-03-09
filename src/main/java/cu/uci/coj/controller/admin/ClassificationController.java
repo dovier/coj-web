@@ -33,6 +33,7 @@ public class ClassificationController extends BaseController {
     @Resource
     private ProblemDAO problemDAO;
 
+    /*RF34 Listar etiquetas para clasificar problema*/
     @RequestMapping(value = "/manageclassifications.xhtml", method = RequestMethod.GET)
     public String allClassifications(Model model, @RequestParam(required = false, value = "username") String filter_user, @RequestParam(required = false, value = "pid") Integer pid,
                                      @RequestParam(required = false, value = "status") String status, @RequestParam(required = false, value = "planguage") String language, PagingOptions options) {
@@ -49,13 +50,14 @@ public class ClassificationController extends BaseController {
         return "/admin/tables/manageclassifications";
     }
 
+    /* RF35 Adicionar etiquetas para clasificar problema*/
     @RequestMapping(value = "/addclassifications.xhtml", method = RequestMethod.POST)
     public String addClassifications(Model model, @RequestParam(required = false, value = "username") String filter_user, @RequestParam(required = false, value = "pid") Integer pid,
                                      @RequestParam(required = false, value = "status") String status, @RequestParam(required = false, value = "planguage") String language, PagingOptions options,
                                      @RequestParam(required = true, value = "name") String name, RedirectAttributes redirectAttributes) {
         String newname = name.replace(" ", "");
 
-        if (newname.length() == 0){
+        if (newname.length() == 0) {
             redirectAttributes.addFlashAttribute("message", Notification.getNotSuccesfullCreate());
             redirectAttributes.addFlashAttribute("errorcreate", true);
             return "redirect:/admin/manageclassifications.xhtml";
@@ -70,15 +72,26 @@ public class ClassificationController extends BaseController {
         return "redirect:/admin/manageclassifications.xhtml";
     }
 
+    /*RF36 Editar etiqueta para clasificar problema*/
     @RequestMapping(value = "/updateclassifications.xhtml", method = RequestMethod.GET)
     public String updateClassifications(Model model, @RequestParam(required = true, value = "classid") Integer classid, @RequestParam(required = true, value = "name") String name,
                                         RedirectAttributes redirectAttributes) {
+
+        String newname = name.replace(" ", "");
+
+        if (newname.length() == 0) {
+            redirectAttributes.addFlashAttribute("message", Notification.getNotSuccesfullUpdate());
+            redirectAttributes.addFlashAttribute("errorcreate", true);
+            return "redirect:/admin/manageclassifications.xhtml";
+        }
+
         problemDAO.updateClassification(classid, name);
 
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return "redirect:/admin/manageclassifications.xhtml";
     }
 
+    /*RF37 Eliminar etiqueta para clasificar problema*/
     @RequestMapping(value = "/deleteclassifications.xhtml", method = RequestMethod.GET)
     public String deleteClassifications(Model model, @RequestParam(required = true, value = "classid") Integer classid, RedirectAttributes redirectAttributes) {
         problemDAO.deleteClassification(classid);
@@ -105,6 +118,7 @@ public class ClassificationController extends BaseController {
                     model.addAttribute("errors", errors);
                 }
             }
+
             List<ProblemClassification> classifications = problemDAO.getClassifications();
             if (pid != null) {
                 List<ProblemClassification> problemClassifications = problemDAO.getProblemClassifications(pid);
@@ -134,19 +148,18 @@ public class ClassificationController extends BaseController {
     }
 
     @RequestMapping(value = "/errorRedirectPage.xhtml", method = RequestMethod.GET)
-    public String errorRedirectPage(HttpServletRequest request, Model model)
-    {
+    public String errorRedirectPage(HttpServletRequest request, Model model) {
         model.addAttribute("notint", true);
         return "/admin/manageproblemclassification";
     }
 
     @RequestMapping(value = "/classify.xhtml", method = RequestMethod.GET)
-    public String clasificateG(Model model){
+    public String clasificateG(Model model) {
         return "/admin/manageproblemclassification";
     }
 
-    @RequestMapping(value = "/classify.xhtml", params={"submit"}, method = RequestMethod.GET)
-    public String clasificateGET(Model model){
+    @RequestMapping(value = "/classify.xhtml", params = {"submit"}, method = RequestMethod.GET)
+    public String clasificateGET(Model model) {
         return "/admin/manageproblemclassification";
     }
 
@@ -159,7 +172,7 @@ public class ClassificationController extends BaseController {
 
         try {
             problemDAO.getProblemByPid(locale.getLanguage(), pid);
-        } catch (Exception e){
+        } catch (Exception e) {
             model.addAttribute("problems", problemDAO.findAllProblemsWithoutClassification(locale.getLanguage(), options));
             model.addAttribute("notid", !eid);
             return "/admin/manageproblemclassification";
@@ -205,7 +218,9 @@ public class ClassificationController extends BaseController {
         }
         model.addAttribute("classifications", classifications);
 
-        model.addAttribute("problems", problemDAO.findAllProblemsWithoutClassification(locale.getLanguage(), options));
+        IPaginatedList<Problem> p = problemDAO.findAllProblemsWithoutClassification(locale.getLanguage(), options);
+
+        model.addAttribute("problems", p);
         return "/admin/tables/manageproblemclassification";
     }
 
@@ -227,6 +242,16 @@ public class ClassificationController extends BaseController {
                     model.addAttribute("errors", errors);
                 }
             }
+
+            //Chequear si existe id del problema
+            int count = problemDAO.integer("select.count.problem.classifications", pid);
+
+            if (count <= 0){
+                //No existe el problema
+                model.addAttribute("notid", true);
+                return "/admin/manageproblemclassification";
+            }
+
             List<ProblemClassification> classifications = problemDAO.getClassifications();
             if (pid != null) {
                 List<ProblemClassification> problemClassifications = problemDAO.getProblemClassifications(pid);

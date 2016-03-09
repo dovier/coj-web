@@ -149,7 +149,14 @@ public class ProblemController extends BaseController {
     }
 
     @RequestMapping(value = "/manageproblem.xhtml", method = RequestMethod.GET)
-    public String manageProblem(Model model, Locale locale, Principal principal, SecurityContextHolderAwareRequestWrapper requestWrapper, @RequestParam(required = false, value = "pid") Integer pid) {
+    public String manageProblem(Model model, Locale locale, Principal principal, SecurityContextHolderAwareRequestWrapper requestWrapper,
+                                @RequestParam(required = false, value = "pid") Integer pid,
+                                @RequestParam(required = false, value = "norm") Integer norm,
+                                RedirectAttributes redirectAttributes) {
+        if (norm != null) {
+            redirectAttributes.addFlashAttribute("message", Notification.getNormalizeProblem());
+            return "redirect:/admin/adminproblems.xhtml";
+        }
         Integer uid = contestDAO.integer("select.uid.by.username", getUsername(principal));
 
         final List<Language> languages = utilDAO.getEnabledProgramingLanguages();
@@ -196,10 +203,10 @@ public class ProblemController extends BaseController {
 
         // adicionar. el resto es modificar.
         if (problem.getPid() == null || problem.getPid() == 0) {
-            String data  = addProblem(model, principal, request, problem, result);
+            String data = addProblem(model, principal, request, problem, result);
             //chequeo que haya insertado correctamente y valla a redireccionar para el listar para mostrar los flash
-            if(data.equals("redirect:/admin/adminproblems.xhtml")){
-               redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());              
+            if (data.equals("redirect:/admin/adminproblems.xhtml")) {
+                redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullCreate());
             }
             return data;
         }
@@ -259,13 +266,13 @@ public class ProblemController extends BaseController {
 
         problemDAO.log("editing problem " + problem.getPid(), getUsername(principal));
         //return "redirect:/24h/problem.xhtml?pid=" + problem.getPid();
-        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());   
+        redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
         return "redirect:/admin/adminproblems.xhtml";
     }
 
     public void handleFiles(Problem problem, HttpServletRequest request) {
-  //      Assert.state(request instanceof MultipartHttpServletRequest, "request !instanceof MultipartHttpServletRequest");
-       if (!( request instanceof MultipartHttpServletRequest))return;
+        //      Assert.state(request instanceof MultipartHttpServletRequest, "request !instanceof MultipartHttpServletRequest");
+        if (!(request instanceof MultipartHttpServletRequest)) return;
         final MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
         final Map<String, MultipartFile> files = multiRequest.getFileMap();
 
@@ -315,7 +322,7 @@ public class ProblemController extends BaseController {
 
     }
 
-    @RequestMapping(value = "/normalizeproblem.xhtml", method = RequestMethod.GET)
+    @RequestMapping(value = "/manageproblemI18N.xhtml", method = RequestMethod.GET)
     public String manageProblemI18N(Model model, Locale locale, Principal principal, SecurityContextHolderAwareRequestWrapper requestWrapper, @RequestParam("pid") Integer pid) {
         Integer uid = problemDAO.integer("select.uid.by.username", getUsername(principal));
 
@@ -357,36 +364,29 @@ public class ProblemController extends BaseController {
         utils.removeDatasets(pid);
     }
 
-    @RequestMapping(produces = "application/json", value = "/normalizeproblem.json", method = RequestMethod.GET, headers = {"Accept=application/json"})
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void normalizeproblem(@RequestParam(value = "pid") int pid) {
-
-        utils.normalizeProblem(pid);
-    }
-
     @RequestMapping(produces = "application/json", value = "/removedataset.json", method = RequestMethod.GET, headers = {"Accept=application/json"})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteDataset(@RequestParam(value = "pid") int pid, @RequestParam(value = "dataset") String dataset) {
         utils.removeDataset(pid, dataset);
     }
-    
-     private Map<String, double[]> getMultipliers(){
+
+    private Map<String, double[]> getMultipliers() {
         //TODO: Refactorizar esto, ponerlo en configuraciones o como sea, pero no así
         Map<String, double[]> multipliers = new HashMap<>();
-        
-        String[] language = {"Text","C++","Java","C","C#","Perl","Python","Pascal","Ruby","PHP","Bash","C++11","Haskell","Prolog","JavaScript-NodeJS","VBasic"};
-        double[] memoryMult = {1,1  ,60,1,20,1,2,1,2,5,1,1,1,25,15,20};
-        double[] caseTimeMult = {3,1,3,1 ,2,3 ,6,3,3,6,3,1,3,3,6,2};
-        double[] totalTimeMult = {3,1,3,1 ,2,3 ,6,3,3,6,3,1,3,3,6,2};
-        double[] sourceCodeLenghtMult = {1,1,1,1 ,1,1 ,1,1,1,1,1,1,1,1,1,1};
-        
+
+        String[] language = {"Text", "C++", "Java", "C", "C#", "Perl", "Python", "Pascal", "Ruby", "PHP", "Bash", "C++11", "Haskell", "Prolog", "JavaScript-NodeJS", "VBasic"};
+        double[] memoryMult = {1, 1, 60, 1, 20, 1, 2, 1, 2, 5, 1, 1, 1, 25, 15, 20};
+        double[] caseTimeMult = {3, 1, 3, 1, 2, 3, 6, 3, 3, 6, 3, 1, 3, 3, 6, 2};
+        double[] totalTimeMult = {3, 1, 3, 1, 2, 3, 6, 3, 3, 6, 3, 1, 3, 3, 6, 2};
+        double[] sourceCodeLenghtMult = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+
         for (int i = 0; i < language.length; i++) {
             double[] limits = new double[4];
             limits[0] = memoryMult[i];
             limits[1] = caseTimeMult[i];
             limits[2] = totalTimeMult[i];
             limits[3] = sourceCodeLenghtMult[i];
-            
+
             multipliers.put(language[i], limits);
         }
         return multipliers;

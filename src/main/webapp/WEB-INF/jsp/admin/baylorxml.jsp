@@ -47,6 +47,12 @@
             <i class="fa fa-check"></i><spring:message code="${message}"/>
         </div>
     </c:if>
+    <c:if test="${messagerror != null}">
+        <div class="alert alert-danger alert-dismissable fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <i class="fa fa-warning"></i><spring:message code="${messagerror}"/>
+        </div>
+    </c:if>
 
     <form:form method="post" enctype="multipart/form-data"
                commandName="contest" cssClass="form-horizontal">
@@ -59,7 +65,7 @@
 
             <div class="col-xs-5">
                 <input type="file" id="file" data-show-upload="false" data-show-caption="true"
-                       name="siteFile" class="file"/>
+                       name="xml" class="file"/>
             </div>
             <div class="error col-xs-8 col-xs-offset-4">
                 <span class="label label-danger"><form:errors path="xml"/></span>
@@ -71,7 +77,7 @@
         </div>
         <div class="form-actions pull-right">
             <input type="submit" name="but" class="btn btn-primary"
-                   value="<spring:message code="button.update"/>"/>
+                   value="<spring:message code="button.edit"/>"/>
             <a class="btn btn-primary" href="<c:url value="/admin/admincontests.xhtml"/>"><spring:message
                     code="button.close"/></a>
         </div>
@@ -83,8 +89,7 @@
     $("#file").fileinput({
         maxFileSize: 51200,
         msgProgress: 'Loading {percent}%',
-        previewClass: 'file_preview',
-        previewFileType: "file",
+       // showPreview: false,
         browseClass: "btn btn-primary",
         browseLabel: "<spring:message code="message.filename"/>",
         browseIcon: '<i class="fa fa-file-archive-o"></i>&nbsp;',
@@ -92,7 +97,9 @@
         removeLabel: "<spring:message code="tablehdr.delete"/>",
         removeIcon: '<i class="fa fa-trash"></i>',
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>',
-        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>"
+        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
+        allowedFileExtensions:['.xml'],
+        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'
     });
 
     $("[data-toggle='tooltip']").tooltip();

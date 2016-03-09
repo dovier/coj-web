@@ -1,20 +1,14 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>
-
-<%--property="site"--%>
 <display:table id="site" name="sites" class="volume" requestURI=""
 	defaultsort="0" defaultorder="ascending">
-	<display:column   titleKey="tablehdr.site" >
-		<a href="${site.url}">${site.site}</a>
-	</display:column>
+	<display:column property="site" titleKey="tablehdr.site" />
 	<display:column titleKey="tablehdr.enabled">
 		<c:choose>
 			<c:when test="${site.enabled == true}">
 				<button id="e${site.sid}" class="btn btn-success enable mybutton"
-					type="button"><fmt:message key="page.general.yes" />
-
-				</button>
+					type="button"><fmt:message key="page.general.yes" /></button>
 			</c:when>
 			<c:otherwise>
 				<button id="e${site.sid}" class="btn btn-danger enable mybutton"
@@ -25,29 +19,15 @@
 	<display:column titleKey="tablehdr.actions">
 		<c:choose>
 			<c:when test="${site.enabled == true}">
-				<%--<button id="p${site.sid}" class="btn btn-primary parse mybutton"
+				<button id="p${site.sid}" class="btn btn-primary parse mybutton"
 					type="button">
 					<fmt:message key="tablehdr.parse.uppercase" />
-				</button>--%>
-				<%--<button id="e${site.sid}" class="btn btn-success enable mybutton"
-						type="button"><fmt:message key="page.general.yes" /></button>--%>
-				<button id="p${site.sid}" class="btn btn-link parse mybutton" title="<fmt:message key="tablehdr.parse.uppercase" />" data-toggle="tooltip">
-					<i class="fa fa-search">
-
-					</i>
 				</button>
 			</c:when>
 			<c:otherwise>
-				<%--<button id="p${site.sid}"
+				<button id="p${site.sid}"
 					class="btn btn-primary disabled parse mybutton" type="button">
 					<fmt:message key="tablehdr.parse.uppercase" />
-				</button>--%>
-				<%--<button id="e${site.sid}" class="btn btn-danger enable mybutton"
-						type="button"><fmt:message key="page.general.no" /></button>--%>
-				<button id="p${site.sid}" class="btn btn-link disabled parse mybutton" title="<fmt:message key="tablehdr.parse.uppercase" />" data-toggle="tooltip">
-					<i class="fa fa-search">
-
-					</i>
 				</button>
 			</c:otherwise>
 		</c:choose>
@@ -59,10 +39,6 @@
 			src="<c:url value="/images/ajax-loader-6.gif"/>" /></span>
 	</display:column>
 </display:table>
-
-<script>
-	$("[data-toggle='tooltip']").tooltip();
-</script>
 
 <script>
 	$(document).ready(function() {

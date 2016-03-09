@@ -5,7 +5,7 @@
 <h2 class="postheader" style="clear: both">
 	<a class="linkheader"
 		href="<c:url value="contestview.xhtml?cid=${contest.cid}"/>"
-		title="Go to Contest">${contest.name}</a> <br />
+		>${contest.name}</a> <br />
 	<spring:message code="pagehdr.contest.awards" />
 </h2>
 <c:if test="${not empty users}">
@@ -15,7 +15,7 @@
 				<div class="panel panel-primary">
 					<div class="panel-body">
 						<img src="/images/<c:url value="${user.medal}"/>"
-							alt="${user.rank}"
+							alt="${user.rank}" data-toggle="tooltip"
 							title="<spring:message code="titval.${user.medal}"/>" /> <a
 							href="<c:url value="/contest/cuseraccount.xhtml?uid=${user.username}&cid=${cid}" />">${user.nick}</a>
 					</div>
@@ -32,7 +32,7 @@
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-xs-12">
-							<img src="/images/<c:url value="fast.png"/>" title="<spring:message code="contest.award.fast" />">
+							<img src="/images/<c:url value="fast.png"/>" title="<spring:message code="contest.award.fast" />" data-toggle="tooltip">
 							
 							<a
 								href="<c:url value="/contest/cuseraccount.xhtml?uid=${fastAward.uid}&cid=${fastAward.cid}" />">${fastAward.nick}</a>
@@ -51,7 +51,7 @@
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-xs-12">
-							<img src="/images/<c:url value="exclusive.png"/>"
+							<img src="/images/<c:url value="exclusive.png"/>" data-toggle="tooltip"
 							title="<spring:message code="contest.award.exclusive" />" >
 							<a
 								href="<c:url value="/contest/cuseraccount.xhtml?uid=${exclusiveAward.uid}&cid=${exclusiveAward.cid}" />">${exclusiveAward.nick}</a>
@@ -70,7 +70,7 @@
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-xs-12">
-							<img src="/images/<c:url value="accurate.png"/>"
+							<img src="/images/<c:url value="accurate.png"/>" data-toggle="tooltip"
 							title="<spring:message code="contest.award.accurate" />" >
 							<a
 								href="<c:url value="/contest/cuseraccount.xhtml?uid=${accurateAward.uid}&cid=${accurateAward.cid}" />">${accurateAward.nick}</a>

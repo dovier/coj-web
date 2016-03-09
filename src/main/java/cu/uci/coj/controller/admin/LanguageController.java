@@ -8,6 +8,7 @@ import cu.uci.coj.validator.languageValidator;
 import cu.uci.coj.utils.Notification;
 
 import java.security.Principal;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -22,7 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(value = "/admin")
-public class LanguageController  extends BaseController {
+public class LanguageController extends BaseController {
 
     @Resource
     private BaseDAO baseDAO;
@@ -36,35 +37,57 @@ public class LanguageController  extends BaseController {
     }
 
     @RequestMapping(value = "/managelanguage.xhtml", method = RequestMethod.GET)
-    public String manageLanguages(Model model, @RequestParam(value="lid",required=false) Integer lid) {
-    	Language language = null;
-    	if (lid == null)
-    		language = new Language();
-    	else {
-         language = baseDAO.object("load.language", Language.class, lid);
-    	}
+    public String manageLanguages(Model model, @RequestParam(value = "lid", required = false) Integer lid) {
+        Language language = null;
+        if (lid == null)
+            language = new Language();
+        else {
+            language = baseDAO.object("load.language", Language.class, lid);
+        }
         model.addAttribute(language);
         return "/admin/managelanguage";
     }
 
     @RequestMapping(value = "/managelanguage.xhtml", method = RequestMethod.POST)
     public String manageLanguages(Model model, Principal principal, Language language, BindingResult result, RedirectAttributes redirectAttributes) {
+
         validator.validate(language, result);
         if (result.hasErrors()) {
             model.addAttribute(language);
             return "/admin/managelanguage";
         }
-        
+
         boolean update = false;
-        
-        if(language.getLid() > 1 ){
+
+        if (language.getLid() > 1) {
             update = true;
         }
-        baseDAO.dml("upsert.language",language.getLanguage(),language.getKey(),language.getName_bin(),language.isEnabled(),language.getDescripcion(),language.getLid(),language.getLanguage(),language.getKey(),language.getName_bin(),language.isEnabled(),language.getDescripcion());
-      
-       redirectAttributes.addFlashAttribute("message",update ? Notification.getSuccesfullUpdate(): Notification.getSuccesfullCreate());
-      
-        
+
+        boolean existeLanguage = false;
+
+        int count = baseDAO.integer("count.language.name", language.getLanguage());
+        if (count > 0)
+            existeLanguage = true;
+        else {
+            String nuevoLanguageStr = language.getLanguage().replace(" ", "");
+            List<Language> languages = baseDAO.objects("get.all.languages", Language.class);
+            for (int i = 0; i < languages.size() && !existeLanguage; i++) {
+                Language l = languages.get(i);
+                String languageStr = l.getLanguage().replace(" ", "");
+                if (languageStr.equals(nuevoLanguageStr))
+                    existeLanguage = true;
+            }
+        }
+
+        if (update || !existeLanguage)
+            baseDAO.dml("upsert.language", language.getLanguage(), language.getKey(), language.getName_bin(), language.isEnabled(), language.getDescripcion(), language.getLid(), language.getLanguage(), language.getKey(), language.getName_bin(), language.isEnabled(), language.getDescripcion());
+        else {
+            result.rejectValue("language", "language.error.exist");
+            model.addAttribute(language);
+            return "/admin/managelanguage";
+        }
+
+        redirectAttributes.addFlashAttribute("message", update ? Notification.getSuccesfullUpdate() : Notification.getSuccesfullCreate());
         return "redirect:/admin/programminglanguages.xhtml";
     }
 }

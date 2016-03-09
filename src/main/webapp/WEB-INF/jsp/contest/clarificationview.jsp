@@ -17,9 +17,9 @@
                     </authz:authorize>
                 </c:if>
             <a href="<c:url value="myclarifications.xhtml?cid=${contest.cid}"/>"><i
-										class="text-danger fa fa-close"></i>&nbsp;<spring:message code="link.close"/></a>
+										class="fa fa-close"></i>&nbsp;<spring:message code="link.close"/></a>
             <c:if test="${clarification.isread == false}">
-                <a href="<c:url value="markanswered.xhtml?cid=${contest.cid}&ccid=${clarification.id}"/>"><i class="green fa fa-check-circle"></i>&nbsp;<spring:message code="link.markanswered"/></a>
+                <a href="<c:url value="markanswered.xhtml?cid=${contest.cid}&ccid=${clarification.id}"/>"><i class="fa fa-check-circle"></i>&nbsp;<spring:message code="link.markanswered"/></a>
                 </c:if>
             <fieldset>
                 <table class="msgheader">

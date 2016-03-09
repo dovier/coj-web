@@ -29,10 +29,6 @@ public class sendMailValidator implements Validator {
     public void validate(Object o, Errors errors) {
         Mail mail = (Mail) o;
         try {
-            if((mail.getTitle() == null || mail.getTitle().length() == 0) && (mail.getContent() == null || mail.getContent().length() == 0))
-            {
-                errors.rejectValue("title", "errormsg.39");
-            }
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usernameTo", "errormsg.40");
             if (!errors.hasFieldErrors("usernameTo")) {
                 String[] to = mail.getUsernameTo().split(";");

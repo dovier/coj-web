@@ -54,6 +54,9 @@ public class ContestScoreboardsController extends BaseController {
 	@Resource
 	private UserDAO userDAO;
 
+	/*
+    * RF98 Ver posiciones del concurso
+    * */
 	@RequestMapping(value = "/contest/contestsrank.xhtml", method = RequestMethod.GET)
 	public String UsersRank(Model model, HttpServletRequest request, PagingOptions options, @RequestParam(required = false, value = "pattern") String pattern,
 			@RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
@@ -62,9 +65,15 @@ public class ContestScoreboardsController extends BaseController {
 		return "/contest/contestsrank";
 	}
 
+	/*
+    * RF98 Ver posiciones del concurso
+    * */
 	@RequestMapping(value = "/tables/contestsrank.xhtml", method = RequestMethod.GET)
 	public String tablesUsersRank(Model model, HttpServletRequest request, PagingOptions options, @RequestParam(required = false, value = "pattern") String pattern,
 			@RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
+		if (pattern!=null) {
+			pattern = pattern.replace(" ", "");
+		}
 		int found = contestDAO.countContestGeneralScoreboard(pattern);
 		if (found != 0) {
 			IPaginatedList<User> users = contestDAO.getContestGeneralScoreboard(found, pattern, options);
@@ -102,6 +111,9 @@ public class ContestScoreboardsController extends BaseController {
 		return "/tables/cscoreboard4";
 	}
 
+	/*
+   * RF20 Repuntear concurso
+   * */
 	@RequestMapping(value = "/contest/cscoreboard.xhtml", method = RequestMethod.GET)
 	public String ContestScoreboard(Locale locale, SecurityContextHolderAwareRequestWrapper requestWrapper, Model model, Principal principal, PagingOptions options, HttpServletRequest request,
 			@RequestParam("cid") Integer cid, @RequestParam(required = false, value = "selGroup") String selGroup, @RequestParam(required = false, value = "ungroup") String ungroup,

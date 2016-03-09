@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.displaytag.pagination.PaginatedList;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +24,7 @@ import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.model.Translation;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller("adminTranslationController")
 @RequestMapping(value="/admin")
@@ -33,12 +37,34 @@ public class TranslationController extends BaseController {
 	String manageTranslations(Model model) {
 		return "/admin/managetranslations";
 	}
+
+	@RequestMapping(value = "/managetranslations.xhtml", method = RequestMethod.POST)
+	String managePostTranslations(Model model, PagingOptions options, @RequestParam(required=false) String username, @RequestParam(required=false,defaultValue="0",value="pid") Integer pid,
+								  @RequestParam(required=false) String locale){
+
+		if (pid == 0) pid = null;
+
+		IPaginatedList<Translation> translations = problemDAO.getTranslationList(username, pid, locale, options);
+		model.addAttribute("translations", translations);
+
+		return "/admin/managetranslations";
+	}
 	
 	@RequestMapping(value="/tables/managetranslations.xhtml", method=RequestMethod.GET)
 	String manageTranslationsTable(Model model, PagingOptions options, @RequestParam(required=false) String username, @RequestParam(required=false,defaultValue="0",value="pid") Integer pid,
 			@RequestParam(required=false) String locale) {
+
 		if (pid == 0) pid = null;
-		IPaginatedList<Translation> translations = problemDAO.getTranslationList(username, pid, locale, options);	
+
+
+
+		IPaginatedList<Translation> translations = problemDAO.getTranslationList(username, pid, locale, options);
+
+
+		if (translations.getList().size() <= 0 && !problemDAO.exists(pid)){
+			model.addAttribute("notid", true);
+		}
+
 		model.addAttribute("translations", translations);
 		
 		return "/admin/tables/managetranslations";
@@ -70,5 +96,18 @@ public class TranslationController extends BaseController {
 		problemDAO.deleteTranslation(id);
                 redirectAttributes.addFlashAttribute("message", Notification.getRechazedTranslate());
 		return "redirect:/admin/managetranslations.xhtml";
+	}
+
+	@ExceptionHandler(TypeMismatchException.class)
+	public RedirectView handleIOExceptionN(TypeMismatchException e, HttpServletRequest request) {
+		RedirectView redirectView = new RedirectView("/admin/errortranslationRedirectPage.xhtml");
+		redirectView.addStaticAttribute("errorMessage", e.getMessage());
+		return redirectView;
+	}
+
+	@RequestMapping(value = "/errortranslationRedirectPage.xhtml", method = RequestMethod.GET)
+	public String errorRedirectPageN(HttpServletRequest request, Model model) {
+		model.addAttribute("notint", true);
+		return "/admin/tables/managetranslations";
 	}
 }

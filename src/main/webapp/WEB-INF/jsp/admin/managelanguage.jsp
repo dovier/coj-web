@@ -14,19 +14,19 @@
             </legend>
 
             <!-- ID OF LANGUAGE -->
-<%--
-            <div class="form-group">
-                <label class="control-label col-xs-3"><spring:message code="tablehdr.id"/></label>
+            <%--
+                        <div class="form-group">
+                            <label class="control-label col-xs-3"><spring:message code="tablehdr.id"/></label>
 
-                <div class="col-xs-8">
-                    <form:input cssClass="form-control" path="lid" size="30"
-                                maxlength="30" readonly="true"/>
-                </div>
-                <div class="error col-xs-8 col-xs-offset-3">
-                    <span class="label label-danger"><form:errors path="lid"/></span>
-                </div>
+                            <div class="col-xs-8">
+                                <form:input cssClass="form-control" path="lid" size="30"
+                                            maxlength="30" readonly="true"/>
+                            </div>
+                            <div class="error col-xs-8 col-xs-offset-3">
+                                <span class="label label-danger"><form:errors path="lid"/></span>
+                            </div>
 
-            </div>--%>
+                        </div>--%>
 
             <!-- NAME OF LANGUAGE -->
 
@@ -127,6 +127,9 @@
                 <div class="form-actions pull-right">
                     <input class="btn btn-primary" type="submit" name="submit"
                            id="submit" value="<spring:message code="button.create"/>"/>
+                    <input
+                            class="btn btn-primary" type="reset" name="reset" id="reset"
+                            value="<spring:message code="judge.register.reset.value"/>"/>
                     <a class="btn btn-primary" href="<c:url value="/admin/programminglanguages.xhtml"/>"><spring:message
                             code="button.close"/></a>
                 </div>
@@ -135,6 +138,9 @@
                 <div class="form-actions pull-right">
                     <input class="btn    btn-primary" type="submit" name="submit"
                            id="submit" value="<spring:message code="button.edit"/>"/>
+                    <input
+                            class="btn btn-primary" type="reset" name="reset" id="reset"
+                            value="<spring:message code="judge.register.reset.value"/>"/>
                     <a class="btn btn-primary" href="<c:url value="/admin/programminglanguages.xhtml"/>"><spring:message
                             code="button.close"/></a>
                 </div>

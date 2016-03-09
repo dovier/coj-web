@@ -10,13 +10,13 @@
     <c:if test="${message != null}">
         <div class="alert alert-success alert-dismissable fade in">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <i class="fa fa-check"></i><spring:message code="${message}" />
+            <i class="fa fa-check"></i> <spring:message code="${message}" />
         </div>                 
     </c:if> 
     <center><spring:message code="fieldhdr.usage"/>: <fmt:formatNumber value="${mail.percent}" minFractionDigits="2" maxFractionDigits="2"/>% (${mail.consumed_quote} <spring:message code="fieldval.bytesof"/> ${mail.mail_quote} <spring:message code="fieldval.bytes"/>) </center>
     <div class="panel panel-primary">
-        &nbsp;<a href="<c:url value="composemail.xhtml"/>"><i class="fa fa-pencil"></i><spring:message code="link.compose"/></a>
-        &nbsp;<a onclick="confirm_delete('<c:url value="deleteallmail.xhtml?delete=1"/>')" href="#"><i class="fa fa-trash"></i><spring:message code="link.delall"/></a>
+        &nbsp;<a href="<c:url value="composemail.xhtml"/>"><i class="fa fa-pencil"></i> <spring:message code="link.compose"/></a>
+        &nbsp;<a onclick="confirm_delete('<c:url value="deleteallmail.xhtml?delete=1"/>')" href="#"><i class="fa fa-trash"></i> <spring:message code="link.delall"/></a>
     </div>
     <div id="display-table-container" data-reload-url="/tables/inbox.xhtml"></div>
 </div>

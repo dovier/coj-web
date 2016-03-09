@@ -47,11 +47,11 @@
 					<c:choose>
 						<c:when test="${user.update_nick == false}">
 							<form:input cssClass="form-control" path="nick" size="30"
-								maxlength="15" readonly="true" />
+								maxlength="15" readonly="true" tabindex="1" />
 						</c:when>
 						<c:otherwise>
 							<form:input cssClass="form-control" path="nick" size="30"
-								maxlength="15" />
+								maxlength="15" tabindex="1" />
 						</c:otherwise>
 					</c:choose>
 				</div>
@@ -403,9 +403,11 @@
 			<form:hidden path="uid" readonly="true" />
 			<div class="form-actions pull-right">
 				<input class="btn btn-primary" type="submit" name="submit"
-					id="submit" value="<spring:message code="button.edit"/>" /> <input
+					id="submit" value="<spring:message code="button.edit"/>" />
+				<input
 					class="btn btn-primary" type="reset" name="reset" id="reset"
 					value="<spring:message code="button.reset"/>" />
+				<a href="/index.xhtml" class="btn btn-primary"><spring:message code="button.close" /></a>
 			</div>
 		</form:form>
 	</div>
@@ -428,3 +430,4 @@
 	});
 	$("[data-toggle='tooltip']").tooltip();
 </script>
+

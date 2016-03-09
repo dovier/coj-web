@@ -77,25 +77,34 @@
                         <option value="3"><spring:message code="fieldval.no"/></option>
                     </select>
                 </td>
+                <td><a><i data-toggle="tooltip" class="fa fa-asterisk"
+                          title="<spring:message code="onemandatory.field"/>"></i></a>
+                </td>
             </tr>
+
+
             <tr>
                 <td width="15%"></td>
                 <td style="width: 70%;">
                     <form:textarea path="description"/>
                 </td>
+
                 <td><span class="label label-danger"><form:errors path="description"/></span></td>
+
             </tr>
             <c:if test="${not empty clarification.originalMSG}">
                 <tr>
                     <td width="15%"><spring:message code="fieldhdr.originalmsg"/>:</td>
                     <td style="width: 70%;">
-                        <form:textarea readonly="true" path="originalMSG"/>
+                            ${clarification.originalMSG}
                     </td>
+
                 </tr>
             </c:if>
 
         </table>
-        <div class="pull-right">
+        <div class="clearfix"></div>
+        <div class="pull-right margin-top-05">
             <input class="btn btn-primary" type="submit" value="<spring:message code="button.send" />"/>
             <input class="btn btn-primary" type="reset" value="<spring:message code="button.reset" />"/>
             <a class="btn btn-primary" href="<c:url value="/contest/myclarifications.xhtml?cid=${contest.cid}"/>"><spring:message code="button.close"/></a>
@@ -103,4 +112,7 @@
     </form:form>
     <div class="clearfix"></div>
 </div>
-    
+
+<script>
+    $("[data-toggle='tooltip']").tooltip();
+</script>

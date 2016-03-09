@@ -7,6 +7,10 @@ public class SharedFile extends BaseBean{
 	private Integer fid;
 	private String name;
 	private String path;
+	private Long size;
+
+	public Long getSize() {return size/1024;}
+	public void setSize(Long size) {this.size = size;	}
 	public Integer getFid() {
 		return fid;
 	}

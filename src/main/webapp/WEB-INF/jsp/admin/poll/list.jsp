@@ -45,6 +45,13 @@
                 data-toggle="tooltip" class="fa fa-trash"></i> </a>
             </display:column>
         </display:table>
+
+    <div class="coj_float_rigth">
+        <a href="/admin/index.xhtml" class="btn btn-primary">
+            <spring:message code="button.close" />
+        </a>
+    </div>
+    <div class="clearfix"></div>
 </div>
 <script>
     $.ready(function () {

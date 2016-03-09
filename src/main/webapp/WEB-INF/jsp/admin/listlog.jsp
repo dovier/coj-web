@@ -2,8 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <h2 class="postheader">
-    <spring:message code="page.general.admin.header" />
-    : <spring:message code="pagehdr.alogs" />
+    <spring:message code="page.general.admin.header" />: <spring:message code="pagehdr.alogs" />
 </h2>
 <div class="postcontent row">
 
@@ -20,9 +19,16 @@
         </div>
 
     </form>
-
+    <div class="clearfix"></div>
     <div id="display-table-container"
          data-reload-url="/admin/tables/listlog.xhtml"></div>
+
+    <div class="coj_float_rigth">
+        <a href="/admin/index.xhtml" class="btn btn-primary">
+            <spring:message code="button.close" />
+        </a>
+    </div>
+    <div class="clearfix"></div>
 
 </div>
 <script>

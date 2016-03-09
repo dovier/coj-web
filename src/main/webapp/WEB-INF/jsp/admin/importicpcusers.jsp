@@ -27,7 +27,7 @@
                     key="page.managecontest.link.mpc"/></a></li>
         </c:if>
         <li class="active"><a
-                href="<c:url value="importicpcusers.xhtml?cid=${contest.cid}"/>"><fmt:message
+                href="<c:url value="importicpcusers.xhtml?cid=${cid}"/>"><fmt:message
                 key="page.managecontest.link.iiu"/></a></li>
         <li><a href="<c:url value="baylorxml.xhtml?cid=${cid}"/>"><fmt:message
                 key="page.managecontest.link.bx"/></a></li>
@@ -40,7 +40,7 @@
         <li><a href="<c:url value="contestoverview.xhtml?cid=${cid}"/>"><fmt:message
                 key="page.managecontest.link.ov"/></a></li>
         <li><a
-                href="<c:url value="contestimg.xhtml?cid=${contest.cid}"/>"><fmt:message
+                href="<c:url value="contestimg.xhtml?cid=${cid}"/>"><fmt:message
                 key="page.managecontest.link.img"/></a></li>
     </ul>
     <br/>
@@ -48,6 +48,12 @@
         <div class="alert alert-success alert-dismissable fade in">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <i class="fa fa-check"></i><spring:message code="${message}"/>
+        </div>
+    </c:if>
+    <c:if test="${messagerror != null}">
+        <div class="alert alert-danger alert-dismissable fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <i class="fa fa-warning"></i><spring:message code="${messagerror}"/>
         </div>
     </c:if>
     <form:form method="post" enctype="multipart/form-data" cssClass="form-horizontal"
@@ -75,8 +81,12 @@
             </label>
 
             <div class="col-xs-5">
-                <input type='text' name='warmupCid' value="" class="form-control"/>
+                <input id="warmupCid" type='text' name='warmupCid' value="" class="form-control"/>
             </div>
+            <a><i
+                    data-toggle="tooltip" class="fa fa-asterisk"
+                    title="<spring:message code="mandatory.field"/>">
+            </i></a>
         </div>
 
         <div class="form-group">
@@ -101,7 +111,7 @@
 
             <div class="col-xs-5">
                 <input type="file" id="filesch" data-show-upload="false" data-show-caption="true"
-                       name="siteFile" class="file"/>
+                       name="schoolFile" class="file"/>
             </div>
             <a><i
                     data-toggle="tooltip" class="fa fa-asterisk"
@@ -131,7 +141,7 @@
 
             <div class="col-xs-5">
                 <input type="file" id="filetea" data-show-upload="false" data-show-caption="true"
-                       name="siteFile" class="file"/>
+                       name="teamFile" class="file"/>
             </div>
             <a><i
                     data-toggle="tooltip" class="fa fa-asterisk"
@@ -146,7 +156,7 @@
 
             <div class="col-xs-5">
                 <input type="file" id="filetep" data-show-upload="false" data-show-caption="true"
-                       name="siteFile" class="file"/>
+                       name="teamPersonFile" class="file"/>
             </div>
             <a><i
                     data-toggle="tooltip" class="fa fa-asterisk"
@@ -155,7 +165,7 @@
         </div>
         <div class="form-actions pull-right">
             <input type="submit" name="but" class="btn btn-primary"
-                   value="<spring:message code="button.update"/>"/>
+                   value="<spring:message code="button.edit"/>"/>
             <a class="btn btn-primary" href="<c:url value="/admin/admincontests.xhtml"/>"><spring:message
                     code="button.close"/></a>
         </div>
@@ -166,23 +176,27 @@
     $("#fileper").fileinput({
         maxFileSize: 51200,
         msgProgress: 'Loading {percent}%',
-        previewClass: 'file_preview',
-        previewFileType: "file",
+       // showPreview: false,
+        /*previewClass: 'file_preview',
+        previewFileType: "file",*/
         browseClass: "btn btn-primary",
         browseLabel: "<spring:message code="message.filename"/>",
         browseIcon: '<i class="fa fa-file-archive-o"></i>&nbsp;',
         removeClass: "btn btn-default",
-        removeLabel: "<spring:message code="tablehdr.delete"/>",
+        removeLabel: '<spring:message code="tablehdr.delete"/>',
         removeIcon: '<i class="fa fa-trash"></i>',
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>',
-        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>"
+        msgValidationError: '<spring:message code="message.files.msgvalidationerror"/>',
+        allowedFileExtensions:['.tab'],
+        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'
     });
 
     $("#filesch").fileinput({
         maxFileSize: 51200,
         msgProgress: 'Loading {percent}%',
-        previewClass: 'file_preview',
-        previewFileType: "file",
+      //  showPreview: false,
+        /*previewClass: 'file_preview',
+        previewFileType: "file",*/
         browseClass: "btn btn-primary",
         browseLabel: "<spring:message code="message.filename"/>",
         browseIcon: '<i class="fa fa-file-archive-o"></i>&nbsp;',
@@ -190,14 +204,17 @@
         removeLabel: "<spring:message code="tablehdr.delete"/>",
         removeIcon: '<i class="fa fa-trash"></i>',
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>',
-        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>"
+        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
+        allowedFileExtensions:['.tab'],
+        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'
     });
 
     $("#filesit").fileinput({
         maxFileSize: 51200,
         msgProgress: 'Loading {percent}%',
-        previewClass: 'file_preview',
-        previewFileType: "file",
+       // showPreview: false,
+        /*previewClass: 'file_preview',
+        previewFileType: "file",*/
         browseClass: "btn btn-primary",
         browseLabel: "<spring:message code="message.filename"/>",
         browseIcon: '<i class="fa fa-file-archive-o"></i>&nbsp;',
@@ -205,29 +222,35 @@
         removeLabel: "<spring:message code="tablehdr.delete"/>",
         removeIcon: '<i class="fa fa-trash"></i>',
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>',
-        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>"
+        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
+        allowedFileExtensions:['.tab'],
+        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'
     });
 
     $("#filetea").fileinput({
         maxFileSize: 51200,
         msgProgress: 'Loading {percent}%',
-        previewClass: 'file_preview',
+       // showPreview: false,
+        /*previewClass: 'file_preview',
         previewFileType: "file",
-        browseClass: "btn btn-primary",
+        browseClass: "btn btn-primary",*/
         browseLabel: "<spring:message code="message.filename"/>",
         browseIcon: '<i class="fa fa-file-archive-o"></i>&nbsp;',
         removeClass: "btn btn-default",
         removeLabel: "<spring:message code="tablehdr.delete"/>",
         removeIcon: '<i class="fa fa-trash"></i>',
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>',
-        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>"
+        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
+        allowedFileExtensions:['.tab'],
+        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'
     });
 
     $("#filetep").fileinput({
         maxFileSize: 51200,
         msgProgress: 'Loading {percent}%',
-        previewClass: 'file_preview',
-        previewFileType: "file",
+       // showPreview: false,
+       /* previewClass: 'file_preview',
+        previewFileType: "file",*/
         browseClass: "btn btn-primary",
         browseLabel: "<spring:message code="message.filename"/>",
         browseIcon: '<i class="fa fa-file-archive-o"></i>&nbsp;',
@@ -235,12 +258,18 @@
         removeLabel: "<spring:message code="tablehdr.delete"/>",
         removeIcon: '<i class="fa fa-trash"></i>',
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>',
-        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>"
+        msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
+        allowedFileExtensions:['.tab'],
+        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'
     });
 
 
     $("[data-toggle='tooltip']").tooltip();
 </script>
-
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#warmupCid').numeric();
+    });
+</script>
 
 <script src="/js/admin/utility.js"></script>

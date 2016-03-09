@@ -52,7 +52,15 @@
             </tr>
         </c:forEach>
     </table>
+    <div class="coj_float_rigth">
+        <a href="/admin/index.xhtml" class="btn btn-primary">
+            <spring:message code="button.close" />
+        </a>
+    </div>
+    <div class="clearfix"></div>
 </div>
+
+<script type="text/javascript" src="<c:url value="/js/admin/utility.js" />"></script>
 
 <script>
     $("[data-toggle='tooltip']").tooltip();

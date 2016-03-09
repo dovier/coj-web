@@ -25,7 +25,6 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import atg.taglib.json.util.JSONArray;
@@ -49,7 +48,6 @@ import cu.uci.coj.model.Locale;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.User;
-import cu.uci.coj.model.UserClassificationStats;
 import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
 import cu.uci.coj.utils.FileUtils;
@@ -87,6 +85,9 @@ public class UserController extends BaseController {
     private WbSiteDAO wbSiteDAO;
     @Resource
     WbContestService wbContestService;
+
+    /*@Autowired
+    private MessageSource messageSource;*/
 
 
     private String passcode = null;
@@ -293,7 +294,7 @@ public class UserController extends BaseController {
             }
         } else if (user1 == null && principal != null) {
             cmp.setUser1(getUsername(principal));
-        } else if (user1 != null || user2 != null){
+        } else if (user1 != null || user2 != null) {
             error = 3;
         }
         model.addAttribute("compare", cmp);
@@ -420,7 +421,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/createnewaccount.xhtml", method = RequestMethod.POST)
-    public String createNewAccount(Model model, User user, BindingResult bindingResult) {
+    public String createNewAccount(Model model, User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         user.setDob(new Date(user.getYear() - 1900, user.getMonth() - 1, user.getDay()));
         regValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -440,7 +441,12 @@ public class UserController extends BaseController {
         String token = md5.encodePassword(user.getUsername(), "ABC123XYZ789");
         userDAO.dml("insert.account.activation", user.getUsername(), token, true);
 
-        mailNotificationService.sendAccountVerification(user, token);
+        try {
+            mailNotificationService.sendAccountVerification(user, token);
+        } catch (Exception e){
+            redirectAttributes.addFlashAttribute("message", "text.errorsendemail");
+        }
+
         return "redirect:/user/registrationsuccess.xhtml";
     }
 
@@ -515,7 +521,7 @@ public class UserController extends BaseController {
             try {
                 mailNotificationService.sendForgottenPasswordEmail(user.getEmail(), subject, msg);
                 redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullSendMail());
-            } catch (Exception e){
+            } catch (Exception e) {
                 redirectAttributes.addFlashAttribute("message", Notification.getNotSuccesfullSendMail());
                 redirectAttributes.addFlashAttribute("errorcreate", true);
                 return "redirect:/user/forgottenpassword.xhtml";

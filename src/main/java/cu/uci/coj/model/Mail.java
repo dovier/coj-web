@@ -8,15 +8,15 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-/** 
- * @version Caribbean Online Judge(COJ) v2.0
+/**
  * @author Juan Carlos Lobaina Guzman & Jorge Luis Roque Alvarez
- * @since 2010-09-01
+ * @version Caribbean Online Judge(COJ) v2.0
  * @see http://coj.uci.cu
+ * @since 2010-09-01
  */
 public class Mail {
 
-    
+
     private int idmail;
     private int mail_quote;
     private int consumed_quote;
@@ -99,7 +99,7 @@ public class Mail {
     }
 
     public void setIsread(boolean isread) {
-        
+
         this.isread = isread;
         initialize();
     }
@@ -156,10 +156,14 @@ public class Mail {
         return to;
     }
 
+    public String getFirstTo() {
+        return to.get(0);
+    }
+
     public void setTo(List<String> to) {
         this.to = to;
     }
-    
+
     public void setTo(String to) {
         if (to != null)
             this.to = Arrays.asList(to.split(","));

@@ -5,8 +5,8 @@
 	decorator="cu.uci.coj.utils.tabledecorator.problemsTableDecorator">
 	<display:column property="title" titleKey="tablehdr.subject"
 		href="mailview.xhtml?send=0" paramId="draft" paramProperty="idmail" />
-	<display:column property="size" titleKey="tablehdr.size" />
-	<display:column titleKey="tablehdr.date" headerClass="headdate">
+	<display:column property="size" titleKey="tablehdr.size" headerClass="headtable-2"/>
+	<display:column titleKey="tablehdr.date" headerClass="headtable-5">
 		<fmt:formatDate value="${mail.date}" pattern="yyyy-MM-dd HH:mm:ss" />
 	</display:column>
 	<display:column titleKey="tablehdr.actions" headerClass="headactions">

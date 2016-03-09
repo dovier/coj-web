@@ -33,6 +33,13 @@
     <div id="display-table-container" data-reload-url="/admin/tables/manageentries.xhtml"></div>
 
     <br />
+
+    <div class="coj_float_rigth">
+        <a href="/admin/index.xhtml" class="btn btn-primary">
+            <spring:message code="button.close" />
+        </a>
+    </div>
+    <div class="clearfix"></div>
 </div>
 
 <script>

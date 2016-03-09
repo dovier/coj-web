@@ -281,13 +281,13 @@
                         path="enabled"/></span></td>
             </tr>
 
-            <tr>
+          <%--  <tr>
                 <td><fmt:message key="page.managecontest.vtemplate"/>:</td>
                 <td><form:checkbox path="vtemplate"/></td>
                 <td colspan="3"><span class="label label-danger"><form:errors
                         path="vtemplate"/></span></td>
             </tr>
-            <tr>
+            <tr>--%>
                 <td><fmt:message key="page.managecontest.status.block"/>:</td>
                 <td><form:checkbox path="blocked"/></td>
                 <td colspan="3"><span class="label label-danger"><form:errors
@@ -304,7 +304,7 @@
         <div class="pull-right">
 
             <input type="submit" name="but" class="btn btn-primary"
-                   value="<spring:message code="button.update"/>"/>
+                   value="<spring:message code="button.edit"/>"/>
             <a class="btn btn-primary" href="<c:url value="/admin/admincontests.xhtml"/>"><spring:message
                     code="button.close"/></a>
         </div>

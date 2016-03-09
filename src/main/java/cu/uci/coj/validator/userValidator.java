@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.validator.constraints.impl.EmailValidator;
+import org.apache.commons.validator.EmailValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -38,7 +38,30 @@ public class userValidator implements Validator {
         User user = (User) o;
         user.setDob(new Date(user.getYear() - 1900, user.getMonth() - 1, user.getDay()));
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nick", "judge.register.error.nick");
+        if (!errors.hasFieldErrors("nick")) {
+            if ((user.getNick().length()) > 15) {
+                errors.rejectValue("nick", "judge.register.error.long25charact");
+            } else if (user.getNick().length() < 3) {
+                errors.rejectValue("nick", "judge.register.error.less3charact");
+            }
 
+
+        }
+        if (user.getName().length() < 1) {
+            errors.rejectValue("name", "errormsg.7");
+        } else if (user.getName().length() > 30) {
+            errors.rejectValue("name", "errormsg.6");
+        } else if (!user.getName().matches("[a-zA-Z\\.\\-\\'\\s]+")) {
+            errors.rejectValue("name", "errormsg.8");
+        }
+
+        if (user.getLastname().length() < 1) {
+            errors.rejectValue("lastname", "errormsg.10");
+        } else if (user.getLastname().length() > 50) {
+            errors.rejectValue("lastname", "errormsg.9");
+        } else if (!user.getLastname().matches("[a-zA-Z\\.\\-\\'\\s]+")) {
+            errors.rejectValue("lastname", "errormsg.11");
+        }
         // si el correo ha sido cambiado y esta en uso por otra persona en el
         // COJ
         if (!user.isTeam()) {
@@ -46,11 +69,17 @@ public class userValidator implements Validator {
             if (!StringUtils.isEmpty(user.getEmail()) && userDAO.bool("email.changed", user.getEmail(), user.getUid()) && userDAO.emailExistUpdate(user.getEmail().trim(), user.getUsername())) {
                 errors.rejectValue("email", "judge.register.error.emailexist");
             }
+            if (!errors.hasFieldErrors("email")) {
+                EmailValidator emailValidator = EmailValidator.getInstance(); //ver como inyectar este objeto
+                if (!emailValidator.isValid(user.getEmail())) {
+                    errors.rejectValue("email", "judge.register.error.bademail");
+                }
+            }
         }
 
         if (user.isTeam()) {
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "user_1", "errormsg.51");
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "user_2", "errormsg.51");
+            // ValidationUtils.rejectIfEmptyOrWhitespace(errors, "user_1", "errormsg.51");
+            // ValidationUtils.rejectIfEmptyOrWhitespace(errors, "user_2", "errormsg.51");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "user_3", "errormsg.51");
         }
         if (user.getCountry_id() == 0) {
@@ -80,8 +109,8 @@ public class userValidator implements Validator {
             }
         }
         if (!user.isTeam()) {
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "judge.register.error.name");
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastname", "judge.register.error.lastname");
+            //  ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "judge.register.error.name");
+            //  ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastname", "judge.register.error.lastname");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dob", "judge.register.error.name");
 
             if (user.getGender() == 0) {
@@ -99,7 +128,17 @@ public class userValidator implements Validator {
 
         user.setDob(new Date(user.getYear() - 1900, user.getMonth() - 1, user.getDay()));
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nick", "mandatory.field");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "access_rule", "errormsg.10");
+
+        if (!errors.hasFieldErrors("nick")) {
+            if ((user.getNick().length()) > 15) {
+                errors.rejectValue("nick", "judge.register.error.long25charact");
+            } else if (user.getNick().length() < 3) {
+                errors.rejectValue("nick", "judge.register.error.less3charact");
+            }
+
+
+        }
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "access_rule", "mandatory.field");
         if (user.getCountry_id() == 0) {
             errors.rejectValue("country", "judge.register.error.country");
         }
@@ -127,18 +166,19 @@ public class userValidator implements Validator {
             }
         }
 
-        if (user.getAccess_rule() != null && !IpAddress.validate(user.getAccess_rule())) {
-            errors.rejectValue("access_rule", "errormsg.11");
+        if (!errors.hasFieldErrors("access_rule")) {
+            if (user.getAccess_rule() != null && !IpAddress.validate(user.getAccess_rule())) {
+                errors.rejectValue("access_rule", "errormsg.11.1");
+            }
         }
-
         if (!user.isTeam()) {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "judge.register.error.name");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastname", "judge.register.error.lastname");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "judge.register.error.email");
-          //  ValidationUtils.rejectIfEmptyOrWhitespace(errors, "mail_quote", "general.error.empty");
+            //  ValidationUtils.rejectIfEmptyOrWhitespace(errors, "mail_quote", "general.error.empty");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dob", "judge.register.error.name");
-            EmailValidator a = new EmailValidator();
-            if (!a.isValid(user.getEmail(), null)) {
+            EmailValidator a = EmailValidator.getInstance();
+            if (!a.isValid(user.getEmail())) {
                 errors.rejectValue("email", "judge.register.error.bademail");
             }
 
@@ -161,37 +201,42 @@ public class userValidator implements Validator {
     public void validateTeam(Object o, Errors errors) {
         Team team = (Team) o;
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "judge.register.error.username_empty");
-        String userName = team.getUsername();
-        if ((userName.length()) > 50) {
-            errors.rejectValue("username", "judge.register.error.long50charact");
-        }
-        if (!team.getUsername().isEmpty()) {
-            if (!team.getUsername().matches("[0-9a-zA-Z_-]+")) {
+
+        if (!errors.hasFieldErrors("username")) {
+            String userName = team.getUsername();
+            if ((userName.length()) > 50) {
+                errors.rejectValue("username", "judge.register.error.long50charact");
+            } else if (!userName.matches("[0-9a-zA-Z_-]+")) {
                 errors.rejectValue("username", "general.error.onlylettersnumbers");
-            }
-        }
-        if (!team.getNick().isEmpty()) {
-            if (!team.getNick().matches("[0-9a-zA-Z_-]+")) {
-                errors.rejectValue("nick", "general.error.onlylettersnumbers");
+            } else {
+                boolean userExist = false;
+                try {
+                    for (int i = 0; i < team.getTotal() + 1 && !userExist; i++) {
+                        userExist = userDAO.bool("exists.user.byusername", buildteamUsername(team.getUsername(), team.getTotal(), i + 1));
+                    }
+                } catch (Exception e) {
+                }
+                if (userExist) {
+                    errors.rejectValue("username", "judge.register.error.username");
+                }
             }
         }
 
-        boolean userExist = false;
-        try {
-            for (int i = 0; i < team.getTotal() && !userExist; i++) {
-                userExist = userDAO.bool("exists.user.byusername", buildteamUsername(team.getUsername(), team.getTotal(), i + 1));
-            }
-        } catch (Exception e) {
-        }
-        if (userExist) {
-            errors.rejectValue("username", "judge.register.error.username");
-        }
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nick", "judge.register.error.nick");
-        String nick = team.getNick();
-        if ((userName.length()) > 25) {
-            errors.rejectValue("nick", "judge.register.error.long25charact");
+
+        if (!errors.hasFieldErrors("nick")) {
+            if (!team.getNick().isEmpty()) {
+                if (!team.getNick().matches("[0-9a-zA-Z_-]+")) {
+                    errors.rejectValue("nick", "general.error.onlylettersnumbers");
+                }
+            } else if ((team.getNick().length()) > 15) {
+                errors.rejectValue("nick", "judge.register.error.long25charact");
+            } else if (team.getNick().length() < 3) {
+                errors.rejectValue("nick", "judge.register.error.less3charact");
+            }
         }
+
 
         int country = team.getCountry();
         if (country == 0) {
@@ -207,9 +252,8 @@ public class userValidator implements Validator {
         }
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "judge.register.error.password");
-        if (!(StringUtils.isEmpty(team.getPassword()) && StringUtils.isEmpty(team.getConfirmPassword()))) {
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "judge.register.error.password");
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "confirmPassword", "judge.register.error.password");
+
+        if (!errors.hasFieldErrors("password")) {
             if (team.getPassword().length() < 8) {
                 errors.rejectValue("password", "errormsg.15");
             } else if (team.getPassword().length() > 100) {
@@ -219,8 +263,14 @@ public class userValidator implements Validator {
             }
         }
 
-        if (team.getTotal() <= 0) {
-            errors.rejectValue("total", "judge.createteams.error.total");
+
+        if (!errors.hasFieldErrors("total")) {
+            int total = team.getTotal();
+            if (total <= 0) {
+                errors.rejectValue("total", "judge.createteams.error.total");
+            } else if (total > 999) {
+                errors.rejectValue("total", "judge.createteams.error.total.max");
+            }
         }
     }
 

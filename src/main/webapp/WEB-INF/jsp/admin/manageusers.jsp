@@ -23,8 +23,15 @@
 
         </div>
     </form>
+    <div class="clearfix"></div>
     <div id="display-table-container"
          data-reload-url="/admin/tables/manageusers.xhtml"></div>
+    <div class="coj_float_rigth">
+        <a href="/admin/index.xhtml" class="btn btn-primary">
+            <spring:message code="button.close" />
+        </a>
+    </div>
+    <div class="clearfix"></div>
 </div>
 
 <script src="/js/admin/utility.js"></script>

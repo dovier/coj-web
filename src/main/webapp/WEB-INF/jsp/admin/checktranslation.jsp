@@ -20,7 +20,7 @@
 			
 			<div class="form-group col-xs-12">
 				<label class="control-label col-xs-3"><fmt:message
-						key="fieldhdr.lang" /></label>
+						key="fieldhdr.idioma" /></label>
 				<div class="col-xs-8">
 					<form:select path="locale" cssClass="form-control">
 						<form:options items="${locales}" /> 
@@ -66,10 +66,10 @@
 			
 			<div class="col-xs-12">
 				<div class="form-actions pull-right ">
-					<input class="btn btn-success confirm-message" type="submit"
+					<input class="btn btn-primary confirm-message" type="submit"
 						value='<spring:message code="button.approve"/>' />
 						
-					<a class="btn btn-danger confirm-message"
+					<a class="btn btn-primary confirm-message"
 						href="/admin/managetranslations/delete.xhtml?id=${translation.id}"><spring:message code="button.reject"/></a>
 						
 					<input class="btn btn-primary" type="reset"

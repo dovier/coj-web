@@ -72,7 +72,7 @@
         </table>
         <div class="pull-right">
             <input type="submit" name="but" class="btn btn-primary"
-                   value="<spring:message code="button.update"/>"/>
+                   value="<spring:message code="button.edit"/>"/>
             <a class="btn btn-primary" href="<c:url value="/admin/admincontests.xhtml"/>"><spring:message
                     code="button.close"/></a>
         </div>

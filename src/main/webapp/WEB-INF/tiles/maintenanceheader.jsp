@@ -14,7 +14,7 @@
                 <div class="logoj">J</div>
             </div>
 
-            <div class="slogan">Thinking better!</div>
+            <div class="slogan"><spring:message code="header.thinkingbetter" /></div>
         </div>
         <div class="headerrigth">
             <span class="bannername">Caribbean Online Judge</span>            

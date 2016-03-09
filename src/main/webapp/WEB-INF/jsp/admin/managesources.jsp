@@ -32,6 +32,7 @@
                  data-reload-url="/admin/tables/managesources.xhtml"></div>
         </div>
     </div>
+
 </div>
 <script>
     $(document).ready(displayTableReload(" "));

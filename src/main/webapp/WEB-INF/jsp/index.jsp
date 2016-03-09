@@ -8,6 +8,13 @@
 <!-- /article-content -->
 <div class="row">
     <div class="col-xs-12">
+        <c:if test="${message != null}">
+            <div class="alert alert-success alert-dismissable fade in">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <i class="fa fa-check"></i><spring:message code="${message}"/>
+            </div>
+        </c:if>
+
         <authz:authorize access="isAuthenticated()">
             <form:form method="post" commandName="entry">
                 <div class="form-group">
@@ -33,18 +40,18 @@
     </div>
 </div>
 <div class="row">
-    <authz:authorize access="isAuthenticated()">
-        <div class="col-xs-5 col-xs-offset-7 filter-follow">
-            <ul class="list-inline pull-right">
-                <li><a href="javascript:displayTableReload('');"><spring:message
-                        code="link.entry.user"/></a></li>
+    <div class="col-xs-5 col-xs-offset-7 filter-follow">
+        <ul class="list-inline pull-right">
+            <li><a href="javascript:displayTableReload('');"><spring:message
+                    code="link.entry.user"/></a></li>
+            <authz:authorize access="isAuthenticated()">
                 <li><a href="javascript:displayTableReload('?entries=following');"><spring:message
                         code="link.entry.fallowing"/></a></li>
-                <li><a href="javascript:displayTableReload('?entries=cojboard');"><spring:message
-                        code="link.entry.cojboard"/></a></li>
-            </ul>
-        </div>
-    </authz:authorize>
+            </authz:authorize>
+            <li><a href="javascript:displayTableReload('?entries=cojboard');"><spring:message
+                    code="link.entry.cojboard"/></a></li>
+        </ul>
+    </div>
 
     <div id="display-table-container" data-reload-url="/tables/entries.xhtml" class="col-xs-12"></div>
 </div>
@@ -70,12 +77,13 @@
     $(document).ready(displayTableReload("?page=1"));
 </script>
 
-<link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<c:url value="/js/admin/utility.js" />"></script>
+<link href="/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css"/>
 <script src="/js/bootstrap-dialog.min.js"></script>
 
 <script>
     var i18n = {};
-    i18n.title      = "<spring:message code="message.confirm.hdr.aprobation.entry"/>";
-    i18n.message    = "<spring:message code="message.confirm.aprobation.entry"/>";
+    i18n.title = "<spring:message code="message.confirm.hdr.aprobation.entry"/>";
+    i18n.message = "<spring:message code="message.confirm.aprobation.entry"/>";
     i18n.btn_accept = "<spring:message code="btn.text.accept"/>";
 </script>

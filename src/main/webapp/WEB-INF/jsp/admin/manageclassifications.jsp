@@ -1,3 +1,4 @@
+<%--RF34 Clasificar problema--%>
 <%@include file="/WEB-INF/jsp/include/include.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!--<script  type="text/javascript" src="<c:url value="/js/jquery.js" />"></script>
@@ -12,7 +13,7 @@
             <c:when test="${errorcreate}">
                 <div class="alert alert-danger alert-dismissable fade in">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <i class="fa fa-check"></i><spring:message code="${message}" />
+                    <i class="fa fa-warning"></i><spring:message code="${message}" />
                 </div>
             </c:when>
 
@@ -34,6 +35,13 @@
     <br />
 
     <div id="display-table-container" data-reload-url="/admin/tables/manageclassifications.xhtml"></div>
+
+    <div class="coj_float_rigth">
+        <a href="/admin/index.xhtml" class="btn btn-primary">
+            <spring:message code="button.close" />
+        </a>
+    </div>
+    <div class="clearfix"></div>
 
 </div>
 <script>

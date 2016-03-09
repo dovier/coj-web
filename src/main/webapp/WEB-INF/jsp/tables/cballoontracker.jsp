@@ -12,9 +12,7 @@
 		</span>
 	</display:column>
 	<display:column titleKey="tablehdr.user" headerClass="headdate">
-		<a
-			href="<c:url value="cuseraccount.xhtml?uid=${submit.username}&cid=${contest.cid}"/>"><c:out
-				value="${submit.userNick}" /></a>
+		${submit.userNick}
 	</display:column>
 	<display:column titleKey="tablehdr.date" headerClass="headdate">
 		<c:set var="newdate" value="${fn:substring(submit.ddate, 0, 19)}" />

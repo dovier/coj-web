@@ -50,6 +50,9 @@ public class ClarificationController extends BaseController {
     @Resource
     private sendClarificationValidator sendValidator;
 
+    /*
+    * RF128 Listar aclaraciones del concurso
+    * */
     @RequestMapping(value = "/myclarifications.xhtml", method = RequestMethod.GET)
     public String ClarificationsList(Model model, Principal principal, @RequestParam("cid") Integer cid, @RequestParam(required = false, value = "pattern") String pattern) {
         String username = getUsername(principal);
@@ -73,6 +76,9 @@ public class ClarificationController extends BaseController {
         return "/contest/myclarifications";
     }
 
+    /*
+    * RF129 Mostrar aclaración del concurso
+    * */
     @RequestMapping(value = "/clarificationview.xhtml", method = RequestMethod.GET)
     public String ClarificationView(Model model, Principal principal, @RequestParam("cid") Integer cid, @RequestParam("ccid") Integer ccid) {
         int uid = 0;
@@ -97,6 +103,9 @@ public class ClarificationController extends BaseController {
         return "/contest/clarificationview";
     }
 
+    /*
+    * RF7 Solicitar aclaración para el concurso
+    * */
     @RequestMapping(value = "/clarification.xhtml", method = RequestMethod.GET)
     public String RequestClarification(Locale locale, Model model, @RequestParam("cid") Integer cid, @RequestParam(defaultValue = "-1", required = false, value = "ccid") Integer ccid) {
         List<Problem> problems = new LinkedList<Problem>();
@@ -136,6 +145,10 @@ public class ClarificationController extends BaseController {
         return "redirect:/contest/myclarifications.xhtml?cid=" + clarification.getCid();
     }
 
+    /*
+    * RF83 Enviar aclaración para el concurso
+    * RF93 Responder aclaración del concurso
+    * */
     @RequestMapping(value = "/sendclarification.xhtml", method = RequestMethod.GET)
     public String SendClarification(Locale locale, Model model, Principal principal, @RequestParam(required = false, defaultValue = "", value = "uid") String uid, @RequestParam("cid") Integer cid,
                                     @RequestParam(defaultValue = "-1", required = false, value = "ccid") Integer ccid, @RequestParam(defaultValue = "0", required = false, value = "pid") Integer pid) {
@@ -180,6 +193,10 @@ public class ClarificationController extends BaseController {
         return originaMSG;
     }
 
+    /*
+   * RF83 Enviar aclaración para el concurso
+   * RF93 Responder aclaración del concurso
+   * */
     @RequestMapping(value = "/sendclarification.xhtml", method = RequestMethod.POST)
     public String SendClarification(Locale locale, Model model, Principal principal, Clarification clarification, BindingResult result, @RequestParam("modes") Integer mode, RedirectAttributes redirectAttributes) {
 
@@ -240,6 +257,12 @@ public class ClarificationController extends BaseController {
 
             if (userDAO.integer("select.uid.by.username", string) == null) {
                 result.rejectValue("usernameto", "sendclarification.error.usernotexist");
+                List<Problem> problems = new LinkedList<Problem>();
+                problems.add(new Problem(0, "General"));
+                problems.addAll(problemDAO.getContestProblems(locale.getLanguage(), clarification.getCid()));
+                model.addAttribute("problems", problems);
+                model.addAttribute("contest", contestDAO.loadContest(clarification.getCid()));
+                model.addAttribute(clarification);
                 return "/contest/sendclarification";
             }
 
@@ -257,6 +280,9 @@ public class ClarificationController extends BaseController {
         return "redirect:/contest/myclarifications.xhtml?cid=" + clarification.getCid();
     }
 
+    /*
+    * RF130 Marcar aclaración del concurso como respondido
+    * */
     @RequestMapping(value = "/markanswered.xhtml", method = RequestMethod.GET)
     public String markAnswered(Model model, Principal principal, @RequestParam("cid") Integer cid, @RequestParam("ccid") Integer ccid) {
         clarificationDAO.dml("update.clarification.read", ccid, clarificationDAO.integer("select.uid.by.username", getUsername(principal)));

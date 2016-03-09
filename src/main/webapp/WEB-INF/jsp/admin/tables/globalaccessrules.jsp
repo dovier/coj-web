@@ -6,7 +6,7 @@
 	<display:column titleKey="tablehdr.id" headerClass="headid"
 		property="rid" />
 	<display:column titleKey="tablehdr.content" property="rule" />
-	<display:column titleKey="tablehdr.actions">
+	<display:column titleKey="tablehdr.actions" headerClass="headdate">
             <a href="#" onclick="confirm_delete('<c:url value="/admin/deleterule.xhtml?rid=${rul.rid}"/>')"
 			><i title="<spring:message code="messages.general.delete"/>"
 				data-toggle="tooltip" class="fa fa-trash"></i></a>

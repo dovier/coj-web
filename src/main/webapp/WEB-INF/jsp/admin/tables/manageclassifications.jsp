@@ -1,3 +1,4 @@
+<%--RF34 Clasificar problema--%>
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page buffer="16kb" autoFlush="true"%>

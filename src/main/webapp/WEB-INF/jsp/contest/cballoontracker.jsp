@@ -39,7 +39,7 @@
                             value="<spring:message code="button.filter"/>"/>
                     </form>
                 </div>
-
+                <div class="clearfix"></div>
                 <div id="display-table-container"
                      data-reload-url="/tables/cballoontracker.xhtml"></div>
 

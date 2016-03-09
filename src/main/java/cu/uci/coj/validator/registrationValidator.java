@@ -11,8 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.annotation.Resource;
 
-
-import org.hibernate.validator.constraints.impl.EmailValidator;
+import org.apache.commons.validator.EmailValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -92,8 +91,8 @@ public class registrationValidator implements Validator {
 
 
         String email = user.getEmail();
-        EmailValidator a = new EmailValidator();
-        if (!a.isValid(email, null) || email.length() == 0) {
+        boolean valid = EmailValidator.getInstance().isValid(email);
+        if (!valid || email.length() == 0) {
             errors.rejectValue("email", "errormsg.12");
         } else if (userDAO.bool("exist.user.bymail", user.getEmail())) {
             errors.rejectValue("email", "errormsg.20");

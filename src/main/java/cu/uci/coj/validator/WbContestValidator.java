@@ -20,6 +20,8 @@ public class WbContestValidator implements Validator {
     @Resource
     WbContestDAO wbContestDAO;
 
+    private String URLREGEX = "^(http(?:s)?\\:\\/\\/[a-zA-Z0-9]+(?:(?:\\.|\\-)[a-zA-Z0-9]+)+(?:\\:\\d+)?(?:\\/[\\w\\-]+)*(?:\\/?|\\/\\w+\\.[a-zA-Z]{2,5}(?:\\?[\\w]+\\=[\\w\\-]+)?)?(?:\\&[\\w]+\\=[\\w\\-]+)*)$";
+
     @Override
     public boolean supports(Class<?> clazz) {
         return WbContest.class.isAssignableFrom(clazz);
@@ -44,10 +46,8 @@ public class WbContestValidator implements Validator {
             errors.rejectValue("sid", "wboard.error.nosite", "Select a site.");
         }
 
-        try {
-            new URL(((WbContest) o).getUrl());
-        } catch (MalformedURLException e) {
-            errors.rejectValue("url", "wboard.error.url.invalid", "Invalid url.");
+        if (!((WbContest) o).getUrl().matches(URLREGEX)) {
+            errors.rejectValue("url", "wboard.error.url.invalid");
         }
     }
 
@@ -61,10 +61,9 @@ public class WbContestValidator implements Validator {
             errors.rejectValue("sid", "wboard.error.nosite", "Select a site.");
         }
 
-        try {
-            new URL(((WbContest) o).getUrl());
-        } catch (MalformedURLException e) {
-            errors.rejectValue("url", "wboard.error.url.invalid", "Invalid url.");
+
+        if (!((WbContest) o).getUrl().matches(URLREGEX)) {
+            errors.rejectValue("url", "wboard.error.url.invalid");
         }
     }
 }
