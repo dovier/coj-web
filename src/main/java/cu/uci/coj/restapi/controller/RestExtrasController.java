@@ -75,4 +75,32 @@ public class RestExtrasController {
         return new ResponseEntity<>(listEntriesRest, HttpStatus.OK);
 
     }
+    
+    @RequestMapping(value = "/cojboard", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getAllCOJboard() {
+        
+        if(true)
+            return new ResponseEntity<>("offline", HttpStatus.BAD_REQUEST);
+        
+        /*PagingOptions options = new PagingOptions(page);
+        IPaginatedList<Entry> entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options, 0);
+      
+        if(entries.getList().size() == 0)
+            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
+        
+        List<Entry> listEntry = entries.getList();
+        List<EntriesRest> listEntriesRest = new LinkedList();
+
+        for (Entry e : listEntry) {
+            String dirAvatar = "http://coj.uci.cu/images/avatars/"+e.getUsername();
+            EntriesRest er = new EntriesRest(dirAvatar,e.getUsername(),e.getDate().toString(),e.getText(), e.getRate());
+            listEntriesRest.add(er);
+        }*/
+
+      //  return new ResponseEntity<>(listEntriesRest, HttpStatus.OK);
+        
+        return null;
+
+    }
 }

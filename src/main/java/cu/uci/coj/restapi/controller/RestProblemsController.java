@@ -29,6 +29,8 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,6 +64,10 @@ public class RestProblemsController {
             @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
 
         try {
+            PasswordEncoder encoder = new Md5PasswordEncoder();
+            String password = encoder.encodePassword("dovier","ABC123XYZ789");
+            System.out.println("pss " + password);
+            System.out.println("LOLOLOLOLo");
             Long l = new Long(15 * 60 * 1000);
             System.out.println(TokenUtils.CreateTokenUser("admin"));
             l = new Long(15 * 60 * 1000);

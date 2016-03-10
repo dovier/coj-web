@@ -78,7 +78,10 @@ public class RestJudgmentsController {
         List<JudgmentsRest> listJudgmentsRest = new LinkedList();
         
         for(SubmissionJudge s:listSubmitions){
-            JudgmentsRest jud = new JudgmentsRest(s.getSid(),""+s.getDate().toString(),s.getUsername(), s.getPid(), s.getStatus(),s.getTestcase(), s.getTimeUsed(), s.getMemoryMB(), s.getFontMB(), s.getLang());
+            int testcase = 0;
+            if(s.isOntest())
+                testcase = s.getFirstWaCase()+1;
+            JudgmentsRest jud = new JudgmentsRest(s.getSid(),""+s.getDate().toString(),s.getUsername(), s.getPid(), s.getStatus(),testcase, s.getTimeUsed(), s.getMemoryMB(), s.getFontMB(), s.getLang());
             listJudgmentsRest.add(jud);
         }
         
@@ -108,7 +111,10 @@ public class RestJudgmentsController {
             List<JudgmentsRest> listJudgmentsRest = new LinkedList();
 
             for(SubmissionJudge s:listSubmitions){
-                JudgmentsRest jud = new JudgmentsRest(s.getSid(),""+s.getDate().toString(),s.getUsername(), s.getPid(), s.getStatus(),s.getTestcase(), s.getTimeUsed(), s.getMemoryMB(), s.getFontMB(), s.getLang());
+                int testcase = 0;
+                if(s.isOntest())
+                    testcase = s.getFirstWaCase()+1;
+                JudgmentsRest jud = new JudgmentsRest(s.getSid(),""+s.getDate().toString(),s.getUsername(), s.getPid(), s.getStatus(),testcase, s.getTimeUsed(), s.getMemoryMB(), s.getFontMB(), s.getLang());
                 listJudgmentsRest.add(jud);
             }
             
@@ -149,7 +155,10 @@ public class RestJudgmentsController {
         
         for(int i=0;i<n;i++){
             SubmissionJudge s = listSubmitions.get(i);
-            JudgmentsRest jud = new JudgmentsRest(s.getSid(),""+s.getDate().toString(),s.getUsername(), s.getPid(), s.getStatus(),s.getTestcase(), s.getTimeUsed(), s.getMemoryMB(), s.getFontMB(), s.getLang());
+            int testcase = 0;
+            if(s.isOntest())
+                testcase = s.getFirstWaCase()+1;
+            JudgmentsRest jud = new JudgmentsRest(s.getSid(),""+s.getDate().toString(),s.getUsername(), s.getPid(), s.getStatus(),testcase, s.getTimeUsed(), s.getMemoryMB(), s.getFontMB(), s.getLang());
             listJudgmentsRest.add(jud);
         }
         
