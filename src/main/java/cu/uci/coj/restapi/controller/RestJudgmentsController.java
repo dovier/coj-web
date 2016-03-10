@@ -61,6 +61,10 @@ public class RestJudgmentsController {
         
         String lang = submissionDAO.string("select language from language where key=?", language);        
 	int found = submissionDAO.countSubmissions(filter_user, lang, pid,Config.getProperty("judge.status." + status));	
+        
+        if(found>5000)
+            found = 5000;
+        
         String st = Config.getProperty("judge.status." + status);
         
         List<SubmissionJudge> listSubmitions = new LinkedList(); 
