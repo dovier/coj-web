@@ -5,10 +5,14 @@
  */
 package cu.uci.coj.restapi.controller;
 
+import cu.uci.coj.board.dao.WbSiteDAO;
+import cu.uci.coj.board.service.WbContestService;
 import cu.uci.coj.dao.EntryDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.model.Entry;
 import cu.uci.coj.model.Problem;
+import cu.uci.coj.model.WbContest;
+import cu.uci.coj.model.WbSite;
 import cu.uci.coj.recommender.Recommender;
 import cu.uci.coj.restapi.templates.EntriesRest;
 import cu.uci.coj.restapi.templates.ProblemRest;
@@ -49,6 +53,11 @@ public class RestExtrasController {
 
 	private Map<String, String> emoties = new HashMap<String, String>();
         
+        @Resource
+	WbContestService wbContestService;
+	@Resource
+	WbSiteDAO wbSiteDAO;
+        
         
     @RequestMapping(value = "/welcome/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
@@ -75,31 +84,51 @@ public class RestExtrasController {
         return new ResponseEntity<>(listEntriesRest, HttpStatus.OK);
 
     }
-    
+
     @RequestMapping(value = "/cojboard", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getAllCOJboard() {
+        PagingOptions options = new PagingOptions(1);
+
+        if (options.getDirection() == null) {
+            options.setDirection("asc");
+            options.setSort("startDate");
+        }
+
+        Integer uid = null;
+        Integer followed = 0;
         
-        if(true)
+        IPaginatedList<WbContest> contests = wbContestService.getContestList(site, options, followed, uid);
+
+        List<WbSite> list = wbSiteDAO.getSiteList();
+        HashMap<Integer, WbSite> map = new HashMap<Integer, WbSite>();
+
+        for (int i = 0; i < list.size(); i++) {
+            map.put(list.get(i).getSid(), list.get(i));
+        }
+
+        model.addAttribute("mapsites", map);
+        model.addAttribute("contests", contests);
+
+        if (true) {
             return new ResponseEntity<>("offline", HttpStatus.BAD_REQUEST);
-        
+        }
+
         /*PagingOptions options = new PagingOptions(page);
-        IPaginatedList<Entry> entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options, 0);
+         IPaginatedList<Entry> entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options, 0);
       
-        if(entries.getList().size() == 0)
-            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
+         if(entries.getList().size() == 0)
+         return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
         
-        List<Entry> listEntry = entries.getList();
-        List<EntriesRest> listEntriesRest = new LinkedList();
+         List<Entry> listEntry = entries.getList();
+         List<EntriesRest> listEntriesRest = new LinkedList();
 
-        for (Entry e : listEntry) {
-            String dirAvatar = "http://coj.uci.cu/images/avatars/"+e.getUsername();
-            EntriesRest er = new EntriesRest(dirAvatar,e.getUsername(),e.getDate().toString(),e.getText(), e.getRate());
-            listEntriesRest.add(er);
-        }*/
-
+         for (Entry e : listEntry) {
+         String dirAvatar = "http://coj.uci.cu/images/avatars/"+e.getUsername();
+         EntriesRest er = new EntriesRest(dirAvatar,e.getUsername(),e.getDate().toString(),e.getText(), e.getRate());
+         listEntriesRest.add(er);
+         }*/
       //  return new ResponseEntity<>(listEntriesRest, HttpStatus.OK);
-        
         return null;
 
     }
