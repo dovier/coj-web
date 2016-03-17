@@ -1,5 +1,6 @@
 package cu.uci.coj.dao.impl;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -15,6 +16,7 @@ import cu.uci.coj.controller.interfaces.IVirtualStatusSolutions;
 import cu.uci.coj.dao.AchievementDAO;
 import cu.uci.coj.dao.SubmissionDAO;
 import cu.uci.coj.model.Contest;
+import cu.uci.coj.model.DatasetVerdict;
 import cu.uci.coj.model.Filter;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
@@ -25,7 +27,9 @@ import cu.uci.coj.query.Where;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
+
 import java.sql.Array;
+
 import javax.swing.JOptionPane;
 
 @Repository("submissionDAO")
@@ -127,10 +131,30 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 					submit.getLang());
 			achievementDAO.checkSubmits(submit);
 		}
+	
+		//frankr ioi start
+		insertDatasetVerdicts(submit);
+		//frankr ioi end
 
 		dml("mark.submit", submit.getSid());
 
 	}
+	
+	//frankr ioi start
+	private void insertDatasetVerdicts(SubmissionJudge submit){
+		Integer testNum = 0;
+		Iterator<DatasetVerdict> it = submit.getDatasetVerdicts().iterator();
+		while (it.hasNext()){
+			DatasetVerdict dv = it.next();
+			dv.setSid(submit.getSid());
+			dv.setTestnum(testNum++);
+			dv.setStatus(dv.getVerdict().associatedMessage());
+			dml("insert.datasetverdict", dv.getSid(), dv.getTestnum(), dv.getMessage(), dv.getStatus(), 
+										 dv.getUserTime(), dv.getCpuTime(), dv.getMemory());
+		}
+		//insert.datasetverdict=insert into dataset_verdict (sid,testnum,message,status,"userTime","cpuTime",memory) values (?,?,?,?,?,?)
+	}
+	//frankr ioi end
 
 	public void removeEffects(SubmissionJudge submit, boolean isDisabling) {
 		if (!isDisabling) {
@@ -176,6 +200,11 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 			achievementDAO.checkSubmits(submit);
 		// esto tiene que quedarse al final para asegurarse que cuando se
 		// dispare el evento sea cuando se haya calculado todo lo anterior
+		
+		//frankr ioi start
+		dml("remove.datasetverdict.by.sid", submit.getSid());
+		//frankr ioi end
+		
 		dml("reset.event.processing", submit.getSid());
 	}
 
@@ -370,10 +399,23 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 	public SubmissionJudge getSourceCode(int submit_id) {
 		SubmissionJudge sub = object("get.source.code", SubmissionJudge.class,
 				submit_id);
+		//frankr ioi start
+		List<DatasetVerdict> datasetVerdicts = getDatasetVerdictsBySid(submit_id);
+		sub.setDatasetVerdicts(datasetVerdicts);
+		//frankr ioi end
 		sub.initialize();
 		return sub;
 	}
-
+	
+	//frankr ioi start
+	@Transactional(readOnly = true)
+	private List<DatasetVerdict> getDatasetVerdictsBySid(int submit_id){ //FIXME: add to interface
+		List<DatasetVerdict> result = objects("get.datasetverdicts.by.sid", DatasetVerdict.class, submit_id);
+		//get.datasetverdicts.by.sid=select testnum, message, status, "userTime", "cpuTime", memory from dataset_verdict where sid=? order by testnum
+		return result;
+	}
+	//frankr ioi end
+	
 	@Transactional(readOnly = true)
 	public String getCompileInfo(int sid) {
 		return string("get.error", sid);

@@ -36,7 +36,7 @@ public class SubmissionJudgeToSubmissionDTOAdapter extends SubmissionDTO {
 
         this.sourceCode = submissionJudge.getSource();
 
-        this.allResults = false;//Para modo IOI cuando procesar y devolver todas los testcase results por separado
+        this.allResults = true;//Para modo IOI cuando procesar y devolver todas los testcase results por separado
 
         this.trusted = false;//This is for security reasons, to espesify that 
 
