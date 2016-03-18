@@ -10,15 +10,15 @@ package cu.uci.coj.restapi.templates;
  * @author cesar
  */
 public class FilterRest {
-    int id;
+    Object id;
     String description;
 
-    public FilterRest(int id, String description) {
+    public FilterRest(Object id, String description) {
         this.id = id;
         this.description = description;
     }
 
-    public int getId() {
+    public Object getId() {
         return id;
     }
 

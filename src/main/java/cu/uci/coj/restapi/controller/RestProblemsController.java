@@ -18,6 +18,7 @@ import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.recommender.Recommender;
+import cu.uci.coj.restapi.templates.FilterRest;
 import cu.uci.coj.restapi.templates.ProblemDescriptionRest;
 import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.utils.TokenUtils;
@@ -25,6 +26,7 @@ import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -403,12 +405,14 @@ public class RestProblemsController {
             
             if(!TokenUtils.ValidatePropertiesinJson(node,"pid","language","source"))
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
-           
-            boolean favorite = node.get("favorite").asBoolean();
+     
             int pid = node.get("pid").asInt();
             String language = node.get("language").asText();
             String code = node.get("source").asText();
-
+            
+            if (!problemDAO.exists(pid) )
+                return new ResponseEntity<>("bad pid",HttpStatus.BAD_REQUEST);
+            
             SubmissionJudge submit = new SubmissionJudge();
             submit.setPid(pid);
             submit.setCode(code);
@@ -419,6 +423,16 @@ public class RestProblemsController {
             
             if (problemDAO.exists(submit.getPid())) 
                 languages.addAll(utilDAO.getEnabledLanguagesByProblem(pid));
+            
+            int cont=0;
+            for (Iterator<Language> it = languages.iterator(); it.hasNext();) {
+                Language lang = it.next();
+                if (lang.getKey().equals(language)) 
+                    cont++;
+            }
+            if(cont == 0)
+                return new ResponseEntity<>("bad language",HttpStatus.BAD_REQUEST);
+			
             
             submit.setLanguages(languages);
             submit.getLanguageIdByKey();
@@ -448,5 +462,22 @@ public class RestProblemsController {
         }
         
         return new ResponseEntity<>(null,HttpStatus.OK);
+    }
+    
+    
+    @RequestMapping(value = "/submit/enabled_language/{pid}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getAllCOJboardbySID(@PathVariable Integer pid) {
+        if (problemDAO.exists(pid) ){ 
+            List<FilterRest> filters = new LinkedList();
+            List<Language> languages = new LinkedList();
+            languages.addAll(utilDAO.getEnabledLanguagesByProblem(pid));
+            for(Language lan:languages){
+                FilterRest f = new FilterRest(lan.getKey(),lan.getLanguage());
+                filters.add(f);
+            }
+            return new ResponseEntity<>(filters,HttpStatus.OK);
+        }
+        return new ResponseEntity<>("bad pid",HttpStatus.BAD_REQUEST);
     }
 }
