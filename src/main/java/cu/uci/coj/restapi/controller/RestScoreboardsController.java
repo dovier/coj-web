@@ -60,7 +60,8 @@ public class RestScoreboardsController{
         
         Integer uid = null;
         int found = userDAO.countEnabledUsersForScoreboard(pattern, online, uid);
-        
+        if(found>2000)
+            found = 2000;
      
         List<User> listUsers = new LinkedList();   
         
@@ -117,6 +118,8 @@ public class RestScoreboardsController{
         
         return listInstitucionRest;
     }
+    
+    
     
     @RequestMapping(value = "/byinstitution/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody

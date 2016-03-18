@@ -9,14 +9,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.RecommenderDAO;
+import cu.uci.coj.dao.SubmissionDAO;
 import cu.uci.coj.dao.UserDAO;
+import cu.uci.coj.dao.UtilDAO;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Limits;
 import cu.uci.coj.model.Problem;
+import cu.uci.coj.model.Roles;
+import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.recommender.Recommender;
 import cu.uci.coj.restapi.templates.ProblemDescriptionRest;
 import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.utils.TokenUtils;
+import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import java.io.IOException;
@@ -53,6 +58,12 @@ public class RestProblemsController {
     private UserDAO userDAO;
     @Resource
     private RecommenderDAO recommenderDAO;
+    @Resource
+    private UtilDAO utilDAO;
+    @Resource
+    private SubmissionDAO submissionDAO;
+    @Resource
+    private Utils utils;
 
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
@@ -64,14 +75,10 @@ public class RestProblemsController {
             @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
 
         try {
-            PasswordEncoder encoder = new Md5PasswordEncoder();
-            String password = encoder.encodePassword("dovier","ABC123XYZ789");
-            System.out.println("pss " + password);
-            System.out.println("LOLOLOLOLo");
             Long l = new Long(15 * 60 * 1000);
-            System.out.println(TokenUtils.CreateTokenUser("admin"));
+            System.out.println(TokenUtils.CreateTokenUser("dovier"));
             l = new Long(15 * 60 * 1000);
-            System.out.println(TokenUtils.CreateAPIKey("admin", "cesar"));
+            System.out.println(TokenUtils.CreateAPIKey("dovier", "cesar"));
         } catch (Exception e) {
         }
 
@@ -373,5 +380,73 @@ public class RestProblemsController {
         } catch (IOException ex) {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }
+    }
+    
+    
+    
+    
+    @RequestMapping(value = "/submit", method = RequestMethod.POST, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> SubmitProblem(@RequestBody String bodyjson) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
+
+            int error = ValidateApiAndToken(bodyjson);
+            if (error > 0) {
+                return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
+            }
+
+            String username = null;
+            String token = node.get("token").textValue();
+            username = ExtractUser(token);
+            
+            if(!TokenUtils.ValidatePropertiesinJson(node,"pid","language","source"))
+                return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
+           
+            boolean favorite = node.get("favorite").asBoolean();
+            int pid = node.get("pid").asInt();
+            String language = node.get("language").asText();
+            String code = node.get("source").asText();
+
+            SubmissionJudge submit = new SubmissionJudge();
+            submit.setPid(pid);
+            submit.setCode(code);
+            submit.setKey(language);
+            
+            List<Language> languages = new LinkedList<Language>();
+            Integer uid = userDAO.integer("select.uid.by.username",username);
+            
+            if (problemDAO.exists(submit.getPid())) 
+                languages.addAll(utilDAO.getEnabledLanguagesByProblem(pid));
+            
+            submit.setLanguages(languages);
+            submit.getLanguageIdByKey();
+            submit.setHaspriviligeForProblem(false);
+            
+            Problem problem = problemDAO.getProblemSubmitDataByAbb(submit.getPid(),submit.getLid());
+            problem.setUserLanguage("en");
+            boolean locked = problemDAO.bool("issolved.byuser", uid,problem.getPid()) && problemDAO.isLocked(uid, problem.getPid());
+            
+            int sid = submissionDAO.insertSubmission(uid,username, problem.getPid(), submit.getCode(),submit.getLanguageByLid(), locked, null);
+            SubmissionJudge submission = new SubmissionJudge(sid, uid,
+					submit.getCode(), problem.getPid(), problem.getTime(),
+					problem.getCasetimelimit(), problem.getMemory(),
+					submit.getLanguageByLid());
+            submission.setSpecialJudge(problem.isSpecial_judge());
+            try {                            
+                int priority = 6;
+                utils.startCalification(submission,priority);
+            } catch (Exception e) {
+                submissionDAO.changeStatus(sid, "Unqualified");
+            }
+            
+           
+
+        } catch (IOException ex) {
+            return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity<>(null,HttpStatus.OK);
     }
 }

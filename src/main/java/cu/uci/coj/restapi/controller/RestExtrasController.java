@@ -9,16 +9,12 @@ import cu.uci.coj.board.dao.WbSiteDAO;
 import cu.uci.coj.board.service.WbContestService;
 import cu.uci.coj.dao.EntryDAO;
 import cu.uci.coj.dao.UserDAO;
-import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Entry;
-import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
-import cu.uci.coj.recommender.Recommender;
 import cu.uci.coj.restapi.templates.CojBoardRest;
 import cu.uci.coj.restapi.templates.EntriesRest;
-import cu.uci.coj.restapi.templates.ProblemRest;
-import cu.uci.coj.restapi.utils.TokenUtils;
+import cu.uci.coj.restapi.templates.FilterRest;
 import cu.uci.coj.utils.EntryHelper;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
@@ -34,7 +30,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -135,4 +130,17 @@ public class RestExtrasController {
     public ResponseEntity<?> getAllCOJboardbySID(@PathVariable Integer sid) {
         return getAllCOJboard(sid);
     }
+    
+    @RequestMapping(value = "/cojboard/filters", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getAllCOJboardFilters() {
+        List<WbSite> listsites = wbSiteDAO.getSiteList();
+        List<FilterRest> listFilters = new LinkedList();
+        for (WbSite site : listsites) {
+            FilterRest filter = new FilterRest(site.getSid(), site.getSite());
+            listFilters.add(filter);
+        }
+        return new ResponseEntity<>(listFilters,HttpStatus.OK);
+    }
+    
 }
