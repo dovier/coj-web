@@ -60,8 +60,10 @@
 				<td id="lang"><c:out value="${submission.lang}" /></td>
 			</tr>
 		</table>
+		<!-- frankr ioi modification start -->
 		<c:if
-			test="${submission.status eq 'Accepted' or submission.status eq 'Presentation Error'}">
+ 			test="${!(submission.status eq 'Compilation Error') and !(submission.status eq 'Judging') and !(submission.status eq 'Internal Error') and !(submission.status eq 'Invalid Function')}">
+		<!-- frankr ioi end --> 			 
 			<table class="volume">
 				<thead>
 					<th><spring:message code="tablehdr.tests" /></th>
@@ -71,15 +73,64 @@
 					<th><spring:message code="tablehdr.maxtesttime" /></th>
 				</thead>
 				<tr>
-					<td width="16%">${submission.acTestCases}</td>
-					<td width="16%">${submission.timeUsed}</td>
-					<td width="17%">${submission.avgTimeUsed}</td>
+					<td width="16%">${submission.acTestCases} 		<c:if test="${submission.totalTestCases > 0}">
+						 / ${submission.totalTestCases}
+					</c:if> </td>
+					<td width="16%"><c:if test="${submission.status eq 'Accepted'}">${submission.timeUsed}</c:if>
+					                <c:if test="${!(submission.status eq 'Accepted')}">...</c:if></td>
+					<td width="17%"><c:if test="${submission.status eq 'Accepted'}">${submission.avgTimeUsed}</c:if>
+					                <c:if test="${!(submission.status eq 'Accepted')}">...</c:if></td>
 					<td width="17%">${submission.minTimeUsed}</td>
 					<td width="17%">${submission.maxTimeUsed}</td>
 				</tr>
 			</table>
 		</c:if>
 		<br />
+		
+	<!-- frankr ioi start -->
+		<c:if
+ 			test="${submission.totalTestCases > 0}"> 
+	
+			<div class="col-xs-12">
+				<div class="panel">
+					<div class="panel-heading">
+						<div class="badge pull-left"><spring:message code="fieldhdr.verdictsdetails" /> </div>
+						<div class="badge pull-right">
+							<a data-toggle="collapse" href="#details"><i
+								class="fa fa-chevron-down"></i></a>
+						</div>
+					</div>
+					<div id="details" class="panel-body collapse">
+						<table class="volume" width='100%'>
+							<thead>
+								<th><spring:message code="tablehdr.testnum" /></th>
+								<th class="result"><spring:message code="tablehdr.judgment" /></th>
+								<th><spring:message code="tablehdr.time" /></th>
+								<th><spring:message code="tablehdr.mem" /></th>
+							</thead>
+			
+							<c:forEach items="${submission.datasetVerdicts}" var="dv">
+								<tr>
+									<td><c:out value="${dv.testnum}" /></td>
+									<td><label class=<c:if test="${dv.status eq 'Accepted'}">"subAC"</c:if>
+													 <c:if test="${!(dv.status eq 'Accepted')}">"subWA"</c:if>	> 
+										<c:out value="${dv.status}" />
+										</label></td>
+									<td><c:out value="${dv.userTime}" /> <c:if
+										test="${!empty dv.userTime}">ms</c:if></td>
+									<td><c:out value="${dv.memory}" /> <c:if
+										test="${!empty dv.memory}">bytes</c:if></td>
+								</tr>
+							</c:forEach>
+						</table>			
+					</div>
+
+				</div>
+			</div>			
+		</c:if>
+	
+	<!-- frankr ioi end -->
+		
 	</center>
 	<div style="clear: both; float: right;">
 		<a href="/24h/submit.xhtml?sid=${submission.sid}"> <i
@@ -138,3 +189,22 @@
 				.execCommand(id, 'is_editable'));
 	}
 </script>
+
+<!-- frankr ioi start -->
+<script>
+	$(function() {
+		$('.fa-chevron-up').click(function() {
+			$(this).toggleClass('fa-chevron-up');
+			$(this).toggleClass('fa-chevron-down');
+		});
+	});
+
+	//frankr addtion start
+	$(function() {
+		$('.fa-chevron-down').click(function() {
+			$(this).toggleClass('fa-chevron-up');
+			$(this).toggleClass('fa-chevron-down');
+		});
+	});
+</script>	
+<!-- frankr ioi end -->

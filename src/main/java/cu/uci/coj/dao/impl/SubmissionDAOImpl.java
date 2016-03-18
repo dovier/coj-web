@@ -402,6 +402,8 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 		//frankr ioi start
 		List<DatasetVerdict> datasetVerdicts = getDatasetVerdictsBySid(submit_id);
 		sub.setDatasetVerdicts(datasetVerdicts);
+		sub.setTotalTestCases(datasetVerdicts.size()); //esto deberia hacerse persistiendo un campo en la BD para totalTestCases 
+		//y recuperarlo tambien mediante la consulta get.source.code
 		//frankr ioi end
 		sub.initialize();
 		return sub;
