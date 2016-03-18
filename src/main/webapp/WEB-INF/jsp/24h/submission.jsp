@@ -117,9 +117,11 @@
 										<c:out value="${dv.status}" />
 										</label></td>
 									<td><c:out value="${dv.userTime}" /> <c:if
-										test="${!empty dv.userTime}">ms</c:if></td>
+										test="${!empty dv.userTime}">ms</c:if><c:if
+										test="${empty dv.userTime}">...</c:if></td>
 									<td><c:out value="${dv.memory}" /> <c:if
-										test="${!empty dv.memory}">bytes</c:if></td>
+										test="${!empty dv.memory}">bytes</c:if><c:if
+										test="${empty dv.memory}">...</c:if></td>
 								</tr>
 							</c:forEach>
 						</table>			
