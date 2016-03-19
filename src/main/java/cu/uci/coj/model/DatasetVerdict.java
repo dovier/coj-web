@@ -12,6 +12,29 @@ package cu.uci.coj.model;
  */
 public class DatasetVerdict {
 
+	//frankr ioi start
+	public DatasetVerdict(Integer sid, Integer testnum, String status,
+			String message, Long userTime, Long cpuTime, Long memory,
+			Verdicts verdict) {
+		super();
+		this.sid = sid;
+		this.testnum = testnum;
+		this.status = status;
+		this.message = message;
+		this.userTime = userTime;
+		this.cpuTime = cpuTime;
+		this.memory = memory;
+		this.verdict = verdict;
+	}
+	
+	public DatasetVerdict() {
+		super();
+	}	
+
+	private Integer sid;
+	private Integer testnum;
+	private String status;
+	//frankr ioi end
     private String message;
     private Long userTime;
     private Long cpuTime;
@@ -88,5 +111,48 @@ public class DatasetVerdict {
     public void setVerdict(Verdicts verdicts) {
         this.verdict = verdicts;
     }
-   
+
+	//frankr ioi start
+	/**
+	 * @return the testnum
+	 */
+	public Integer getTestnum() {
+		return testnum;
+	}
+
+	/**
+	 * @param testnum the testnum to set
+	 */
+	public void setTestnum(Integer testnum) {
+		this.testnum = testnum;
+	}
+
+	/**
+	 * @return the sid
+	 */
+	public Integer getSid() {
+		return sid;
+	}
+
+	/**
+	 * @param sid the sid to set
+	 */
+	public void setSid(Integer sid) {
+		this.sid = sid;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	//frankr ioi end
 }
