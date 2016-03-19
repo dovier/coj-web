@@ -3,6 +3,7 @@ package cu.uci.coj.dao;
 import java.util.List;
 import java.util.Map;
 
+import cu.uci.coj.model.ProblemComplexity;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
@@ -145,4 +146,15 @@ public interface UserDAO extends BaseDAO {
 	public UserClassificationStats getUserClassifications(Integer uid);
 
 	UserClassificationStats getTotalClassifications();
+
+	//frankr addition start
+	public boolean existUsername(String user1);
+
+	List<ProblemComplexity> getProblemsSolvedByUIdAndTagId(Integer uid,
+			Integer idClassification);
+
+	List<ProblemComplexity> getProblemsTriedByUIdAndTagId(Integer uid,
+			Integer idClassification);
+	
+	//frankr addition end
 }
