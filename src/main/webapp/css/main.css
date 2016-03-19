@@ -20,7 +20,7 @@ textarea {
 .zoom {
     position: absolute;
     right: 9px;
-    text-align: right;
+   /*text-align: right;*/
     top: 95px;
     z-index: 120;
 }

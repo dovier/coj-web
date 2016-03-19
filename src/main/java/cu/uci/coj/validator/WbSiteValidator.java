@@ -24,7 +24,7 @@ public class WbSiteValidator implements Validator {
     //   private String URLREGEX = "(http(s)?://)?([\\w-]+\\.)+[\\w-]+(/[\\w- ;,./?%&=]*)?";
 
 
-    String CODEREGEX = "[0-9]+";
+    String CODEREGEX = "[0-9A-z/-]+";
 
     @Resource
     WbSiteDAO wbSiteDAO;

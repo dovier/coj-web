@@ -58,6 +58,7 @@
         </c:choose>
     </display:column>
     <display:column titleKey="tablehdr.actions">
+        <c:if test="${contest.past == true}">
         <a
             href="<c:url value="/admin/managesubmissions.xhtml?cid=${contest.cid}"/>">
             <img
@@ -72,6 +73,7 @@
                 alt="<spring:message code="altval.repoint"/>"
                 data-toggle="tooltip"
                 title="<spring:message code="titval.repoint"/>" /></a>
+        </c:if>
             <c:if test="${contest.past == true && contest.blocked == false}">
             <a href="<c:url value="/admin/lock.xhtml?cid=${contest.cid}"/>"
                ><i data-toggle="tooltip" class="fa fa-eye-slash"

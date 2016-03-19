@@ -112,18 +112,13 @@ public class institutionValidator implements Validator {
                     "At must 40 characters.");
         }
 
-        if (!errors.hasFieldErrors("zip") && institution.getZip().length() > 8) {
-            errors.rejectValue("zip",
-                    "general.error.invalid",
-                    "At must 40 characters.");
-        } else if (!errors.hasFieldErrors("zip")) {
-
+        if (!errors.hasFieldErrors("zip")) {
             pattern = Pattern.compile(ZIP_PATTERN);
             matcher = pattern.matcher(institution.getZip());
             if (!matcher.matches()) {
                 errors.rejectValue("zip",
-                        "general.error.upper",
-                        "Upper case characters only");
+                        "general.error.upper.number",
+                        "Upper case characters and numbers only");
             }       
         }
     }
@@ -164,18 +159,14 @@ public class institutionValidator implements Validator {
                     "At must 40 characters.");
         }
 
-        if (!errors.hasFieldErrors("zip") && institution.getZip().length() > 8) {
-            errors.rejectValue("zip",
-                    "general.error.invalid",
-                    "At must 40 characters.");
-        } else if (!errors.hasFieldErrors("zip")) {
+        if (!errors.hasFieldErrors("zip")) {
             pattern = Pattern.compile(ZIP_PATTERN);
             matcher = pattern.matcher(institution.getZip());
             if (!matcher.matches()) {
                 errors.rejectValue("zip",
-                        "general.error.upper",
+                        "general.error.upper.number",
                         "Upper case characters only");
-            }           
+            }
         }
     }
 }
