@@ -6,6 +6,7 @@ import cu.uci.coj.model.Group;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Locale;
 import cu.uci.coj.model.Rule;
+
 import java.util.List;
 
 /**
@@ -17,5 +18,5 @@ public interface UtilDAO extends BaseDAO {
     public List<Language> getEnabledProgramingLanguages();
     public List<Language> getEnabledLanguagesByProblem(Integer pid);
     public Language getLanguageByExtension(String ext);
-   
+    public String getClassificationNameById(Integer idClassification);   
 }

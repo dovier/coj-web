@@ -43,5 +43,4 @@ public interface BaseDAO {
 	public <T> IPaginatedList<T> paginated(String sqlKey, Class<T> clazz, int pageSize, PagingOptions options, Object... args);
 
 	public String parseDate(Date date);
-	String getClassificationNameById(Integer idClassification);
 }
