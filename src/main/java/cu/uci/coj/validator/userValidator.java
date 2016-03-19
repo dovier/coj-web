@@ -9,6 +9,7 @@ import cu.uci.coj.model.IpAddress;
 import cu.uci.coj.model.Team;
 import cu.uci.coj.model.User;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -192,6 +193,14 @@ public class userValidator implements Validator {
 
             if (user.getGender() == 0) {
                 errors.rejectValue("gender", "judge.register.error.gender");
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(user.getYear(), user.getMonth() - 1, user.getDay());
+            Date date = calendar.getTime();
+
+            if (date.after(new Date())) {
+                errors.rejectValue("dob", "errormsg.61");
             }
 
         }

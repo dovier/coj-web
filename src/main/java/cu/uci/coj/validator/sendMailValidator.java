@@ -28,6 +28,8 @@ public class sendMailValidator implements Validator {
 
     public void validate(Object o, Errors errors) {
         Mail mail = (Mail) o;
+
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "errormsg.39");
         try {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "usernameTo", "errormsg.40");
             if (!errors.hasFieldErrors("usernameTo")) {
