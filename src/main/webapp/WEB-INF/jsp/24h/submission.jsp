@@ -1,5 +1,6 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<jsp:useBean id="FileUtils" class="org.apache.commons.io.FileUtils" />
 <script type="text/javascript" src="/js/edit_area/edit_area_full.js"></script>
 
 <h2 class="postheader">
@@ -111,7 +112,7 @@
 			
 							<c:forEach items="${submission.datasetVerdicts}" var="dv">
 								<tr>
-									<td><c:out value="${dv.testnum}" /></td>
+									<td><c:out value="${dv.testnum + 1}" /></td>
 									<td><label class=<c:if test="${dv.status eq 'Accepted'}">"subAC"</c:if>
 													 <c:if test="${!(dv.status eq 'Accepted')}">"subWA"</c:if>	> 
 										<c:out value="${dv.status}" />
@@ -119,8 +120,8 @@
 									<td><c:out value="${dv.userTime}" /> <c:if
 										test="${!empty dv.userTime}">ms</c:if><c:if
 										test="${empty dv.userTime}">...</c:if></td>
-									<td><c:out value="${dv.memory}" /> <c:if
-										test="${!empty dv.memory}">bytes</c:if><c:if
+									<td><c:if
+										test="${!empty dv.memory}"> <c:out value="${FileUtils.byteCountToDisplaySize(dv.memory * 1024)}" /></c:if><c:if
 										test="${empty dv.memory}">...</c:if></td>
 								</tr>
 							</c:forEach>
