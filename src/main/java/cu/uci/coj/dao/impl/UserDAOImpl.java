@@ -1,5 +1,6 @@
 package cu.uci.coj.dao.impl;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,14 +19,15 @@ import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
+import cu.uci.coj.model.ProblemClassification;
 import cu.uci.coj.model.ProblemComplexity;
+import cu.uci.coj.model.ProblemRichTitle;
 import cu.uci.coj.model.Registration;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.Team;
 import cu.uci.coj.model.User;
 import cu.uci.coj.model.UserClassificationStats;
 import cu.uci.coj.model.UserProfile;
-import cu.uci.coj.model.ProblemComplexity;
 import cu.uci.coj.query.DmlPart;
 import cu.uci.coj.query.Order;
 import cu.uci.coj.query.Query;
@@ -761,18 +763,50 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	//frankr addition start
 	@Override
 	@Transactional(readOnly = true)
-	public List<ProblemComplexity> getProblemsSolvedByUIdAndTagId(Integer uid, Integer idClassification) {
-		String sqlKey = Config.getProperty("problems.solved.by.uid.and.tagid"); 
+	public List<ProblemComplexity> getPublicProblemsSolvedByUIdAndTagId(Integer uid, Integer idClassification) {
+		String sqlKey = Config.getProperty("public.problems.solved.by.uid.and.tagid"); 
 		List<ProblemComplexity> result = super.objects(sqlKey, ProblemComplexity.class, uid, idClassification);
 		return result;
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<ProblemComplexity> getProblemsTriedByUIdAndTagId(Integer uid, Integer idClassification) {
-		String sqlKey = Config.getProperty("problems.tried.by.uid.and.tagid"); 
+	public List<ProblemComplexity> getPublicProblemsTriedByUIdAndTagId(Integer uid, Integer idClassification) {
+		String sqlKey = Config.getProperty("public.problems.tried.by.uid.and.tagid"); 
 		List<ProblemComplexity> result = super.objects(sqlKey, ProblemComplexity.class, uid, idClassification);
 		return result;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProblemRichTitle> getPublicProblemsSolvedWithRichTitleByUid(Integer uid) {
+		String sqlKey = Config.getProperty("public.problems.solved.by.uid"); 
+		List<ProblemRichTitle> result = super.objects(sqlKey, ProblemRichTitle.class, uid);
+		makeRichTitle(result);
+		return result;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProblemRichTitle> getPublicProblemsTriedWithRichTitleByUid(Integer uid) {
+		String sqlKey = Config.getProperty("public.problems.tried.by.uid"); 
+		List<ProblemRichTitle> result = super.objects(sqlKey, ProblemRichTitle.class, uid);
+		makeRichTitle(result);
+		return result;
+	}
+	
+	@Transactional(readOnly = true)
+	private void makeRichTitle(List<ProblemRichTitle> result){
+		for (ProblemRichTitle prt : result){
+			String sqlKey = Config.getProperty("get.problem.classifications");
+			List<ProblemClassification> pcs = super.objects(sqlKey, ProblemClassification.class, prt.getPid());
+			
+			String richTitle = "";
+			for (ProblemClassification pc : pcs){
+				richTitle += " | " + pc.getName() + " " + Integer.valueOf(pc.getComplexity());
+			}
+			prt.setRichTitle(richTitle);
+		}
 	}
 	
 	@Override
@@ -782,7 +816,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		boolean result = super.bool(sqlKey, username);
 		return result;
 	}
-	//frankr addition end
-	
+	//frankr addition end	
+
 
 }

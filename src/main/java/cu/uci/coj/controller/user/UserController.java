@@ -53,6 +53,7 @@ import cu.uci.coj.model.Locale;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.ProblemClassification;
 import cu.uci.coj.model.ProblemComplexity;
+import cu.uci.coj.model.ProblemRichTitle;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.User;
 import cu.uci.coj.model.WbContest;
@@ -198,6 +199,7 @@ public class UserController extends BaseController {
         return "/user/compareusers";
     }*/
 
+    @Deprecated 
     @RequestMapping(value = "/compareusers.xhtml", method = RequestMethod.GET)
     public String compareUsersPost(Principal principal, Model model, @RequestParam(required = false, value = "uid1") String user1, @RequestParam(required = false, value = "uid2") String user2) {
         int error = 1;
@@ -314,17 +316,22 @@ public class UserController extends BaseController {
 	//frankr addition start
 	@RequestMapping(value = "/compareusersbytag.xhtml", method = RequestMethod.GET)
 	public String compareUsersByTag(Principal principal, Model model, 
-			@RequestParam(required = false, value = "user1") String user1, 
-			@RequestParam(required = false, value = "user2") String user2,
+			@RequestParam(required = false, value = "user1", defaultValue = "-1") String user1, 
+			@RequestParam(required = false, value = "user2", defaultValue = "-1") String user2,
 			@RequestParam(required = false, defaultValue = "-1", value = "classification") Integer idClassification) { 
 		
 		boolean error = true;
 		boolean usernameError = false;
 		Integer uid1 = -2;
 		Integer uid2 = -2;
-		if ((user1 == null || user1 == "") && (user2 == null || user2 == "")){
+		if ((user1.compareTo("-1") == 0) || (user2.compareTo("-1") == 0)){
 			if (principal != null){
 				user1 = getUsername(principal);
+				user2 = "";
+			}
+			else{
+				user1 = "";
+				user2 = "";
 			}
 		}
 		else{
@@ -350,55 +357,90 @@ public class UserController extends BaseController {
 
 		//FIXME: DRY principle
 		if (!error){
-			//Problems solved
-			Set<ProblemComplexity> solved_user1 = new TreeSet<ProblemComplexity>(userDAO.getProblemsSolvedByUIdAndTagId(uid1, idClassification));
-			Set<ProblemComplexity> solved_user2 = new TreeSet<ProblemComplexity>(userDAO.getProblemsSolvedByUIdAndTagId(uid2, idClassification));
-					
-			Set<ProblemComplexity> onlyUser1 = new TreeSet<ProblemComplexity>(solved_user1);
-			onlyUser1.removeAll(solved_user2);
-			
-			Set<ProblemComplexity> both = new TreeSet<ProblemComplexity>(solved_user1);
-			both.retainAll(solved_user2);
-			
-			Set<ProblemComplexity> onlyUser2 = new TreeSet<ProblemComplexity>(solved_user2);
-			onlyUser2.removeAll(solved_user1);
-					
-			model.addAttribute("onlybyuser1", onlyUser1.size());
-			model.addAttribute("byboth", both.size());
-			model.addAttribute("onlybyuser2", onlyUser2.size());
-			
-			Map<Integer, List<ProblemComplexity>> onlyUser1Complexity = Utils.separateByComplexity(onlyUser1);
-			Map<Integer, List<ProblemComplexity>> bothComplexity = Utils.separateByComplexity(both);
-			Map<Integer, List<ProblemComplexity>> onlyUser2Complexity = Utils.separateByComplexity(onlyUser2);
-			
-			model.addAttribute("onlyUser1Complexity", onlyUser1Complexity);
-			model.addAttribute("bothComplexity", bothComplexity);
-			model.addAttribute("onlyUser2Complexity", onlyUser2Complexity);
-			
-			// Problems tried
-			Set<ProblemComplexity> tried_user1 = new TreeSet<ProblemComplexity>(userDAO.getProblemsTriedByUIdAndTagId(uid1, idClassification));
-			Set<ProblemComplexity> tried_user2 = new TreeSet<ProblemComplexity>(userDAO.getProblemsTriedByUIdAndTagId(uid2, idClassification));
-					
-			Set<ProblemComplexity> triedOnlyUser1 = new TreeSet<ProblemComplexity>(tried_user1);
-			triedOnlyUser1.removeAll(tried_user2);
-			
-			Set<ProblemComplexity> triedBoth = new TreeSet<ProblemComplexity>(tried_user1);
-			triedBoth.retainAll(tried_user2);
-			
-			Set<ProblemComplexity> triedOnlyUser2 = new TreeSet<ProblemComplexity>(tried_user2);
-			triedOnlyUser2.removeAll(tried_user1);
-					
-			model.addAttribute("triedonlybyuser1", triedOnlyUser1.size());
-			model.addAttribute("triedbyboth", triedBoth.size());
-			model.addAttribute("triedonlybyuser2", triedOnlyUser2.size());
-			
-			Map<Integer, List<ProblemComplexity>> triedUser1Complexity = Utils.separateByComplexity(triedOnlyUser1);
-			Map<Integer, List<ProblemComplexity>> triedBothComplexity = Utils.separateByComplexity(triedBoth);
-			Map<Integer, List<ProblemComplexity>> triedUser2Complexity = Utils.separateByComplexity(triedOnlyUser2);
-			
-			model.addAttribute("triedUser1Complexity", triedUser1Complexity);
-			model.addAttribute("triedBothComplexity", triedBothComplexity);
-			model.addAttribute("triedUser2Complexity", triedUser2Complexity);
+			if (idClassification != -1){
+				//Problems solved
+				Set<ProblemComplexity> solved_user1 = new TreeSet<ProblemComplexity>(userDAO.getPublicProblemsSolvedByUIdAndTagId(uid1, idClassification));
+				Set<ProblemComplexity> solved_user2 = new TreeSet<ProblemComplexity>(userDAO.getPublicProblemsSolvedByUIdAndTagId(uid2, idClassification));
+						
+				Set<ProblemComplexity> onlyUser1 = new TreeSet<ProblemComplexity>(solved_user1);
+				onlyUser1.removeAll(solved_user2);
+				
+				Set<ProblemComplexity> both = new TreeSet<ProblemComplexity>(solved_user1);
+				both.retainAll(solved_user2);
+				
+				Set<ProblemComplexity> onlyUser2 = new TreeSet<ProblemComplexity>(solved_user2);
+				onlyUser2.removeAll(solved_user1);
+						
+				model.addAttribute("onlybyuser1", onlyUser1.size());
+				model.addAttribute("byboth", both.size());
+				model.addAttribute("onlybyuser2", onlyUser2.size());
+				
+				Map<Integer, List<ProblemComplexity>> onlyUser1Complexity = Utils.separateByComplexity(onlyUser1);
+				Map<Integer, List<ProblemComplexity>> bothComplexity = Utils.separateByComplexity(both);
+				Map<Integer, List<ProblemComplexity>> onlyUser2Complexity = Utils.separateByComplexity(onlyUser2);
+				
+				model.addAttribute("onlyUser1Complexity", onlyUser1Complexity);
+				model.addAttribute("bothComplexity", bothComplexity);
+				model.addAttribute("onlyUser2Complexity", onlyUser2Complexity);
+				
+				// Problems tried
+				Set<ProblemComplexity> tried_user1 = new TreeSet<ProblemComplexity>(userDAO.getPublicProblemsTriedByUIdAndTagId(uid1, idClassification));
+				Set<ProblemComplexity> tried_user2 = new TreeSet<ProblemComplexity>(userDAO.getPublicProblemsTriedByUIdAndTagId(uid2, idClassification));
+						
+				Set<ProblemComplexity> triedOnlyUser1 = new TreeSet<ProblemComplexity>(tried_user1);
+				triedOnlyUser1.removeAll(tried_user2);
+				
+				Set<ProblemComplexity> triedBoth = new TreeSet<ProblemComplexity>(tried_user1);
+				triedBoth.retainAll(tried_user2);
+				
+				Set<ProblemComplexity> triedOnlyUser2 = new TreeSet<ProblemComplexity>(tried_user2);
+				triedOnlyUser2.removeAll(tried_user1);
+						
+				model.addAttribute("triedonlybyuser1", triedOnlyUser1.size());
+				model.addAttribute("triedbyboth", triedBoth.size());
+				model.addAttribute("triedonlybyuser2", triedOnlyUser2.size());
+				
+				Map<Integer, List<ProblemComplexity>> triedUser1Complexity = Utils.separateByComplexity(triedOnlyUser1);
+				Map<Integer, List<ProblemComplexity>> triedBothComplexity = Utils.separateByComplexity(triedBoth);
+				Map<Integer, List<ProblemComplexity>> triedUser2Complexity = Utils.separateByComplexity(triedOnlyUser2);
+				
+				model.addAttribute("triedUser1Complexity", triedUser1Complexity);
+				model.addAttribute("triedBothComplexity", triedBothComplexity);
+				model.addAttribute("triedUser2Complexity", triedUser2Complexity);
+			}
+			else{
+				Set<ProblemRichTitle> allSolved_user1 = new TreeSet<ProblemRichTitle> (userDAO.getPublicProblemsSolvedWithRichTitleByUid(uid1));			
+				Set<ProblemRichTitle> allSolved_user2 = new TreeSet<ProblemRichTitle> (userDAO.getPublicProblemsSolvedWithRichTitleByUid(uid2));
+				
+				Set<ProblemRichTitle> allOnlyUser1 = new TreeSet<ProblemRichTitle>(allSolved_user1);
+				allOnlyUser1.removeAll(allSolved_user2);
+				
+				Set<ProblemRichTitle> allByBoth = new TreeSet<ProblemRichTitle>(allSolved_user1);
+				allByBoth.retainAll(allSolved_user2);
+				
+				Set<ProblemRichTitle> allOnlyUser2 = new TreeSet<ProblemRichTitle>(allSolved_user2);
+				allOnlyUser2.removeAll(allSolved_user1);
+				
+				model.addAttribute("allonlybyuser1", allOnlyUser1);
+				model.addAttribute("allbyboth", allByBoth);
+				model.addAttribute("allonlybyuser2", allOnlyUser2);
+				
+				Set<ProblemRichTitle> allTried_user1 = new TreeSet<ProblemRichTitle> (userDAO.getPublicProblemsTriedWithRichTitleByUid(uid1));			
+				Set<ProblemRichTitle> allTried_user2 = new TreeSet<ProblemRichTitle> (userDAO.getPublicProblemsTriedWithRichTitleByUid(uid2));
+				
+				Set<ProblemRichTitle> allTriedUser1 = new TreeSet<ProblemRichTitle>(allTried_user1);
+				allTriedUser1.removeAll(allTried_user2);
+				
+				Set<ProblemRichTitle> allTriedBoth = new TreeSet<ProblemRichTitle>(allTried_user1);
+				allTriedBoth.retainAll(allTried_user2);
+				
+				Set<ProblemRichTitle> allTriedUser2 = new TreeSet<ProblemRichTitle>(allTried_user2);
+				allTriedUser2.removeAll(allTried_user1);
+				
+				model.addAttribute("allTriedUser1", allTriedUser1);
+				model.addAttribute("allTriedBoth", allTriedBoth);
+				model.addAttribute("allTriedUser2", allTriedUser2);
+			}
 		} //if (!error)
 
 		model.addAttribute("error", error); //FIXME: hacer mas particular y pasar error de parametros incorrectos al formlario

@@ -606,10 +606,9 @@ public class SubmissionJudge implements Serializable {
 			return "...";
 		//frankr 20/03/2016 cuando desplegamos el modo de evaluacion ioi en el Archivo 24h el motor comenzo a retornar
 		//la memoria en Kb y no en bytes como la espera la funcion FileUtils.byteCountToDisplaySize()
-		long normalizedMemory = Math.min((long)3145728, memoryUsed); //parche para los envios viejos no los muestre con miles de GB 
-		//ya q el motor retornaba en bytes
-		//otra posible sol es rejuzgar o dividir en la BD por 1024 en el rango de fechas q se determine
-		return FileUtils.byteCountToDisplaySize(normalizedMemory * 1024);
+		//la mejor manera de resolver esto es en el motor....
+		
+		return FileUtils.byteCountToDisplaySize(memoryUsed);
 	}
 
 	public String getFontMB() {

@@ -121,7 +121,7 @@
 										test="${!empty dv.userTime}">ms</c:if><c:if
 										test="${empty dv.userTime}">...</c:if></td>
 									<td><c:if
-										test="${!empty dv.memory}"> <c:out value="${FileUtils.byteCountToDisplaySize(dv.memory * 1024)}" /></c:if><c:if
+										test="${!empty dv.memory}"> <c:out value="${FileUtils.byteCountToDisplaySize(dv.memory)}" /></c:if><c:if
 										test="${empty dv.memory}">...</c:if></td>
 								</tr>
 							</c:forEach>
