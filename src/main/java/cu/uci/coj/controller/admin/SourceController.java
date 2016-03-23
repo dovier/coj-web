@@ -95,6 +95,7 @@ public class SourceController extends BaseController {
             return "/admin/wbsource/edit";
         }
 
+        System.out.println("PINCHE");
 
         problemDAO.updateProblemSource(idSource, name, author);
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());

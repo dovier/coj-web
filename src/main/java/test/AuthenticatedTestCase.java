@@ -90,7 +90,7 @@ public class AuthenticatedTestCase {
         problemToManage  = ArgumentCaptor.forClass(Problem.class);
         contestToManage  = ArgumentCaptor.forClass(Contest.class);
         
-        result = mockMvc.perform(post("/j_spring_security_check").param("j_username", "jasr").param("j_password", "shAdOw.11"))
+        result = mockMvc.perform(post("/j_spring_security_check").param("j_username", "ybroche").param("j_password", "adminpass123"))
         		.andReturn();
 	}
 
@@ -100,19 +100,19 @@ public class AuthenticatedTestCase {
 	
 	@Test
 	public void userAuthenticates() throws Exception {
-		mockMvc.perform(post("/j_spring_security_check").param("j_username", "jasr").param("j_password", "shAdOw.11"))
+		mockMvc.perform(post("/j_spring_security_check").param("j_username", "ybroche").param("j_password", "adminpass123"))
 			.andExpect(new ResultMatcher() {
 				public void match(MvcResult mvcResult) throws Exception {
 					HttpSession session = mvcResult.getRequest().getSession();
 					SecurityContext securityContext = (SecurityContext) session.getAttribute(SEC_CONTEXT_ATTR);
-					Assert.assertEquals(securityContext.getAuthentication().getName(), "jasr");
+					Assert.assertEquals(securityContext.getAuthentication().getName(), "ybroche");
 				}
 			});
 	}
 
 	@Test
 	public void userAuthenticateFails() throws Exception {
-		mockMvc.perform(post("/j_spring_security_check").param("j_username", "user").param("j_password", ""))
+		MvcResult res = mockMvc.perform(post("/j_spring_security_check").param("j_username", "user").param("j_password", ""))
 			.andExpect(redirectedUrl("/index.xhtml?login_error=1"))
 			.andExpect(new ResultMatcher() {
 				public void match(MvcResult mvcResult) throws Exception {
@@ -120,16 +120,28 @@ public class AuthenticatedTestCase {
 					SecurityContext securityContext = (SecurityContext) session.getAttribute(SEC_CONTEXT_ATTR);
 					Assert.assertNull(securityContext);
 				}
-			});
+			}).andReturn();
+		System.out.println(res.getResponse().getRedirectedUrl());
 	}
+	/**@Test
+	public void validator_source() throws Exception {
+		MvcResult res = mockMvc.perform(post("/admin/updatesource.xhtml")
+				.param("idSource", "14")
+				.param("name", "2008/2009 ACM-ICPC Mexico and Central Americaa")
+				.param("author", "")
+		).andReturn();
+
+		System.out.println("PINGA SO YO "+res.getResponse().getRedirectedUrl());
+	}*/
 
 	@Test
 	public void addProblem() throws Exception {
-		
-		MvcResult result = mockMvc.perform(post("/j_spring_security_check").param("j_username", "jasr").param("j_password", "shAdOw.11"))
+
+		MvcResult result = mockMvc.perform(post("/j_spring_security_check").param("j_username", "ybroche").param("j_password", "adminpass123"))
 		.andReturn();
 		
 		when( problemDAOMock.getPidByTitle("Test Title")).thenReturn( 10000 );
+
 		mockMvc.perform(post("/admin/manageproblem.xhtml").param("title", "Test Title").session((MockHttpSession) result.getRequest().getSession()))
 		
 		.andExpect(status().isFound());
@@ -140,9 +152,11 @@ public class AuthenticatedTestCase {
 	
 	@Test
 	public void editProblem() throws Exception {
-		
-		
-		
+
+		MvcResult result = mockMvc.perform(post("/j_spring_security_check").param("j_username", "ybroche").param("j_password", "adminpass123"))
+				.andReturn();
+
+
 		mockMvc.perform(post("/admin/manageproblem.xhtml").param("pid","1000").param("disable_24h","false").param("title", "A+B modified").session((MockHttpSession) result.getRequest().getSession()))
 		.andExpect(status().isFound());
 		verify( problemDAOMock,times(1)).updateProblem(problemToManage.capture());
@@ -170,6 +184,8 @@ public class AuthenticatedTestCase {
 	
 	@Test
 	public void addUserContest() throws Exception {
+		MvcResult result = mockMvc.perform(post("/j_spring_security_check").param("j_username", "ybroche").param("j_password", "adminpass123"))
+				.andReturn();
 		
 		mockMvc.perform(post("/admin/contestusers.xhtml").param("usersids", users).param("judgesids",judges).session((MockHttpSession) result.getRequest().getSession()))
 		.andExpect(status().isFound());
