@@ -1,10 +1,14 @@
 package cu.uci.coj.dao.impl;
 
+import cu.uci.coj.config.Config;
 import cu.uci.coj.dao.UtilDAO;
 import cu.uci.coj.model.Language;
+
 import java.util.Iterator;
 import java.util.List;
+
 import javax.annotation.PostConstruct;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -53,4 +57,15 @@ public class UtilDAOImpl extends BaseDAOImpl implements UtilDAO {
     public void startUpConfigurations() {
         dml("update.users.startup");
     }
+    
+    //frankr addition start
+    @Override
+    @Transactional(readOnly = true)    
+    public String getClassificationNameById(Integer idClassification){
+    	String sqlKey = Config.getProperty("classification.name.by.id");
+    	String result = string(sqlKey, idClassification);
+    	return result;
+    }
+    //frankr addition end
+    
 }

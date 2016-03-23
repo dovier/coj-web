@@ -12,17 +12,20 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import cu.uci.coj.config.Config;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
+import cu.uci.coj.model.ProblemComplexity;
 import cu.uci.coj.model.Registration;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.Team;
 import cu.uci.coj.model.User;
 import cu.uci.coj.model.UserClassificationStats;
 import cu.uci.coj.model.UserProfile;
+import cu.uci.coj.model.ProblemComplexity;
 import cu.uci.coj.query.DmlPart;
 import cu.uci.coj.query.Order;
 import cu.uci.coj.query.Query;
@@ -754,5 +757,32 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		List<Map<String, Object>> probs = maps("select.prob.classif");
 		return new UserClassificationStats(probs);
 	}
+	
+	//frankr addition start
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProblemComplexity> getProblemsSolvedByUIdAndTagId(Integer uid, Integer idClassification) {
+		String sqlKey = Config.getProperty("problems.solved.by.uid.and.tagid"); 
+		List<ProblemComplexity> result = super.objects(sqlKey, ProblemComplexity.class, uid, idClassification);
+		return result;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProblemComplexity> getProblemsTriedByUIdAndTagId(Integer uid, Integer idClassification) {
+		String sqlKey = Config.getProperty("problems.tried.by.uid.and.tagid"); 
+		List<ProblemComplexity> result = super.objects(sqlKey, ProblemComplexity.class, uid, idClassification);
+		return result;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public boolean existUsername(String username){
+		String sqlKey = Config.getProperty("exist.username");
+		boolean result = super.bool(sqlKey, username);
+		return result;
+	}
+	//frankr addition end
+	
 
 }
