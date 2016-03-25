@@ -27,6 +27,15 @@ public class DatasetVerdict {
 		this.verdict = verdict;
 	}
 	
+	public DatasetVerdict(Integer testnum, String status, Long userTime, Long memory) {
+		super();
+		this.testnum = testnum;
+		this.status = status;
+		this.userTime = userTime;
+		this.memory = memory;
+	}
+	
+	
 	public DatasetVerdict() {
 		super();
 	}	
