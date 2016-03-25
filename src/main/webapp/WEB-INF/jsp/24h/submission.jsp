@@ -92,14 +92,16 @@
 		<c:if
  			test="${submission.totalTestCases > 0}"> 
 	
-			<div class="col-xs-12">
-				<div class="panel">
+			<div class="">
+				<div class="panel panel-primary">
 					<div class="panel-heading">
+					
 						<div class="badge pull-left"><spring:message code="fieldhdr.verdictsdetails" /> </div>
 						<div class="badge pull-right">
 							<a data-toggle="collapse" href="#details"><i
 								class="fa fa-chevron-down"></i></a>
 						</div>
+						<br />
 					</div>
 					<div id="details" class="panel-body collapse">
 						<table class="volume" width='100%'>
