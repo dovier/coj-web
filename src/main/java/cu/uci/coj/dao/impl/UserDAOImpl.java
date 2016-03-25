@@ -782,7 +782,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	public List<ProblemRichTitle> getPublicProblemsSolvedWithRichTitleByUid(Integer uid) {
 		String sqlKey = Config.getProperty("public.problems.solved.by.uid"); 
 		List<ProblemRichTitle> result = super.objects(sqlKey, ProblemRichTitle.class, uid);
-		makeRichTitle(result);
+		//makeRichTitle(result);
 		return result;
 	}
 	
@@ -791,7 +791,7 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	public List<ProblemRichTitle> getPublicProblemsTriedWithRichTitleByUid(Integer uid) {
 		String sqlKey = Config.getProperty("public.problems.tried.by.uid"); 
 		List<ProblemRichTitle> result = super.objects(sqlKey, ProblemRichTitle.class, uid);
-		makeRichTitle(result);
+		//makeRichTitle(result);
 		return result;
 	}
 	
