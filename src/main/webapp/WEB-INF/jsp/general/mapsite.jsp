@@ -65,9 +65,9 @@
         <tr>
             <td style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=3 height="17" align="center"><b><font color="#000000">General</font></b></td>
             <td style="border-right: 1px solid #000000" align="center"><font color="#FFFFFF"><br></font></td>
-            <td style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=4 align="center"><b><font color="#000000">Archivo de 24 horas</font></b></td>
+            <td style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=4 align="center"><b><font color="#000000"><spring:message code="pagehdr.24h"/></font></b></td>
             <td style="border-right: 1px solid #000000" align="center"><font color="#FFFFFF"><br></font></td>
-            <td style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=3 align="center"><b><font color="#000000">Concursos reales</font></b></td>
+            <td style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" colspan=3 align="center"><b><font color="#000000"><spring:message code="block.rcontests"/></font></b></td>
         </tr>
         <tr>
             <td style="border-right: 1px solid #000000" height="17" align="left"><font color="#FFFFFF"><br></font></td>

@@ -57,6 +57,7 @@
         <li><a href="http://www.math.com/">Math.com</a></li>
         <li><a href="http://www.varsitytutors.com/practice-tests">Varsity
                 Tutors LLC</a></li>
+        <li><a href="http://ithare.com/a-beginners-guide-to-programming-languages/">A Beginner’s Guide to Programming Languages</a></li>
 
     </ul>
 

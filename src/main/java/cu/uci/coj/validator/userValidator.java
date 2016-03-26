@@ -48,24 +48,25 @@ public class userValidator implements Validator {
 
 
         }
-        if (user.getName().length() < 1) {
-            errors.rejectValue("name", "errormsg.7");
-        } else if (user.getName().length() > 30) {
-            errors.rejectValue("name", "errormsg.6");
-        } else if (!user.getName().matches("[a-zA-Z\\.\\-\\'\\s]+")) {
-            errors.rejectValue("name", "errormsg.8");
-        }
-
-        if (user.getLastname().length() < 1) {
-            errors.rejectValue("lastname", "errormsg.10");
-        } else if (user.getLastname().length() > 50) {
-            errors.rejectValue("lastname", "errormsg.9");
-        } else if (!user.getLastname().matches("[a-zA-Z\\.\\-\\'\\s]+")) {
-            errors.rejectValue("lastname", "errormsg.11");
-        }
-        // si el correo ha sido cambiado y esta en uso por otra persona en el
-        // COJ
         if (!user.isTeam()) {
+            if (user.getName().length() < 1) {
+                errors.rejectValue("name", "errormsg.7");
+            } else if (user.getName().length() > 30) {
+                errors.rejectValue("name", "errormsg.6");
+            } else if (!user.getName().matches("[a-zA-Z\\.\\-\\'\\s]+")) {
+                errors.rejectValue("name", "errormsg.8");
+            }
+
+            if (user.getLastname().length() < 1) {
+                errors.rejectValue("lastname", "errormsg.10");
+            } else if (user.getLastname().length() > 50) {
+                errors.rejectValue("lastname", "errormsg.9");
+            } else if (!user.getLastname().matches("[a-zA-Z\\.\\-\\'\\s]+")) {
+                errors.rejectValue("lastname", "errormsg.11");
+            }
+            // si el correo ha sido cambiado y esta en uso por otra persona en el
+            // COJ
+
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "errormsg.51");
             if (!StringUtils.isEmpty(user.getEmail()) && userDAO.bool("email.changed", user.getEmail(), user.getUid()) && userDAO.emailExistUpdate(user.getEmail().trim(), user.getUsername())) {
                 errors.rejectValue("email", "judge.register.error.emailexist");
@@ -236,7 +237,7 @@ public class userValidator implements Validator {
 
         if (!errors.hasFieldErrors("nick")) {
             if (!team.getNick().isEmpty()) {
-                if (!team.getNick().matches("[0-9a-zA-Z_-]+")) {
+                if (!team.getNick().matches("[0-9a-zA-Z _-]+")) {
                     errors.rejectValue("nick", "general.error.onlylettersnumbers");
                 }
             } else if ((team.getNick().length()) > 15) {
