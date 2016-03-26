@@ -58,7 +58,7 @@
         </c:choose>
     </display:column>
     <display:column titleKey="tablehdr.actions">
-        <c:if test="${contest.past == true}">
+        <c:if test="${contest.past == true || contest.running==true}">
         <a
             href="<c:url value="/admin/managesubmissions.xhtml?cid=${contest.cid}"/>">
             <img

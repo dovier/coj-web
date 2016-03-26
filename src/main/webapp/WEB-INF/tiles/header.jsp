@@ -48,8 +48,8 @@
         <div class="zoom">
             <a target="_blank" href="/downloads/COJ_Manual_Usuario.pdf" title="<spring:message code="text.tools.5"/>" data-toggle="tooltip"><i class="fa fa-question"></i></a>
             <a href="<c:url value="/general/mapsite.xhtml"/>" title="<spring:message code="text.tools.6"/>" data-toggle="tooltip"><i class="fa fa-sitemap"></i></a>
-            <a href="#" onclick="subzoom();"><i class="fa fa-search-minus"></i></a>
-            <a href="#" onclick="addzoom();"><i class="fa fa-search-plus"></i></a>
+          <%--  <a href="#" onclick="subzoom();"><i class="fa fa-search-minus"></i></a>
+            <a href="#" onclick="addzoom();"><i class="fa fa-search-plus"></i></a>--%>
         </div>
     </div>
 </div>

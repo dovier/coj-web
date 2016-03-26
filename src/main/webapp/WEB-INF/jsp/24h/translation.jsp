@@ -128,7 +128,7 @@
                         <div class="form-actions pull-right ">
                             <input class="btn btn-primary" type="submit" name="but"
                                    value='<spring:message code="button.send" />'/>
-                            <a href="/24h/problem.xhtml?pid="${problem.pid}><spring:message code="btn.text.cancel" /> </a>
+                            <a class="btn btn-primary" href="/24h/problem.xhtml?pid="${problem.pid}><spring:message code="btn.text.cancel" /> </a>
                         </div>
                     </div>
                 </form:form>
@@ -178,7 +178,7 @@
                         <div class="form-actions pull-right ">
                             <input class="btn btn-primary" type="submit" name="but"
                                    value='<spring:message code="button.send" />' />
-                            <a href="/24h/problem.xhtml?pid="${problem.pid}><spring:message code="btn.text.cancel" /> </a>
+                            <a class="btn btn-primary" href="/24h/problem.xhtml?pid="${problem.pid}><spring:message code="btn.text.cancel" /> </a>
                         </div>
                     </div>
                 </form:form>
