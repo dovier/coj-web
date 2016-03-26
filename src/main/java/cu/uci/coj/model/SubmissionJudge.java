@@ -602,8 +602,12 @@ public class SubmissionJudge implements Serializable {
 	}
 
 	public String getMemoryMB() {
-		if (memoryUsed == -1)
+		if (memoryUsed == -1 || memoryUsed == 0)
 			return "...";
+		//frankr 20/03/2016 cuando desplegamos el modo de evaluacion ioi en el Archivo 24h el motor comenzo a retornar
+		//la memoria en Kb y no en bytes como la espera la funcion FileUtils.byteCountToDisplaySize()
+		//la mejor manera de resolver esto es en el motor....
+		
 		return FileUtils.byteCountToDisplaySize(memoryUsed);
 	}
 

@@ -1,5 +1,6 @@
 package cu.uci.coj.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,13 +11,19 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.cfg.MapperConfig;
+
 import cu.uci.coj.config.Config;
 import cu.uci.coj.controller.interfaces.IBestSolutions;
 import cu.uci.coj.controller.interfaces.IVirtualStatusSolutions;
 import cu.uci.coj.dao.AchievementDAO;
 import cu.uci.coj.dao.SubmissionDAO;
 import cu.uci.coj.model.Contest;
+import cu.uci.coj.model.DataSetVerdictsJson;
 import cu.uci.coj.model.DatasetVerdict;
+import cu.uci.coj.model.DatasetVerdictJson;
 import cu.uci.coj.model.Filter;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
@@ -28,6 +35,7 @@ import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 
+import java.io.IOException;
 import java.sql.Array;
 
 import javax.swing.JOptionPane;
@@ -38,6 +46,9 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 
 	@Resource
 	private AchievementDAO achievementDAO;
+	
+	@Resource
+	private ObjectMapper objectMapper;
 
 	@Transactional(readOnly = true)
 	public boolean Solved(int uid, int pid) {
@@ -142,19 +153,42 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 	
 	//frankr ioi start
 	private void insertDatasetVerdicts(SubmissionJudge submit){
+		//ObjectMapper mapper = new ObjectMapper(); //FIXME insertar con DI
 		Integer testNum = 0;
 		Iterator<DatasetVerdict> it = submit.getDatasetVerdicts().iterator();
+		DataSetVerdictsJson dvsjson = new DataSetVerdictsJson();
 		while (it.hasNext()){
 			DatasetVerdict dv = it.next();
 			dv.setSid(submit.getSid());
 			dv.setTestnum(testNum++);
 			dv.setStatus(dv.getVerdict().associatedMessage());
-			dml("insert.datasetverdict", dv.getSid(), dv.getTestnum(), dv.getMessage(), dv.getStatus(), 
-										 dv.getUserTime(), dv.getCpuTime(), dv.getMemory());
+			dvsjson.addDataSetVerdict(dv);
 		}
-		//insert.datasetverdict=insert into dataset_verdict (sid,testnum,message,status,"userTime","cpuTime",memory) values (?,?,?,?,?,?)
+		String jsonString = "";
+		try {
+			jsonString = objectMapper.writeValueAsString(dvsjson);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		dml("insert.datasetverdictsjson", submit.getSid(), jsonString);
 	}
 	//frankr ioi end
+	
+//	//frankr ioi start
+//	private void insertDatasetVerdicts(SubmissionJudge submit){
+//		Integer testNum = 0;
+//		Iterator<DatasetVerdict> it = submit.getDatasetVerdicts().iterator();
+//		while (it.hasNext()){
+//			DatasetVerdict dv = it.next();
+//			dv.setSid(submit.getSid());
+//			dv.setTestnum(testNum++);
+//			dv.setStatus(dv.getVerdict().associatedMessage());
+//			dml("insert.datasetverdict", dv.getSid(), dv.getTestnum(), dv.getMessage(), dv.getStatus(), 
+//										 dv.getUserTime(), dv.getCpuTime(), dv.getMemory());
+//		}
+//		//insert.datasetverdict=insert into dataset_verdict (sid,testnum,message,status,"userTime","cpuTime",memory) values (?,?,?,?,?,?)
+//	}
+//	//frankr ioi end	
 
 	public void removeEffects(SubmissionJudge submit, boolean isDisabling) {
 		if (!isDisabling) {
@@ -202,7 +236,8 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 		// dispare el evento sea cuando se haya calculado todo lo anterior
 		
 		//frankr ioi start
-		dml("remove.datasetverdict.by.sid", submit.getSid());
+		dml("remove.datasetverdictjson.by.sid", submit.getSid());
+		//dml("remove.datasetverdict.by.sid", submit.getSid());
 		//frankr ioi end
 		
 		dml("reset.event.processing", submit.getSid());
@@ -412,7 +447,23 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 	//frankr ioi start
 	@Transactional(readOnly = true)
 	private List<DatasetVerdict> getDatasetVerdictsBySid(int submit_id){ //FIXME: add to interface
-		List<DatasetVerdict> result = objects("get.datasetverdicts.by.sid", DatasetVerdict.class, submit_id);
+		//ObjectMapper mapper = new ObjectMapper(); //FIXME insertar dependencia 
+		String dvsjsonString = this.string("get.datasetverdictsjson.by.sid", submit_id);
+		List<DatasetVerdict> result = new ArrayList<DatasetVerdict>();
+		if (dvsjsonString != null){
+			DataSetVerdictsJson dvsjson = null;
+			try {
+				dvsjson = objectMapper.readValue(dvsjsonString, DataSetVerdictsJson.class);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return result;
+			} 
+			List<DatasetVerdictJson> d = dvsjson.getD();
+			for (DatasetVerdictJson dvjson : d){
+				result.add( new DatasetVerdict(dvjson.getC(), dvjson.getS(), dvjson.getT(), dvjson.getM()) );
+			}
+		}
+		//List<DatasetVerdict> result = objects("get.datasetverdicts.by.sid", DatasetVerdict.class, submit_id);
 		//get.datasetverdicts.by.sid=select testnum, message, status, "userTime", "cpuTime", memory from dataset_verdict where sid=? order by testnum
 		return result;
 	}

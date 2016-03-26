@@ -713,7 +713,7 @@
 	<!-- frankr addition start -->
 	<definition name="/user/compareusersbytag" extends="template">
 		<put-attribute name="idpage" value="compareusersbytag" />
-		<put-attribute name="title" value="pagetit.24hcusersbytag" />
+		<put-attribute name="title" value="pagetit.24hcusers" />
 		<put-attribute name="content" value="/WEB-INF/jsp/user/compareusersbytag.jsp" />
 	</definition>
 	<!-- frankr addition end -->
