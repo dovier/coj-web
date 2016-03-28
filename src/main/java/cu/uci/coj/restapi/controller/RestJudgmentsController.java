@@ -10,6 +10,8 @@ import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.SubmissionDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.dao.UtilDAO;
+import cu.uci.coj.model.Problem;
+import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.restapi.templates.JudgmentsRest;
 import cu.uci.coj.utils.Utils;
@@ -21,6 +23,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -180,7 +183,45 @@ public class RestJudgmentsController {
         String response = "{\"lastpage\":"+end(found)+"}";
         
         return response;
+    }
+    
+    
+    @RequestMapping(value = "/best/{pid}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getBestJudgmentsByProblem(@PathVariable int pid,SecurityContextHolderAwareRequestWrapper requestWrapper) {
+        
+        Problem p = null;
+        try {
+            p = problemDAO.getProblemByCode("en", pid, false);
+        } catch (NullPointerException ne) {
+            return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);
+        }
+        
+        List<SubmissionJudge> listSubmitions = new LinkedList();
+        int found = submissionDAO.countBestSolutions(pid);
+        
+	if (found != 0){
+            PagingOptions options = new PagingOptions(1); 
+            Problem problem = problemDAO.getStatistics("en", pid);            
+            IPaginatedList<SubmissionJudge> submissions = submissionDAO.bestSolutions(pid, found, options,requestWrapper, problem);
+            listSubmitions = submissions.getList();
+        }               
+        
+        List<JudgmentsRest> listJudgmentsRest = new LinkedList();
+        
+        for(SubmissionJudge s:listSubmitions){
+            int testcase = 0;
+            if(s.isOntest())
+                testcase = s.getFirstWaCase()+1;
+            JudgmentsRest jud = new JudgmentsRest(s.getSid(),""+s.getDate().toString(),s.getUsername(), s.getPid(), s.getStatus(),testcase, s.getTimeUsed(), s.getMemoryMB(), s.getFontMB(), s.getLang());
+            listJudgmentsRest.add(jud);
+        }
+        
+        return new ResponseEntity<>(listJudgmentsRest, HttpStatus.OK);
     }  
+    
+    
+   
     
     
     public int end(int found){

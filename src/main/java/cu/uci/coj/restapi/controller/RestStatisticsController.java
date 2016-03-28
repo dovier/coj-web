@@ -7,6 +7,7 @@ package cu.uci.coj.restapi.controller;
 
 import cu.uci.coj.dao.BaseDAO;
 import cu.uci.coj.dao.ContestDAO;
+import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.model.CompareUsers;
 import cu.uci.coj.model.Language;
@@ -38,6 +39,8 @@ public class RestStatisticsController {
     private UserDAO userDAO;
     @Resource
     private ContestDAO contestDAO;
+    @Resource
+    private ProblemDAO problemDAO;
 
     @RequestMapping(value = "/24h", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
@@ -206,6 +209,23 @@ public class RestStatisticsController {
         }
 
         return lisPID;
+    }
+    
+    @RequestMapping(value = "/problem/{pid}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getStadisticByProblem(@PathVariable int pid) {
+        
+        Problem p = null;
+        try {
+            p = problemDAO.getProblemByCode("en", pid, false);
+        } catch (NullPointerException ne) {
+            return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);
+        }
+
+        p = problemDAO.getStatistics("en", pid);
+        StadisticsRest stadistic = new StadisticsRest(""+pid, p.getAc(), p.getCe(), p.getIvf(), p.getMle(), p.getOle(), p.getPe(), p.getRte(), p.getTle(), p.getWa(), p.getSubmitions());
+        return new ResponseEntity<>(stadistic, HttpStatus.OK);
+        
     }
 
 }

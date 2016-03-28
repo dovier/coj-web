@@ -10,7 +10,7 @@ package cu.uci.coj.restapi.templates;
  * @author cesar
  */
 public class StadisticsRest {
-    String language;
+    String pattern;
     int ac;
     int ce;
     int ivf;
@@ -22,8 +22,8 @@ public class StadisticsRest {
     int wa;
     int total;
 
-    public StadisticsRest(String language, int ac, int ce, int ivf, int mle, int ole, int pe, int rte, int tle, int wa, int total) {
-        this.language = language;
+    public StadisticsRest(String pattern, int ac, int ce, int ivf, int mle, int ole, int pe, int rte, int tle, int wa, int total) {
+        this.pattern = pattern;
         this.ac = ac;
         this.ce = ce;
         this.ivf = ivf;
@@ -36,12 +36,12 @@ public class StadisticsRest {
         this.total = total;
     }
 
-    public String getLanguage() {
-        return language;
+    public String getPattern() {
+        return pattern;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
     }
 
     public int getAc() {
@@ -123,8 +123,5 @@ public class StadisticsRest {
     public void setTotal(int total) {
         this.total = total;
     }
-    
-    
-    
-    
+
 }
