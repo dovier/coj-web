@@ -11,6 +11,7 @@ package cu.uci.coj.restapi.templates;
  */
 public class CountryRest {
     
+     int country_id;
      int rank;
      String name;
      int institutions;
@@ -18,7 +19,8 @@ public class CountryRest {
      int acc;     
      double points;
 
-    public CountryRest(int rank, String name, int institutions, int users, int acc, double points) {
+    public CountryRest(int country_id, int rank, String name, int institutions, int users, int acc, double points) {
+        this.country_id = country_id;
         this.rank = rank;
         this.name = name;
         this.institutions = institutions;
@@ -26,6 +28,16 @@ public class CountryRest {
         this.acc = acc;
         this.points = points;
     }
+
+    public int getCountry_id() {
+        return country_id;
+    }
+
+    public void setCountry_id(int country_id) {
+        this.country_id = country_id;
+    }
+
+    
 
     public int getRank() {
         return rank;

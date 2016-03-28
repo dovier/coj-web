@@ -13,7 +13,9 @@ import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.model.Country;
 import cu.uci.coj.model.Institution;
 import cu.uci.coj.model.User;
+import cu.uci.coj.restapi.templates.CountryDescriptionRest;
 import cu.uci.coj.restapi.templates.CountryRest;
+import cu.uci.coj.restapi.templates.InstitutionDescriptionRest;
 import cu.uci.coj.restapi.templates.InstitutionRest;
 import cu.uci.coj.restapi.templates.UserRest;
 import cu.uci.coj.utils.paging.IPaginatedList;
@@ -81,18 +83,6 @@ public class RestScoreboardsController{
         return listUsersRest;
     }  
     
-    @RequestMapping(value = "/byuser/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
-    @ResponseBody
-    public ResponseEntity<?> getRankingByUserFromTo(@PathVariable int from, @PathVariable int to) {
-        if(from<1 || to<1 || from>to)
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<UserRest> listUserRest = getRankingByUser(null, null, Boolean.FALSE, Boolean.FALSE);
-        if(from>listUserRest.size() || to>listUserRest.size())
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        
-        return new ResponseEntity<>(listUserRest.subList(from-1, to), HttpStatus.OK);
-    } 
-    
     @RequestMapping(value = "/byinstitution", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<InstitutionRest> getRankingByInstitucions(Principal principal,
@@ -112,26 +102,13 @@ public class RestScoreboardsController{
         List<InstitutionRest> listInstitucionRest = new LinkedList();
 
         for(Institution i:listInstitution){
-            InstitutionRest ir = new InstitutionRest(i.getRank(), i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
+            InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
             listInstitucionRest.add(ir);
         }
         
         return listInstitucionRest;
     }
     
-    
-    
-    @RequestMapping(value = "/byinstitution/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
-    @ResponseBody
-    public ResponseEntity<?> getRankingByInstitutionFromTo(@PathVariable int from, @PathVariable int to) {
-        if(from<1 || to<1 || from>to)
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<InstitutionRest> listInstitutionRest = getRankingByInstitucions(null, null);
-        if(from>listInstitutionRest.size() || to>listInstitutionRest.size())
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        
-        return new ResponseEntity<>(listInstitutionRest.subList(from-1, to), HttpStatus.OK);
-    } 
     
     @RequestMapping(value = "/bycountry", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
@@ -151,25 +128,38 @@ public class RestScoreboardsController{
         List<CountryRest> listCountryRest = new LinkedList();
 
         for(Country c:listCountry){
-            CountryRest cr = new CountryRest(c.getRank(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
+            CountryRest cr = new CountryRest(c.getId(),c.getRank(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
             listCountryRest.add(cr);
         }
         
         return listCountryRest;
     }
     
-    @RequestMapping(value = "/bycountry/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
-    @ResponseBody
-    public  ResponseEntity<?>  getRankingByCountryFromTo(@PathVariable int from, @PathVariable int to) {
-        if(from<1 || to<1 || from>to)
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<CountryRest> listCountryRest = getRankingByCountry(null, null);
-        if(from>listCountryRest.size() || to>listCountryRest.size())
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        
-        return new ResponseEntity<>(listCountryRest.subList(from-1, to), HttpStatus.OK);
-    }
     
+    @RequestMapping(value = "/institutionbycountry", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public List<CountryRest> getRankingInstitutionByCountry(Principal principal,
+            @RequestParam(required = false, value = "pattern") String pattern) {
+        
+        int found = countryDAO.countEnabledCountries(pattern);
+     
+        List<Country> listCountry = new LinkedList();   
+        
+        for(int i=1;i<=end(found);i++){
+            PagingOptions options = new PagingOptions(i);            
+            IPaginatedList<Country> pages = countryDAO.getEnabledCountries(pattern, found, options);
+            listCountry.addAll(pages.getList());
+        }        
+            
+        List<CountryRest> listCountryRest = new LinkedList();
+
+      /*  for(Country c:listCountry){
+            CountryRest cr = new CountryRest(c.getRank(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
+            listCountryRest.add(cr);
+        }*/
+        
+        return listCountryRest;
+    }
     
     
     @RequestMapping(value = "/bycontest", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -197,6 +187,81 @@ public class RestScoreboardsController{
         return listUsersRest;
     }
     
+    @RequestMapping(value = "/description/institution/{inst_id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getDescriptionInstitutionByInstID(@PathVariable int inst_id) {
+        
+        Institution i = institutionDAO.object("institution.id", Institution.class, inst_id);
+        if(i == null)
+            return new ResponseEntity<>("bad institution id", HttpStatus.BAD_REQUEST);
+        i.setCount(institutionDAO.integer("institution.profile.count.users", inst_id));
+        i.setPoints(institutionDAO.real(0.0,"user.score.enabled.inst", inst_id));
+        i.setRank(institutionDAO.integer(-1,"insitutions.rank", inst_id));
+        i.setRankincountry(institutionDAO.integer(-1,"institution.rank.incountry" , i.getCountry_id(),inst_id));
+        Country c  = countryDAO.object("country.by.id", Country.class, i.getCountry_id());      
+        
+        String logo = "http://coj.uci.cu/images/school/"+i.getZip()+".png";
+        InstitutionDescriptionRest idescrip = new InstitutionDescriptionRest(i.getName(),i.getZip(), logo, i.getWebsite(),c.getName(), i.getCount(), i.getPoints(),i.getRank(), i.getRankincountry());
+        return new ResponseEntity<>(idescrip, HttpStatus.OK);
+    }    
+    
+    @RequestMapping(value = "/description/country/{country_id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getDescriptionCountryByCountryID(@PathVariable int country_id) {
+        
+        Country c = countryDAO.object("country.by.id", Country.class, country_id);
+        if(c == null)
+            return new ResponseEntity<>("bad country id", HttpStatus.BAD_REQUEST);
+        
+        c.setInstitutions(countryDAO.integer("count.institutions", country_id));
+        c.setPoints(countryDAO.real("user.score", country_id));
+        c.setRank(countryDAO.integer("country.rank", country_id));
+        c.setUsers(countryDAO.integer("count.users", country_id));   
+                
+        String flag = "http://coj.uci.cu/images/countries/"+c.getZip()+".png";
+        CountryDescriptionRest cdescrip = new CountryDescriptionRest(c.getName(),c.getZip_two(), c.getZip(), flag, c.getWebsite(), c.getInstitutions(), c.getUsers(), c.getPoints(), c.getRank());
+        return new ResponseEntity<>(cdescrip, HttpStatus.OK);
+    }
+    
+    
+    
+    
+    @RequestMapping(value = "/byuser/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getRankingByUserFromTo(@PathVariable int from, @PathVariable int to) {
+        if(from<1 || to<1 || from>to)
+            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+        List<UserRest> listUserRest = getRankingByUser(null, null, Boolean.FALSE, Boolean.FALSE);
+        if(from>listUserRest.size() || to>listUserRest.size())
+            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+        
+        return new ResponseEntity<>(listUserRest.subList(from-1, to), HttpStatus.OK);
+    }     
+    
+    @RequestMapping(value = "/byinstitution/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getRankingByInstitutionFromTo(@PathVariable int from, @PathVariable int to) {
+        if(from<1 || to<1 || from>to)
+            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+        List<InstitutionRest> listInstitutionRest = getRankingByInstitucions(null, null);
+        if(from>listInstitutionRest.size() || to>listInstitutionRest.size())
+            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+        
+        return new ResponseEntity<>(listInstitutionRest.subList(from-1, to), HttpStatus.OK);
+    } 
+    
+    @RequestMapping(value = "/bycountry/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public  ResponseEntity<?>  getRankingByCountryFromTo(@PathVariable int from, @PathVariable int to) {
+        if(from<1 || to<1 || from>to)
+            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+        List<CountryRest> listCountryRest = getRankingByCountry(null, null);
+        if(from>listCountryRest.size() || to>listCountryRest.size())
+            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+        
+        return new ResponseEntity<>(listCountryRest.subList(from-1, to), HttpStatus.OK);
+    }
+  
     @RequestMapping(value = "/bycontest/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public  ResponseEntity<?>  getRankingBybycontestFromTo(@PathVariable int from, @PathVariable int to) {
@@ -207,13 +272,9 @@ public class RestScoreboardsController{
             return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
         
         return new ResponseEntity<>(listUserRest.subList(from-1, to), HttpStatus.OK);
-    } 
+    }
     
-    
-    
-  
-    
-    public int end(int found){
+    private int end(int found){
         if(found%30==0)
             return found/30;
         else

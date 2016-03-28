@@ -215,14 +215,10 @@ public class RestStatisticsController {
     @ResponseBody
     public ResponseEntity<?> getStadisticByProblem(@PathVariable int pid) {
         
-        Problem p = null;
-        try {
-            p = problemDAO.getProblemByCode("en", pid, false);
-        } catch (NullPointerException ne) {
-            return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);
-        }
+        if (!problemDAO.exists(pid) )
+            return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);     
 
-        p = problemDAO.getStatistics("en", pid);
+        Problem p = problemDAO.getStatistics("en", pid);
         StadisticsRest stadistic = new StadisticsRest(""+pid, p.getAc(), p.getCe(), p.getIvf(), p.getMle(), p.getOle(), p.getPe(), p.getRte(), p.getTle(), p.getWa(), p.getSubmitions());
         return new ResponseEntity<>(stadistic, HttpStatus.OK);
         

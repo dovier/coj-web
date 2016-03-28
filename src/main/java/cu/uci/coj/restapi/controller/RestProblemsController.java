@@ -155,6 +155,9 @@ public class RestProblemsController {
             @PathVariable int pid,
             @RequestParam(required = false, value = "locale", defaultValue = "en") String locale) {
         
+        if (!problemDAO.exists(pid) )
+            return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);
+        
         Problem p = null;
         try {
             p = problemDAO.getProblemByCode(locale, pid, false);

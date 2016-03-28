@@ -190,12 +190,8 @@ public class RestJudgmentsController {
     @ResponseBody
     public ResponseEntity<?> getBestJudgmentsByProblem(@PathVariable int pid,SecurityContextHolderAwareRequestWrapper requestWrapper) {
         
-        Problem p = null;
-        try {
-            p = problemDAO.getProblemByCode("en", pid, false);
-        } catch (NullPointerException ne) {
+        if (!problemDAO.exists(pid) )
             return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);
-        }
         
         List<SubmissionJudge> listSubmitions = new LinkedList();
         int found = submissionDAO.countBestSolutions(pid);

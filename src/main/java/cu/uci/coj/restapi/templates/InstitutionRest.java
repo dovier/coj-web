@@ -11,6 +11,7 @@ package cu.uci.coj.restapi.templates;
  */
 public class InstitutionRest {
     
+    int inst_id;
     int rank;
     String cname;
     String name;
@@ -18,7 +19,8 @@ public class InstitutionRest {
     int acc;
     double points;
 
-    public InstitutionRest(int rank, String cname, String name, int users, int acc, double points) {
+    public InstitutionRest(int inst_id, int rank, String cname, String name, int users, int acc, double points) {
+        this.inst_id = inst_id;
         this.rank = rank;
         this.cname = cname;
         this.name = name;
@@ -26,6 +28,16 @@ public class InstitutionRest {
         this.acc = acc;
         this.points = points;
     }
+
+    public int getInst_id() {
+        return inst_id;
+    }
+
+    public void setInst_id(int inst_id) {
+        this.inst_id = inst_id;
+    }
+
+    
 
     public String getName() {
         return name;
