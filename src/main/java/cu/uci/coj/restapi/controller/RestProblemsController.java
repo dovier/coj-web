@@ -17,7 +17,7 @@ import cu.uci.coj.model.Limits;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.recommender.Recommender;
-import cu.uci.coj.restapi.templates.FilterRest;
+import cu.uci.coj.restapi.templates.FilterLanguageRest;
 import cu.uci.coj.restapi.templates.ProblemDescriptionRest;
 import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.utils.TokenUtils;
@@ -466,21 +466,7 @@ public class RestProblemsController {
     }
     
     
-    @RequestMapping(value = "/submit/enabled_language/{pid}", method = RequestMethod.GET, headers = "Accept=application/json")
-    @ResponseBody
-    public ResponseEntity<?> getAllCOJboardbySID(@PathVariable Integer pid) {
-        if (problemDAO.exists(pid) ){ 
-            List<FilterRest> filters = new LinkedList();
-            List<Language> languages = new LinkedList();
-            languages.addAll(utilDAO.getEnabledLanguagesByProblem(pid));
-            for(Language lan:languages){
-                FilterRest f = new FilterRest(lan.getKey(),lan.getLanguage());
-                filters.add(f);
-            }
-            return new ResponseEntity<>(filters,HttpStatus.OK);
-        }
-        return new ResponseEntity<>("bad pid",HttpStatus.BAD_REQUEST);
-    }
+   
     
     
    

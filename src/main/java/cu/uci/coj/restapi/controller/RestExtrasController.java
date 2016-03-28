@@ -16,7 +16,7 @@ import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
 import cu.uci.coj.restapi.templates.CojBoardRest;
 import cu.uci.coj.restapi.templates.EntriesRest;
-import cu.uci.coj.restapi.templates.FilterRest;
+import cu.uci.coj.restapi.templates.FilterLanguageRest;
 import cu.uci.coj.utils.EntryHelper;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
@@ -133,29 +133,13 @@ public class RestExtrasController {
     @ResponseBody
     public ResponseEntity<?> getAllCOJboardbySID(@PathVariable Integer sid) {
         return getAllCOJboard(sid);
-    }
+    }    
     
-    @RequestMapping(value = "/cojboard/filters", method = RequestMethod.GET, headers = "Accept=application/json")
-    @ResponseBody
-    public ResponseEntity<?> getAllCOJboardFilters() {
-        List<WbSite> listsites = wbSiteDAO.getSiteList();
-        List<FilterRest> listFilters = new LinkedList();
-        for (WbSite site : listsites) {
-            FilterRest filter = new FilterRest(site.getSid(), site.getSite());
-            listFilters.add(filter);
-        }
-        return new ResponseEntity<>(listFilters,HttpStatus.OK);
-    }
     
     @RequestMapping(value = "/faq", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getFAQs() {
         List<Faq> faqs = utilDao.objects("list.faq", Faq.class);
-        /*List<FilterRest> listFilters = new LinkedList();
-        for (WbSite site : listsites) {
-            FilterRest filter = new FilterRest(site.getSid(), site.getSite());
-            listFilters.add(filter);
-        }*/
         return new ResponseEntity<>(faqs,HttpStatus.OK);
     }
     
