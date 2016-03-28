@@ -9,7 +9,9 @@ import cu.uci.coj.board.dao.WbSiteDAO;
 import cu.uci.coj.board.service.WbContestService;
 import cu.uci.coj.dao.EntryDAO;
 import cu.uci.coj.dao.UserDAO;
+import cu.uci.coj.dao.UtilDAO;
 import cu.uci.coj.model.Entry;
+import cu.uci.coj.model.Faq;
 import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
 import cu.uci.coj.restapi.templates.CojBoardRest;
@@ -54,6 +56,8 @@ public class RestExtrasController {
 	WbContestService wbContestService;
 	@Resource
 	WbSiteDAO wbSiteDAO;
+        @Resource
+        private UtilDAO utilDao;
         
         
     @RequestMapping(value = "/welcome/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -141,6 +145,18 @@ public class RestExtrasController {
             listFilters.add(filter);
         }
         return new ResponseEntity<>(listFilters,HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/faq", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getFAQs() {
+        List<Faq> faqs = utilDao.objects("list.faq", Faq.class);
+        /*List<FilterRest> listFilters = new LinkedList();
+        for (WbSite site : listsites) {
+            FilterRest filter = new FilterRest(site.getSid(), site.getSite());
+            listFilters.add(filter);
+        }*/
+        return new ResponseEntity<>(faqs,HttpStatus.OK);
     }
     
 }

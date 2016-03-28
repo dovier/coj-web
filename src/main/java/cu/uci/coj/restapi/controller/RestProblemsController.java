@@ -15,7 +15,6 @@ import cu.uci.coj.dao.UtilDAO;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Limits;
 import cu.uci.coj.model.Problem;
-import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.recommender.Recommender;
 import cu.uci.coj.restapi.templates.FilterRest;
@@ -36,8 +35,6 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -97,7 +94,7 @@ public class RestProblemsController {
             if (found != 0) {
                 List<ProblemRest> listProblemsRest = new LinkedList();
                 for (Problem p : recommendations) {
-                    ProblemRest pr = new ProblemRest(p.getPid(), p.getTitleEN(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints(), p.isFavorite(), ResolveStatus(p, username));
+                    ProblemRest pr = new ProblemRest(p.getPid(), p.getTitle(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints(), p.isFavorite(), ResolveStatus(p, username));
                     listProblemsRest.add(pr);
                 }
 
@@ -118,7 +115,7 @@ public class RestProblemsController {
         List<ProblemRest> listProblemsRest = new LinkedList();
 
         for (Problem p : listProblems) {
-            ProblemRest pr = new ProblemRest(p.getPid(), p.getTitleEN(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints(), p.isFavorite(), ResolveStatus(p, username));
+            ProblemRest pr = new ProblemRest(p.getPid(), p.getTitle(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints(), p.isFavorite(), ResolveStatus(p, username));
             listProblemsRest.add(pr);
         }
 
@@ -154,26 +151,26 @@ public class RestProblemsController {
 
     @RequestMapping(value = "/{pid}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getProblemDescriptionsByID(@PathVariable int pid) {
+    public ResponseEntity<?> getProblemDescriptionsByID(
+            @PathVariable int pid,
+            @RequestParam(required = false, value = "locale", defaultValue = "en") String locale) {
+        
         Problem p = null;
         try {
-            p = problemDAO.getProblemByCode("en", pid, false);
+            p = problemDAO.getProblemByCode(locale, pid, false);
         } catch (NullPointerException ne) {
             return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);
         }
         p.setDate(p.getDate().split(" ")[0]);
         problemDAO.fillProblemLanguages(p);
         problemDAO.fillProblemLimits(p);
-        String username = null;
-        Language language = null;
         Recommender recommender = new Recommender(userDAO, problemDAO, recommenderDAO);
         List<Problem> recommendations = recommender.findSimilarProblems(p);
-
+ 
         List<String> languages = new LinkedList();
         List<Long> totaltime = new LinkedList();
         List<Long> testtime = new LinkedList();
         List<String> memory = new LinkedList();
-        List<String> outputMB = new LinkedList();
         List<String> size = new LinkedList();
         for (Language leng : p.getLanguages()) {
             for (Limits limit : p.getLimits()) {
@@ -195,7 +192,7 @@ public class RestProblemsController {
         }
 
         ProblemDescriptionRest problemDescrptions;
-        problemDescrptions = new ProblemDescriptionRest(p.getAuthor(), p.getUsername(), p.getDate(), totaltime, testtime, memory, "64 MB", size, languages, p.getDescriptionEN(), p.getInputEN(), p.getOutputEN(), p.getInputex(), p.getOutputex(), p.getCommentsEN(), recomended);
+        problemDescrptions = new ProblemDescriptionRest(p.getAuthor(), p.getUsername(), p.getDate(), totaltime, testtime, memory, "64 MB", size, languages, p.getDescription(), p.getInput(), p.getOutput(), p.getInputex(), p.getOutputex(), p.getComments(), recomended);
 
         return new ResponseEntity<>(problemDescrptions, HttpStatus.OK);
 
@@ -390,6 +387,7 @@ public class RestProblemsController {
     @RequestMapping(value = "/submit", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> SubmitProblem(@RequestBody String bodyjson) {
+        int sid = -1;  
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
@@ -409,6 +407,8 @@ public class RestProblemsController {
             int pid = node.get("pid").asInt();
             String language = node.get("language").asText();
             String code = node.get("source").asText();
+                     
+            
             
             if (!problemDAO.exists(pid) )
                 return new ResponseEntity<>("bad pid",HttpStatus.BAD_REQUEST);
@@ -442,7 +442,7 @@ public class RestProblemsController {
             problem.setUserLanguage("en");
             boolean locked = problemDAO.bool("issolved.byuser", uid,problem.getPid()) && problemDAO.isLocked(uid, problem.getPid());
             
-            int sid = submissionDAO.insertSubmission(uid,username, problem.getPid(), submit.getCode(),submit.getLanguageByLid(), locked, null);
+            sid = submissionDAO.insertSubmission(uid,username, problem.getPid(), submit.getCode(),submit.getLanguageByLid(), locked, null);
             SubmissionJudge submission = new SubmissionJudge(sid, uid,
 					submit.getCode(), problem.getPid(), problem.getTime(),
 					problem.getCasetimelimit(), problem.getMemory(),
@@ -455,13 +455,14 @@ public class RestProblemsController {
                 submissionDAO.changeStatus(sid, "Unqualified");
             }
             
+                  
            
 
         } catch (IOException ex) {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }
-        
-        return new ResponseEntity<>(null,HttpStatus.OK);
+        String response = "{idsubmission:"+sid+"}";
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
     
     
