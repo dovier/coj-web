@@ -55,7 +55,7 @@ public class RestScoreboardsController{
     
     @RequestMapping(value = "/byuser", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public List<UserRest> getRankingByUser(Principal principal,
+    public List<UserRest> getRankingByUser(
             @RequestParam(required = false, value = "pattern") String pattern, 
             @RequestParam(required = false, defaultValue = "false", value = "following") Boolean following, 
             @RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
@@ -85,7 +85,7 @@ public class RestScoreboardsController{
     
     @RequestMapping(value = "/byinstitution", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public List<InstitutionRest> getRankingByInstitucions(Principal principal,
+    public List<InstitutionRest> getRankingByInstitucions(
             @RequestParam(required = false, value = "pattern") String pattern) {
         
       
@@ -112,8 +112,7 @@ public class RestScoreboardsController{
     
     @RequestMapping(value = "/bycountry", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public List<CountryRest> getRankingByCountry(Principal principal,
-            @RequestParam(required = false, value = "pattern") String pattern) {
+    public List<CountryRest> getRankingByCountry(@RequestParam(required = false, value = "pattern") String pattern) {
         
         int found = countryDAO.countEnabledCountries(pattern);
      
@@ -136,29 +135,95 @@ public class RestScoreboardsController{
     }
     
     
-    @RequestMapping(value = "/institutionbycountry", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/institutionbycountry/{country_id}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public List<CountryRest> getRankingInstitutionByCountry(Principal principal,
-            @RequestParam(required = false, value = "pattern") String pattern) {
+    public ResponseEntity<?> getRankingInstitutionByCountry(@PathVariable int country_id) {
         
-        int found = countryDAO.countEnabledCountries(pattern);
+        Country c = countryDAO.object("country.by.id", Country.class, country_id);
+        if(c == null)
+            return new ResponseEntity<>("bad country id", HttpStatus.BAD_REQUEST);
+        
+        int found = institutionDAO.countEnabledInstitutionsByCountry("", country_id);
      
-        List<Country> listCountry = new LinkedList();   
+        List<Institution> listInstitution = new LinkedList();   
         
         for(int i=1;i<=end(found);i++){
             PagingOptions options = new PagingOptions(i);            
-            IPaginatedList<Country> pages = countryDAO.getEnabledCountries(pattern, found, options);
-            listCountry.addAll(pages.getList());
+            IPaginatedList<Institution> pages = institutionDAO.getEnabledInstitutionsByCountry("", found, options, country_id);
+            listInstitution.addAll(pages.getList());
         }        
             
-        List<CountryRest> listCountryRest = new LinkedList();
+        List<InstitutionRest> listInstitucionRest = new LinkedList();
 
-      /*  for(Country c:listCountry){
-            CountryRest cr = new CountryRest(c.getRank(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
-            listCountryRest.add(cr);
-        }*/
+        for(Institution i:listInstitution){
+            InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
+            listInstitucionRest.add(ir);
+        }
         
-        return listCountryRest;
+        return new ResponseEntity<>(listInstitucionRest, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/usersbycountry/{country_id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getRankingUsersByCountry(@PathVariable int country_id) {
+        
+        Country c = countryDAO.object("country.by.id", Country.class, country_id);
+        if(c == null)
+            return new ResponseEntity<>("bad country id", HttpStatus.BAD_REQUEST);
+
+        int found = userDAO.countEnabledUsersByCountry("",false, country_id);
+
+        if(found>2000)
+            found = 2000;
+
+        List<User> listUsers = new LinkedList();   
+        
+        for(int i=1;i<=end(found);i++){
+            PagingOptions options = new PagingOptions(i);            
+            IPaginatedList<User> pages = userDAO.getCountryUsersRanking("", found, false, options, country_id);
+            listUsers.addAll(pages.getList());
+        }        
+
+        List<UserRest> listUsersRest = new LinkedList();
+        
+        for(User u:listUsers){
+            UserRest ur = new UserRest(u.getRank(), u.getCountry_desc(), u.getUsername(), u.getStatus(),u.getTotal(), u.getAccu(),u.getPercent(),u.getPoints());
+            listUsersRest.add(ur);
+        }
+
+        return new ResponseEntity<>(listUsersRest, HttpStatus.OK);
+    }
+    
+    
+    @RequestMapping(value = "/usersbyinstitution/{inst_id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getRankingUsersByInstitution(@PathVariable int inst_id) {
+        
+        Institution ins = institutionDAO.object("institution.id", Institution.class, inst_id);
+        if(ins == null)
+            return new ResponseEntity<>("bad institution id", HttpStatus.BAD_REQUEST);
+  
+        int found = userDAO.countEnabledUsersByInstitutions("", false, inst_id);
+
+        if(found>2000)
+            found = 2000;
+
+        List<User> listUsers = new LinkedList();   
+        
+        for(int i=1;i<=end(found);i++){
+            PagingOptions options = new PagingOptions(i);            
+            IPaginatedList<User> pages = userDAO.getInstitutionUsersRanking("", found, false, options, inst_id);
+            listUsers.addAll(pages.getList());
+        }        
+
+        List<UserRest> listUsersRest = new LinkedList();
+        
+        for(User u:listUsers){
+            UserRest ur = new UserRest(u.getRank(), u.getCountry_desc(), u.getUsername(), u.getStatus(),u.getTotal(), u.getAccu(),u.getPercent(),u.getPoints());
+            listUsersRest.add(ur);
+        }
+
+        return new ResponseEntity<>(listUsersRest, HttpStatus.OK);
     }
     
     
@@ -231,7 +296,7 @@ public class RestScoreboardsController{
     public ResponseEntity<?> getRankingByUserFromTo(@PathVariable int from, @PathVariable int to) {
         if(from<1 || to<1 || from>to)
             return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<UserRest> listUserRest = getRankingByUser(null, null, Boolean.FALSE, Boolean.FALSE);
+        List<UserRest> listUserRest = getRankingByUser(null, Boolean.FALSE, Boolean.FALSE);
         if(from>listUserRest.size() || to>listUserRest.size())
             return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
         
@@ -243,7 +308,7 @@ public class RestScoreboardsController{
     public ResponseEntity<?> getRankingByInstitutionFromTo(@PathVariable int from, @PathVariable int to) {
         if(from<1 || to<1 || from>to)
             return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<InstitutionRest> listInstitutionRest = getRankingByInstitucions(null, null);
+        List<InstitutionRest> listInstitutionRest = getRankingByInstitucions(null);
         if(from>listInstitutionRest.size() || to>listInstitutionRest.size())
             return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
         
@@ -255,7 +320,7 @@ public class RestScoreboardsController{
     public  ResponseEntity<?>  getRankingByCountryFromTo(@PathVariable int from, @PathVariable int to) {
         if(from<1 || to<1 || from>to)
             return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<CountryRest> listCountryRest = getRankingByCountry(null, null);
+        List<CountryRest> listCountryRest = getRankingByCountry(null);
         if(from>listCountryRest.size() || to>listCountryRest.size())
             return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
         
