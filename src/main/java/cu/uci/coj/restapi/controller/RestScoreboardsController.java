@@ -291,52 +291,88 @@ public class RestScoreboardsController{
     
     
     
-    @RequestMapping(value = "/byuser/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/byuser/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getRankingByUserFromTo(@PathVariable int from, @PathVariable int to) {
-        if(from<1 || to<1 || from>to)
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<UserRest> listUserRest = getRankingByUser(null, Boolean.FALSE, Boolean.FALSE);
-        if(from>listUserRest.size() || to>listUserRest.size())
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> getRankingByUserFromTo(@PathVariable int page) {       
+        Integer uid = null;
+        int found = userDAO.countEnabledUsersForScoreboard("", false, uid);
         
-        return new ResponseEntity<>(listUserRest.subList(from-1, to), HttpStatus.OK);
+        if (page > 0 && page <= end(found)) {
+            PagingOptions options = new PagingOptions(page);            
+            IPaginatedList<User> pages = userDAO.getUserRanking("", found, false, uid, options);
+            
+            List<UserRest> listUsersRest = new LinkedList();
+            for(User u:pages.getList()){
+                UserRest ur = new UserRest(u.getRank(), u.getCountry_desc(), u.getUsername(), u.getStatus(),u.getTotal(), u.getAccu(),u.getPercent(),u.getPoints());
+                listUsersRest.add(ur);
+            }
+
+            return new ResponseEntity<>(listUsersRest, HttpStatus.OK);
+        }
+        else 
+            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);        
     }     
     
-    @RequestMapping(value = "/byinstitution/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/byinstitution/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getRankingByInstitutionFromTo(@PathVariable int from, @PathVariable int to) {
-        if(from<1 || to<1 || from>to)
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<InstitutionRest> listInstitutionRest = getRankingByInstitucions(null);
-        if(from>listInstitutionRest.size() || to>listInstitutionRest.size())
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> getRankingByInstitutionFromTo(@PathVariable int page) {
+       
+        int found = institutionDAO.countEnabledInstitutions(""); 
         
-        return new ResponseEntity<>(listInstitutionRest.subList(from-1, to), HttpStatus.OK);
+        if (page > 0 && page <= end(found)) {     
+            PagingOptions options = new PagingOptions(page);            
+            IPaginatedList<Institution> pages = institutionDAO.getEnabledInstitutions("", found, options);
+            
+            List<InstitutionRest> listInstitucionRest = new LinkedList();
+            for(Institution i:pages.getList()){
+                InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
+                listInstitucionRest.add(ir);
+            }
+            
+            return new ResponseEntity<>(listInstitucionRest, HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
+   
     } 
     
-    @RequestMapping(value = "/bycountry/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/bycountry/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public  ResponseEntity<?>  getRankingByCountryFromTo(@PathVariable int from, @PathVariable int to) {
-        if(from<1 || to<1 || from>to)
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<CountryRest> listCountryRest = getRankingByCountry(null);
-        if(from>listCountryRest.size() || to>listCountryRest.size())
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+    public  ResponseEntity<?>  getRankingByCountryFromTo(@PathVariable int page) {
         
-        return new ResponseEntity<>(listCountryRest.subList(from-1, to), HttpStatus.OK);
+        int found = countryDAO.countEnabledCountries("");         
+        if (page > 0 && page <= end(found)) { 
+            PagingOptions options = new PagingOptions(page);            
+            IPaginatedList<Country> pages = countryDAO.getEnabledCountries("", found, options);
+            
+            List<CountryRest> listCountryRest = new LinkedList();
+            for(Country c:pages.getList()){
+                CountryRest cr = new CountryRest(c.getId(),c.getRank(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
+                listCountryRest.add(cr);
+            }
+            return new ResponseEntity<>(listCountryRest, HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
     }
   
-    @RequestMapping(value = "/bycontest/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/bycontest/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public  ResponseEntity<?>  getRankingBybycontestFromTo(@PathVariable int from, @PathVariable int to) {
-        if(from<1 || to<1 || from>to)
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<UserRest> listUserRest = getRankingByContest(null, null);
-        if(from>listUserRest.size() || to > listUserRest.size())
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        
-        return new ResponseEntity<>(listUserRest.subList(from-1, to), HttpStatus.OK);
+    public  ResponseEntity<?>  getRankingBybycontestFromTo(@PathVariable int page) {
+        int found = contestDAO.countContestGeneralScoreboard("");         
+        if (page > 0 && page <= end(found)) { 
+            PagingOptions options = new PagingOptions(page);            
+            IPaginatedList<User> pages = contestDAO.getContestGeneralScoreboard(found, "", options);
+            
+            List<UserRest> listUsersRest = new LinkedList();        
+            for(User u:pages.getList()){
+                UserRest ur = new UserRest(u.getRank(), u.getCountry_desc(), u.getUsername(), u.getStatus(),u.getTotal(), u.getAccu(),u.getPercent(),u.getPoints());
+                listUsersRest.add(ur);
+            }
+            return new ResponseEntity<>(listUsersRest, HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
     }
     
     private int end(int found){

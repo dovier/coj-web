@@ -56,13 +56,13 @@ public class RestPrivateController {
             String sql = "SELECT * FROM public.users WHERE username = ?";
             
             try{
-            User user =  (User) jdbcTemplate.queryForObject(sql,new Object[]{username},new BeanPropertyRowMapper(User.class));
-            PasswordEncoder encoder = new Md5PasswordEncoder();
-            password = encoder.encodePassword(password,"ABC123XYZ789");
-            
-            if(user.getPassword().equals(password)){
-                TokenRest token = new TokenRest(TokenUtils.CreateTokenUser(username), TokenUtils.expirityToken);
-                return  new ResponseEntity<>(token, HttpStatus.OK);
+                User user =  (User) jdbcTemplate.queryForObject(sql,new Object[]{username},new BeanPropertyRowMapper(User.class));
+                PasswordEncoder encoder = new Md5PasswordEncoder();
+                password = encoder.encodePassword(password,"ABC123XYZ789");
+
+                if(user.getPassword().equals(password)){
+                    TokenRest token = new TokenRest(TokenUtils.CreateTokenUser(username), TokenUtils.expirityToken);
+                    return  new ResponseEntity<>(token, HttpStatus.OK);
             }
             else
                 return  new ResponseEntity<>("bad user or password", HttpStatus.UNAUTHORIZED);
