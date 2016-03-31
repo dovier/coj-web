@@ -14,6 +14,8 @@ import java.util.List;
 public class ProblemDescriptionRest {
     
     String createdby;
+    String source;
+    String author;    
     String addedby;
     String dateOfCreation;
     List<Long> totaltime;
@@ -30,8 +32,10 @@ public class ProblemDescriptionRest {
     String hints;
     List<String> recommendation;
 
-    public ProblemDescriptionRest(String createdby, String addedby, String dateOfCreation, List<Long> totaltime, List<Long> testtime, List<String> memory, String outputMB, List<String> size, List<String> enabledlanguages, String description, String inputSpecification, String outputSpecification, String sampleInput, String sampleOutput, String hints, List<String> recommendation) {
+    public ProblemDescriptionRest(String createdby, String source, String author, String addedby, String dateOfCreation, List<Long> totaltime, List<Long> testtime, List<String> memory, String outputMB, List<String> size, List<String> enabledlanguages, String description, String inputSpecification, String outputSpecification, String sampleInput, String sampleOutput, String hints, List<String> recommendation) {
         this.createdby = createdby;
+        this.source = source;
+        this.author = author;
         this.addedby = addedby;
         this.dateOfCreation = dateOfCreation;
         this.totaltime = totaltime;
@@ -48,6 +52,24 @@ public class ProblemDescriptionRest {
         this.hints = hints;
         this.recommendation = recommendation;
     }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    
 
     public String getCreatedby() {
         return createdby;

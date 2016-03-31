@@ -17,7 +17,6 @@ import cu.uci.coj.model.Limits;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.recommender.Recommender;
-import cu.uci.coj.restapi.templates.FilterLanguageRest;
 import cu.uci.coj.restapi.templates.ProblemDescriptionRest;
 import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.utils.TokenUtils;
@@ -63,6 +62,7 @@ public class RestProblemsController {
     private SubmissionDAO submissionDAO;
     @Resource
     private Utils utils;
+    
 
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
@@ -158,6 +158,8 @@ public class RestProblemsController {
         if (!problemDAO.exists(pid) )
             return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);
         
+        
+        
         Problem p = null;
         try {
             p = problemDAO.getProblemByCode(locale, pid, false);
@@ -194,13 +196,32 @@ public class RestProblemsController {
             recomended.add("" + pro.getPid());
         }
 
+        String[] arreglo = author_source(pid);
         ProblemDescriptionRest problemDescrptions;
-        problemDescrptions = new ProblemDescriptionRest(p.getAuthor(), p.getUsername(), p.getDate(), totaltime, testtime, memory, "64 MB", size, languages, p.getDescription(), p.getInput(), p.getOutput(), p.getInputex(), p.getOutputex(), p.getComments(), recomended);
+        problemDescrptions = new ProblemDescriptionRest(p.getAuthor(),arreglo[0].trim(),arreglo[1].trim(), p.getUsername(), p.getDate(), totaltime, testtime, memory, "64 MB", size, languages, p.getDescription(), p.getInput(), p.getOutput(), p.getInputex(), p.getOutputex(), p.getComments(), recomended);
 
         return new ResponseEntity<>(problemDescrptions, HttpStatus.OK);
 
     }
-
+    
+    private String[] author_source(int pid){
+        String[] arreglo = new String[2];
+        
+        String s = problemDAO.string("select.author.problem.id",pid);
+        if(s.contains("[")){
+            s = s.replace("[", "!");
+            arreglo = s.split("!");
+            arreglo[1] = arreglo[1].replace("]", "");
+        }
+        else
+        {
+            arreglo[0] = s;
+            arreglo[1] = "";
+        }
+        return arreglo;
+    }
+            
+    
     private int end(int found) {
         if (found % 50 == 0) {
             return found / 50;
