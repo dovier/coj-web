@@ -14,6 +14,7 @@ import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.restapi.templates.CompareUserRest;
 import cu.uci.coj.restapi.templates.StadisticsRest;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Resource;
@@ -103,7 +104,7 @@ public class RestStatisticsController {
                 uid1 = userDAO.integer("select.uid.by.username", user1);
                 uid2 = userDAO.integer("select.uid.by.username", user2);
             }catch(NullPointerException ne){
-                return new ResponseEntity<>("bad users", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(ErrorUtils.BAD_USER, HttpStatus.BAD_REQUEST);
             }
             if (uid1 != -1 && uid2 != -1) {
                 solved1 = userDAO.objects("problems.solved", Problem.class, user1);
@@ -186,7 +187,7 @@ public class RestStatisticsController {
                 error = false;
             }
         } else {
-            return new ResponseEntity<>("bad users", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_USER, HttpStatus.BAD_REQUEST);
         }
 
         List<Integer> solvedOnlyByUser1 = ExtraerPID(cmp.getFacc());
@@ -216,7 +217,7 @@ public class RestStatisticsController {
     public ResponseEntity<?> getStadisticByProblem(@PathVariable int pid) {
         
         if (!problemDAO.exists(pid) )
-            return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);     
+            return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.BAD_REQUEST);     
 
         Problem p = problemDAO.getStatistics("en", pid);
         StadisticsRest stadistic = new StadisticsRest(""+pid, p.getAc(), p.getCe(), p.getIvf(), p.getMle(), p.getOle(), p.getPe(), p.getRte(), p.getTle(), p.getWa(), p.getSubmitions());

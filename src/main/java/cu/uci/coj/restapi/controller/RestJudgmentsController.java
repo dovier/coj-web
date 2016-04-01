@@ -14,9 +14,9 @@ import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.dao.UtilDAO;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
-import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.restapi.templates.JudgmentsRest;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
@@ -130,7 +130,7 @@ public class RestJudgmentsController {
             
             return new ResponseEntity<>(listJudgmentsRest, HttpStatus.OK);
         }else
-            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
     }    
     
     
@@ -146,7 +146,7 @@ public class RestJudgmentsController {
         String lang = null;        
 	int totals = submissionDAO.countSubmissions(null, lang, null,Config.getProperty("judge.status." + status));	
         if(n > totals || n<1)
-            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
         
         
         lang = submissionDAO.string("select language from language where key=?", language);        
@@ -198,7 +198,7 @@ public class RestJudgmentsController {
     public ResponseEntity<?> getBestJudgmentsByProblem(@PathVariable int pid,SecurityContextHolderAwareRequestWrapper requestWrapper) {
         
         if (!problemDAO.exists(pid) )
-            return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
         
         List<SubmissionJudge> listSubmitions = new LinkedList();
         int found = submissionDAO.countBestSolutions(pid);
@@ -251,7 +251,7 @@ public class RestJudgmentsController {
             
             
             if (!problemDAO.exists(pid) )
-                return new ResponseEntity<>("bad pid",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(ErrorUtils.BAD_PID,HttpStatus.BAD_REQUEST);
             
             SubmissionJudge submit = new SubmissionJudge();
             submit.setPid(pid);
@@ -271,7 +271,7 @@ public class RestJudgmentsController {
                     cont++;
             }
             if(cont == 0)
-                return new ResponseEntity<>("bad language",HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(ErrorUtils.BAD_LANGUAGE,HttpStatus.BAD_REQUEST);
 			
             
             submit.setLanguages(languages);

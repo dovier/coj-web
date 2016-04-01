@@ -12,6 +12,7 @@ import cu.uci.coj.model.Language;
 import cu.uci.coj.model.WbSite;
 import cu.uci.coj.restapi.templates.FilterLanguageRest;
 import cu.uci.coj.restapi.templates.FiltersCOJBoardRest;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Resource;
@@ -53,7 +54,7 @@ public class RestInfoFiltersController {
             }
             return new ResponseEntity<>(filters,HttpStatus.OK);
         }
-        return new ResponseEntity<>("bad pid",HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ErrorUtils.BAD_PID,HttpStatus.BAD_REQUEST);
     }
     
     //Devuelve todos los lenguajes disponibles disponibles del COJ.

@@ -185,27 +185,25 @@ public class TokenUtils {
    public static String ErrorMessage(int error) {
         switch (error) {
             case 1:
-                return "Username and token mismatch";
+                return ErrorUtils.USERNAME_TOKEN_MISMATCH;
             case 2:
-                return "hash incorrect";
+                return ErrorUtils.HASH_INCORRECT;
             case 3:
-                return "token expirated";
+                return ErrorUtils.TOKEN_EXPIRED;
             case 4:
-                return "mismatch username apikey";
+                return ErrorUtils.USERNAME_APIKEY_MISMATCH;
             case 5:
-                return "hash incorrect apikey";
+                return ErrorUtils.HASH_INCORRECT_APIKEY;
             case 6:
-                return "apikey expirated";
+                return ErrorUtils.APIKEY_EXPIRED;
             case 7:
-                return "apikey and apikey mismatch";
+                return ErrorUtils.APIKEY_SECRET_INCORRECT;
             case 8:
-                return "incorrect json";
+                return ErrorUtils.INCORRECT_JSON;
             case 9:
-                return "incorrect token or apikey";
+                return ErrorUtils.INCORRECT_TOKEN_OR_APIKEY;
             case 10:
-                return "Missig Properties";
-            case 11:
-                return "bad ids";
+                return ErrorUtils.MISSING_PROPERTIES;
         }
 
         return "";

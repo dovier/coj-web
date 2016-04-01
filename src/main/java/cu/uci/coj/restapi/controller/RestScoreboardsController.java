@@ -18,6 +18,7 @@ import cu.uci.coj.restapi.templates.CountryRest;
 import cu.uci.coj.restapi.templates.InstitutionDescriptionRest;
 import cu.uci.coj.restapi.templates.InstitutionRest;
 import cu.uci.coj.restapi.templates.UserRest;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import java.security.Principal;
@@ -141,7 +142,7 @@ public class RestScoreboardsController{
         
         Country c = countryDAO.object("country.by.id", Country.class, country_id);
         if(c == null)
-            return new ResponseEntity<>("bad country id", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_COUNTRY_ID, HttpStatus.BAD_REQUEST);
         
         int found = institutionDAO.countEnabledInstitutionsByCountry("", country_id);
      
@@ -169,7 +170,7 @@ public class RestScoreboardsController{
         
         Country c = countryDAO.object("country.by.id", Country.class, country_id);
         if(c == null)
-            return new ResponseEntity<>("bad country id", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_COUNTRY_ID, HttpStatus.BAD_REQUEST);
 
         int found = userDAO.countEnabledUsersByCountry("",false, country_id);
 
@@ -201,7 +202,7 @@ public class RestScoreboardsController{
         
         Institution ins = institutionDAO.object("institution.id", Institution.class, inst_id);
         if(ins == null)
-            return new ResponseEntity<>("bad institution id", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_INSTITUTION_ID, HttpStatus.BAD_REQUEST);
   
         int found = userDAO.countEnabledUsersByInstitutions("", false, inst_id);
 
@@ -258,7 +259,8 @@ public class RestScoreboardsController{
         
         Institution i = institutionDAO.object("institution.id", Institution.class, inst_id);
         if(i == null)
-            return new ResponseEntity<>("bad institution id", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_INSTITUTION_ID, HttpStatus.BAD_REQUEST);
+        
         i.setCount(institutionDAO.integer("institution.profile.count.users", inst_id));
         i.setPoints(institutionDAO.real(0.0,"user.score.enabled.inst", inst_id));
         i.setRank(institutionDAO.integer(-1,"insitutions.rank", inst_id));
@@ -276,7 +278,7 @@ public class RestScoreboardsController{
         
         Country c = countryDAO.object("country.by.id", Country.class, country_id);
         if(c == null)
-            return new ResponseEntity<>("bad country id", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_COUNTRY_ID, HttpStatus.BAD_REQUEST);
         
         c.setInstitutions(countryDAO.integer("count.institutions", country_id));
         c.setPoints(countryDAO.real("user.score", country_id));
@@ -310,7 +312,7 @@ public class RestScoreboardsController{
             return new ResponseEntity<>(listUsersRest, HttpStatus.OK);
         }
         else 
-            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);        
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);        
     }     
     
     @RequestMapping(value = "/byinstitution/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -332,7 +334,7 @@ public class RestScoreboardsController{
             return new ResponseEntity<>(listInstitucionRest, HttpStatus.OK);
         }
         else
-            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
    
     } 
     
@@ -353,7 +355,7 @@ public class RestScoreboardsController{
             return new ResponseEntity<>(listCountryRest, HttpStatus.OK);
         }
         else
-            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
     }
   
     @RequestMapping(value = "/bycontest/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -372,7 +374,7 @@ public class RestScoreboardsController{
             return new ResponseEntity<>(listUsersRest, HttpStatus.OK);
         }
         else
-            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
     }
     
     private int end(int found){

@@ -11,6 +11,7 @@ import cu.uci.coj.model.ContestStyle;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.restapi.templates.ContestDescriptionRest;
 import cu.uci.coj.restapi.templates.ContestRest;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
@@ -114,7 +115,7 @@ public class RestContestController {
             try{
                  contest = contestDAO.loadContestFull(cid);
             }catch(NullPointerException ne){
-                return new ResponseEntity<>("bad cid", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(ErrorUtils.BAD_CID, HttpStatus.BAD_REQUEST);
             }
             List<Language> planguages = contestDAO.getContestLanguages(cid);
             List<ContestStyle> styles = contestDAO.loadEnabledScoringStyles();

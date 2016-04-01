@@ -86,8 +86,7 @@ public class RestProblemsController {
             System.out.println(TokenUtils.CreateTokenUser("dovier"));
             l = new Long(15 * 60 * 1000);
             System.out.println(TokenUtils.CreateAPIKey("dovier", "cesar"));
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
 
         if (filterby == null) {
             filterby = 0;
@@ -137,7 +136,7 @@ public class RestProblemsController {
     public ResponseEntity<?> getAllProblemsInContest(@PathVariable int cid) {
         
         if(!contestDAO.existsContest(cid))
-            return new ResponseEntity<>(ErrorUtils.BADPID,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.BAD_REQUEST);
         
         String username = null;
         Contest contest = contestDAO.loadContest(cid);
@@ -161,12 +160,10 @@ public class RestProblemsController {
                 listProblemsRest.add(pr);
             }
             
-             return new ResponseEntity<>(listProblemsRest,HttpStatus.OK);
-            
-            
+             return new ResponseEntity<>(listProblemsRest,HttpStatus.OK);        
         }
 
-        return new ResponseEntity<>("asd",HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.BAD_REQUEST);
 
     }
     
@@ -194,7 +191,7 @@ public class RestProblemsController {
 
             return new ResponseEntity<>(listProblemsRest, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -205,15 +202,13 @@ public class RestProblemsController {
             @RequestParam(required = false, value = "locale", defaultValue = "en") String locale) {
         
         if (!problemDAO.exists(pid) )
-            return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);
-        
-        
+            return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.BAD_REQUEST);
         
         Problem p = null;
         try {
             p = problemDAO.getProblemByCode(locale, pid, false);
         } catch (NullPointerException ne) {
-            return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.BAD_REQUEST);
         }
         p.setDate(p.getDate().split(" ")[0]);
         problemDAO.fillProblemLanguages(p);
@@ -451,7 +446,7 @@ public class RestProblemsController {
                 
                 return new ResponseEntity<>(HttpStatus.OK);
             } catch (EmptyResultDataAccessException e) {
-                return new ResponseEntity<>("Problem not exists", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.BAD_REQUEST);
             }
            
 

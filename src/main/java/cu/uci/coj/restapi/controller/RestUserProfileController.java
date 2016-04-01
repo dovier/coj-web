@@ -6,16 +6,11 @@
 package cu.uci.coj.restapi.controller;
 
 import cu.uci.coj.dao.UserDAO;
-import cu.uci.coj.model.Achievement;
 import cu.uci.coj.model.Entry;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.User;
-import cu.uci.coj.model.WbContest;
-import cu.uci.coj.model.WbSite;
 import cu.uci.coj.restapi.templates.UserProfileRest;
-import cu.uci.coj.utils.paging.IPaginatedList;
-import cu.uci.coj.utils.paging.PagingOptions;
-import java.util.HashMap;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.http.HttpStatus;
@@ -44,14 +39,13 @@ public class RestUserProfileController {
         User user = null;
 
         if (!userDAO.bool("is.user.enabled", username))
-            return new ResponseEntity<>("disabled username", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.USERNAME_DISABLED, HttpStatus.BAD_REQUEST);
       
-
         Integer uid = userDAO.idByUsername(username);
         if (uid != null && userDAO.isUser(username)) {
             user = userDAO.loadUserData(username);
             if (user.isTeam())
-                return new ResponseEntity<>("bad username", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(ErrorUtils.BAD_USER, HttpStatus.BAD_REQUEST);
             
             List<Problem> solved = userDAO.objects("problems.solved.1", Problem.class, user.getUid());
             List<Problem> unsolved = userDAO.getProblemsTryied(user.getUid());

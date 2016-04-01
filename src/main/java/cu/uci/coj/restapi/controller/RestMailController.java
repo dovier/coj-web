@@ -7,13 +7,12 @@ package cu.uci.coj.restapi.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cu.uci.coj.controller.mail.MailController;
 import cu.uci.coj.dao.MailDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.Mail;
 import cu.uci.coj.restapi.templates.MailRest;
-import cu.uci.coj.restapi.templates.ProblemRest;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
@@ -33,9 +32,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ValidationUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -217,18 +213,13 @@ public class RestMailController {
             
             if (result != null) {
                 if (result.equals(""))
-				return new ResponseEntity<>("inbox overflow", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(ErrorUtils.INBOX_OVERFLOW, HttpStatus.BAD_REQUEST);
 			else
-				return new ResponseEntity<>("receiver inbox overflow", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(ErrorUtils.RECEIVER_INBOX_OVERFLOW, HttpStatus.BAD_REQUEST);
 			//return new ResponseEntity<>("no 3", HttpStatus.BAD_REQUEST);
 		}
 
-		/*if (mail.isRedirectInbox()) {
-			return "redirect:/mail/inbox.xhtml";
-		}
-		return "redirect:/mail/outbox.xhtml";*/
-
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException ex) {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }
@@ -273,7 +264,7 @@ public class RestMailController {
                return new ResponseEntity<>(TokenUtils.ErrorMessage(11), HttpStatus.BAD_REQUEST);
            }
             
-           return new ResponseEntity<>(null, HttpStatus.OK);
+           return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException ex) {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }

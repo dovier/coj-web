@@ -16,7 +16,7 @@ import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
 import cu.uci.coj.restapi.templates.CojBoardRest;
 import cu.uci.coj.restapi.templates.EntriesRest;
-import cu.uci.coj.restapi.templates.FilterLanguageRest;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.utils.EntryHelper;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
@@ -65,13 +65,13 @@ public class RestExtrasController {
     public ResponseEntity<?> getAllEntries(@PathVariable int page) {
         
         if(page<1)
-            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
         
         PagingOptions options = new PagingOptions(page);
         IPaginatedList<Entry> entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options, 0);
       
         if(entries.getList().size() == 0)
-            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
         
         List<Entry> listEntry = entries.getList();
         List<EntriesRest> listEntriesRest = new LinkedList();
@@ -94,7 +94,7 @@ public class RestExtrasController {
             sid = 0;
         
         if(sid<0)
-            return new ResponseEntity<>("bad sid", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_SID, HttpStatus.BAD_REQUEST);
         
         PagingOptions options = new PagingOptions(1);
         options.setDirection("asc");

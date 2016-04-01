@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cu.uci.coj.model.User;
 import cu.uci.coj.restapi.templates.TokenRest;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
 import java.io.IOException;
 import javax.annotation.Resource;
@@ -65,11 +66,11 @@ public class RestPrivateController {
                     return  new ResponseEntity<>(token, HttpStatus.OK);
             }
             else
-                return  new ResponseEntity<>("bad user or password", HttpStatus.UNAUTHORIZED);
+                return  new ResponseEntity<>(ErrorUtils.BAD_USERNAME_PASSWORD, HttpStatus.UNAUTHORIZED);
             
             
             }catch(Exception e){
-                return  new ResponseEntity<>("bad user or password", HttpStatus.UNAUTHORIZED);
+                return  new ResponseEntity<>(ErrorUtils.BAD_USERNAME_PASSWORD, HttpStatus.UNAUTHORIZED);
             }
            
 
