@@ -7,24 +7,25 @@ package cu.uci.coj.restapi.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.RecommenderDAO;
 import cu.uci.coj.dao.SubmissionDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.dao.UtilDAO;
+import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Limits;
 import cu.uci.coj.model.Problem;
-import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.recommender.Recommender;
 import cu.uci.coj.restapi.templates.ProblemDescriptionRest;
 import cu.uci.coj.restapi.templates.ProblemRest;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -64,6 +65,8 @@ public class RestProblemsController {
     private SubmissionDAO submissionDAO;
     @Resource
     private Utils utils;
+    @Resource
+    private ContestDAO contestDAO;
     
 
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -99,7 +102,7 @@ public class RestProblemsController {
             if (found != 0) {
                 List<ProblemRest> listProblemsRest = new LinkedList();
                 for (Problem p : recommendations) {
-                    ProblemRest pr = new ProblemRest(p.getPid(), p.getTitle(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints(), p.isFavorite(), ResolveStatus(p, username));
+                    ProblemRest pr = BuildProblemRest(p, username);
                     listProblemsRest.add(pr);
                 }
 
@@ -120,13 +123,54 @@ public class RestProblemsController {
         List<ProblemRest> listProblemsRest = new LinkedList();
 
         for (Problem p : listProblems) {
-            ProblemRest pr = new ProblemRest(p.getPid(), p.getTitle(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints(), p.isFavorite(), ResolveStatus(p, username));
+            ProblemRest pr = BuildProblemRest(p, username);
             listProblemsRest.add(pr);
         }
 
         return listProblemsRest;
 
     }
+    
+    
+    @RequestMapping(value = "/contest/{cid}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getAllProblemsInContest(@PathVariable int cid) {
+        
+        if(!contestDAO.existsContest(cid))
+            return new ResponseEntity<>(ErrorUtils.BADPID,HttpStatus.BAD_REQUEST);
+        
+        String username = null;
+        Contest contest = contestDAO.loadContest(cid);
+        contestDAO.unfreezeIfNecessary(contest);
+
+        if ((contest.isRunning() || contest.isPast()) && contest.isShow_problem_out()) {
+            contest.setShow_status(true);
+            int found = problemDAO.countProblemContest(cid);
+            PagingOptions options = new PagingOptions(1);
+            IPaginatedList<Problem> pages = problemDAO.getContestProblems(found,"en",username, contest, options);
+            
+            List<ProblemRest> listProblemsRest = new LinkedList();
+
+            for (Problem p : pages.getList()) {
+                Object id = contest.getStyle()==1 ? (""+p.getLetter()) : p.getPid();
+                String balloon = contest.isBalloon() == true ? p.getBalloonColor() : null;
+                Integer level  = contest.getStyle() == 4 ? p.getLevel() : null;
+                ProblemRest pr = new ProblemRest(id,balloon, p.getTitle(), p.getAccu(),level);
+                if (contest.getStyle() == 3 )
+                    pr.setScore(p.getPoints());
+                listProblemsRest.add(pr);
+            }
+            
+             return new ResponseEntity<>(listProblemsRest,HttpStatus.OK);
+            
+            
+        }
+
+        return new ResponseEntity<>("asd",HttpStatus.BAD_REQUEST);
+
+    }
+    
+    
 
     @RequestMapping(value = "/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
@@ -144,7 +188,7 @@ public class RestProblemsController {
             List<ProblemRest> listProblemsRest = new LinkedList();
 
             for (Problem p : listProblems) {
-                ProblemRest pr = new ProblemRest(p.getPid(), p.getTitleEN(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints());
+                ProblemRest pr = BuildProblemRest(p, username);
                 listProblemsRest.add(pr);
             }
 
@@ -207,6 +251,12 @@ public class RestProblemsController {
 
         return new ResponseEntity<>(problemDescrptions, HttpStatus.OK);
 
+    }
+    
+    private ProblemRest BuildProblemRest(Problem p,String username){
+        if(username == null)
+            return new ProblemRest(p.getPid(), p.getTitle(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints());
+        return new ProblemRest(p.getPid(), p.getTitle(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints(), p.isFavorite(), ResolveStatus(p, username));
     }
     
     private String[] author_source(int pid){
