@@ -13,13 +13,13 @@ import cu.uci.coj.model.User;
 import cu.uci.coj.restapi.templates.TokenRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
-import cu.uci.coj.utils.Notification;
 import cu.uci.coj.validator.forgottenValidator;
 import java.io.IOException;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
+import org.hibernate.validator.constraints.impl.EmailValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +28,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -99,7 +98,7 @@ public class RestPrivateController {
     
     @RequestMapping(value = "/forgottenpassword", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> ForgottenPassword(@RequestBody String bodyjson, BindingResult bindingResult,java.util.Locale locale){
+    public ResponseEntity<?> ForgottenPassword(@RequestBody String bodyjson, java.util.Locale locale){
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
@@ -118,12 +117,7 @@ public class RestPrivateController {
             String email = node.get("email").asText();
             String passcode;
             
-            User user = new User();
-            user.setEmail(email);
-            user.setUsername(username);
-            
-            forgottenValidator.validate(user, bindingResult);
-            if (bindingResult.hasErrors()) 
+            if (!ValidateEmail(email)) 
                 return new ResponseEntity<>(ErrorUtils.INVALID_EMAIL,HttpStatus.BAD_REQUEST);
             
             try {
@@ -146,6 +140,22 @@ public class RestPrivateController {
            return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }
 
+    }
+    
+    
+    private boolean ValidateEmail(String email){
+        EmailValidator a = new EmailValidator();
+        if (!a.isValid(email, null))
+            return false; 
+        
+        try {
+            boolean emailExist = userDAO.bool("exist.user.bymail", email);
+            if (!emailExist) 
+                return false;
+                    
+        } catch (Exception e) {return false;}
+        
+        return true;
     }
    
     private int ValidateApi(String bodyjson) throws IOException {
