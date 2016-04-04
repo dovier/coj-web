@@ -5,17 +5,20 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  *
  * @author lucy
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class JudgmentsRest {
     int id;
     String date;
     String user;
     int prob;
     String judgment;
-    int errortestcase;
+    Integer errortestcase;
     int time;
     String memory;
     String tam;

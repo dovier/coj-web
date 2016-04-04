@@ -8,12 +8,15 @@ package cu.uci.coj.restapi.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cu.uci.coj.config.Config;
+import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.SubmissionDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.dao.UtilDAO;
+import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
+import cu.uci.coj.model.Status;
 import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.restapi.templates.JudgmentsRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
@@ -26,6 +29,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +63,8 @@ public class RestJudgmentsController {
 	private submitValidator submitValidator;
 	@Resource
 	private Utils utils;
+        @Resource
+	private ContestDAO contestDAO;
     
     
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -97,6 +103,139 @@ public class RestJudgmentsController {
         
         return listJudgmentsRest;
     }  
+    
+    
+    
+    @RequestMapping(value = "/contest/{cid}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getAllJudgmentsInContestByCid(@PathVariable Integer cid,
+                        @RequestParam(required = false, value = "user") String filter_user,
+			@RequestParam(required = false, value = "prob",defaultValue="0") Integer pid,
+                        @RequestParam(required = false, value = "status") String status,
+			@RequestParam(required = false, value = "lang") String language) {
+        
+        if(!contestDAO.existsContest(cid))
+            return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.BAD_REQUEST);
+        
+        if (pid==0) 
+            pid = null;
+        
+        String username = null;
+        Contest contest = contestDAO.loadContest(cid);
+        contestDAO.unfreezeIfNecessary(contest);
+
+        if (contest.isComing())
+            return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.BAD_REQUEST);
+        
+        if ( (contest.isRunning() || contest.isPast()) && contest.isShow_status()) {
+            contest.setShow_status(false);
+            if (contest.isShow_status_out() ) {
+                contest.setShow_status(true);
+                String lang = submissionDAO.string("select language from language where key=?", language);
+                int found = submissionDAO.countSubmissionsContest(filter_user, lang, pid, Config.getProperty("judge.status." + status), contest);
+                if(found>500)
+                    found = 500;
+                String st = Config.getProperty("judge.status." + status);
+                
+                List<SubmissionJudge> listSubmitions = new LinkedList();         
+                for(int i=1;i<=end(found);i++){
+                    PagingOptions options = new PagingOptions(i); 
+                    IPaginatedList<SubmissionJudge> submissions = submissionDAO.getContestSubmissions(found, username, language, pid, status, options, username, false, false, contest);
+                    listSubmitions.addAll(submissions.getList());
+                }          
+                
+                if (contest.getStyle() == 1) {
+                    Map<Integer, Problem> pids = contestDAO.loadContestProblemsLetters(cid);
+                    for (SubmissionJudge sub : listSubmitions) {
+                            if (!sub.isAuthorize() && contest.isInFrozen(sub.getDate().getTime()) && contest.isFrozen())
+                                    sub.froze();
+                            sub.setLetter(pids.get(sub.getPid()).getLetter());
+                            sub.setProblemTitle(pids.get(sub.getPid()).getTitle());
+                    }
+                }
+                 
+                List<JudgmentsRest> listJudgmentsRest = new LinkedList();
+        
+                for(SubmissionJudge s:listSubmitions){
+                    int testcase = 0;
+                    if(s.isOntest())
+                        testcase = s.getFirstWaCase()+1;
+                    JudgmentsRest jud = new JudgmentsRest(s.getSid(),""+s.getDate().toString(),s.getUsername(), s.getPid(), s.getStatus(),testcase, s.getTimeUsed(), s.getMemoryMB(), s.getFontMB(), s.getLang());
+                    listJudgmentsRest.add(jud);
+                }
+                
+                return new ResponseEntity<>(listJudgmentsRest,HttpStatus.OK);
+            }
+        }
+        
+        return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.BAD_REQUEST);
+    }
+    
+    
+    @RequestMapping(value = "/contest/{cid}/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getAllJudgmentsInContestByCidbyPage(@PathVariable Integer cid,@PathVariable int page,
+                        @RequestParam(required = false, value = "user") String filter_user,
+			@RequestParam(required = false, value = "prob",defaultValue="0") Integer pid,
+                        @RequestParam(required = false, value = "status") String status,
+			@RequestParam(required = false, value = "lang") String language) {
+        
+        if(!contestDAO.existsContest(cid))
+            return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.BAD_REQUEST);
+        
+        if (pid==0) 
+            pid = null;
+        
+        String username = null;
+        Contest contest = contestDAO.loadContest(cid);
+        contestDAO.unfreezeIfNecessary(contest);
+
+        if (contest.isComing())
+            return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.BAD_REQUEST);
+        
+        if ( (contest.isRunning() || contest.isPast()) && contest.isShow_status()) {
+            contest.setShow_status(false);
+            if (contest.isShow_status_out() ) {
+                contest.setShow_status(true);
+                String lang = submissionDAO.string("select language from language where key=?", language);
+                int found = submissionDAO.countSubmissionsContest(filter_user, lang, pid, Config.getProperty("judge.status." + status), contest);
+                if(found>500)
+                    found = 500;
+                if (page < 1 || page > end(found))
+                    return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
+                   
+                String st = Config.getProperty("judge.status." + status);
+
+                PagingOptions options = new PagingOptions(page); 
+                IPaginatedList<SubmissionJudge> submissions = submissionDAO.getContestSubmissions(found, username, language, pid, status, options, username, false, false, contest);
+         
+                
+                if (contest.getStyle() == 1) {
+                    Map<Integer, Problem> pids = contestDAO.loadContestProblemsLetters(cid);
+                    for (SubmissionJudge sub : submissions.getList()) {
+                            if (!sub.isAuthorize() && contest.isInFrozen(sub.getDate().getTime()) && contest.isFrozen())
+                                    sub.froze();
+                            sub.setLetter(pids.get(sub.getPid()).getLetter());
+                            sub.setProblemTitle(pids.get(sub.getPid()).getTitle());
+                    }
+                }
+                 
+                List<JudgmentsRest> listJudgmentsRest = new LinkedList();
+        
+                for(SubmissionJudge s:submissions.getList()){
+                    int testcase = 0;
+                    if(s.isOntest())
+                        testcase = s.getFirstWaCase()+1;
+                    JudgmentsRest jud = new JudgmentsRest(s.getSid(),""+s.getDate().toString(),s.getUsername(), s.getPid(), s.getStatus(),testcase, s.getTimeUsed(), s.getMemoryMB(), s.getFontMB(), s.getLang());
+                    listJudgmentsRest.add(jud);
+                }
+                
+                return new ResponseEntity<>(listJudgmentsRest,HttpStatus.OK);
+            }
+        }
+        
+        return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.BAD_REQUEST);
+    }
     
     
     @RequestMapping(value = "/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
