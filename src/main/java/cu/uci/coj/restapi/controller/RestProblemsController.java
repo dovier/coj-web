@@ -68,6 +68,7 @@ public class RestProblemsController {
     @Resource
     private ContestDAO contestDAO;
     
+    
 
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody

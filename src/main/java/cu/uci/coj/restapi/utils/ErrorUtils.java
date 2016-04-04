@@ -34,6 +34,9 @@ public class ErrorUtils {
     public static String INBOX_OVERFLOW = "inbox_overflow";
     public static String RECEIVER_INBOX_OVERFLOW = "receiver inbox overflow";
     public static String BAD_LANGUAGE = "bad language";
+    public static String INVALID_EMAIL = "invalid email";
+    public static String ERROR_UPDATE_CODE = "error update code";
+    public static String FAILED_SEND_EMAIL = "failed send email";
     
     
     

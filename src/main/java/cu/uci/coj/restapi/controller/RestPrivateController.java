@@ -7,12 +7,20 @@ package cu.uci.coj.restapi.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cu.uci.coj.dao.UserDAO;
+import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.User;
 import cu.uci.coj.restapi.templates.TokenRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
+import cu.uci.coj.utils.Notification;
+import cu.uci.coj.validator.forgottenValidator;
 import java.io.IOException;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -20,6 +28,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,10 +44,18 @@ public class RestPrivateController {
     
     @Resource
     protected JdbcTemplate jdbcTemplate;
+    @Resource
+    private forgottenValidator forgottenValidator;
+    @Resource
+    private UserDAO userDAO;
+    @Resource
+    protected MessageSource messageSource;
+    @Resource
+    private MailNotificationService mailNotificationService;
     
     @RequestMapping(value = "/login", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> createToken(@RequestBody String bodyjson){
+    public ResponseEntity<?> CreateToken(@RequestBody String bodyjson){
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
@@ -79,6 +96,57 @@ public class RestPrivateController {
         }
 
     }
+    
+    @RequestMapping(value = "/forgottenpassword", method = RequestMethod.POST, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> ForgottenPassword(@RequestBody String bodyjson, BindingResult bindingResult,java.util.Locale locale){
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
+
+            int error = ValidateApiAndToken(bodyjson);
+            if (error > 0) {
+                return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
+            }
+
+            if(!TokenUtils.ValidatePropertiesinJson(node,"email"))
+                return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
+            
+            String username = null;
+            String token = node.get("token").textValue();
+            username = ExtractUser(token);
+            String email = node.get("email").asText();
+            String passcode;
+            
+            User user = new User();
+            user.setEmail(email);
+            user.setUsername(username);
+            
+            forgottenValidator.validate(user, bindingResult);
+            if (bindingResult.hasErrors()) 
+                return new ResponseEntity<>(ErrorUtils.INVALID_EMAIL,HttpStatus.BAD_REQUEST);
+            
+            try {
+                passcode = generateRandomPassword(30);
+                userDAO.dml("update.passcode", passcode, email);
+            } catch (Exception e) {
+                return new ResponseEntity<>(ErrorUtils.ERROR_UPDATE_CODE,HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            String subject = messageSource.getMessage("mail.pass.recover.subject", new Object[0], java.util.Locale.ENGLISH);
+            String msg = messageSource.getMessage("forgotten.password", new Object[]{passcode}, locale);
+            try {
+                mailNotificationService.sendForgottenPasswordEmail(email, subject, msg);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>(ErrorUtils.FAILED_SEND_EMAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            
+
+        } catch (IOException ex) {
+           return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
+        }
+
+    }
    
     private int ValidateApi(String bodyjson) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -100,6 +168,58 @@ public class RestPrivateController {
         }
 
         return 0;
+    }
+    
+    
+    private int ValidateApiAndToken(String bodyjson) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
+
+        if (!node.has("apikey") || !node.has("token")) {
+            return 8;
+        }
+
+        String apikey = node.get("apikey").textValue();
+        String token = node.get("token").textValue();
+
+        try {
+            int error = TokenUtils.ValidateAPIKey(apikey);
+            if (error > 0) {
+                return error;
+            }
+
+            int error2 = TokenUtils.ValidateTokenUser(token);
+            if (error2 > 0) {
+                return error2;
+            }
+        } catch (Exception e) {
+            return 9;
+        }
+
+        return 0;
+    }
+    
+    
+    private String ExtractUser(String token) {
+        String username = null;
+        try {
+            username = TokenUtils.getUsernameFromToken(token);
+        } catch (Exception ex) {
+            Logger.getLogger(RestProblemsController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return username;
+    }  
+    
+    
+    private String generateRandomPassword(int length) {
+        String password = "";
+        for (int i = 0; i < length; i++) {
+            Random r = new Random();
+            password += (char) ('A' + r.nextInt(26));
+        }
+        password = password.toLowerCase();
+        return password;
     }
 
     
