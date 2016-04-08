@@ -82,6 +82,11 @@ public class FaqController extends BaseController {
         model.addAttribute("faqs", faqs);
         return "/general/faqs";
     }
+    
+    @RequestMapping(value = "/general/docs.xhtml", method = RequestMethod.GET)
+    public String getDocs(Locale locale, Model model) {
+        return "/general/doc";
+    }
 
     @RequestMapping(value = "/admin/faqs.xhtml", method = RequestMethod.GET)
     public String listFaqs(Locale locale, Model model) {
