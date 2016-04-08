@@ -44,7 +44,7 @@
       if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
-        url = "http://localhost:8084/RestSpringMaven/api-docs";
+        url = "http://localhost:8084/api/api-docs";
       }
 
       hljs.configure({
