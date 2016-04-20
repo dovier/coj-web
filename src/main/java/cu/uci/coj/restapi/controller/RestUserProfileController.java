@@ -79,7 +79,14 @@ public class RestUserProfileController {
         }
 
         Entry lastentry = userDAO.object("last.entry.by.user", Entry.class, uid);
-       
+        
+        String lastentryText = "";
+        String lastentryDate = "";        
+        if(lastentry != null){
+            lastentryText = lastentry.getText();
+            lastentryDate = lastentry.getDate().toString();
+        }
+               
         //model.addAttribute("count.entries", userDAO.integer(0, "count.entries", uid));
         int followers = userDAO.integer(0, "count.followers", uid);
         int following = userDAO.integer(0, "count.following", uid);
@@ -88,8 +95,8 @@ public class RestUserProfileController {
         String gender = "female";
         if(user.getGender() == 1)
             gender = "male";
-            
-        UserProfileRest userRest = new UserProfileRest(avatar,user.getName(), user.getLastname(), username, gender, user.getCountry(), user.getInstitution(), user.getPlanguage(), user.getRgdate(), user.getLast_submission(), user.getLast_accepted(), user.getScore(), user.getRanking(),user.getRankingbyinstitution(),user.getRankingbycountry(), lastentry.getText(),lastentry.getDate().toString(),followers,following);
+        
+        UserProfileRest userRest = new UserProfileRest(avatar,user.getName(), user.getLastname(), username, gender, user.getCountry(), user.getInstitution(), user.getPlanguage(), user.getRgdate(), user.getLast_submission(), user.getLast_accepted(), user.getScore(), user.getRanking(),user.getRankingbyinstitution(),user.getRankingbycountry(), lastentryText,lastentryDate,followers,following);
  
         return new ResponseEntity<>(userRest, HttpStatus.OK);
 }
