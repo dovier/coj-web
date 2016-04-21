@@ -6,10 +6,15 @@
 package cu.uci.coj.restapi.controller;
 
 import cu.uci.coj.board.dao.WbSiteDAO;
+import cu.uci.coj.dao.CountryDAO;
+import cu.uci.coj.dao.InstitutionDAO;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.UtilDAO;
+import cu.uci.coj.model.Country;
 import cu.uci.coj.model.Language;
+import cu.uci.coj.model.Locale;
 import cu.uci.coj.model.WbSite;
+import cu.uci.coj.restapi.templates.CountryRest;
 import cu.uci.coj.restapi.templates.FilterLanguageRest;
 import cu.uci.coj.restapi.templates.FiltersCOJBoardRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
@@ -82,5 +87,11 @@ public class RestInfoFiltersController {
             listFilters.add(filter);
         }
         return new ResponseEntity<>(listFilters,HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/locales", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public List<Locale> getAllLocales() {    
+        return utilDAO.objects("enabled.locale", Locale.class);   
     }
 }

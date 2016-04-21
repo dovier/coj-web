@@ -444,11 +444,6 @@ public class RestJudgmentsController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
     
-    
-    
-   
-    
-    
     public int end(int found){
         if(found%20==0)
             return found/20;
