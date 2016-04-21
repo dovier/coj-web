@@ -7,6 +7,7 @@ package cu.uci.coj.restapi.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordnik.swagger.annotations.ApiOperation;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.RecommenderDAO;
@@ -79,7 +80,7 @@ public class RestProblemsController {
             @RequestParam(required = false, value = "classification", defaultValue = "-1") Integer idClassification,
             @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
 
-        try {
+       /* try {
             PasswordEncoder encoder = new Md5PasswordEncoder();
             String password = encoder.encodePassword("dovier","ABC123XYZ789");
             System.out.println(password);
@@ -87,7 +88,7 @@ public class RestProblemsController {
             System.out.println(TokenUtils.CreateTokenUser("dovier"));
             l = new Long(15 * 60 * 1000);
             System.out.println(TokenUtils.CreateAPIKey("dovier", "cesar"));
-        } catch (Exception e) {}
+        } catch (Exception e) {}*/
 
         if (filterby == null) {
             filterby = 0;
@@ -170,6 +171,8 @@ public class RestProblemsController {
     
     
 
+    @ApiOperation(httpMethod = "GET",value = "Resource to get a user", 
+   responseClass = "ProblemRest.class")
     @RequestMapping(value = "/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getAllProblemsOrderByPage(@PathVariable int page, String username) {

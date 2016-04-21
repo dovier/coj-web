@@ -30,7 +30,7 @@ public class ErrorUtils {
     public static String USERNAME_DISABLED = "username is not enabled";
     public static String BAD_COUNTRY_ID = "bad country id";
     public static String BAD_INSTITUTION_ID = "bad institution id";
-    public static String BAD_USERNAME_PASSWORD = "bad institution id";
+    public static String BAD_USERNAME_PASSWORD = "bad username or password";
     public static String INBOX_OVERFLOW = "inbox_overflow";
     public static String RECEIVER_INBOX_OVERFLOW = "receiver inbox overflow";
     public static String BAD_LANGUAGE = "bad language";

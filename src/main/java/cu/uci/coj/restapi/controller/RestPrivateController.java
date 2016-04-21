@@ -143,6 +143,38 @@ public class RestPrivateController {
     }
     
     
+    @RequestMapping(value = "/generateapi", method = RequestMethod.POST, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> GenerateAPI(@RequestBody String bodyjson){
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
+
+            
+            if(!TokenUtils.ValidatePropertiesinJson(node,"username","secret"))
+                return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
+            
+            String username = node.get("username").asText();
+            String secret = node.get("secret").asText();
+            
+            int uid1;
+            try{
+                uid1 = userDAO.integer("select.uid.by.username", username);
+            }catch(NullPointerException ne){
+                return new ResponseEntity<>(ErrorUtils.BAD_USER, HttpStatus.BAD_REQUEST);
+            }
+            
+            String apiKey = TokenUtils.CreateAPIKey(username, secret);
+            
+            return new ResponseEntity<>(apiKey,HttpStatus.OK);
+
+        } catch (IOException ex) {
+           return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+    
+    
     private boolean ValidateEmail(String email){
         EmailValidator a = new EmailValidator();
         if (!a.isValid(email, null))
