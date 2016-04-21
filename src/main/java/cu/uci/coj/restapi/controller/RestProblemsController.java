@@ -7,7 +7,9 @@ package cu.uci.coj.restapi.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mangofactory.swagger.annotations.ApiIgnore;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.RecommenderDAO;
@@ -70,13 +72,16 @@ public class RestProblemsController {
     private ContestDAO contestDAO;
     
     
-
+    @ApiOperation(value = "",
+    notes = "Multiple status values can be provided with comma seperated strings",
+    response = ProblemRest.class,
+    responseContainer = "List")
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<ProblemRest> getAllProblemsOrFiltrerProblems(
-            String username,
+            @ApiIgnore String username,
             @RequestParam(required = false, value = "pattern") String pattern,
-            Integer filterby,
+            @ApiIgnore Integer filterby,
             @RequestParam(required = false, value = "classification", defaultValue = "-1") Integer idClassification,
             @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
 
@@ -169,10 +174,7 @@ public class RestProblemsController {
 
     }
     
-    
 
-    @ApiOperation(httpMethod = "GET",value = "Resource to get a user", 
-   responseClass = "ProblemRest.class")
     @RequestMapping(value = "/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getAllProblemsOrderByPage(@PathVariable int page, String username) {

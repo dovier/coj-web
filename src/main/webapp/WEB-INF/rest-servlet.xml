@@ -20,7 +20,7 @@
     <context:component-scan base-package="cu.uci.coj.restapi.controller" />
     <mvc:annotation-driven />
     
-    <bean id="documentationConfig" class="com.mangofactory.swagger.configuration.DocumentationConfig"/>
+    <bean class="cu.uci.coj.config.SwaggerSpringMvcConfig"/>
     
     <mvc:default-servlet-handler/>
     
