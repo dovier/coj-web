@@ -6,16 +6,21 @@
 package cu.uci.coj.restapi.templates;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 /**
  *
  * @author lucy
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@ApiModel
 public class ProblemRest {
-    
+    @ApiModelProperty
     Object pid;
+    @ApiModelProperty
     String ballon;
+    @ApiModelProperty
     String title;
     Integer sub;
     Integer ac;
@@ -59,6 +64,7 @@ public class ProblemRest {
         this.level = level;
     }
 
+    @ApiModelProperty(value = "pet status in the store", allowableValues = "available,pending,sold")
     public Integer getLevel() {
         return level;
     }

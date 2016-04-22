@@ -5,19 +5,26 @@
  */
 package cu.uci.coj.config;
 
+import com.fasterxml.classmate.TypeResolver;
 import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
+import com.mangofactory.swagger.models.alternates.AlternateTypeRule;
+import com.mangofactory.swagger.models.alternates.Alternates;
+import com.mangofactory.swagger.models.alternates.WildcardType;
 import com.mangofactory.swagger.plugin.EnableSwagger;
 import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
 import com.wordnik.swagger.model.ApiInfo;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
  
 @Configuration
 @EnableSwagger
 public class SwaggerSpringMvcConfig {
  
     private SpringSwaggerConfig springSwaggerConfig;
+
  
     @Autowired
     public void setSpringSwaggerConfig(SpringSwaggerConfig springSwaggerConfig) {
@@ -26,9 +33,16 @@ public class SwaggerSpringMvcConfig {
  
     @Bean
     public SwaggerSpringMvcPlugin customImplementation() {
+//        TypeResolver typeResolver = new TypeResolver();
+//        AlternateTypeRule rules = Alternates.newRule(
+//                    typeResolver.resolve(ResponseEntity.class, WildcardType.class), 
+//                    //with List<T> for any T
+//                    typeResolver.resolve(List.class, WildcardType.class));
+        
         return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
                 .apiInfo(apiInfo())
-                .includePatterns(".*/*.*");
+                .includePatterns(".*/*.*")
+                .genericModelSubstitutes(ResponseEntity.class,List.class);
     }
  
     private ApiInfo apiInfo() {
@@ -41,4 +55,6 @@ public class SwaggerSpringMvcConfig {
                 "http://www.apache.org/licenses/LICENSE-2.0.html"
         );
     }
+    
+    
 }

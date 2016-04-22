@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mangofactory.swagger.annotations.ApiIgnore;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.RecommenderDAO;
@@ -72,13 +74,15 @@ public class RestProblemsController {
     private ContestDAO contestDAO;
     
     
-    @ApiOperation(value = "",
-    notes = "Multiple status values can be provided with comma seperated strings",
-    response = ProblemRest.class,
-    responseContainer = "List")
+    @ApiOperation(value = "Obtener todos los problemas",  
+            notes = "Devuelve todos los problemas del COJ",
+            position = 1,
+            response = ProblemRest.class)
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public List<ProblemRest> getAllProblemsOrFiltrerProblems(
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "ffffff"),
+      @ApiResponse(code = 404, message = "Pet not found")  })
+    public ResponseEntity<?> getAllProblemsOrFiltrerProblems(
             @ApiIgnore String username,
             @RequestParam(required = false, value = "pattern") String pattern,
             @ApiIgnore Integer filterby,
@@ -112,7 +116,8 @@ public class RestProblemsController {
                     listProblemsRest.add(pr);
                 }
 
-                return listProblemsRest;
+                //return listProblemsRest;
+                return new ResponseEntity(listProblemsRest, HttpStatus.OK);
             }
         }
 
@@ -133,7 +138,8 @@ public class RestProblemsController {
             listProblemsRest.add(pr);
         }
 
-        return listProblemsRest;
+        //return listProblemsRest;
+        return new ResponseEntity(listProblemsRest, HttpStatus.OK);
 
     }
     
@@ -349,7 +355,7 @@ public class RestProblemsController {
      ...
      }    
      */
-    @RequestMapping(value = "", method = RequestMethod.POST, headers = "Accept=application/json")
+    /*@RequestMapping(value = "", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getAllProblemsOrFiltrerProblemsPrivate(@RequestBody String bodyjson) {
         try {
@@ -390,7 +396,7 @@ public class RestProblemsController {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }
 
-    }
+    }*/
 
     @RequestMapping(value = "/page/{page}", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
