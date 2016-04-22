@@ -23,6 +23,7 @@ import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Limits;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.recommender.Recommender;
+import cu.uci.coj.restapi.templates.Car;
 import cu.uci.coj.restapi.templates.ProblemDescriptionRest;
 import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
@@ -36,9 +37,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
+import javax.ws.rs.core.HttpHeaders;
 import org.apache.commons.io.FileUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -81,7 +84,7 @@ public class RestProblemsController {
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     @ApiResponses(value = { @ApiResponse(code = 401, message = "ffffff"),
-      @ApiResponse(code = 404, message = "Pet not found")  })
+                            @ApiResponse(code = 404, message = "Pet not found")  })
     public ResponseEntity<?> getAllProblemsOrFiltrerProblems(
             @ApiIgnore String username,
             @RequestParam(required = false, value = "pattern") String pattern,
@@ -397,6 +400,17 @@ public class RestProblemsController {
         }
 
     }*/
+    
+    @RequestMapping(value = "/prueba", method = RequestMethod.POST, headers="Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<Car> miprueba(@RequestBody Car car) {
+
+        if (car != null) {
+            car.setId(car.getId() + 100);
+        }
+        
+        return new ResponseEntity<Car>(car,HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/page/{page}", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
