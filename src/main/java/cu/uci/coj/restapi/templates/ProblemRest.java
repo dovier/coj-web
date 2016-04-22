@@ -16,11 +16,13 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @ApiModel
 public class ProblemRest {
-    @ApiModelProperty
+    @ApiModelProperty(value = "Identificador del Problema", required = true)
     Object pid;
-    @ApiModelProperty
+    
+    @ApiModelProperty(value = "Color del globo", required = true)
     String ballon;
-    @ApiModelProperty
+    
+    @ApiModelProperty(value = "Título del Problema", required = true)
     String title;
     Integer sub;
     Integer ac;
@@ -32,6 +34,9 @@ public class ProblemRest {
     String status;
     
     Integer level;
+
+    public ProblemRest() {
+    }
     
     //Constructor de visualizar los problemas publicos
     public ProblemRest(Object pid, String title, int sub, int ac, double acporciento, double score) {
@@ -64,7 +69,7 @@ public class ProblemRest {
         this.level = level;
     }
 
-    @ApiModelProperty(value = "pet status in the store", allowableValues = "available,pending,sold")
+   
     public Integer getLevel() {
         return level;
     }

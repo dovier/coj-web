@@ -8,6 +8,7 @@ package cu.uci.coj.restapi.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mangofactory.swagger.annotations.ApiIgnore;
+import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
@@ -52,6 +53,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  *
@@ -78,14 +80,13 @@ public class RestProblemsController {
     
     
     @ApiOperation(value = "Obtener todos los problemas",  
-            notes = "Devuelve todos los problemas del COJ",
-            position = 1,
-            response = ProblemRest.class)
+            notes = "Devuelve todos los problemas del COJ.",
+            response = ProblemRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    @ApiResponses(value = { @ApiResponse(code = 401, message = "ffffff"),
-                            @ApiResponse(code = 404, message = "Pet not found")  })
-    public ResponseEntity<?> getAllProblemsOrFiltrerProblems(
+    public List<ProblemRest> getAllProblemsOrFiltrerProblems(
             @ApiIgnore String username,
             @RequestParam(required = false, value = "pattern") String pattern,
             @ApiIgnore Integer filterby,
@@ -119,8 +120,8 @@ public class RestProblemsController {
                     listProblemsRest.add(pr);
                 }
 
-                //return listProblemsRest;
-                return new ResponseEntity(listProblemsRest, HttpStatus.OK);
+                return listProblemsRest;
+                //return new ResponseEntity(listProblemsRest, HttpStatus.OK);
             }
         }
 
@@ -141,8 +142,8 @@ public class RestProblemsController {
             listProblemsRest.add(pr);
         }
 
-        //return listProblemsRest;
-        return new ResponseEntity(listProblemsRest, HttpStatus.OK);
+        return listProblemsRest;
+        //return new ResponseEntity(listProblemsRest, HttpStatus.OK);
 
     }
     
@@ -400,7 +401,9 @@ public class RestProblemsController {
         }
 
     }*/
-    
+    @ApiOperation(value = "Obtener todos los problemas",  
+            notes = "Devuelve todos los problemas del COJ",
+            position = 2)
     @RequestMapping(value = "/prueba", method = RequestMethod.POST, headers="Accept=application/json")
     @ResponseBody
     public ResponseEntity<Car> miprueba(@RequestBody Car car) {
