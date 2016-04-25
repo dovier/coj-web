@@ -8,7 +8,6 @@ package cu.uci.coj.restapi.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mangofactory.swagger.annotations.ApiIgnore;
-import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
@@ -25,6 +24,7 @@ import cu.uci.coj.model.Limits;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.recommender.Recommender;
 import cu.uci.coj.restapi.templates.Car;
+import cu.uci.coj.restapi.templates.ProblemContestRest;
 import cu.uci.coj.restapi.templates.ProblemDescriptionRest;
 import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
@@ -38,14 +38,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
-import javax.ws.rs.core.HttpHeaders;
 import org.apache.commons.io.FileUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,7 +49,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  *
@@ -88,10 +83,10 @@ public class RestProblemsController {
     @ResponseBody
     public List<ProblemRest> getAllProblemsOrFiltrerProblems(
             @ApiIgnore String username,
-            @RequestParam(required = false, value = "pattern") String pattern,
+            @ApiParam(value = "Filtrar por nombre, id o descripción") @RequestParam(required = false, value = "pattern") String pattern,
             @ApiIgnore Integer filterby,
-            @RequestParam(required = false, value = "classification", defaultValue = "-1") Integer idClassification,
-            @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
+            @ApiParam(value = "Filtrar por clasificación del problema(Ver filter)") @RequestParam(required = false, value = "classification", defaultValue = "-1") Integer idClassification,
+            @ApiParam(value = "Filtrar por complejidad", allowableValues = "1,2,3,4,5") @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
 
        /* try {
             PasswordEncoder encoder = new Md5PasswordEncoder();
@@ -147,13 +142,17 @@ public class RestProblemsController {
 
     }
     
-    
+    @ApiOperation(value = "Obtener todos los problemas por competencias",  
+            notes = "Dado el identificador de una competencia devuelve todos los problemas utilizados en la misma.",
+            response = ProblemContestRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad cid or access private")  })
     @RequestMapping(value = "/contest/{cid}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getAllProblemsInContest(@PathVariable int cid) {
+    public ResponseEntity<?> getAllProblemsInContest(@ApiParam(value = "Identificador de una competencia") @PathVariable int cid) {
         
         if(!contestDAO.existsContest(cid))
-            return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.NOT_FOUND);
         
         String username = null;
         Contest contest = contestDAO.loadContest(cid);
@@ -165,29 +164,40 @@ public class RestProblemsController {
             PagingOptions options = new PagingOptions(1);
             IPaginatedList<Problem> pages = problemDAO.getContestProblems(found,"en",username, contest, options);
             
-            List<ProblemRest> listProblemsRest = new LinkedList();
+            List<ProblemContestRest> listProblemsContestRest = new LinkedList();
 
             for (Problem p : pages.getList()) {
-                Object id = contest.getStyle()==1 ? (""+p.getLetter()) : p.getPid();
+                //Object id = contest.getStyle()==1 ? (""+p.getLetter()) : p.getPid();
                 String balloon = contest.isBalloon() == true ? p.getBalloonColor() : null;
                 Integer level  = contest.getStyle() == 4 ? p.getLevel() : null;
-                ProblemRest pr = new ProblemRest(id,balloon, p.getTitle(), p.getAccu(),level);
+                ProblemContestRest pcr = null;
+                if(contest.getStyle()==1)
+                    pcr = new ProblemContestRest(p.getPid(),""+p.getLetter(),balloon, p.getTitle(), p.getAccu(),level);
+                else
+                    pcr = new ProblemContestRest(p.getPid(),balloon, p.getTitle(), p.getAccu(),level);
+                    
                 if (contest.getStyle() == 3 )
-                    pr.setScore(p.getPoints());
-                listProblemsRest.add(pr);
+                    pcr.setScore(p.getPoints());
+                listProblemsContestRest.add(pcr);
             }
             
-             return new ResponseEntity<>(listProblemsRest,HttpStatus.OK);        
+             return new ResponseEntity<>(listProblemsContestRest,HttpStatus.OK);        
         }
 
-        return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.NOT_FOUND);
 
     }
     
 
+    @ApiOperation(value = "Obtener problemas por páginas",  
+            notes = "Devuelve los problemas por páginas (50 problemas por página) como en el sitio web COJ.",
+            response = ProblemRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "page out of index")  })
     @RequestMapping(value = "/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getAllProblemsOrderByPage(@PathVariable int page, String username) {
+    public ResponseEntity<?> getAllProblemsOrderByPage(@ApiParam(value = "Número de la página") @PathVariable int page, 
+            @ApiIgnore String username) {
 
         int found = problemDAO.countProblem(null, 0, username, -1, -1);
         if (page > 0 && page <= end(found)) {
@@ -207,24 +217,28 @@ public class RestProblemsController {
 
             return new ResponseEntity<>(listProblemsRest, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.NOT_FOUND);
         }
     }
 
+    @ApiOperation(value = "Obtener descripción del problema",  
+            notes = "Devuelve la descripción de un problema dado su identificador.",
+            response = ProblemDescriptionRest.class)
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad pid")  })
     @RequestMapping(value = "/{pid}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getProblemDescriptionsByID(
-            @PathVariable int pid,
-            @RequestParam(required = false, value = "locale", defaultValue = "en") String locale) {
+            @ApiParam(value = "Identificador del problema") @PathVariable int pid,
+            @ApiParam(value = "Idioma del problema (Ver filter)") @RequestParam(required = false, value = "locale", defaultValue = "en") String locale) {
         
         if (!problemDAO.exists(pid) )
-            return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.NOT_FOUND);
         
         Problem p = null;
         try {
             p = problemDAO.getProblemByCode(locale, pid, false);
         } catch (NullPointerException ne) {
-            return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.NOT_FOUND);
         }
         p.setDate(p.getDate().split(" ")[0]);
         problemDAO.fillProblemLanguages(p);
@@ -359,7 +373,12 @@ public class RestProblemsController {
      ...
      }    
      */
-    /*@RequestMapping(value = "", method = RequestMethod.POST, headers = "Accept=application/json")
+     @ApiOperation(value = "Obtener todos los problemas (Privado)",  
+            notes = "Devuelve todos los problemas del COJ.",
+            response = ProblemRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "Ejemplo de respuesta del método")  })
+    @RequestMapping(value = "", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getAllProblemsOrFiltrerProblemsPrivate(@RequestBody String bodyjson) {
         try {
@@ -400,7 +419,10 @@ public class RestProblemsController {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }
 
-    }*/
+    }
+    
+    
+    
     @ApiOperation(value = "Obtener todos los problemas",  
             notes = "Devuelve todos los problemas del COJ",
             position = 2)
@@ -415,6 +437,11 @@ public class RestProblemsController {
         return new ResponseEntity<Car>(car,HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Obtener problemas por páginas",  
+            notes = "Devuelve los problemas por páginas (50 problemas por página) como en el sitio web COJ.",
+            response = ProblemRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "page out of index")  })
     @RequestMapping(value = "/page/{page}", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getAllProblemsOrderByPagePrivate(@PathVariable int page,@RequestBody String bodyjson) {

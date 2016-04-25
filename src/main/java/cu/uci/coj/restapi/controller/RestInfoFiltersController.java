@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 
 @Controller
-@RequestMapping("/utils")
+@RequestMapping("/filter")
 public class RestInfoFiltersController {
     
     @Resource
@@ -77,7 +77,7 @@ public class RestInfoFiltersController {
         return new ResponseEntity<>(filters,HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/cojboard/filters", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/cojboard", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getAllCOJboardFilters() {
         List<WbSite> listsites = wbSiteDAO.getSiteList();

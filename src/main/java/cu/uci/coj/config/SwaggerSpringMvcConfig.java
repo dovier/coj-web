@@ -42,7 +42,7 @@ public class SwaggerSpringMvcConfig {
         return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
                 .apiInfo(apiInfo())
                 .includePatterns(".*/*.*")
-                .genericModelSubstitutes(ResponseEntity.class,List.class);
+                .genericModelSubstitutes(List.class);
     }
  
     private ApiInfo apiInfo() {

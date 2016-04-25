@@ -17,29 +17,37 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class ProblemRest {
     @ApiModelProperty(value = "Identificador del Problema", required = true)
-    Object pid;
-    
-    @ApiModelProperty(value = "Color del globo", required = true)
-    String ballon;
+    Integer pid; 
     
     @ApiModelProperty(value = "Título del Problema", required = true)
     String title;
+    
+    @ApiModelProperty(value = "Envíos realizados al problema", required = true)
     Integer sub;
+    
+    @ApiModelProperty(value = "Envíos aceptados al problema", required = true)
     Integer ac;
+    
+    @ApiModelProperty(value = "Porciento de aceptados", required = true)
     Double acporciento;
-    Double score;
+    
+    @ApiModelProperty(value = "Puntuación del problema", required = true)
+    Double score;    
     
     //Private Atributes of User
+    @ApiModelProperty(value = "Solo es usado cuando se envía un token de un usuario, devuelve si el problema está marcado como favorito", position = 9)
     Boolean favorite;
+    
+    @ApiModelProperty(value = "Solo es usado cuando se envía un token de un usuario, devuelve es estado del problema", allowableValues = "not send, solved, unsolved, not logged", position = 10)
     String status;
     
-    Integer level;
+    
 
     public ProblemRest() {
     }
     
     //Constructor de visualizar los problemas publicos
-    public ProblemRest(Object pid, String title, int sub, int ac, double acporciento, double score) {
+    public ProblemRest(Integer pid, String title, int sub, int ac, double acporciento, double score) {
         this.pid = pid;
         this.title = title;
         this.sub = sub;
@@ -49,7 +57,7 @@ public class ProblemRest {
     }
 
     //Constructor de visualizar los problemas privados
-    public ProblemRest(Object pid, String title, int sub, int ac, double acporciento, double score, boolean favorite, String status) {
+    public ProblemRest(Integer pid, String title, int sub, int ac, double acporciento, double score, boolean favorite, String status) {
         this.pid = pid;
         this.title = title;
         this.sub = sub;
@@ -60,40 +68,15 @@ public class ProblemRest {
         this.status = status;
     }
 
-    //Construvtor para los problemas de competencia
-    public ProblemRest(Object pid, String ballon, String title, int ac, Integer level) {
-        this.pid = pid;
-        this.ballon = ballon;
-        this.title = title;
-        this.ac = ac;
-        this.level = level;
-    }
+  
 
    
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-    
-    
-
-    public Object getPid() {
+    public Integer getPid() {
         return pid;
     }
 
-    public void setPid(Object pid) {
+    public void setPid(Integer pid) {
         this.pid = pid;
-    }
-
-    public String getBallon() {
-        return ballon;
-    }
-
-    public void setBallon(String ballon) {
-        this.ballon = ballon;
     }
 
     public String getTitle() {

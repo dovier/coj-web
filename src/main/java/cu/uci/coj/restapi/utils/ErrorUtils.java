@@ -22,10 +22,10 @@ public class ErrorUtils {
     public static String INCORRECT_TOKEN_OR_APIKEY = "token or apikey incorrect";
     public static String MISSING_PROPERTIES = "Missig Properties";
     
-    public static String PAGE_OUT_OF_INDEX = "page out of index";
-    public static String BAD_PID = "bad pid";
+    public static String PAGE_OUT_OF_INDEX = "{\"error\":\"page out of index\"}";
+    public static String BAD_PID = "{\"error\":\"bad pid\"}";
     public static String BAD_USER = "bad user";
-    public static String BAD_CID = "bad cid";
+    public static String BAD_CID = "{\"error\":\"bad cid or access private\"}";
     public static String BAD_SID = "bad sid";
     public static String USERNAME_DISABLED = "username is not enabled";
     public static String BAD_COUNTRY_ID = "bad country id";
