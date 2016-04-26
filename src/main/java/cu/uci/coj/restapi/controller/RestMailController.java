@@ -7,11 +7,18 @@ package cu.uci.coj.restapi.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.dao.MailDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.Mail;
+import cu.uci.coj.restapi.templates.InputCredentialRest;
+import cu.uci.coj.restapi.templates.InputMailSend;
 import cu.uci.coj.restapi.templates.MailRest;
+import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
 import cu.uci.coj.utils.paging.IPaginatedList;
@@ -30,6 +37,7 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,23 +66,27 @@ public class RestMailController {
        
     
     
-    
-    @RequestMapping(value = "/inbox", method = RequestMethod.POST, headers = "Accept=application/json")
+    @ApiOperation(value = "Obtener los correos entrantes (Privado)",  
+            notes = "Devuelve los correos de la bandeja de entrada (inbox).",
+            response = MailRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+                            @ApiResponse(code = 400, message = "incorrect request")  })
+    @RequestMapping(value = "/inbox", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getMailInbox(@RequestBody String bodyjson) {
+    public ResponseEntity<?> getMailInbox(
+            @ApiParam(value = "JSON para enviar") @RequestBody InputCredentialRest bodyjson) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
+            //ObjectMapper mapper = new ObjectMapper();
+            //JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
 
-            int error = ValidateApiAndToken(bodyjson);
+            int error = ValidateApiAndToken(bodyjson.getApikey(), bodyjson.getToken());
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
             String username = null;
-            
-            String token = node.get("token").textValue();
-            username = ExtractUser(token);
+            username = ExtractUser(bodyjson.getToken());
             
             PagingOptions options = new PagingOptions(1);             
             IPaginatedList<Mail> mails = mailDAO.paginated("user.inbox", Mail.class, 500, options, username);
@@ -96,23 +108,27 @@ public class RestMailController {
     }
     
     
-    
-    @RequestMapping(value = "/outbox", method = RequestMethod.POST, headers = "Accept=application/json")
+    @ApiOperation(value = "Obtener los correos salientes (Privado)",  
+            notes = "Devuelve los correos de la bandeja de salida (outbox).",
+            response = MailRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+                            @ApiResponse(code = 400, message = "incorrect request")  })
+    @RequestMapping(value = "/outbox", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getMailSend(@RequestBody String bodyjson) {
+    public ResponseEntity<?> getMailSend(
+            @ApiParam(value = "JSON para enviar") @RequestBody InputCredentialRest bodyjson) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
+            //ObjectMapper mapper = new ObjectMapper();
+            //JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
 
-            int error = ValidateApiAndToken(bodyjson);
+            int error = ValidateApiAndToken(bodyjson.getApikey(),bodyjson.getToken());
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
             String username = null;
-            
-            String token = node.get("token").textValue();
-            username = ExtractUser(token);
+            username = ExtractUser(bodyjson.getToken());
             
             PagingOptions options = new PagingOptions(1);             
             IPaginatedList<Mail> mails = mailDAO.paginated("user.outbox", Mail.class,500, options, username);
@@ -133,23 +149,27 @@ public class RestMailController {
 
     }
     
-    
+    @ApiOperation(value = "Obtener los borradores (Privado)",  
+            notes = "Devuelve los correos de la bandeja de borradores (draft).",
+            response = MailRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+                            @ApiResponse(code = 400, message = "incorrect request")  })
     @RequestMapping(value = "/draft", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getMailDraft(@RequestBody String bodyjson) {
+    public ResponseEntity<?> getMailDraft(
+            @ApiParam(value = "JSON para enviar") @RequestBody InputCredentialRest bodyjson) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
+            //ObjectMapper mapper = new ObjectMapper();
+            //JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
 
-            int error = ValidateApiAndToken(bodyjson);
+            int error = ValidateApiAndToken(bodyjson.getApikey(),bodyjson.getToken());
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
             String username = null;
-            
-            String token = node.get("token").textValue();
-            username = ExtractUser(token);
+            username = ExtractUser(bodyjson.getToken());
             
             PagingOptions options = new PagingOptions(1);             
             IPaginatedList<Mail> mails = mailDAO.paginated("user.draft", Mail.class,500, options, username);
@@ -171,29 +191,33 @@ public class RestMailController {
     }
     
     
-    
-    
+    //Message body or subject required
+    //There must be at least one recipient
+    //At least one recipient doesn't exist
+    //At most 10 recipients
+    //No valid mail
+    @ApiOperation(value = "Obtener los borradores (Privado)",  
+            notes = "Devuelve los correos de la bandeja de borradores (draft).",
+            response = MailRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 412, message = "Message body or subject required, There must be at least one recipient, At least one recipient doesn't exist, At most 10 recipients,No valid mail"),
+                            @ApiResponse(code = 400, message = "incorrect request")  })
     @RequestMapping(value = "/send", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> SendEmail(@RequestBody String bodyjson) {
+    public ResponseEntity<?> SendEmail(
+            @ApiParam(value = "JSON para enviar") @RequestBody InputMailSend bodyjson)  {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
-
-            int error = ValidateApiAndToken(bodyjson);
+            int error = ValidateApiAndToken(bodyjson.getApikey(),bodyjson.getToken());
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
-            
-            if(!TokenUtils.ValidatePropertiesinJson(node,"to","subject","content"))
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
 
             String username = null;
             
-            String token = node.get("token").textValue();
-            String to = node.get("to").textValue();
-            String subject = node.get("subject").textValue();
-            String content = node.get("content").textValue();
+            String token = bodyjson.getToken();
+            String to = bodyjson.getTo();
+            String subject = bodyjson.getSubject();
+            String content = bodyjson.getContent();
             username = ExtractUser(token);
             
             Mail mail = new Mail();
@@ -203,7 +227,7 @@ public class RestMailController {
            
             String errors = validateEmail(mail);
             if (errors != null) 
-                return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(errors, HttpStatus.PRECONDITION_FAILED);
             
             mail.setId_from(username);
             // result = null se mando el mensaje, "" no habia espacio en el
@@ -234,7 +258,7 @@ public class RestMailController {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
 
-            int error = ValidateApiAndToken(bodyjson);
+            int error = ValidateApiAndToken("asd","asd");
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
@@ -347,16 +371,8 @@ public class RestMailController {
         return errors;
     }
     
-    private int ValidateApiAndToken(String bodyjson) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
-
-        if (!node.has("apikey") || !node.has("token")) {
-            return 8;
-        }
-
-        String apikey = node.get("apikey").textValue();
-        String token = node.get("token").textValue();
+    private int ValidateApiAndToken(String apikey, String token) throws IOException {
+        
 
         try {
             int error = TokenUtils.ValidateAPIKey(apikey);

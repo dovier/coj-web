@@ -14,11 +14,11 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
  */
 @ApiModel
 public class InputUserRest {
-    @ApiModelProperty(value = "LLave de desarrollador", required = true, position = 3)
+    
     String apikey;
-    @ApiModelProperty(value = "Nombre de usuario",required = true, position = 2)
+    
     String username;
-    @ApiModelProperty(value = "Contraseña",required = true, position = 1)
+    
     String password;
 
     public InputUserRest(String apikey, String username, String password) {
@@ -30,6 +30,7 @@ public class InputUserRest {
     public InputUserRest() {
     }
 
+    @ApiModelProperty(value = "LLave de desarrollador", required = true, position = 1)
     public String getApikey() {
         return apikey;
     }
@@ -39,7 +40,7 @@ public class InputUserRest {
     }
 
     
-
+    @ApiModelProperty(value = "Nombre de usuario",required = true, position = 2)
     public String getUsername() {
         return username;
     }
@@ -48,6 +49,7 @@ public class InputUserRest {
         this.username = username;
     }
 
+    @ApiModelProperty(value = "Contraseña",required = true, position = 3)
     public String getPassword() {
         return password;
     }

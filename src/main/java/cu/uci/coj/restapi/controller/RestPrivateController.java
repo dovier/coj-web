@@ -174,7 +174,7 @@ public class RestPrivateController {
             notes = "Crea una llave de desarrollador para comenzar a utilizar la Capa de servicios Web.",
             response = ApiRest.class)
     @ApiResponses(value = { @ApiResponse(code = 404, message = "bad user")  })
-    @RequestMapping(value = "/generateapi", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/generateapi", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     public ResponseEntity<?> GenerateAPI(
             @ApiParam(value = "Nombre de usuario") @RequestParam(value = "username") String username,
