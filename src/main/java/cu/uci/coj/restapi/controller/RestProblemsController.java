@@ -5,8 +5,7 @@
  */
 package cu.uci.coj.restapi.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.mangofactory.swagger.annotations.ApiIgnore;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -23,7 +22,6 @@ import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Limits;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.recommender.Recommender;
-import cu.uci.coj.restapi.templates.Car;
 import cu.uci.coj.restapi.templates.ProblemContestRest;
 import cu.uci.coj.restapi.templates.ProblemDescriptionRest;
 import cu.uci.coj.restapi.templates.ProblemRest;
@@ -38,13 +36,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
+import javax.ws.rs.QueryParam;
 import org.apache.commons.io.FileUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -85,8 +84,8 @@ public class RestProblemsController {
             @ApiIgnore String username,
             @ApiParam(value = "Filtrar por nombre, id o descripción") @RequestParam(required = false, value = "pattern") String pattern,
             @ApiIgnore Integer filterby,
-            @ApiParam(value = "Filtrar por clasificación del problema(Ver filter)") @RequestParam(required = false, value = "classification", defaultValue = "-1") Integer idClassification,
-            @ApiParam(value = "Filtrar por complejidad", allowableValues = "1,2,3,4,5") @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
+            @ApiParam(value = "Filtrar por clasificación del problema (Ver filter)") @RequestParam(required = false, value = "classification", defaultValue = "-1") Integer idClassification,
+            @ApiParam(value = "Filtrar por complejidad", allowableValues = "-1,1,2,3,4,5") @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
 
        /* try {
             PasswordEncoder encoder = new Md5PasswordEncoder();
@@ -196,7 +195,8 @@ public class RestProblemsController {
     @ApiResponses(value = { @ApiResponse(code = 404, message = "page out of index")  })
     @RequestMapping(value = "/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getAllProblemsOrderByPage(@ApiParam(value = "Número de la página") @PathVariable int page, 
+    public ResponseEntity<?> getAllProblemsOrderByPage(
+            @ApiParam(value = "Número de la página") @PathVariable int page, 
             @ApiIgnore String username) {
 
         int found = problemDAO.countProblem(null, 0, username, -1, -1);
@@ -324,16 +324,16 @@ public class RestProblemsController {
         return s;
     }
 
-    private int ValidateApiAndToken(String bodyjson) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
+    private int ValidateApiAndToken(String apikey, String token) throws IOException {
+        //ObjectMapper mapper = new ObjectMapper();
+        //JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
 
-        if (!node.has("apikey") || !node.has("token")) {
+        if (apikey == null || token == null) {
             return 8;
         }
 
-        String apikey = node.get("apikey").textValue();
-        String token = node.get("token").textValue();
+        //String apikey = node.get("apikey").textValue();
+        //String token = node.get("token").textValue();
 
         try {
             int error = TokenUtils.ValidateAPIKey(apikey);
@@ -366,51 +366,32 @@ public class RestProblemsController {
     }  
 
     //------------------------------PRIVATE METHODS (TOKEN NECESSARY)-------------------------------
-    /*
-     { 
-     "apikey":"asdahsd32234gajagfagfafaf".
-     "token":"asdas3244",
-     ...
-     }    
-     */
-     @ApiOperation(value = "Obtener todos los problemas (Privado)",  
+   
+    @ApiOperation(value = "Obtener todos los problemas (Privado)",  
             notes = "Devuelve todos los problemas del COJ.",
             response = ProblemRest.class,
             responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 404, message = "Ejemplo de respuesta del método")  })
-    @RequestMapping(value = "", method = RequestMethod.POST, headers = "Accept=application/json")
+    @ApiResponses( value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect") })
+    @RequestMapping(value = "", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getAllProblemsOrFiltrerProblemsPrivate(@RequestBody String bodyjson) {
+    public ResponseEntity<?> getAllProblemsOrFiltrerProblemsPrivate(
+            @ApiParam(value = "Llave de desarrollador")@RequestParam(required = true, value = "apikey") String apikey,
+            @ApiParam(value = "Token de usuario")@RequestParam(required = true, value = "token") String token,
+            @ApiParam(value = "Filtrar por nombre, id o descripción") @RequestParam(required = false, value = "pattern") String pattern,
+            @ApiParam(value = "Filtrar por Todos(0), Resueltos(1), Por Resolver(2), Por Intentar(3), Favoritos(4), Recommendados(5)",allowableValues = "0,1,2,3,4,5") @RequestParam(required = false, value = "filterby", defaultValue = "0") Integer filterby,
+            @ApiParam(value = "Filtrar por clasificación del problema (Ver filter)") @RequestParam(required = false, value = "classification", defaultValue = "-1") Integer classification,
+            @ApiParam(value = "Filtrar por complejidad", allowableValues = "-1,1,2,3,4,5") @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
-
-            int error = ValidateApiAndToken(bodyjson);
+            int error = ValidateApiAndToken(apikey,token);
             if (error > 0) {
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
+                if(error == 8)
+                    return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
+                else    
+                    return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
             String username = null;
-            String pattern = null;
-            Integer filterby = 0;
-            Integer classification = -1;
-            Integer complexity = -1;
-
-            String token = node.get("token").textValue();
             username = ExtractUser(token);
-
-            if (node.has("pattern")) {
-                pattern = node.get("pattern").textValue();
-            }
-            if (node.has("filterby")) {
-                filterby = node.get("filterby").intValue();
-            }
-            if (node.has("classification")) {
-                classification = node.get("classification").intValue();
-            }
-            if (node.has("complexity")) {
-                complexity = node.get("complexity").intValue();
-            }
 
             List<ProblemRest> listproblemrest = getAllProblemsOrFiltrerProblems(username, pattern, filterby, classification, complexity);
 
@@ -420,42 +401,31 @@ public class RestProblemsController {
         }
 
     }
-    
-    
-    
-    @ApiOperation(value = "Obtener todos los problemas",  
-            notes = "Devuelve todos los problemas del COJ",
-            position = 2)
-    @RequestMapping(value = "/prueba", method = RequestMethod.POST, headers="Accept=application/json")
-    @ResponseBody
-    public ResponseEntity<Car> miprueba(@RequestBody Car car) {
 
-        if (car != null) {
-            car.setId(car.getId() + 100);
-        }
-        
-        return new ResponseEntity<Car>(car,HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "Obtener problemas por páginas",  
+    
+    @ApiOperation(value = "Obtener problemas por páginas (Privado)",  
             notes = "Devuelve los problemas por páginas (50 problemas por página) como en el sitio web COJ.",
             response = ProblemRest.class,
             responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 404, message = "page out of index")  })
-    @RequestMapping(value = "/page/{page}", method = RequestMethod.POST, headers = "Accept=application/json")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+                            @ApiResponse(code = 404, message = "page out of index")  })
+    @RequestMapping(value = "/page/{page}", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getAllProblemsOrderByPagePrivate(@PathVariable int page,@RequestBody String bodyjson) {
+    public ResponseEntity<?> getAllProblemsOrderByPagePrivate(
+            @ApiParam(value = "Llave de desarrollador") @RequestParam(value = "apikey") String apikey,
+            @ApiParam(value = "Token de usuario") @RequestParam(value = "token") String token,
+            @ApiParam(value = "Número de la página") @PathVariable int page) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
 
-            int error = ValidateApiAndToken(bodyjson);
+           int error = ValidateApiAndToken(apikey,token);
             if (error > 0) {
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
+                if(error == 8)
+                    return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
+                else    
+                    return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
             String username = null;
-            String token = node.get("token").textValue();
             username = ExtractUser(token);
 
             return getAllProblemsOrderByPage(page, username);
@@ -466,27 +436,29 @@ public class RestProblemsController {
 
     }
    
-    @RequestMapping(value = "/togglefavorite", method = RequestMethod.POST, headers = "Accept=application/json")
+    
+    @ApiOperation(value = "Agregar/Quitar problema como favorito",  
+            notes = "Cambiar el estado de favorito de un problema dado el identificador del mismo")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+                            @ApiResponse(code = 404, message = "page out of index")  })
+    @RequestMapping(value = "/togglefavorite", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    public ResponseEntity<?> togglefavorite(@RequestBody String bodyjson) {
+    public ResponseEntity<?> togglefavorite(
+            @ApiParam(value = "Llave del desarrollador") @RequestParam(required = true, value = "apikey") String apikey,
+            @ApiParam(value = "Token de usuario") @RequestParam(required = true, value = "token") String token,
+            @ApiParam(value = "Marcar o no como favorito") @RequestParam(required = true, value = "favorite", defaultValue = "false") Boolean favorite,
+            @ApiParam(value = "Identificador del problema") @RequestParam(required = true, value = "pid") Integer pid) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
-
-            int error = ValidateApiAndToken(bodyjson);
+            int error = ValidateApiAndToken(apikey,token);
             if (error > 0) {
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
+                if(error == 8)
+                    return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
+                else    
+                    return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
-            String username = null;
-            String token = node.get("token").textValue();
-            username = ExtractUser(token);
-            
-            if(!TokenUtils.ValidatePropertiesinJson(node,"favorite","pid"))
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
-           
-            boolean favorite = node.get("favorite").asBoolean();
-            int pid = node.get("pid").asInt();
+            String username = null;          
+            username = ExtractUser(token);           
 
             try {
                 int uid = problemDAO.integer("select.uid.by.username", username);
@@ -510,10 +482,6 @@ public class RestProblemsController {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }
     }
-    
-    
-    
-    
     
     
    
