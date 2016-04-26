@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
-import javax.ws.rs.QueryParam;
 import org.apache.commons.io.FileUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -115,7 +114,6 @@ public class RestProblemsController {
                 }
 
                 return listProblemsRest;
-                //return new ResponseEntity(listProblemsRest, HttpStatus.OK);
             }
         }
 
@@ -137,8 +135,6 @@ public class RestProblemsController {
         }
 
         return listProblemsRest;
-        //return new ResponseEntity(listProblemsRest, HttpStatus.OK);
-
     }
     
     @ApiOperation(value = "Obtener todos los problemas por competencias",  
@@ -166,7 +162,6 @@ public class RestProblemsController {
             List<ProblemContestRest> listProblemsContestRest = new LinkedList();
 
             for (Problem p : pages.getList()) {
-                //Object id = contest.getStyle()==1 ? (""+p.getLetter()) : p.getPid();
                 String balloon = contest.isBalloon() == true ? p.getBalloonColor() : null;
                 Integer level  = contest.getStyle() == 4 ? p.getLevel() : null;
                 ProblemContestRest pcr = null;
@@ -325,15 +320,10 @@ public class RestProblemsController {
     }
 
     private int ValidateApiAndToken(String apikey, String token) throws IOException {
-        //ObjectMapper mapper = new ObjectMapper();
-        //JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
-
+        
         if (apikey == null || token == null) {
             return 8;
         }
-
-        //String apikey = node.get("apikey").textValue();
-        //String token = node.get("token").textValue();
 
         try {
             int error = TokenUtils.ValidateAPIKey(apikey);

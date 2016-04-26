@@ -12,24 +12,28 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
  *
  * @author cesar
  */
+
 @ApiModel
-public class TokenRest {
-    @ApiModelProperty(value = "Token de usuario", required = true, position = 2)
-    String token;
-    @ApiModelProperty(value = "Tiempo en que expira el token (ms)", position = 1)
+public class ApiRest {
+    @ApiModelProperty(value = "LLave de desarrollador", required = true, position = 2)
+    String apikey;
+    @ApiModelProperty(value = "Tiempo en que expira la apikey (ms)", position = 1)
     Long expiredin;
 
-    public TokenRest(String token, Long expiredin) {
-        this.token = token;
+    public ApiRest(String apikey, Long expiredin) {
+        this.apikey = apikey;
         this.expiredin = expiredin;
     }
 
-    public String getToken() {
-        return token;
+    public ApiRest() {
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public String getApikey() {
+        return apikey;
+    }
+
+    public void setApikey(String apikey) {
+        this.apikey = apikey;
     }
 
     public Long getExpiredin() {
@@ -39,7 +43,8 @@ public class TokenRest {
     public void setExpiredin(Long expiredin) {
         this.expiredin = expiredin;
     }
-    
+
+   
     
 
     

@@ -113,7 +113,7 @@ public class RestUserProfileController {
         if(user.getGender() == 1)
             gender = "male";
         
-        UserProfileRest userRest = new UserProfileRest(avatar,user.getName(), user.getLastname(), username, gender, user.getCountry(), user.getInstitution(), user.getPlanguage(), user.getRgdate(), user.getLast_submission(), user.getLast_accepted(), user.getScore(), user.getRanking(),user.getRankingbyinstitution(),user.getRankingbycountry(), lastentryText,lastentryDate,followers,following);
+        UserProfileRest userRest = new UserProfileRest(avatar,user.getName(), user.getLastname(), username, gender, user.getCountry_desc(), user.getInstitution_desc(), user.getPlanguage(), user.getRgdate(), user.getLast_submission(), user.getLast_accepted(), user.getScore(), user.getRanking(),user.getRankingbyinstitution(),user.getRankingbycountry(), lastentryText,lastentryDate,followers,following);
  
         return new ResponseEntity<>(userRest, HttpStatus.OK);
 }

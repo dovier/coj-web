@@ -13,8 +13,10 @@ import cu.uci.coj.dao.UtilDAO;
 import cu.uci.coj.model.Country;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Locale;
+import cu.uci.coj.model.ProblemClassification;
 import cu.uci.coj.model.WbSite;
 import cu.uci.coj.restapi.templates.CountryRest;
+import cu.uci.coj.restapi.templates.FilterClassificationRest;
 import cu.uci.coj.restapi.templates.FilterLanguageRest;
 import cu.uci.coj.restapi.templates.FiltersCOJBoardRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
@@ -65,7 +67,7 @@ public class RestInfoFiltersController {
     //Devuelve todos los lenguajes disponibles disponibles del COJ.
     @RequestMapping(value = "/language", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getAllLanguage() {
+    public List<FilterLanguageRest> getAllLanguage() {
 
         List<FilterLanguageRest> filters = new LinkedList();
         List<Language> languages = new LinkedList();
@@ -74,7 +76,7 @@ public class RestInfoFiltersController {
             FilterLanguageRest f = new FilterLanguageRest(lan.getLid(),lan.getLanguage(),lan.getDescripcion(),lan.getKey());
             filters.add(f);
         }
-        return new ResponseEntity<>(filters,HttpStatus.OK);
+        return filters;
     }
     
     @RequestMapping(value = "/cojboard", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -94,4 +96,20 @@ public class RestInfoFiltersController {
     public List<Locale> getAllLocales() {    
         return utilDAO.objects("enabled.locale", Locale.class);   
     }
+    
+    
+    @RequestMapping(value = "/classification", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public List<FilterClassificationRest> getAllClassification() {  
+        List<ProblemClassification> classifications = problemDAO.objects("problem.classifications", ProblemClassification.class);
+        List<FilterClassificationRest> classificationsRest = new LinkedList();
+        
+        for(ProblemClassification p:classifications)
+            classificationsRest.add(new FilterClassificationRest(p.getIdClassification(), p.getName()));
+        
+        return classificationsRest;   
+    }
+    
+    
+    
 }

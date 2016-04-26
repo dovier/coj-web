@@ -31,7 +31,7 @@ public class TokenUtils {
     static String secretKey = "MiSuperClaveParaLaSeguridadDelCOJ123458%$^&&^^%%Yatusabes";
     
     public static Long expirityToken = new Long(100*60*1000);
-    public static Long expirityAPIKey = new Long(30 * 24 * 60 * 60 *1000);
+    public static Long expirityAPIKey = new Long(500 * 24 * 60 * 60 *1000);
     
     public static String CreateTokenUser(String username){
         String token;
