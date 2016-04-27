@@ -20,6 +20,13 @@
     <context:component-scan base-package="cu.uci.coj.restapi.controller" />
     <mvc:annotation-driven />
     
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="cu.uci.coj.utils.RestRateLimitInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors> 
+    
     <bean class="cu.uci.coj.config.SwaggerSpringMvcConfig"/>
     
     <mvc:default-servlet-handler/>

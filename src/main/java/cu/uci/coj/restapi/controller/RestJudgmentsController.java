@@ -7,6 +7,10 @@ package cu.uci.coj.restapi.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.config.Config;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.ProblemDAO;
@@ -18,7 +22,11 @@ import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.Status;
 import cu.uci.coj.model.SubmissionJudge;
+import cu.uci.coj.restapi.templates.InputCredentialRest;
+import cu.uci.coj.restapi.templates.InputSubmitRest;
 import cu.uci.coj.restapi.templates.JudgmentsRest;
+import cu.uci.coj.restapi.templates.ProblemRest;
+import cu.uci.coj.restapi.templates.ResponseSubmitRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
 import cu.uci.coj.utils.Utils;
@@ -32,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
@@ -362,35 +371,41 @@ public class RestJudgmentsController {
         return new ResponseEntity<>(listJudgmentsRest, HttpStatus.OK);
     }  
     
-    
-    @RequestMapping(value = "/submit", method = RequestMethod.POST, headers = "Accept=application/json")
+    @ApiOperation(value = "Hacer un envío de solución a un problema (Privado)",  
+            notes = "Devuelve el identificador del envío para ser buscado posteriormente en los envíos juzgados por el COJ. (Este servicio web no devuelve el veredicto solo lo envía a la cola del juez. Solo se podrán hacer 30 envíos por minuto)",
+            response = ResponseSubmitRest.class)
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+                            @ApiResponse(code = 404, message = "bad pid"),
+                            @ApiResponse(code = 429, message = "Rate limit exceeded, wait one minute")})
+    @RequestMapping(value = "/submit", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> SubmitProblem(@RequestBody String bodyjson) {
+    public ResponseEntity<?> SubmitProblem(
+            @ApiParam(value = "JSON para enviar") @RequestBody InputSubmitRest bodyjson) {
         int sid = -1;  
+        String username = null;
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
+            //ObjectMapper mapper = new ObjectMapper();
+            //JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
 
-            int error = ValidateApiAndToken(bodyjson);
+            int error = ValidateApiAndToken(bodyjson.getApikey(), bodyjson.getToken());
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
-            String username = null;
-            String token = node.get("token").textValue();
-            username = ExtractUser(token);
+
+            username = ExtractUser(bodyjson.getToken());
             
-            if(!TokenUtils.ValidatePropertiesinJson(node,"pid","language","source"))
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
+            //if(!TokenUtils.ValidatePropertiesinJson(node,"pid","language","source"))
+              //  return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
      
-            int pid = node.get("pid").asInt();
-            String language = node.get("language").asText();
-            String code = node.get("source").asText();
+            int pid = bodyjson.getPid();
+            String language = bodyjson.getKeylanguage();
+            String code = bodyjson.getSource();
                      
             
             
             if (!problemDAO.exists(pid) )
-                return new ResponseEntity<>(ErrorUtils.BAD_PID,HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(ErrorUtils.BAD_PID,HttpStatus.NOT_FOUND);
             
             SubmissionJudge submit = new SubmissionJudge();
             submit.setPid(pid);
@@ -440,8 +455,9 @@ public class RestJudgmentsController {
         } catch (IOException ex) {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }
-        String response = "{idsubmission:"+sid+"}";
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        
+      //  String response = "{idsubmission:"+sid+"}";
+        return new ResponseEntity<>(new ResponseSubmitRest(sid, bodyjson.getPid(),username, bodyjson.getKeylanguage()),HttpStatus.OK);
     }
     
     public int end(int found){
@@ -451,16 +467,8 @@ public class RestJudgmentsController {
             return (found/20)+1;
     }
     
-    private int ValidateApiAndToken(String bodyjson) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
-
-        if (!node.has("apikey") || !node.has("token")) {
-            return 8;
-        }
-
-        String apikey = node.get("apikey").textValue();
-        String token = node.get("token").textValue();
+    private int ValidateApiAndToken(String apikey, String token) throws IOException {
+        
 
         try {
             int error = TokenUtils.ValidateAPIKey(apikey);
