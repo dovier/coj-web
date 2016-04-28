@@ -34,9 +34,12 @@ public class ErrorUtils {
     public static String INBOX_OVERFLOW = "{\"error\":\"inbox_overflow\"}";
     public static String RECEIVER_INBOX_OVERFLOW = "{\"error\":\"receiver inbox overflow\"}";
     public static String BAD_LANGUAGE = "{\"error\":\"bad language\"}";
+    public static String BAD_LOCALE = "{\"error\":\"bad locale\"}";
+    public static String BAD_GENDER = "{\"error\":\"bad gender\"}";
     public static String INVALID_EMAIL = "{\"error\":\"invalid email\"}";
     public static String ERROR_UPDATE_CODE = "{\"error\":\"error update code\"}";
     public static String FAILED_SEND_EMAIL = "{\"error\":\"failed send email\"}";
+    public static String INSTITUTION_WITHOUT_COUNTRY = "{\"error\":\"institution witout country\"}";
     
     
     

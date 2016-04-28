@@ -14,8 +14,10 @@ public class UserProfileRest {
     String firstname;
     String lastname;
     String username;
+    String nickname;
     String gender;
-    String country;
+    String country_code;
+    String country_desc;
     String institution;
     String favLanguage;
     String registration;
@@ -30,13 +32,13 @@ public class UserProfileRest {
     int followers;
     int following;
 
-    public UserProfileRest(String avatar, String firstname, String lastname, String username, String gender, String country, String institution, String favLanguage, String registration, String lastSubmission, String lastAccepted, double score, int rankByUser, int rankByInstotution, int rankByCountry, String lastEntry, String lastEntryDate, int followers, int following) {
+    public UserProfileRest(String avatar, String firstname, String lastname, String username, String gender, String country_code, String institution, String favLanguage, String registration, String lastSubmission, String lastAccepted, double score, int rankByUser, int rankByInstotution, int rankByCountry, String lastEntry, String lastEntryDate, int followers, int following) {
         this.avatar = avatar;
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.gender = gender;
-        this.country = country;
+        this.country_code = country_code;
         this.institution = institution;
         this.favLanguage = favLanguage;
         this.registration = registration;
@@ -55,6 +57,30 @@ public class UserProfileRest {
     public String getAvatar() {
         return avatar;
     }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getCountry_code() {
+        return country_code;
+    }
+
+    public void setCountry_code(String country_code) {
+        this.country_code = country_code;
+    }
+
+    public String getCountry_desc() {
+        return country_desc;
+    }
+
+    public void setCountry_desc(String country_desc) {
+        this.country_desc = country_desc;
+    }   
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
@@ -93,11 +119,11 @@ public class UserProfileRest {
     }
 
     public String getCountry() {
-        return country;
+        return country_code;
     }
 
     public void setCountry(String country) {
-        this.country = country;
+        this.country_code = country;
     }
 
     public String getInstitution() {

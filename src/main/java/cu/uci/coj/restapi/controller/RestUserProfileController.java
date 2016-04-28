@@ -5,12 +5,19 @@
  */
 package cu.uci.coj.restapi.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+import cu.uci.coj.dao.CountryDAO;
 import cu.uci.coj.dao.InstitutionDAO;
 import cu.uci.coj.dao.UserDAO;
+import cu.uci.coj.dao.UtilDAO;
+import cu.uci.coj.model.Country;
 import cu.uci.coj.model.Entry;
 import cu.uci.coj.model.Institution;
+import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.User;
 import cu.uci.coj.restapi.templates.UserProfileRest;
@@ -23,17 +30,19 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
-import javax.mail.AuthenticationFailedException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.EmailValidator;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -46,6 +55,12 @@ public class RestUserProfileController {
     
     @Resource
     private UserDAO userDAO;
+    @Resource
+    protected JdbcTemplate jdbcTemplate;
+    @Resource
+    private UtilDAO utilDAO;
+    @Resource
+    private CountryDAO countryDAO;
     @Resource
     private InstitutionDAO institutionDAO;
     
@@ -113,31 +128,53 @@ public class RestUserProfileController {
         if(user.getGender() == 1)
             gender = "male";
         
-        UserProfileRest userRest = new UserProfileRest(avatar,user.getName(), user.getLastname(), username, gender, user.getCountry_desc(), user.getInstitution_desc(), user.getPlanguage(), user.getRgdate(), user.getLast_submission(), user.getLast_accepted(), user.getScore(), user.getRanking(),user.getRankingbyinstitution(),user.getRankingbycountry(), lastentryText,lastentryDate,followers,following);
- 
+        UserProfileRest userRest = new UserProfileRest(avatar,user.getName(), user.getLastname(), username, gender, user.getCountry(), user.getInstitution_desc(), user.getPlanguage(), user.getRgdate(), user.getLast_submission(), user.getLast_accepted(), user.getScore(), user.getRanking(),user.getRankingbyinstitution(),user.getRankingbycountry(), lastentryText,lastentryDate,followers,following);
+        userRest.setNickname(user.getNick());
+        userRest.setCountry_desc(user.getCountry_desc());
+        
         return new ResponseEntity<>(userRest, HttpStatus.OK);
 }
+
     
-    @RequestMapping(value = "/update", method = RequestMethod.POST, headers = "Accept=application/json")
+    @ApiOperation(value = "Modificar Perfil de Usuario (Privado)",  
+            notes = "Modifica el perfil de usuario con los datos enviados.")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+                            @ApiResponse(code = 400, message = "institution witout country, incorrect request"),
+                            @ApiResponse(code = 412, message = "Nick must not more than 25 characters, Nick must not less than 3 characters, The first name is too short, The first name is too long, The first name contains invalid characters, The last name is too long, The last name is too short, The last name contains invalid characters, Required field, This e-mail already exists, Invalid email."),
+                            @ApiResponse(code = 404, message = "bad user, bad institution id, bad language, bad locale, bad gender, bad country id"),
+                            @ApiResponse(code = 500, message = "failed send email"),})
+    @RequestMapping(value = "/update", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    public ResponseEntity<?> UpdateProfile(@RequestBody String bodyjson) {
+    public ResponseEntity<?> UpdateProfile(
+            @ApiParam(value = "Llave de desarrollador") @RequestParam(value = "apikey") String apikey,
+            @ApiParam(value = "Token de usuario") @RequestParam(value = "token") String token,
+            @ApiParam(value = "Año de nacimiento") @RequestParam(value = "year", required = false) Integer year,
+            @ApiParam(value = "Mes de nacimiento") @RequestParam(value = "month", required = false) Integer month,
+            @ApiParam(value = "Día de nacimiento") @RequestParam(value = "day", required = false) Integer day,
+            @ApiParam(value = "Apodo")  @RequestParam(value = "nick", required = false) String nick,
+            @ApiParam(value = "Nombre") @RequestParam(value = "name", required = false) String name,
+            @ApiParam(value = "Apellido") @RequestParam(value = "lastname", required = false) String lastname,
+            @ApiParam(value = "Correo") @RequestParam(value = "email", required = false) String email,
+            @ApiParam(value = "Identificador del País") @RequestParam(value = "country_id", required = false) Integer country_id,
+            @ApiParam(value = "Identificador de la Institución") @RequestParam(value = "institution_id", required = false) Integer institution_id,
+            @ApiParam(value = "Identificador del lenguaje favorito (Ver filters)") @RequestParam(value = "lid", required = false) Integer lid,
+            @ApiParam(value = "Identificador del idioma favorito (Ver filters)") @RequestParam(value = "locale", required = false) Integer locale,
+            @ApiParam(value = "Sexo:  (1)Hombre (2) Mujer", allowableValues = "1,2") @RequestParam(value = "gender", required = false) Integer gender) {
         
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
+           
 
-            int error = ValidateApiAndToken(bodyjson);
+            int error = ValidateApiAndToken(apikey, token);
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
-            if(!TokenUtils.ValidatePropertiesinJson(node,"year","month","day","nick","name","lastname","email","country_id","institution_id","lid","locale","gender"))
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
+            //if(!TokenUtils.ValidatePropertiesinJson(node,"year","month","day","nick","name","lastname","email","country_id","institution_id","lid","locale","gender"))
+              //  return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
             
             String username = null;
-            String token = node.get("token").textValue();
             username = ExtractUser(token);
-            int year = node.get("year").asInt();
+           /* int year = node.get("year").asInt();
             int month = node.get("month").asInt();
             int day = node.get("day").asInt();
             String nick = node.get("nick").asText();
@@ -148,22 +185,34 @@ public class RestUserProfileController {
             int institution_id = node.get("institution_id").asInt();
             int lid = node.get("lid").asInt();
             int locale = node.get("locale").asInt();
-            int gender = node.get("gender").asInt();
+            int gender = node.get("gender").asInt();*/
             
             User user = userDAO.loadAllUserData(username);
-            user.setYear(year);
-            user.setMonth(month);
-            user.setDay(day);
+            if(year!=null)
+                user.setYear(year);
+            if(month!=null)
+                user.setMonth(month);
+            if(day!=null)
+                user.setDay(day);
             user.setUsername(username);
-            user.setNick(nick);
-            user.setName(name);
-            user.setLastname(lastname);
-            user.setEmail(email);
-            user.setCountry_id(country_id);
-            user.setInstitution_id(institution_id);
-            user.setLid(lid);
-            user.setLocale(locale);
-            user.setGender(gender);            
+            if(nick!=null)
+                user.setNick(nick);
+            if(name!=null)
+             user.setName(name);
+            if(lastname!=null)
+                user.setLastname(lastname);
+            if(email!=null)
+                user.setEmail(email);
+            if(country_id!=null)
+                user.setCountry_id(country_id);
+            if(institution_id!=null)
+                user.setInstitution_id(institution_id);
+            if(lid!=null)
+                user.setLid(lid);
+            if(locale!=null)
+                user.setLocale(locale);
+            if(gender!=null)
+                user.setGender(gender);            
                     
             user.setUid(userDAO.integer("select.uid.by.username", username));
             user.setDob(new Date(user.getYear() - 1900, user.getMonth() - 1, user.getDay()));
@@ -172,17 +221,32 @@ public class RestUserProfileController {
        
             boolean is_team = !userDAO.bool("is.user", user.getUsername());            
             if(is_team)
-                return new ResponseEntity<>(ErrorUtils.BAD_USER,HttpStatus.BAD_REQUEST);        
+                return new ResponseEntity<>(ErrorUtils.BAD_USER,HttpStatus.NOT_FOUND);        
             
             user.setTeam(false);
             
             String errors = ValidateUser(user);
             if(!errors.equals("0"))
-                return new ResponseEntity<>(errors,HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(errors,HttpStatus.PRECONDITION_FAILED);
             
-            if(!ValidateInstitutionID(country_id, institution_id))
-                return new ResponseEntity<>(ErrorUtils.BAD_INSTITUTION_ID, HttpStatus.BAD_REQUEST);
-
+            if(country_id != null && !ValidateCountry(country_id))
+                return new ResponseEntity<>(ErrorUtils.BAD_COUNTRY_ID, HttpStatus.NOT_FOUND);
+            
+            if(country_id != null && institution_id != null && !ValidateInstitutionID(country_id, institution_id))
+                return new ResponseEntity<>(ErrorUtils.BAD_INSTITUTION_ID, HttpStatus.NOT_FOUND);
+            
+            if(country_id == null && institution_id!=null)
+                return new ResponseEntity<>(ErrorUtils.INSTITUTION_WITHOUT_COUNTRY,HttpStatus.BAD_REQUEST);
+            
+            if(lid != null && !ValidateLanguage(lid))
+                return new ResponseEntity<>(ErrorUtils.BAD_LANGUAGE,HttpStatus.NOT_FOUND);
+            
+            if(locale !=null && !ValidateLocale(locale))
+                return new ResponseEntity<>(ErrorUtils.BAD_LOCALE,HttpStatus.NOT_FOUND);
+            
+            if(gender != null && gender!=1 && gender!=2)
+                return new ResponseEntity<>(ErrorUtils.BAD_GENDER,HttpStatus.NOT_FOUND);
+            
             try{
                 userDAO.updateUser(user);
             }catch(Exception e){
@@ -194,6 +258,35 @@ public class RestUserProfileController {
         }
         
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    public boolean ValidateCountry(Integer country_id){
+        String sql = "SELECT * FROM public.country WHERE country_id = ?";
+        try{
+        Country country =  (Country) jdbcTemplate.queryForObject(sql,new Object[]{country_id},new BeanPropertyRowMapper(Country.class));
+        }catch(Exception e){return false;}
+        
+        return true;
+    }
+    
+    public boolean ValidateLocale(Integer locale){
+        List<cu.uci.coj.model.Locale> listlocale = utilDAO.objects("enabled.locale", cu.uci.coj.model.Locale.class);
+        for(cu.uci.coj.model.Locale l:listlocale){
+            if(locale == l.getLid())
+                return true;
+        }
+        
+        return false;
+    }
+    
+    public boolean ValidateLanguage(Integer lid){
+        List<Language> listlanguages = utilDAO.getEnabledProgramingLanguages();
+        for(Language l:listlanguages){
+            if(lid == l.getLid())
+                return true;
+        }
+        
+        return false;
     }
     
     
@@ -211,6 +304,9 @@ public class RestUserProfileController {
         return false;
     }
     
+
+   
+
     private String ValidateUser(User user){
         ResourceBundleMessageSource r=new ResourceBundleMessageSource();
         r.setBasename("messages_en");   
@@ -281,16 +377,8 @@ public class RestUserProfileController {
     
     
     
-    private int ValidateApiAndToken(String bodyjson) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
-
-        if (!node.has("apikey") || !node.has("token")) {
-            return 8;
-        }
-
-        String apikey = node.get("apikey").textValue();
-        String token = node.get("token").textValue();
+    private int ValidateApiAndToken(String apikey, String token) throws IOException {
+        
 
         try {
             int error = TokenUtils.ValidateAPIKey(apikey);

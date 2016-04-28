@@ -59,13 +59,15 @@ public class RestRateLimitInterceptor extends HandlerInterceptorAdapter {
             //Ultima entrada de ese host;
             rate.getHost_time().put(request.getRemoteAddr(), calendar.getTimeInMillis());
             
+            System.out.println(rate.getHost_contador().size());
+            System.out.println(rate.getHost_contador());
+            
             
         }
         
         
         
-        System.out.println(rate.getHost_contador().size());
-        System.out.println(rate.getHost_contador());
+      
         return true;
     }
     
