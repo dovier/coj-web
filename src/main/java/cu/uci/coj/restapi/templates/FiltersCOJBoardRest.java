@@ -5,12 +5,19 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author cesar
  */
+
+@ApiModel
 public class FiltersCOJBoardRest {
+    @ApiModelProperty(value = "Identificador del Juez en Línea", required = true)
     int sid;
+    @ApiModelProperty(value = "Dirección del sitio web", required = true)
     String site;
 
     public FiltersCOJBoardRest(int sid, String site) {

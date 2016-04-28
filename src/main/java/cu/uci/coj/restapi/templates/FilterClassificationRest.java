@@ -5,14 +5,20 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author cesar
  */
+
+@ApiModel
 public class FilterClassificationRest {
-    
-     private int idClassification;
-     private String name;
+    @ApiModelProperty(value = "Identificador de la clasificación", required = true)
+    private int idClassification;
+    @ApiModelProperty(value = "Clasificación", required = true)
+    private String name;
 
     public FilterClassificationRest() {
     }

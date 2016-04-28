@@ -5,12 +5,18 @@
  */
 package cu.uci.coj.restapi.controller;
 
+import com.wordnik.swagger.annotations.ApiModelProperty;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.ContestStyle;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.restapi.templates.ContestDescriptionRest;
 import cu.uci.coj.restapi.templates.ContestRest;
+import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
@@ -44,6 +50,11 @@ public class RestContestController {
 	@Resource
 	private Utils utils;
         
+        @ApiOperation(value = "Obtener próximas competencias",  
+            notes = "Devuelve las proximas competencias del COJ.",
+            response = ContestRest.class,
+            responseContainer = "List")
+        @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
         @RequestMapping(value = "/next", method = RequestMethod.GET, headers = "Accept=application/json")
         @ResponseBody
         public List<ContestRest> getAllNextContest() {
@@ -63,6 +74,12 @@ public class RestContestController {
             return listContestRest ;
         }    
         
+        
+        @ApiOperation(value = "Obtener competencias actualmente en funcionamiento",  
+            notes = "Devuelve las competencias que se estan efectuando actualmente en el COJ.",
+            response = ContestRest.class,
+            responseContainer = "List")
+        @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
         @RequestMapping(value = "/running", method = RequestMethod.GET, headers = "Accept=application/json")
         @ResponseBody
         public List<ContestRest> getAllRunningContest() {
@@ -82,9 +99,16 @@ public class RestContestController {
             return listContestRest ;
         } 
         
+        
+        @ApiOperation(value = "Obtener competencias previas",  
+            notes = "Devuelve las competencias ya efectuadas del COJ.",
+            response = ContestRest.class,
+            responseContainer = "List")
+        @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
         @RequestMapping(value = "/past", method = RequestMethod.GET, headers = "Accept=application/json")
         @ResponseBody
-        public List<ContestRest> getAllPastContest(@RequestParam(value = "pattern", required = false) String pattern) {
+        public List<ContestRest> getAllPastContest(
+                @ApiParam(value = "Filtrar por nombre o identificador de competencia ") @RequestParam(value = "pattern", required = false) String pattern) {
             
             List<Contest> listContest = new LinkedList();  
             int i=1;
@@ -108,14 +132,19 @@ public class RestContestController {
         }
         
         
+        @ApiOperation(value = "Obtener descripción de competencias",  
+            notes = "Devuelve la descripción de una competencia dado su identificador.",
+            response = ContestDescriptionRest.class)
+        @ApiResponses(value = { @ApiResponse(code = 404, message = "bad cid")  })
         @RequestMapping(value = "/{cid}", method = RequestMethod.GET, headers = "Accept=application/json")
         @ResponseBody
-        public  ResponseEntity<?>  getContestDescriptionByID(@PathVariable int cid) {
+        public  ResponseEntity<?>  getContestDescriptionByID(
+                @ApiParam(value = "Identificador de competencia") @PathVariable int cid) {
             Contest contest = null;
             try{
                  contest = contestDAO.loadContestFull(cid);
             }catch(NullPointerException ne){
-                return new ResponseEntity<>(ErrorUtils.BAD_CID, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(ErrorUtils.BAD_CID, HttpStatus.NOT_FOUND);
             }
             List<Language> planguages = contestDAO.getContestLanguages(cid);
             List<ContestStyle> styles = contestDAO.loadEnabledScoringStyles();
@@ -190,6 +219,6 @@ public class RestContestController {
             
             
             ContestDescriptionRest contentDescription = new ContestDescriptionRest(contestType, contestantType, accessType, registrationType, templateToVirtualContest, penaltyB0EachRejectedSubmission, frozenTime, deadTime, levels, acceptedLimit, acceptedByLevels, pointsByProblem, programmingLanguages, showProblemsToAll, showJudgmentsToTheContestants, showJudgmentsToAll, showStandings, showStandingstoall, showStatisticsToTheContestants, showStatisticsToAll, goldMedals, silverMedals, bronzeMedals, overview);
-            return new ResponseEntity<>(contentDescription, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(contentDescription, HttpStatus.OK);
         } 
 }

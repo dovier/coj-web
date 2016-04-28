@@ -5,6 +5,11 @@
  */
 package cu.uci.coj.restapi.controller;
 
+import com.mangofactory.swagger.annotations.ApiIgnore;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.board.dao.WbSiteDAO;
 import cu.uci.coj.board.service.WbContestService;
 import cu.uci.coj.dao.EntryDAO;
@@ -15,6 +20,7 @@ import cu.uci.coj.model.Faq;
 import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
 import cu.uci.coj.restapi.templates.CojBoardRest;
+import cu.uci.coj.restapi.templates.ContestDescriptionRest;
 import cu.uci.coj.restapi.templates.EntriesRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.utils.EntryHelper;
@@ -60,9 +66,15 @@ public class RestExtrasController {
         private UtilDAO utilDao;
         
         
+    @ApiOperation(value = "Obtener últimas entradas de los usuarios",  
+            notes = "Devuelve los últimos comentarios realizados por los usuarios paginados como en el sitio COJ.",
+            response = EntriesRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "page out of index")  })    
     @RequestMapping(value = "/welcome/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getAllEntries(@PathVariable int page) {
+    public ResponseEntity<?> getAllEntries(
+            @ApiParam(value = "Número de la página") @PathVariable int page) {
         
         if(page<1)
             return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
@@ -86,15 +98,19 @@ public class RestExtrasController {
 
     }
 
+    @ApiOperation(value = "Obtener próximas competencia de diferentes jueces en línea",  
+            notes = "Devuelve las próximas competencias de diferentes jueces en línea posteados alrededor del del mundo.",
+            response = CojBoardRest.class,
+            responseContainer = "List")  
     @RequestMapping(value = "/cojboard", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getAllCOJboard(Integer sid) {
+    public ResponseEntity<?> getAllCOJboard(@ApiIgnore Integer sid) {
         
         if(sid == null)
             sid = 0;
         
         if(sid<0)
-            return new ResponseEntity<>(ErrorUtils.BAD_SID, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_SID, HttpStatus.NOT_FOUND);
         
         PagingOptions options = new PagingOptions(1);
         options.setDirection("asc");
@@ -129,18 +145,28 @@ public class RestExtrasController {
        
     }
     
+    @ApiOperation(value = "Obtener próximas competencia dado el juez en línea",  
+            notes = "Dado el identificador de un juez en línea, devuelve todas sus próximas competencias.",
+            response = CojBoardRest.class,
+            responseContainer = "List")  
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad sid")  })    
     @RequestMapping(value = "/cojboard/{sid}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getAllCOJboardbySID(@PathVariable Integer sid) {
+    public ResponseEntity<?> getAllCOJboardbySID(
+            @ApiParam(value = "Identificador del juez en línea (Ver filter)") @PathVariable Integer sid) {
         return getAllCOJboard(sid);
     }    
     
     
+    @ApiOperation(value = "Preguntas frecuentes (FAQs)",  
+            notes = "Preguntas y respuestas frecuentes del COJ.",
+            response = Faq.class,
+            responseContainer = "List")  
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
     @RequestMapping(value = "/faq", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getFAQs() {
-        List<Faq> faqs = utilDao.objects("list.faq", Faq.class);
-        return new ResponseEntity<>(faqs,HttpStatus.OK);
+    public List<Faq>  getFAQs() {
+        return utilDao.objects("list.faq", Faq.class);
     }
     
 }

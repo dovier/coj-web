@@ -5,6 +5,9 @@
  */
 package cu.uci.coj.restapi.controller;
 
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.board.dao.WbSiteDAO;
 import cu.uci.coj.dao.CountryDAO;
 import cu.uci.coj.dao.InstitutionDAO;
@@ -15,6 +18,7 @@ import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Locale;
 import cu.uci.coj.model.ProblemClassification;
 import cu.uci.coj.model.WbSite;
+import cu.uci.coj.restapi.templates.ContestRest;
 import cu.uci.coj.restapi.templates.CountryRest;
 import cu.uci.coj.restapi.templates.FilterClassificationRest;
 import cu.uci.coj.restapi.templates.FilterLanguageRest;
@@ -47,7 +51,12 @@ public class RestInfoFiltersController {
     @Resource
     WbSiteDAO wbSiteDAO;
     
-    //Devuelve los lenguajes disponibles para hacer un envio dado un problema.
+    
+    @ApiOperation(value = "Obtener lenguajes habilitados dado un problema",  
+            notes = "Dado el identificador de un problema, devuelve una lista de todos los lenguajes en los que se le peude hacer un envío.",
+            response = FilterLanguageRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad pid")  })
     @RequestMapping(value = "/submit/language/{pid}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getLanguagesEnabledByProblem(@PathVariable Integer pid) {
@@ -61,10 +70,14 @@ public class RestInfoFiltersController {
             }
             return new ResponseEntity<>(filters,HttpStatus.OK);
         }
-        return new ResponseEntity<>(ErrorUtils.BAD_PID,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ErrorUtils.BAD_PID,HttpStatus.NOT_FOUND);
     }
     
-    //Devuelve todos los lenguajes disponibles disponibles del COJ.
+    @ApiOperation(value = "Obtener todos los lenguajes habilitados",  
+            notes = "Devuelve todos los lenguajes disponibles del COJ.",
+            response = FilterLanguageRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
     @RequestMapping(value = "/language", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<FilterLanguageRest> getAllLanguage() {
@@ -79,18 +92,28 @@ public class RestInfoFiltersController {
         return filters;
     }
     
+    @ApiOperation(value = "Obtener todos los jueces en línea",  
+            notes = "Devuelve todos los jueces en línea para poder utilizarlos como filtro en otros servicios.",
+            response = FiltersCOJBoardRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
     @RequestMapping(value = "/cojboard", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getAllCOJboardFilters() {
+    public List<FiltersCOJBoardRest> getAllCOJboardFilters() {
         List<WbSite> listsites = wbSiteDAO.getSiteList();
         List<FiltersCOJBoardRest> listFilters = new LinkedList();
         for (WbSite site : listsites) {
             FiltersCOJBoardRest filter = new FiltersCOJBoardRest(site.getSid(), site.getSite());
             listFilters.add(filter);
         }
-        return new ResponseEntity<>(listFilters,HttpStatus.OK);
+        return listFilters;
     }
     
+    @ApiOperation(value = "Obtener todos los idiomas habilitados",  
+            notes = "Devuelve todos los idiomas disponibles en el COJ.",
+            response = Locale.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
     @RequestMapping(value = "/locales", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<Locale> getAllLocales() {    
@@ -98,6 +121,11 @@ public class RestInfoFiltersController {
     }
     
     
+     @ApiOperation(value = "Obtener las diferentes clasificaciones de los problemas",  
+            notes = "Devuelve todos las clasificaciones que tiene un problema para utilizarlas como filtro en otros servicios.",
+            response = FilterClassificationRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
     @RequestMapping(value = "/classification", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<FilterClassificationRest> getAllClassification() {  

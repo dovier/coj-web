@@ -5,14 +5,22 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author cesar
  */
+@ApiModel
 public class FilterLanguageRest {
+    @ApiModelProperty(value = "Identificador del Lenguaje", required = true)
     int id;
+    @ApiModelProperty(value = "Nombre del Lenguaje", required = true)
     String language_name;
+    @ApiModelProperty(value = "Descripción", required = true)
     String description;
+    @ApiModelProperty(value = "Identificador en forma de texto", required = true)
     String key;
 
     public FilterLanguageRest(int id, String language_name, String description, String key) {
@@ -22,6 +30,11 @@ public class FilterLanguageRest {
         this.key = key;
     }
 
+    public FilterLanguageRest() {
+    }
+
+    
+    
     public int getId() {
         return id;
     }
