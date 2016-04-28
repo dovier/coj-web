@@ -5,6 +5,10 @@
  */
 package cu.uci.coj.restapi.controller;
 
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.CountryDAO;
 import cu.uci.coj.dao.InstitutionDAO;
@@ -54,12 +58,18 @@ public class RestScoreboardsController{
     @Resource
     private ContestDAO contestDAO;
     
+    
+    @ApiOperation(value = "Obtener tabla de posiciones por usuarios",  
+            notes = "Devuelve las posiciones de todos los usuarios del COJ.",
+            response = UserRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
     @RequestMapping(value = "/byuser", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<UserRest> getRankingByUser(
-            @RequestParam(required = false, value = "pattern") String pattern, 
-            @RequestParam(required = false, defaultValue = "false", value = "following") Boolean following, 
-            @RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
+            @ApiParam(value = "Filtrar por nombre de usuario") @RequestParam(required = false, value = "pattern") String pattern, 
+            @ApiParam(value = "Filtrar por seguidos") @RequestParam(required = false, defaultValue = "false", value = "following") Boolean following, 
+            @ApiParam(value = "Filtrar por conectados") @RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
         
         Integer uid = null;
         int found = userDAO.countEnabledUsersForScoreboard(pattern, online, uid);
@@ -84,6 +94,11 @@ public class RestScoreboardsController{
         return listUsersRest;
     }  
     
+    @ApiOperation(value = "Obtener tabla de posiciones por instituciones",  
+            notes = "Devuelve las posiciones de todos las instituciones registradas en el COJ.",
+            response = InstitutionRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
     @RequestMapping(value = "/byinstitution", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<InstitutionRest> getRankingByInstitucions(
@@ -111,6 +126,11 @@ public class RestScoreboardsController{
     }
     
     
+    @ApiOperation(value = "Obtener tabla de posiciones por países",  
+            notes = "Devuelve las posiciones de todos los países registrados en el COJ.",
+            response = CountryRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
     @RequestMapping(value = "/bycountry", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<CountryRest> getRankingByCountry(@RequestParam(required = false, value = "pattern") String pattern) {
@@ -135,14 +155,19 @@ public class RestScoreboardsController{
         return listCountryRest;
     }
     
-    
+    @ApiOperation(value = "Obtener tabla de posiciones de las instituciones por país",  
+            notes = "Dado el identificador de un país, devuelve las posiciones de todas sus instituciones registradas en el COJ.",
+            response = InstitutionRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad country id") })
     @RequestMapping(value = "/institutionbycountry/{country_id}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getRankingInstitutionByCountry(@PathVariable int country_id) {
+    public ResponseEntity<?> getRankingInstitutionByCountry(
+            @ApiParam(value = "Identificador del pais") @PathVariable int country_id) {
         
         Country c = countryDAO.object("country.by.id", Country.class, country_id);
         if(c == null)
-            return new ResponseEntity<>(ErrorUtils.BAD_COUNTRY_ID, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_COUNTRY_ID, HttpStatus.NOT_FOUND);
         
         int found = institutionDAO.countEnabledInstitutionsByCountry("", country_id);
      
@@ -164,6 +189,11 @@ public class RestScoreboardsController{
         return new ResponseEntity<>(listInstitucionRest, HttpStatus.OK);
     }
     
+    @ApiOperation(value = "Obtener tabla de posiciones de los usuarios por país",  
+            notes = "Dado el identificador de un país, devuelve las posiciones de todos sus usuarios registrados en el COJ.",
+            response = InstitutionRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad country id") })
     @RequestMapping(value = "/usersbycountry/{country_id}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getRankingUsersByCountry(@PathVariable int country_id) {

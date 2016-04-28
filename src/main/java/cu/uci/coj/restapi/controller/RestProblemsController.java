@@ -76,7 +76,7 @@ public class RestProblemsController {
             notes = "Devuelve todos los problemas del COJ.",
             response = ProblemRest.class,
             responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<ProblemRest> getAllProblemsOrFiltrerProblems(
