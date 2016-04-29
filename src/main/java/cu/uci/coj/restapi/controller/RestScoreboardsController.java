@@ -119,7 +119,7 @@ public class RestScoreboardsController{
         List<InstitutionRest> listInstitucionRest = new LinkedList();
 
         for(Institution i:listInstitution){
-            InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
+            InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCzip() ,i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
             listInstitucionRest.add(ir);
         }
         
@@ -183,7 +183,7 @@ public class RestScoreboardsController{
         List<InstitutionRest> listInstitucionRest = new LinkedList();
 
         for(Institution i:listInstitution){
-            InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
+            InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCzip(), i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
             listInstitucionRest.add(ir);
         }
         
@@ -389,7 +389,7 @@ public class RestScoreboardsController{
             
             List<InstitutionRest> listInstitucionRest = new LinkedList();
             for(Institution i:pages.getList()){
-                InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
+                InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCzip(), i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
                 listInstitucionRest.add(ir);
             }
             

@@ -13,16 +13,18 @@ public class InstitutionRest {
     
     int inst_id;
     int rank;
-    String cname;
+    String country_code;
+    String country_desc;
     String name;
     int users;
     int acc;
     double points;
 
-    public InstitutionRest(int inst_id, int rank, String cname, String name, int users, int acc, double points) {
+    public InstitutionRest(int inst_id, int rank, String country_code, String country_desc, String name, int users, int acc, double points) {
         this.inst_id = inst_id;
         this.rank = rank;
-        this.cname = cname;
+        this.country_code = country_code;
+        this.country_desc = country_desc;
         this.name = name;
         this.users = users;
         this.acc = acc;
@@ -37,18 +39,6 @@ public class InstitutionRest {
         this.inst_id = inst_id;
     }
 
-    
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-   
-
     public int getRank() {
         return rank;
     }
@@ -57,12 +47,28 @@ public class InstitutionRest {
         this.rank = rank;
     }
 
-    public String getCname() {
-        return cname;
+    public String getCountry_code() {
+        return country_code;
     }
 
-    public void setCname(String cname) {
-        this.cname = cname;
+    public void setCountry_code(String country_code) {
+        this.country_code = country_code;
+    }
+
+    public String getCountry_desc() {
+        return country_desc;
+    }
+
+    public void setCountry_desc(String country_desc) {
+        this.country_desc = country_desc;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getUsers() {
@@ -90,4 +96,5 @@ public class InstitutionRest {
     }
     
     
+
 }
