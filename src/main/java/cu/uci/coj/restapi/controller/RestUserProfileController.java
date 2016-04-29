@@ -20,6 +20,7 @@ import cu.uci.coj.model.Institution;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.User;
+import cu.uci.coj.restapi.templates.CountryRest;
 import cu.uci.coj.restapi.templates.UserProfileRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
@@ -64,20 +65,27 @@ public class RestUserProfileController {
     @Resource
     private InstitutionDAO institutionDAO;
     
+    
+    @ApiOperation(value = "Obtener el perfil de un usuario",  
+            notes = "Dado el nombre de usuario, devuelve el perfil de este.",
+            response = UserProfileRest.class)
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username disabled"),
+                            @ApiResponse(code = 404, message = "bad user")   })
     @RequestMapping(value = "/{username}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getUserProfile(@PathVariable String username) {
+    public ResponseEntity<?> getUserProfile(
+            @ApiParam(value = "Nombre  de usuario") @PathVariable String username) {
 
         User user = null;
 
         if (!userDAO.bool("is.user.enabled", username))
-            return new ResponseEntity<>(ErrorUtils.USERNAME_DISABLED, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.USERNAME_DISABLED, HttpStatus.UNAUTHORIZED);
       
         Integer uid = userDAO.idByUsername(username);
         if (uid != null && userDAO.isUser(username)) {
             user = userDAO.loadUserData(username);
             if (user.isTeam())
-                return new ResponseEntity<>(ErrorUtils.BAD_USER, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(ErrorUtils.BAD_USER, HttpStatus.NOT_FOUND);
             
             List<Problem> solved = userDAO.objects("problems.solved.1", Problem.class, user.getUid());
             List<Problem> unsolved = userDAO.getProblemsTryied(user.getUid());
@@ -128,9 +136,8 @@ public class RestUserProfileController {
         if(user.getGender() == 1)
             gender = "male";
         
-        UserProfileRest userRest = new UserProfileRest(avatar,user.getName(), user.getLastname(), username, gender, user.getCountry(), user.getInstitution_desc(), user.getPlanguage(), user.getRgdate(), user.getLast_submission(), user.getLast_accepted(), user.getScore(), user.getRanking(),user.getRankingbyinstitution(),user.getRankingbycountry(), lastentryText,lastentryDate,followers,following);
+        UserProfileRest userRest = new UserProfileRest(avatar,user.getName(), user.getLastname(), username, gender, user.getCountry(), user.getCountry_desc(), user.getInstitution_desc(), user.getPlanguage(), user.getRgdate(), user.getLast_submission(), user.getLast_accepted(), user.getScore(), user.getRanking(),user.getRankingbyinstitution(),user.getRankingbycountry(), lastentryText,lastentryDate,followers,following);
         userRest.setNickname(user.getNick());
-        userRest.setCountry_desc(user.getCountry_desc());
         
         return new ResponseEntity<>(userRest, HttpStatus.OK);
 }

@@ -5,11 +5,7 @@
  */
 package cu.uci.coj.config;
 
-import com.fasterxml.classmate.TypeResolver;
 import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
-import com.mangofactory.swagger.models.alternates.AlternateTypeRule;
-import com.mangofactory.swagger.models.alternates.Alternates;
-import com.mangofactory.swagger.models.alternates.WildcardType;
 import com.mangofactory.swagger.plugin.EnableSwagger;
 import com.mangofactory.swagger.plugin.SwaggerSpringMvcPlugin;
 import com.wordnik.swagger.model.ApiInfo;
@@ -17,7 +13,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.ResponseEntity;
  
 @Configuration
 @EnableSwagger
@@ -47,12 +42,12 @@ public class SwaggerSpringMvcConfig {
  
     private ApiInfo apiInfo() {
         return new ApiInfo(
-                "Users API",
-                "Your user database!",
-                "http://userweb.userapi.com/Terms_of_service",
-                "userapi.manager@gmail.com",
-                "Apache 2.0",
-                "http://www.apache.org/licenses/LICENSE-2.0.html"
+                "Capa de Servicios Web para el Juez en Línea Caribeño",
+                "Versión 1.0",
+                "http://coj.uci.cu/general/about.xhtml",
+                "coj@uci.cu",
+                "Universidad de las Ciencias Informáticas",
+                "http://www.uci.cu"
         );
     }
     

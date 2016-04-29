@@ -5,40 +5,67 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author cesar
  */
+@ApiModel
 public class UserProfileRest {
+    @ApiModelProperty(value = "Dirección de la imagen", required = true)
     String avatar;
+    @ApiModelProperty(value = "Nombre", required = true)
     String firstname;
+    @ApiModelProperty(value = "Apellido", required = true)
     String lastname;
+    @ApiModelProperty(value = "Nombre de usuario", required = true)
     String username;
+    @ApiModelProperty(value = "Apodo", required = true)
     String nickname;
+    @ApiModelProperty(value = "Género", required = true)
     String gender;
+    @ApiModelProperty(value = "Código del País", required = true)
     String country_code;
+    @ApiModelProperty(value = "País", required = true)
     String country_desc;
+    @ApiModelProperty(value = "Nombre de la Institución", required = true)
     String institution;
+    @ApiModelProperty(value = "Lenguaje Favorito", required = true)
     String favLanguage;
+    @ApiModelProperty(value = "Fecha de Registro", required = true)
     String registration;
+    @ApiModelProperty(value = "Fecha del último envío", required = true)
     String lastSubmission;
+    @ApiModelProperty(value = "Fecha del último envío aceptado", required = true)
     String lastAccepted;
+    @ApiModelProperty(value = "Puntuación", required = true)
     double score;
+    @ApiModelProperty(value = "Posición en usuarios", required = true)
     int rankByUser;
+    @ApiModelProperty(value = "Posición en la institución", required = true)
     int rankByInstotution;
+    @ApiModelProperty(value = "Posición en el país", required = true)
     int rankByCountry;
+    @ApiModelProperty(value = "Última Entrada", required = true)
     String lastEntry;
+    @ApiModelProperty(value = "Fecha de la última entrada", required = true)
     String lastEntryDate;
+    @ApiModelProperty(value = "Seguidores", required = true)
     int followers;
+    @ApiModelProperty(value = "Siguiendo", required = true)
     int following;
+    
 
-    public UserProfileRest(String avatar, String firstname, String lastname, String username, String gender, String country_code, String institution, String favLanguage, String registration, String lastSubmission, String lastAccepted, double score, int rankByUser, int rankByInstotution, int rankByCountry, String lastEntry, String lastEntryDate, int followers, int following) {
+    public UserProfileRest(String avatar, String firstname, String lastname, String username, String gender, String country_code,String country_desc, String institution, String favLanguage, String registration, String lastSubmission, String lastAccepted, double score, int rankByUser, int rankByInstotution, int rankByCountry, String lastEntry, String lastEntryDate, int followers, int following) {
         this.avatar = avatar;
         this.firstname = firstname;
         this.lastname = lastname;
         this.username = username;
         this.gender = gender;
         this.country_code = country_code;
+        this.country_desc = country_desc;
         this.institution = institution;
         this.favLanguage = favLanguage;
         this.registration = registration;
