@@ -5,19 +5,30 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author cesar
  */
+@ApiModel
 public class InstitutionRest {
-    
+    @ApiModelProperty(value = "Identificador de Institución", required = true)
     int inst_id;
+    @ApiModelProperty(value = "Posición", required = true)
     int rank;
+    @ApiModelProperty(value = "Código del país", required = true)
     String country_code;
+    @ApiModelProperty(value = "País", required = true)
     String country_desc;
+    @ApiModelProperty(value = "Nombre de Institución", required = true)
     String name;
+    @ApiModelProperty(value = "Usuarios", required = true)
     int users;
+    @ApiModelProperty(value = "Envíos", required = true)
     int acc;
+    @ApiModelProperty(value = "Puntuación", required = true)
     double points;
 
     public InstitutionRest(int inst_id, int rank, String country_code, String country_desc, String name, int users, int acc, double points) {

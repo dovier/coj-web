@@ -149,7 +149,7 @@ public class RestScoreboardsController{
         List<CountryRest> listCountryRest = new LinkedList();
 
         for(Country c:listCountry){
-            CountryRest cr = new CountryRest(c.getId(),c.getRank(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
+            CountryRest cr = new CountryRest(c.getId(),c.getRank(), c.getZip(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
             listCountryRest.add(cr);
         }
         
@@ -314,7 +314,7 @@ public class RestScoreboardsController{
         Country c  = countryDAO.object("country.by.id", Country.class, i.getCountry_id());      
         
         String logo = "http://coj.uci.cu/images/school/"+i.getZip()+".png";
-        InstitutionDescriptionRest idescrip = new InstitutionDescriptionRest(i.getName(),i.getZip(), logo, i.getWebsite(),c.getName(), i.getCount(), i.getPoints(),i.getRank(), i.getRankincountry());
+        InstitutionDescriptionRest idescrip = new InstitutionDescriptionRest(i.getName(),i.getZip(), logo, i.getWebsite(), c.getZip(), c.getName(), i.getCount(), i.getPoints(),i.getRank(), i.getRankincountry());
         return new ResponseEntity<>(idescrip, HttpStatus.OK);
     }    
     
@@ -417,7 +417,7 @@ public class RestScoreboardsController{
             
             List<CountryRest> listCountryRest = new LinkedList();
             for(Country c:pages.getList()){
-                CountryRest cr = new CountryRest(c.getId(),c.getRank(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
+                CountryRest cr = new CountryRest(c.getId(),c.getRank(), c.getZip(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
                 listCountryRest.add(cr);
             }
             return new ResponseEntity<>(listCountryRest, HttpStatus.OK);

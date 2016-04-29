@@ -5,15 +5,25 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author cesar
  */
+@ApiModel
 public class CojBoardRest {
+    
+    @ApiModelProperty(value = "Nombre del sitio web", required = true)
     String name;
+    @ApiModelProperty(value = "Sitio web", required = true)
     String site;
+    @ApiModelProperty(value = "Dirección de la competencia", required = true)
     String urlcontest;
+    @ApiModelProperty(value = "Fecha de inicio", required = true)
     String start;
+    @ApiModelProperty(value = "Fecha de fin", required = true)
     String end;
 
     public CojBoardRest(String name, String site, String urlcontest, String start, String end) {

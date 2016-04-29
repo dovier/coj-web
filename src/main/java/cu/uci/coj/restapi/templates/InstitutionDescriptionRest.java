@@ -17,24 +17,24 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
 public class InstitutionDescriptionRest {
     @ApiModelProperty(value = "Nombre de Institución", required = true)
     String name;
-    @ApiModelProperty(value = "Nombre de Institución", required = true)
+    @ApiModelProperty(value = "Código de Institución", required = true)
     String code;
-    @ApiModelProperty(value = "Nombre de Institución", required = true)
+    @ApiModelProperty(value = "Logotipo", required = true)
     String logo;
-    @ApiModelProperty(value = "Nombre de Institución", required = true)
+    @ApiModelProperty(value = "Sitio web", required = true)
     String website;
-    @ApiModelProperty(value = "Nombre de Institución", required = true)
+    @ApiModelProperty(value = "Código de país", required = true)
     String country_code;
-    @ApiModelProperty(value = "Nombre de Institución", required = true)
+    @ApiModelProperty(value = "País", required = true)
     String country_desc;
     
-    @ApiModelProperty(value = "Nombre de Institución", required = true)
+    @ApiModelProperty(value = "Usuarios", required = true)
     int users;
-    @ApiModelProperty(value = "Nombre de Institución", required = true)
+    @ApiModelProperty(value = "Puntuación", required = true)
     double score;
-    @ApiModelProperty(value = "Nombre de Institución", required = true)
+    @ApiModelProperty(value = "Posición", required = true)
     int rank;
-    @ApiModelProperty(value = "Nombre de Institución", required = true)
+    @ApiModelProperty(value = "Posición en el país", required = true)
     int rank_in_country;
 
     public InstitutionDescriptionRest(String name, String code, String logo, String website, String country_code, String country_desc, int users, double score, int rank, int rank_in_country) {
