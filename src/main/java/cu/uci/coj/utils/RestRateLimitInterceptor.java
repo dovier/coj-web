@@ -37,7 +37,7 @@ public class RestRateLimitInterceptor extends HandlerInterceptorAdapter {
         rate = Rate.getIsntance();
         calendar = Calendar.getInstance();
         
-        if ( request.getRequestURL().toString().contains("/judgment/submit") ){
+        if ( request.getRequestURL().toString().contains("/judgment/submit") || request.getRequestURL().toString().contains("/private/login")){
             //Resetear el contador si lo lleva
             ResetCount(request,rate);
             
