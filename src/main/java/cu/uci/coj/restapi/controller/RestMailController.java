@@ -349,18 +349,18 @@ public class RestMailController {
                   for (int i = 0; i < to.length; i++) {
                       String string = to[i].replaceAll(" ", "");
                       if (!userDAO.isUser(string)) {
-                          r.getMessage("errormsg.40",null, new Locale("en"));
+                          return r.getMessage("errormsg.40",null, new Locale("en"));
                       }
                   }
                 } else 
-                   r.getMessage("errormsg.41",null, new Locale("en"));
+                   return r.getMessage("errormsg.41",null, new Locale("en"));
                             
                 Mail m1 = mailDAO.getMailValues(mail.getId_from());
                 int max = m1.getMail_quote();
                 int consumed = m1.getConsumed_quote();
                 int msgSize = mail.getContent().getBytes().length + mail.getTitle().getBytes().length;
                 if (consumed + msgSize > max) 
-                    r.getMessage("errormsg.42",null, new Locale("en"));
+                    return r.getMessage("errormsg.42",null, new Locale("en"));
           
                 return errors;
         } catch (Exception e) {
