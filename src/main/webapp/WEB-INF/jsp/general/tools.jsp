@@ -10,11 +10,11 @@
     <!-- article-content -->
 
     <ul>
-        <!--
+
         <li>
             <a href="/datagen/datasets.xhtml?mode=customsol"><spring:message code="text.tools.1"/></a>
         </li>
-         -->
+
         <%--<li>
             <a href="/services/specification.xhtml"><spring:message code="text.tools.2"/></a>
         </li>--%>
