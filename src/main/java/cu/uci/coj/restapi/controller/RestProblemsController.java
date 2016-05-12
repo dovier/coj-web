@@ -5,27 +5,32 @@
  */
 package cu.uci.coj.restapi.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.mangofactory.swagger.annotations.ApiIgnore;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
+import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.RecommenderDAO;
 import cu.uci.coj.dao.SubmissionDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.dao.UtilDAO;
+import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Limits;
 import cu.uci.coj.model.Problem;
-import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.recommender.Recommender;
-import cu.uci.coj.restapi.templates.FilterLanguageRest;
+import cu.uci.coj.restapi.templates.ProblemContestRest;
 import cu.uci.coj.restapi.templates.ProblemDescriptionRest;
 import cu.uci.coj.restapi.templates.ProblemRest;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,10 +39,10 @@ import javax.annotation.Resource;
 import org.apache.commons.io.FileUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,23 +68,33 @@ public class RestProblemsController {
     private SubmissionDAO submissionDAO;
     @Resource
     private Utils utils;
-
+    @Resource
+    private ContestDAO contestDAO;
+    
+    
+    @ApiOperation(value = "Obtener todos los problemas",  
+            notes = "Devuelve todos los problemas del COJ.",
+            response = ProblemRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<ProblemRest> getAllProblemsOrFiltrerProblems(
-            String username,
-            @RequestParam(required = false, value = "pattern") String pattern,
-            Integer filterby,
-            @RequestParam(required = false, value = "classification", defaultValue = "-1") Integer idClassification,
-            @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
+            @ApiIgnore String username,
+            @ApiParam(value = "Filtrar por nombre, id o descripción") @RequestParam(required = false, value = "pattern") String pattern,
+            @ApiIgnore Integer filterby,
+            @ApiParam(value = "Filtrar por clasificación del problema (Ver filter)") @RequestParam(required = false, value = "classification", defaultValue = "-1") Integer idClassification,
+            @ApiParam(value = "Filtrar por complejidad", allowableValues = "-1,1,2,3,4,5") @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
 
-        try {
+       /* try {
+            PasswordEncoder encoder = new Md5PasswordEncoder();
+            String password = encoder.encodePassword("dovier","ABC123XYZ789");
+            System.out.println(password);
             Long l = new Long(15 * 60 * 1000);
             System.out.println(TokenUtils.CreateTokenUser("dovier"));
             l = new Long(15 * 60 * 1000);
             System.out.println(TokenUtils.CreateAPIKey("dovier", "cesar"));
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}*/
 
         if (filterby == null) {
             filterby = 0;
@@ -94,7 +109,7 @@ public class RestProblemsController {
             if (found != 0) {
                 List<ProblemRest> listProblemsRest = new LinkedList();
                 for (Problem p : recommendations) {
-                    ProblemRest pr = new ProblemRest(p.getPid(), p.getTitle(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints(), p.isFavorite(), ResolveStatus(p, username));
+                    ProblemRest pr = BuildProblemRest(p, username);
                     listProblemsRest.add(pr);
                 }
 
@@ -115,17 +130,69 @@ public class RestProblemsController {
         List<ProblemRest> listProblemsRest = new LinkedList();
 
         for (Problem p : listProblems) {
-            ProblemRest pr = new ProblemRest(p.getPid(), p.getTitle(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints(), p.isFavorite(), ResolveStatus(p, username));
+            ProblemRest pr = BuildProblemRest(p, username);
             listProblemsRest.add(pr);
         }
 
         return listProblemsRest;
+    }
+    
+    @ApiOperation(value = "Obtener todos los problemas por competencias",  
+            notes = "Dado el identificador de una competencia devuelve todos los problemas utilizados en la misma.",
+            response = ProblemContestRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad cid or access private")  })
+    @RequestMapping(value = "/contest/{cid}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getAllProblemsInContest(@ApiParam(value = "Identificador de una competencia") @PathVariable int cid) {
+        
+        if(!contestDAO.existsContest(cid))
+            return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.NOT_FOUND);
+        
+        String username = null;
+        Contest contest = contestDAO.loadContest(cid);
+        contestDAO.unfreezeIfNecessary(contest);
+
+        if ((contest.isRunning() || contest.isPast()) && contest.isShow_problem_out()) {
+            contest.setShow_status(true);
+            int found = problemDAO.countProblemContest(cid);
+            PagingOptions options = new PagingOptions(1);
+            IPaginatedList<Problem> pages = problemDAO.getContestProblems(found,"en",username, contest, options);
+            
+            List<ProblemContestRest> listProblemsContestRest = new LinkedList();
+
+            for (Problem p : pages.getList()) {
+                String balloon = contest.isBalloon() == true ? p.getBalloonColor() : null;
+                Integer level  = contest.getStyle() == 4 ? p.getLevel() : null;
+                ProblemContestRest pcr = null;
+                if(contest.getStyle()==1)
+                    pcr = new ProblemContestRest(p.getPid(),""+p.getLetter(),balloon, p.getTitle(), p.getAccu(),level);
+                else
+                    pcr = new ProblemContestRest(p.getPid(),balloon, p.getTitle(), p.getAccu(),level);
+                    
+                if (contest.getStyle() == 3 )
+                    pcr.setScore(p.getPoints());
+                listProblemsContestRest.add(pcr);
+            }
+            
+             return new ResponseEntity<>(listProblemsContestRest,HttpStatus.OK);        
+        }
+
+        return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.NOT_FOUND);
 
     }
+    
 
+    @ApiOperation(value = "Obtener problemas por páginas",  
+            notes = "Devuelve los problemas por páginas (50 problemas por página) como en el sitio web COJ.",
+            response = ProblemRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "page out of index")  })
     @RequestMapping(value = "/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getAllProblemsOrderByPage(@PathVariable int page, String username) {
+    public ResponseEntity<?> getAllProblemsOrderByPage(
+            @ApiParam(value = "Número de la página") @PathVariable int page, 
+            @ApiIgnore String username) {
 
         int found = problemDAO.countProblem(null, 0, username, -1, -1);
         if (page > 0 && page <= end(found)) {
@@ -139,30 +206,34 @@ public class RestProblemsController {
             List<ProblemRest> listProblemsRest = new LinkedList();
 
             for (Problem p : listProblems) {
-                ProblemRest pr = new ProblemRest(p.getPid(), p.getTitleEN(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints());
+                ProblemRest pr = BuildProblemRest(p, username);
                 listProblemsRest.add(pr);
             }
 
             return new ResponseEntity<>(listProblemsRest, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("page out of index", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.NOT_FOUND);
         }
     }
 
+    @ApiOperation(value = "Obtener descripción del problema",  
+            notes = "Devuelve la descripción de un problema dado su identificador.",
+            response = ProblemDescriptionRest.class)
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad pid")  })
     @RequestMapping(value = "/{pid}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getProblemDescriptionsByID(
-            @PathVariable int pid,
-            @RequestParam(required = false, value = "locale", defaultValue = "en") String locale) {
+            @ApiParam(value = "Identificador del problema") @PathVariable int pid,
+            @ApiParam(value = "Idioma del problema (Ver filter)") @RequestParam(required = false, value = "locale", defaultValue = "en") String locale) {
         
         if (!problemDAO.exists(pid) )
-            return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.NOT_FOUND);
         
         Problem p = null;
         try {
             p = problemDAO.getProblemByCode(locale, pid, false);
         } catch (NullPointerException ne) {
-            return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.NOT_FOUND);
         }
         p.setDate(p.getDate().split(" ")[0]);
         problemDAO.fillProblemLanguages(p);
@@ -194,13 +265,38 @@ public class RestProblemsController {
             recomended.add("" + pro.getPid());
         }
 
+        String[] arreglo = author_source(pid);
         ProblemDescriptionRest problemDescrptions;
-        problemDescrptions = new ProblemDescriptionRest(p.getAuthor(), p.getUsername(), p.getDate(), totaltime, testtime, memory, "64 MB", size, languages, p.getDescription(), p.getInput(), p.getOutput(), p.getInputex(), p.getOutputex(), p.getComments(), recomended);
+        problemDescrptions = new ProblemDescriptionRest(p.getAuthor(),arreglo[0].trim(),arreglo[1].trim(), p.getUsername(), p.getDate(), totaltime, testtime, memory, "64 MB", size, languages, p.getDescription(), p.getInput(), p.getOutput(), p.getInputex(), p.getOutputex(), p.getComments(), recomended);
 
         return new ResponseEntity<>(problemDescrptions, HttpStatus.OK);
 
     }
-
+    
+    private ProblemRest BuildProblemRest(Problem p,String username){
+        if(username == null)
+            return new ProblemRest(p.getPid(), p.getTitle(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints());
+        return new ProblemRest(p.getPid(), p.getTitle(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints(), p.isFavorite(), ResolveStatus(p, username));
+    }
+    
+    private String[] author_source(int pid){
+        String[] arreglo = new String[2];
+        
+        String s = problemDAO.string("select.author.problem.id",pid);
+        if(s.contains("[")){
+            s = s.replace("[", "!");
+            arreglo = s.split("!");
+            arreglo[1] = arreglo[1].replace("]", "");
+        }
+        else
+        {
+            arreglo[0] = s;
+            arreglo[1] = "";
+        }
+        return arreglo;
+    }
+            
+    
     private int end(int found) {
         if (found % 50 == 0) {
             return found / 50;
@@ -223,16 +319,11 @@ public class RestProblemsController {
         return s;
     }
 
-    private int ValidateApiAndToken(String bodyjson) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
-
-        if (!node.has("apikey") || !node.has("token")) {
+    private int ValidateApiAndToken(String apikey, String token) throws IOException {
+        
+        if (apikey == null || token == null) {
             return 8;
         }
-
-        String apikey = node.get("apikey").textValue();
-        String token = node.get("token").textValue();
 
         try {
             int error = TokenUtils.ValidateAPIKey(apikey);
@@ -265,46 +356,32 @@ public class RestProblemsController {
     }  
 
     //------------------------------PRIVATE METHODS (TOKEN NECESSARY)-------------------------------
-    /*
-     { 
-     "apikey":"asdahsd32234gajagfagfafaf".
-     "token":"asdas3244",
-     ...
-     }    
-     */
-    @RequestMapping(value = "", method = RequestMethod.POST, headers = "Accept=application/json")
+   
+    @ApiOperation(value = "Obtener todos los problemas (Privado)",  
+            notes = "Devuelve todos los problemas del COJ.",
+            response = ProblemRest.class,
+            responseContainer = "List")
+    @ApiResponses( value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect") })
+    @RequestMapping(value = "", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getAllProblemsOrFiltrerProblemsPrivate(@RequestBody String bodyjson) {
+    public ResponseEntity<?> getAllProblemsOrFiltrerProblemsPrivate(
+            @ApiParam(value = "Llave de desarrollador")@RequestParam(required = true, value = "apikey") String apikey,
+            @ApiParam(value = "Token de usuario")@RequestParam(required = true, value = "token") String token,
+            @ApiParam(value = "Filtrar por nombre, id o descripción") @RequestParam(required = false, value = "pattern") String pattern,
+            @ApiParam(value = "Filtrar por Todos(0), Resueltos(1), Por Resolver(2), Por Intentar(3), Favoritos(4), Recommendados(5)",allowableValues = "0,1,2,3,4,5") @RequestParam(required = false, value = "filterby", defaultValue = "0") Integer filterby,
+            @ApiParam(value = "Filtrar por clasificación del problema (Ver filter)") @RequestParam(required = false, value = "classification", defaultValue = "-1") Integer classification,
+            @ApiParam(value = "Filtrar por complejidad", allowableValues = "-1,1,2,3,4,5") @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
-
-            int error = ValidateApiAndToken(bodyjson);
+            int error = ValidateApiAndToken(apikey,token);
             if (error > 0) {
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
+                if(error == 8)
+                    return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
+                else    
+                    return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
             String username = null;
-            String pattern = null;
-            Integer filterby = 0;
-            Integer classification = -1;
-            Integer complexity = -1;
-
-            String token = node.get("token").textValue();
             username = ExtractUser(token);
-
-            if (node.has("pattern")) {
-                pattern = node.get("pattern").textValue();
-            }
-            if (node.has("filterby")) {
-                filterby = node.get("filterby").intValue();
-            }
-            if (node.has("classification")) {
-                classification = node.get("classification").intValue();
-            }
-            if (node.has("complexity")) {
-                complexity = node.get("complexity").intValue();
-            }
 
             List<ProblemRest> listproblemrest = getAllProblemsOrFiltrerProblems(username, pattern, filterby, classification, complexity);
 
@@ -315,20 +392,30 @@ public class RestProblemsController {
 
     }
 
-    @RequestMapping(value = "/page/{page}", method = RequestMethod.POST, headers = "Accept=application/json")
+    
+    @ApiOperation(value = "Obtener problemas por páginas (Privado)",  
+            notes = "Devuelve los problemas por páginas (50 problemas por página) como en el sitio web COJ.",
+            response = ProblemRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+                            @ApiResponse(code = 404, message = "page out of index")  })
+    @RequestMapping(value = "/page/{page}", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getAllProblemsOrderByPagePrivate(@PathVariable int page,@RequestBody String bodyjson) {
+    public ResponseEntity<?> getAllProblemsOrderByPagePrivate(
+            @ApiParam(value = "Llave de desarrollador") @RequestParam(value = "apikey") String apikey,
+            @ApiParam(value = "Token de usuario") @RequestParam(value = "token") String token,
+            @ApiParam(value = "Número de la página") @PathVariable int page) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
 
-            int error = ValidateApiAndToken(bodyjson);
+           int error = ValidateApiAndToken(apikey,token);
             if (error > 0) {
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
+                if(error == 8)
+                    return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
+                else    
+                    return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
             String username = null;
-            String token = node.get("token").textValue();
             username = ExtractUser(token);
 
             return getAllProblemsOrderByPage(page, username);
@@ -339,27 +426,29 @@ public class RestProblemsController {
 
     }
    
-    @RequestMapping(value = "/togglefavorite", method = RequestMethod.POST, headers = "Accept=application/json")
+    
+    @ApiOperation(value = "Agregar/Quitar problema como favorito",  
+            notes = "Cambiar el estado de favorito de un problema dado el identificador del mismo")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+                            @ApiResponse(code = 404, message = "page out of index")  })
+    @RequestMapping(value = "/togglefavorite", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
-    public ResponseEntity<?> togglefavorite(@RequestBody String bodyjson) {
+    public ResponseEntity<?> togglefavorite(
+            @ApiParam(value = "Llave del desarrollador") @RequestParam(required = true, value = "apikey") String apikey,
+            @ApiParam(value = "Token de usuario") @RequestParam(required = true, value = "token") String token,
+            @ApiParam(value = "Marcar o no como favorito") @RequestParam(required = true, value = "favorite", defaultValue = "false") Boolean favorite,
+            @ApiParam(value = "Identificador del problema") @RequestParam(required = true, value = "pid") Integer pid) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
-
-            int error = ValidateApiAndToken(bodyjson);
+            int error = ValidateApiAndToken(apikey,token);
             if (error > 0) {
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
+                if(error == 8)
+                    return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
+                else    
+                    return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
-            String username = null;
-            String token = node.get("token").textValue();
-            username = ExtractUser(token);
-            
-            if(!TokenUtils.ValidatePropertiesinJson(node,"favorite","pid"))
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
-           
-            boolean favorite = node.get("favorite").asBoolean();
-            int pid = node.get("pid").asInt();
+            String username = null;          
+            username = ExtractUser(token);           
 
             try {
                 int uid = problemDAO.integer("select.uid.by.username", username);
@@ -375,97 +464,13 @@ public class RestProblemsController {
                 
                 return new ResponseEntity<>(HttpStatus.OK);
             } catch (EmptyResultDataAccessException e) {
-                return new ResponseEntity<>("Problem not exists", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.BAD_REQUEST);
             }
            
 
         } catch (IOException ex) {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }
-    }
-    
-    
-    
-    
-    @RequestMapping(value = "/submit", method = RequestMethod.POST, headers = "Accept=application/json")
-    @ResponseBody
-    public ResponseEntity<?> SubmitProblem(@RequestBody String bodyjson) {
-        int sid = -1;  
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
-
-            int error = ValidateApiAndToken(bodyjson);
-            if (error > 0) {
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
-            }
-
-            String username = null;
-            String token = node.get("token").textValue();
-            username = ExtractUser(token);
-            
-            if(!TokenUtils.ValidatePropertiesinJson(node,"pid","language","source"))
-                return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
-     
-            int pid = node.get("pid").asInt();
-            String language = node.get("language").asText();
-            String code = node.get("source").asText();
-                     
-            
-            
-            if (!problemDAO.exists(pid) )
-                return new ResponseEntity<>("bad pid",HttpStatus.BAD_REQUEST);
-            
-            SubmissionJudge submit = new SubmissionJudge();
-            submit.setPid(pid);
-            submit.setCode(code);
-            submit.setKey(language);
-            
-            List<Language> languages = new LinkedList<Language>();
-            Integer uid = userDAO.integer("select.uid.by.username",username);
-            
-            if (problemDAO.exists(submit.getPid())) 
-                languages.addAll(utilDAO.getEnabledLanguagesByProblem(pid));
-            
-            int cont=0;
-            for (Iterator<Language> it = languages.iterator(); it.hasNext();) {
-                Language lang = it.next();
-                if (lang.getKey().equals(language)) 
-                    cont++;
-            }
-            if(cont == 0)
-                return new ResponseEntity<>("bad language",HttpStatus.BAD_REQUEST);
-			
-            
-            submit.setLanguages(languages);
-            submit.getLanguageIdByKey();
-            submit.setHaspriviligeForProblem(false);
-            
-            Problem problem = problemDAO.getProblemSubmitDataByAbb(submit.getPid(),submit.getLid());
-            problem.setUserLanguage("en");
-            boolean locked = problemDAO.bool("issolved.byuser", uid,problem.getPid()) && problemDAO.isLocked(uid, problem.getPid());
-            
-            sid = submissionDAO.insertSubmission(uid,username, problem.getPid(), submit.getCode(),submit.getLanguageByLid(), locked, null);
-            SubmissionJudge submission = new SubmissionJudge(sid, uid,
-					submit.getCode(), problem.getPid(), problem.getTime(),
-					problem.getCasetimelimit(), problem.getMemory(),
-					submit.getLanguageByLid());
-            submission.setSpecialJudge(problem.isSpecial_judge());
-            try {                            
-                int priority = 6;
-                utils.startCalification(submission,priority);
-            } catch (Exception e) {
-                submissionDAO.changeStatus(sid, "Unqualified");
-            }
-            
-                  
-           
-
-        } catch (IOException ex) {
-            return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
-        }
-        String response = "{idsubmission:"+sid+"}";
-        return new ResponseEntity<>(response,HttpStatus.OK);
     }
     
     

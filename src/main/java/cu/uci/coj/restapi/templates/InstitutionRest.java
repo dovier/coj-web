@@ -5,24 +5,37 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author cesar
  */
+@ApiModel
 public class InstitutionRest {
-    
+    @ApiModelProperty(value = "Identificador de Institución", required = true)
     int inst_id;
+    @ApiModelProperty(value = "Posición", required = true)
     int rank;
-    String cname;
+    @ApiModelProperty(value = "Código del país", required = true)
+    String country_code;
+    @ApiModelProperty(value = "País", required = true)
+    String country_desc;
+    @ApiModelProperty(value = "Nombre de Institución", required = true)
     String name;
+    @ApiModelProperty(value = "Usuarios", required = true)
     int users;
+    @ApiModelProperty(value = "Envíos", required = true)
     int acc;
+    @ApiModelProperty(value = "Puntuación", required = true)
     double points;
 
-    public InstitutionRest(int inst_id, int rank, String cname, String name, int users, int acc, double points) {
+    public InstitutionRest(int inst_id, int rank, String country_code, String country_desc, String name, int users, int acc, double points) {
         this.inst_id = inst_id;
         this.rank = rank;
-        this.cname = cname;
+        this.country_code = country_code;
+        this.country_desc = country_desc;
         this.name = name;
         this.users = users;
         this.acc = acc;
@@ -37,18 +50,6 @@ public class InstitutionRest {
         this.inst_id = inst_id;
     }
 
-    
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-   
-
     public int getRank() {
         return rank;
     }
@@ -57,12 +58,28 @@ public class InstitutionRest {
         this.rank = rank;
     }
 
-    public String getCname() {
-        return cname;
+    public String getCountry_code() {
+        return country_code;
     }
 
-    public void setCname(String cname) {
-        this.cname = cname;
+    public void setCountry_code(String country_code) {
+        this.country_code = country_code;
+    }
+
+    public String getCountry_desc() {
+        return country_desc;
+    }
+
+    public void setCountry_desc(String country_desc) {
+        this.country_desc = country_desc;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getUsers() {
@@ -90,4 +107,5 @@ public class InstitutionRest {
     }
     
     
+
 }

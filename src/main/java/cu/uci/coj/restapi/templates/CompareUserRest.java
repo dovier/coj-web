@@ -5,19 +5,29 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
 /**
  *
  * @author lucy
  */
+
+@ApiModel
 public class CompareUserRest {
+    @ApiModelProperty(value = "Listado de problemas resultos solo por el usuario 1", required = true)
     List<Integer> solvedOnlyByUser1;
+    @ApiModelProperty(value = "Listado de problemas resultos solo por ambos usuarios", required = true)
     List<Integer> solvedOnlyByBoth;
+    @ApiModelProperty(value = "Listado de problemas resultos solo por el usuario 2", required = true)
     List<Integer> solvedOnlyByUser2;
     
+    @ApiModelProperty(value = "Listado de problemas envíados pero no resuletos solo por el usuario 1", required = true)
     List<Integer> triedOnlyByUser1;
+    @ApiModelProperty(value = "Listado de problemas envíados pero no resuletos por ambos usuario", required = true)
     List<Integer> triedOnlyByBoth;
+    @ApiModelProperty(value = "Listado de problemas envíados pero no resuletos solo por el usuario 2", required = true)
     List<Integer> triedOnlyByUser2;
 
     public CompareUserRest(List<Integer> solvedOnlyByUser1, List<Integer> solvedOnlyByBoth, List<Integer> solvedOnlyByUser2, List<Integer> triedOnlyByUser1, List<Integer> triedOnlyByBoth, List<Integer> triedOnlyByUser2) {

@@ -5,20 +5,36 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author lucy
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@ApiModel
 public class JudgmentsRest {
+    @ApiModelProperty(value = "Identificador del envío", required = true)
     int id;
+    @ApiModelProperty(value = "Fecha en que se realizó el envío", required = true)
     String date;
+    @ApiModelProperty(value = "Usuario que realizó el envío", required = true)
     String user;
+    @ApiModelProperty(value = "Identificador del problema", required = true)
     int prob;
+    @ApiModelProperty(value = "Sentencia", required = true)
     String judgment;
-    int errortestcase;
+    @ApiModelProperty(value = "Indica el número del caso de prueba donde ocurrió el error (0 en caso contrario)", required = true)
+    Integer errortestcase;
+    @ApiModelProperty(value = "Tiempo", required = true)
     int time;
+    @ApiModelProperty(value = "Memoria", required = true)
     String memory;
+    @ApiModelProperty(value = "Tamaño", required = true)
     String tam;
+    @ApiModelProperty(value = "Lenguaje", required = true)
     String lang;
 
     public JudgmentsRest(int id, String date, String user, int prob, String judgment, int errortestcase, int time, String memory, String tam, String lang) {

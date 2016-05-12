@@ -5,21 +5,37 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author cesar
  */
+@ApiModel
 public class StadisticsRest {
+    
+    @ApiModelProperty(value = "Lenguaje", required = true)
     String pattern;
+    @ApiModelProperty(value = "Accepted", required = true)
     int ac;
+    @ApiModelProperty(value = "Compilation Error", required = true)
     int ce;
+    @ApiModelProperty(value = "Invalid Function", required = true)
     int ivf;
+    @ApiModelProperty(value = "Memory Limit Exceeded", required = true)
     int mle;
+    @ApiModelProperty(value = "Output Limit Exceeded", required = true)
     int ole;
+    @ApiModelProperty(value = "Presentation Error", required = true)
     int pe;
+    @ApiModelProperty(value = "Runtime Error", required = true)
     int rte;
+    @ApiModelProperty(value = "Time Limit Exceeded", required = true)
     int tle;
+    @ApiModelProperty(value = "Wrong Answer", required = true)
     int wa;
+    @ApiModelProperty(value = "Total de envíos", required = true)
     int total;
 
     public StadisticsRest(String pattern, int ac, int ce, int ivf, int mle, int ole, int pe, int rte, int tle, int wa, int total) {

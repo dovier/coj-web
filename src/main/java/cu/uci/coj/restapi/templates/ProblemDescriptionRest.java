@@ -5,33 +5,58 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
 /**
  *
  * @author lucy
  */
+@ApiModel
 public class ProblemDescriptionRest {
     
+    @ApiModelProperty(value = "Creado por", required = true)
     String createdby;
+    @ApiModelProperty(value = "Fuente", required = true)
+    String source;
+    @ApiModelProperty(value = "Autor", required = true)
+    String author;    
+    @ApiModelProperty(value = "Adicionado al COJ por", required = true)
     String addedby;
+    @ApiModelProperty(value = "Fecha de creación", required = true)
     String dateOfCreation;
+    @ApiModelProperty(value = "Todos los tiempos totales de cada lenguaje", required = true)
     List<Long> totaltime;
+    @ApiModelProperty(value = "Todos los tiempos de los casos por cada lenguaje", required = true)
     List<Long> testtime;
+    @ApiModelProperty(value = "Memoria asignada por cada lenguaje", required = true)
     List<String> memory;
+    @ApiModelProperty(value = "Salida límite", required = true)
     String outputMB;
-    List<String> size;       
+    @ApiModelProperty(value = "Tamaño", required = true)
+    List<String> size;     
+    @ApiModelProperty(value = "Lenguajes habilitados, ej: [java,c++,bash]", required = true)
     List<String> enabledlanguages;
+    @ApiModelProperty(value = "Descripción", required = true)
     String description;
+    @ApiModelProperty(value = "Especificación de entrada", required = true)
     String inputSpecification;
+    @ApiModelProperty(value = "Especificación de salida", required = true)
     String outputSpecification;
+    @ApiModelProperty(value = "Ejemplo de entrada", required = true)
     String sampleInput;
+    @ApiModelProperty(value = "Ejemplo de salida", required = true)
     String sampleOutput;
+    @ApiModelProperty(value = "Sugerencia(s)", required = true)
     String hints;
+    @ApiModelProperty(value = "Recomendación", required = true)
     List<String> recommendation;
 
-    public ProblemDescriptionRest(String createdby, String addedby, String dateOfCreation, List<Long> totaltime, List<Long> testtime, List<String> memory, String outputMB, List<String> size, List<String> enabledlanguages, String description, String inputSpecification, String outputSpecification, String sampleInput, String sampleOutput, String hints, List<String> recommendation) {
+    public ProblemDescriptionRest(String createdby, String source, String author, String addedby, String dateOfCreation, List<Long> totaltime, List<Long> testtime, List<String> memory, String outputMB, List<String> size, List<String> enabledlanguages, String description, String inputSpecification, String outputSpecification, String sampleInput, String sampleOutput, String hints, List<String> recommendation) {
         this.createdby = createdby;
+        this.source = source;
+        this.author = author;
         this.addedby = addedby;
         this.dateOfCreation = dateOfCreation;
         this.totaltime = totaltime;
@@ -48,6 +73,24 @@ public class ProblemDescriptionRest {
         this.hints = hints;
         this.recommendation = recommendation;
     }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    
 
     public String getCreatedby() {
         return createdby;

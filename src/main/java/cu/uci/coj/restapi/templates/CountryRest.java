@@ -5,24 +5,38 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author cesar
  */
+@ApiModel
 public class CountryRest {
     
+     @ApiModelProperty(value = "Identificador del país", required = true)
      int country_id;
+     @ApiModelProperty(value = "Posición", required = true)
      int rank;
-     String name;
+     @ApiModelProperty(value = "Código del país", required = true)
+     String country_code;
+     @ApiModelProperty(value = "Nombre del país", required = true)
+     String country_desc;
+     @ApiModelProperty(value = "Instituciones", required = true)
      int institutions;
+     @ApiModelProperty(value = "Usuarios", required = true)
      int users;
+     @ApiModelProperty(value = "Envíos", required = true)
      int acc;     
+     @ApiModelProperty(value = "Puntuación", required = true)
      double points;
 
-    public CountryRest(int country_id, int rank, String name, int institutions, int users, int acc, double points) {
+    public CountryRest(int country_id, int rank, String country_code, String country_desc, int institutions, int users, int acc, double points) {
         this.country_id = country_id;
         this.rank = rank;
-        this.name = name;
+        this.country_code = country_code;
+        this.country_desc = country_desc;
         this.institutions = institutions;
         this.users = users;
         this.acc = acc;
@@ -37,8 +51,6 @@ public class CountryRest {
         this.country_id = country_id;
     }
 
-    
-
     public int getRank() {
         return rank;
     }
@@ -47,12 +59,20 @@ public class CountryRest {
         this.rank = rank;
     }
 
-    public String getName() {
-        return name;
+    public String getCountry_code() {
+        return country_code;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCountry_code(String country_code) {
+        this.country_code = country_code;
+    }
+
+    public String getCountry_desc() {
+        return country_desc;
+    }
+
+    public void setCountry_desc(String country_desc) {
+        this.country_desc = country_desc;
     }
 
     public int getInstitutions() {
@@ -86,6 +106,11 @@ public class CountryRest {
     public void setPoints(double points) {
         this.points = points;
     }
+     
+     
+     
+
+    
      
      
      

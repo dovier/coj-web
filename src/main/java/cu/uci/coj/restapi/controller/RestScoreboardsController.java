@@ -5,6 +5,11 @@
  */
 package cu.uci.coj.restapi.controller;
 
+import com.mangofactory.swagger.annotations.ApiIgnore;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.CountryDAO;
 import cu.uci.coj.dao.InstitutionDAO;
@@ -18,6 +23,7 @@ import cu.uci.coj.restapi.templates.CountryRest;
 import cu.uci.coj.restapi.templates.InstitutionDescriptionRest;
 import cu.uci.coj.restapi.templates.InstitutionRest;
 import cu.uci.coj.restapi.templates.UserRest;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import java.security.Principal;
@@ -53,12 +59,18 @@ public class RestScoreboardsController{
     @Resource
     private ContestDAO contestDAO;
     
+    
+    @ApiOperation(value = "Obtener tabla de posiciones por usuarios",  
+            notes = "Devuelve las posiciones de todos los usuarios del COJ.",
+            response = UserRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
     @RequestMapping(value = "/byuser", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public List<UserRest> getRankingByUser(Principal principal,
-            @RequestParam(required = false, value = "pattern") String pattern, 
-            @RequestParam(required = false, defaultValue = "false", value = "following") Boolean following, 
-            @RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
+    public List<UserRest> getRankingByUser(
+            @ApiParam(value = "Filtrar por nombre de usuario") @RequestParam(required = false, value = "pattern") String pattern, 
+            @ApiParam(value = "Filtrar por seguidos") @RequestParam(required = false, defaultValue = "false", value = "following") Boolean following, 
+            @ApiParam(value = "Filtrar por conectados") @RequestParam(required = false, defaultValue = "false", value = "online") Boolean online) {
         
         Integer uid = null;
         int found = userDAO.countEnabledUsersForScoreboard(pattern, online, uid);
@@ -76,16 +88,21 @@ public class RestScoreboardsController{
         List<UserRest> listUsersRest = new LinkedList();
         
         for(User u:listUsers){
-            UserRest ur = new UserRest(u.getRank(), u.getCountry_desc(), u.getUsername(), u.getStatus(),u.getTotal(), u.getAccu(),u.getPercent(),u.getPoints());
+            UserRest ur = new UserRest(u.getRank(), u.getCountry(), u.getCountry_desc(), u.getUsername(), u.getStatus(),u.getTotal(), u.getAccu(),u.getPercent(),u.getPoints());
             listUsersRest.add(ur);
         }
         
         return listUsersRest;
     }  
     
+    @ApiOperation(value = "Obtener tabla de posiciones por instituciones",  
+            notes = "Devuelve las posiciones de todos las instituciones registradas en el COJ.",
+            response = InstitutionRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
     @RequestMapping(value = "/byinstitution", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public List<InstitutionRest> getRankingByInstitucions(Principal principal,
+    public List<InstitutionRest> getRankingByInstitucions(
             @RequestParam(required = false, value = "pattern") String pattern) {
         
       
@@ -102,7 +119,7 @@ public class RestScoreboardsController{
         List<InstitutionRest> listInstitucionRest = new LinkedList();
 
         for(Institution i:listInstitution){
-            InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
+            InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCzip() ,i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
             listInstitucionRest.add(ir);
         }
         
@@ -110,10 +127,14 @@ public class RestScoreboardsController{
     }
     
     
+    @ApiOperation(value = "Obtener tabla de posiciones por países",  
+            notes = "Devuelve las posiciones de todos los países registrados en el COJ.",
+            response = CountryRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
     @RequestMapping(value = "/bycountry", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public List<CountryRest> getRankingByCountry(Principal principal,
-            @RequestParam(required = false, value = "pattern") String pattern) {
+    public List<CountryRest> getRankingByCountry(@RequestParam(required = false, value = "pattern") String pattern) {
         
         int found = countryDAO.countEnabledCountries(pattern);
      
@@ -128,44 +149,131 @@ public class RestScoreboardsController{
         List<CountryRest> listCountryRest = new LinkedList();
 
         for(Country c:listCountry){
-            CountryRest cr = new CountryRest(c.getId(),c.getRank(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
+            CountryRest cr = new CountryRest(c.getId(),c.getRank(), c.getZip(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
             listCountryRest.add(cr);
         }
         
         return listCountryRest;
     }
     
-    
-    @RequestMapping(value = "/institutionbycountry", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ApiOperation(value = "Obtener tabla de posiciones de las instituciones por país",  
+            notes = "Dado el identificador de un país, devuelve las posiciones de todas sus instituciones registradas en el COJ.",
+            response = InstitutionRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad country id") })
+    @RequestMapping(value = "/institutionbycountry/{country_id}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public List<CountryRest> getRankingInstitutionByCountry(Principal principal,
-            @RequestParam(required = false, value = "pattern") String pattern) {
+    public ResponseEntity<?> getRankingInstitutionByCountry(
+            @ApiParam(value = "Identificador del pais") @PathVariable int country_id) {
         
-        int found = countryDAO.countEnabledCountries(pattern);
+        Country c = countryDAO.object("country.by.id", Country.class, country_id);
+        if(c == null)
+            return new ResponseEntity<>(ErrorUtils.BAD_COUNTRY_ID, HttpStatus.NOT_FOUND);
+        
+        int found = institutionDAO.countEnabledInstitutionsByCountry("", country_id);
      
-        List<Country> listCountry = new LinkedList();   
+        List<Institution> listInstitution = new LinkedList();   
         
         for(int i=1;i<=end(found);i++){
             PagingOptions options = new PagingOptions(i);            
-            IPaginatedList<Country> pages = countryDAO.getEnabledCountries(pattern, found, options);
-            listCountry.addAll(pages.getList());
+            IPaginatedList<Institution> pages = institutionDAO.getEnabledInstitutionsByCountry("", found, options, country_id);
+            listInstitution.addAll(pages.getList());
         }        
             
-        List<CountryRest> listCountryRest = new LinkedList();
+        List<InstitutionRest> listInstitucionRest = new LinkedList();
 
-      /*  for(Country c:listCountry){
-            CountryRest cr = new CountryRest(c.getRank(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
-            listCountryRest.add(cr);
-        }*/
+        for(Institution i:listInstitution){
+            InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCzip(), i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
+            listInstitucionRest.add(ir);
+        }
         
-        return listCountryRest;
+        return new ResponseEntity<>(listInstitucionRest, HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "Obtener tabla de posiciones de los usuarios por país",  
+            notes = "Dado el identificador de un país, devuelve las posiciones de todos sus usuarios registrados en el COJ.",
+            response = InstitutionRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad country id") })
+    @RequestMapping(value = "/usersbycountry/{country_id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getRankingUsersByCountry(
+            @ApiParam(value = "Identificador del pais") @PathVariable int country_id) {
+        
+        Country c = countryDAO.object("country.by.id", Country.class, country_id);
+        if(c == null)
+            return new ResponseEntity<>(ErrorUtils.BAD_COUNTRY_ID, HttpStatus.NOT_FOUND);
+
+        int found = userDAO.countEnabledUsersByCountry("",false, country_id);
+
+        if(found>2000)
+            found = 2000;
+
+        List<User> listUsers = new LinkedList();   
+        
+        for(int i=1;i<=end(found);i++){
+            PagingOptions options = new PagingOptions(i);            
+            IPaginatedList<User> pages = userDAO.getCountryUsersRanking("", found, false, options, country_id);
+            listUsers.addAll(pages.getList());
+        }        
+
+        List<UserRest> listUsersRest = new LinkedList();
+        
+        for(User u:listUsers){
+            UserRest ur = new UserRest(u.getRank(), u.getCountry(), u.getCountry_desc(), u.getUsername(), u.getStatus(),u.getTotal(), u.getAccu(),u.getPercent(),u.getPoints());
+            listUsersRest.add(ur);
+        }
+
+        return new ResponseEntity<>(listUsersRest, HttpStatus.OK);
+    }
+    
+    @ApiOperation(value = "Obtener tabla de posiciones de los usuarios por institución",  
+            notes = "Dado el identificador de una institución, devuelve las posiciones de todos sus usuarios registrados en el COJ.",
+            response = UserRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad institution id") })
+    @RequestMapping(value = "/usersbyinstitution/{inst_id}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> getRankingUsersByInstitution(
+            @PathVariable int inst_id) {
+        
+        Institution ins = institutionDAO.object("institution.id", Institution.class, inst_id);
+        if(ins == null)
+            return new ResponseEntity<>(ErrorUtils.BAD_INSTITUTION_ID, HttpStatus.NOT_FOUND);
+  
+        int found = userDAO.countEnabledUsersByInstitutions("", false, inst_id);
+
+        if(found>2000)
+            found = 2000;
+
+        List<User> listUsers = new LinkedList();   
+        
+        for(int i=1;i<=end(found);i++){
+            PagingOptions options = new PagingOptions(i);            
+            IPaginatedList<User> pages = userDAO.getInstitutionUsersRanking("", found, false, options, inst_id);
+            listUsers.addAll(pages.getList());
+        }        
+
+        List<UserRest> listUsersRest = new LinkedList();
+        
+        for(User u:listUsers){
+            UserRest ur = new UserRest(u.getRank(), u.getCountry(), u.getCountry_desc(), u.getUsername(), u.getStatus(),u.getTotal(), u.getAccu(),u.getPercent(),u.getPoints());
+            listUsersRest.add(ur);
+        }
+
+        return new ResponseEntity<>(listUsersRest, HttpStatus.OK);
     }
     
     
+    @ApiOperation(value = "Obtener tabla de posiciones de los usuarios en las competencias",  
+            notes = "Devuelve las posiciones de todos los usuarios en las competencias.",
+            response = UserRest.class,
+            responseContainer = "List")
     @RequestMapping(value = "/bycontest", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public List<UserRest> getRankingByContest(Principal principal,
-            @RequestParam(required = false, value = "pattern") String pattern) {
+    public List<UserRest> getRankingByContest(
+            @ApiIgnore Principal principal,
+            @ApiParam(value = "Filtrar por nombre de usuario") @RequestParam(required = false, value = "pattern") String pattern) {
         
         int found = contestDAO.countContestGeneralScoreboard(pattern);
      
@@ -180,20 +288,25 @@ public class RestScoreboardsController{
         List<UserRest> listUsersRest = new LinkedList();
         
         for(User u:listUsers){
-            UserRest ur = new UserRest(u.getRank(), u.getCountry_desc(), u.getUsername(), u.getStatus(),u.getTotal(), u.getAccu(),u.getPercent(),u.getPoints());
+            UserRest ur = new UserRest(u.getRank(), u.getCountry(), u.getCountry_desc(), u.getUsername(), u.getStatus(),u.getTotal(), u.getAccu(),u.getPercent(),u.getPoints());
             listUsersRest.add(ur);
         }
         
         return listUsersRest;
     }
     
+    @ApiOperation(value = "Obtener la descripción de una institución",  
+            notes = "Dado el identificador de una institución, devuelve las descripción asociada a la misma.",
+            response = InstitutionDescriptionRest.class)
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad institution id") })
     @RequestMapping(value = "/description/institution/{inst_id}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getDescriptionInstitutionByInstID(@PathVariable int inst_id) {
         
         Institution i = institutionDAO.object("institution.id", Institution.class, inst_id);
         if(i == null)
-            return new ResponseEntity<>("bad institution id", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_INSTITUTION_ID, HttpStatus.NOT_FOUND);
+        
         i.setCount(institutionDAO.integer("institution.profile.count.users", inst_id));
         i.setPoints(institutionDAO.real(0.0,"user.score.enabled.inst", inst_id));
         i.setRank(institutionDAO.integer(-1,"insitutions.rank", inst_id));
@@ -201,17 +314,22 @@ public class RestScoreboardsController{
         Country c  = countryDAO.object("country.by.id", Country.class, i.getCountry_id());      
         
         String logo = "http://coj.uci.cu/images/school/"+i.getZip()+".png";
-        InstitutionDescriptionRest idescrip = new InstitutionDescriptionRest(i.getName(),i.getZip(), logo, i.getWebsite(),c.getName(), i.getCount(), i.getPoints(),i.getRank(), i.getRankincountry());
+        InstitutionDescriptionRest idescrip = new InstitutionDescriptionRest(i.getName(),i.getZip(), logo, i.getWebsite(), c.getZip(), c.getName(), i.getCount(), i.getPoints(),i.getRank(), i.getRankincountry());
         return new ResponseEntity<>(idescrip, HttpStatus.OK);
     }    
     
+    @ApiOperation(value = "Obtener la descripción de un país",  
+            notes = "Dado el identificador de un país, devuelve las descripción asociada a este.",
+            response = CountryDescriptionRest.class)
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad country id") })
     @RequestMapping(value = "/description/country/{country_id}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getDescriptionCountryByCountryID(@PathVariable int country_id) {
+    public ResponseEntity<?> getDescriptionCountryByCountryID(
+            @ApiParam(value = "Identificador de País") @PathVariable int country_id) {
         
         Country c = countryDAO.object("country.by.id", Country.class, country_id);
         if(c == null)
-            return new ResponseEntity<>("bad country id", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_COUNTRY_ID, HttpStatus.NOT_FOUND);
         
         c.setInstitutions(countryDAO.integer("count.institutions", country_id));
         c.setPoints(countryDAO.real("user.score", country_id));
@@ -225,53 +343,113 @@ public class RestScoreboardsController{
     
     
     
-    
-    @RequestMapping(value = "/byuser/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ApiOperation(value = "Obtener tabla de posiciones por usuarios (Paginados)",  
+            notes = "Devuelve las posiciones de todos los usuarios del COJ por páginas.",
+            response = UserRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "page out of index") })
+    @RequestMapping(value = "/byuser/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getRankingByUserFromTo(@PathVariable int from, @PathVariable int to) {
-        if(from<1 || to<1 || from>to)
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<UserRest> listUserRest = getRankingByUser(null, null, Boolean.FALSE, Boolean.FALSE);
-        if(from>listUserRest.size() || to>listUserRest.size())
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> getRankingByUserFromTo(
+            @ApiParam(value = "Número de la página") @PathVariable int page) {       
+        Integer uid = null;
+        int found = userDAO.countEnabledUsersForScoreboard("", false, uid);
         
-        return new ResponseEntity<>(listUserRest.subList(from-1, to), HttpStatus.OK);
+        if (page > 0 && page <= end(found)) {
+            PagingOptions options = new PagingOptions(page);            
+            IPaginatedList<User> pages = userDAO.getUserRanking("", found, false, uid, options);
+            
+            List<UserRest> listUsersRest = new LinkedList();
+            for(User u:pages.getList()){
+                UserRest ur = new UserRest(u.getRank(), u.getCountry(),  u.getCountry_desc(), u.getUsername(), u.getStatus(),u.getTotal(), u.getAccu(),u.getPercent(),u.getPoints());
+                listUsersRest.add(ur);
+            }
+
+            return new ResponseEntity<>(listUsersRest, HttpStatus.OK);
+        }
+        else 
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);        
     }     
     
-    @RequestMapping(value = "/byinstitution/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ApiOperation(value = "Obtener tabla de posiciones por instituciones (Paginados)",  
+            notes = "Devuelve las posiciones de todos las instituciones del COJ por páginas.",
+            response = InstitutionRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "page out of index") })
+    @RequestMapping(value = "/byinstitution/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getRankingByInstitutionFromTo(@PathVariable int from, @PathVariable int to) {
-        if(from<1 || to<1 || from>to)
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<InstitutionRest> listInstitutionRest = getRankingByInstitucions(null, null);
-        if(from>listInstitutionRest.size() || to>listInstitutionRest.size())
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> getRankingByInstitutionFromTo(
+             @ApiParam(value = "Número de la página") @PathVariable int page) {
+       
+        int found = institutionDAO.countEnabledInstitutions(""); 
         
-        return new ResponseEntity<>(listInstitutionRest.subList(from-1, to), HttpStatus.OK);
+        if (page > 0 && page <= end(found)) {     
+            PagingOptions options = new PagingOptions(page);            
+            IPaginatedList<Institution> pages = institutionDAO.getEnabledInstitutions("", found, options);
+            
+            List<InstitutionRest> listInstitucionRest = new LinkedList();
+            for(Institution i:pages.getList()){
+                InstitutionRest ir = new InstitutionRest(i.getId(),i.getRank(), i.getCzip(), i.getCname(),i.getName(), i.getUsers(), i.getAcc(),i.getPoints());
+                listInstitucionRest.add(ir);
+            }
+            
+            return new ResponseEntity<>(listInstitucionRest, HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
+   
     } 
     
-    @RequestMapping(value = "/bycountry/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ApiOperation(value = "Obtener tabla de posiciones por países (Paginados)",  
+            notes = "Devuelve las posiciones de todos los países del COJ por páginas.",
+            response = CountryRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "page out of index") })
+    @RequestMapping(value = "/bycountry/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public  ResponseEntity<?>  getRankingByCountryFromTo(@PathVariable int from, @PathVariable int to) {
-        if(from<1 || to<1 || from>to)
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<CountryRest> listCountryRest = getRankingByCountry(null, null);
-        if(from>listCountryRest.size() || to>listCountryRest.size())
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+    public  ResponseEntity<?>  getRankingByCountryFromTo(
+             @ApiParam(value = "Número de la página") @PathVariable int page) {
         
-        return new ResponseEntity<>(listCountryRest.subList(from-1, to), HttpStatus.OK);
+        int found = countryDAO.countEnabledCountries("");         
+        if (page > 0 && page <= end(found)) { 
+            PagingOptions options = new PagingOptions(page);            
+            IPaginatedList<Country> pages = countryDAO.getEnabledCountries("", found, options);
+            
+            List<CountryRest> listCountryRest = new LinkedList();
+            for(Country c:pages.getList()){
+                CountryRest cr = new CountryRest(c.getId(),c.getRank(), c.getZip(), c.getName(),c.getInstitutions(),c.getUsers(), c.getAcc(), c.getPoints());
+                listCountryRest.add(cr);
+            }
+            return new ResponseEntity<>(listCountryRest, HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
     }
-  
-    @RequestMapping(value = "/bycontest/show/{from}/{to}", method = RequestMethod.GET, headers = "Accept=application/json")
+
+    @ApiOperation(value = "Obtener tabla de posiciones de los usuarios por competencias (Paginados)",  
+            notes = "Devuelve las posiciones de todos los usuarios del COJ en las competencias por páginas.",
+            response = UserRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "page out of index") })
+    @RequestMapping(value = "/bycontest/page/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public  ResponseEntity<?>  getRankingBybycontestFromTo(@PathVariable int from, @PathVariable int to) {
-        if(from<1 || to<1 || from>to)
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
-        List<UserRest> listUserRest = getRankingByContest(null, null);
-        if(from>listUserRest.size() || to > listUserRest.size())
-            return new ResponseEntity<>("bad from to", HttpStatus.BAD_REQUEST);
+    public  ResponseEntity<?>  getRankingBybycontestFromTo(
+             @ApiParam(value = "Número de la página") @PathVariable int page) {
         
-        return new ResponseEntity<>(listUserRest.subList(from-1, to), HttpStatus.OK);
+        int found = contestDAO.countContestGeneralScoreboard("");         
+        if (page > 0 && page <= end(found)) { 
+            PagingOptions options = new PagingOptions(page);            
+            IPaginatedList<User> pages = contestDAO.getContestGeneralScoreboard(found, "", options);
+            
+            List<UserRest> listUsersRest = new LinkedList();        
+            for(User u:pages.getList()){
+                UserRest ur = new UserRest(u.getRank(), u.getCountry(), u.getCountry_desc(), u.getUsername(), u.getStatus(),u.getTotal(), u.getAccu(),u.getPercent(),u.getPoints());
+                listUsersRest.add(ur);
+            }
+            return new ResponseEntity<>(listUsersRest, HttpStatus.OK);
+        }
+        else
+            return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
     }
     
     private int end(int found){

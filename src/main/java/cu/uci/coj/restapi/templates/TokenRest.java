@@ -5,13 +5,18 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author cesar
  */
+@ApiModel
 public class TokenRest {
-    
+    @ApiModelProperty(value = "Token de usuario", required = true, position = 2)
     String token;
+    @ApiModelProperty(value = "Tiempo en que expira el token (ms)", position = 1)
     Long expiredin;
 
     public TokenRest(String token, Long expiredin) {

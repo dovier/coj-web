@@ -5,23 +5,37 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.List;
+import org.junit.Ignore;
 
 /**
  *
  * @author cesar
  */
+
+@ApiModel
 public class MailRest {
     
-  
+    @ApiModelProperty(value = "Idenificador del correo", required = true)
     int idmail;
+    @ApiModelProperty(value = "Asunto del correo", required = true)
     private String title;
+    @ApiModelProperty(value = "Contenido del correo", required = true)
     private String content;
+    @ApiModelProperty(value = "Enviado por", required = true)
     private String id_from;
+    @ApiModelProperty(value = "Lista de receptores", required = true)
     private List<String> to;
+    @ApiModelProperty(value = "Fecha en que se recibió", required = true)
     private Date date;
+    @ApiModelProperty(value = "Leído o no el correo", required = true)
     private boolean isread;
+    
+    @JsonIgnore
     private String cclass;
 
     public MailRest(int idmail, String title, String content, String id_from, List<String> to, Date date, boolean isread, String cclass) {
