@@ -50,7 +50,7 @@ public class RestContestController {
 	@Resource
 	private Utils utils;
         
-        @ApiOperation(value = "Obtener próximas competencias",  
+        @ApiOperation(value = "Obtener próximas competencias",
             notes = "Devuelve las proximas competencias del COJ.",
             response = ContestRest.class,
             responseContainer = "List")
@@ -74,8 +74,8 @@ public class RestContestController {
             return listContestRest ;
         }    
         
-        
-        @ApiOperation(value = "Obtener competencias actualmente en funcionamiento",  
+
+        @ApiOperation(value = "Obtener competencias actualmente en funcionamiento",
             notes = "Devuelve las competencias que se estan efectuando actualmente en el COJ.",
             response = ContestRest.class,
             responseContainer = "List")
@@ -99,8 +99,8 @@ public class RestContestController {
             return listContestRest ;
         } 
         
-        
-        @ApiOperation(value = "Obtener competencias previas",  
+
+        @ApiOperation(value = "Obtener competencias previas",
             notes = "Devuelve las competencias ya efectuadas del COJ.",
             response = ContestRest.class,
             responseContainer = "List")
@@ -132,7 +132,7 @@ public class RestContestController {
         }
         
         
-        @ApiOperation(value = "Obtener descripción de competencias",  
+        @ApiOperation(value = "Obtener descripción de competencias",
             notes = "Devuelve la descripción de una competencia dado su identificador.",
             response = ContestDescriptionRest.class)
         @ApiResponses(value = { @ApiResponse(code = 404, message = "bad cid")  })
