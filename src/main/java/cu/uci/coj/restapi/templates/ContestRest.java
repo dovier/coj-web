@@ -5,15 +5,24 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author cesar
  */
+@ApiModel
 public class ContestRest {
+    @ApiModelProperty(value = "Identificador de la competencia", required = true)
     int id;
+    @ApiModelProperty(value = "Tipo de competencia", required = true, allowableValues = "private, public")
     String access;
+    @ApiModelProperty(value = "Nombre de la competencia", required = true)
     String name;
+    @ApiModelProperty(value = "Fecha de inicio", required = true)
     String start;
+    @ApiModelProperty(value = "Fecha de fin", required = true)
     String end;
 
     public ContestRest(int id, String access, String name, String start, String end) {
@@ -23,6 +32,11 @@ public class ContestRest {
         this.start = start;
         this.end = end;
     }
+
+    public ContestRest() {
+    }
+    
+    
 
     public int getId() {
         return id;

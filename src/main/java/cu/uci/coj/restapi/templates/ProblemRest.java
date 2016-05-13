@@ -5,34 +5,59 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author lucy
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@ApiModel
 public class ProblemRest {
+    @ApiModelProperty(value = "Identificador del Problema", required = true)
+    Integer pid; 
     
-    int pid;
+    @ApiModelProperty(value = "Título del Problema", required = true)
     String title;
-    int sub;
-    int ac;
-    double acporciento;
-    double score;
+    
+    @ApiModelProperty(value = "Envíos realizados al problema", required = true)
+    Integer sub;
+    
+    @ApiModelProperty(value = "Envíos aceptados al problema", required = true)
+    Integer ac;
+    
+    @ApiModelProperty(value = "Porciento de aceptados", required = true)
+    Double acporciento;
+    
+    @ApiModelProperty(value = "Puntuación del problema", required = true)
+    Double score;    
     
     //Private Atributes of User
-    boolean favorite;
+    @ApiModelProperty(value = "Solo es usado cuando se envía un token de un usuario, devuelve si el problema está marcado como favorito", position = 9)
+    Boolean favorite;
+    
+    @ApiModelProperty(value = "Solo es usado cuando se envía un token de un usuario, devuelve es estado del problema", allowableValues = "not send, solved, unsolved, not logged", position = 10)
     String status;
     
-    public ProblemRest(int pid, String title, int sub, int ac, double acporciento, double score) {
+    
+
+    public ProblemRest() {
+    }
+    
+    //Constructor de visualizar los problemas publicos
+    public ProblemRest(Integer pid, String title, int sub, int ac, double acporciento, double score) {
         this.pid = pid;
         this.title = title;
         this.sub = sub;
         this.ac = ac;
         this.acporciento = acporciento;
         this.score = score;
-        status = "not logged";
     }
 
-    public ProblemRest(int pid, String title, int sub, int ac, double acporciento, double score, boolean favorite, String status) {
+    //Constructor de visualizar los problemas privados
+    public ProblemRest(Integer pid, String title, int sub, int ac, double acporciento, double score, boolean favorite, String status) {
         this.pid = pid;
         this.title = title;
         this.sub = sub;
@@ -42,14 +67,15 @@ public class ProblemRest {
         this.favorite = favorite;
         this.status = status;
     }
-    
-    
 
-    public int getPid() {
+  
+
+   
+    public Integer getPid() {
         return pid;
     }
 
-    public void setPid(int pid) {
+    public void setPid(Integer pid) {
         this.pid = pid;
     }
 
@@ -61,43 +87,43 @@ public class ProblemRest {
         this.title = title;
     }
 
-    public int getSub() {
+    public Integer getSub() {
         return sub;
     }
 
-    public void setSub(int sub) {
+    public void setSub(Integer sub) {
         this.sub = sub;
     }
 
-    public int getAc() {
+    public Integer getAc() {
         return ac;
     }
 
-    public void setAc(int ac) {
+    public void setAc(Integer ac) {
         this.ac = ac;
     }
 
-    public double getAcporciento() {
+    public Double getAcporciento() {
         return acporciento;
     }
 
-    public void setAcporciento(double acporciento) {
+    public void setAcporciento(Double acporciento) {
         this.acporciento = acporciento;
     }
 
-    public double getScore() {
+    public Double getScore() {
         return score;
     }
 
-    public void setScore(double score) {
+    public void setScore(Double score) {
         this.score = score;
     }
 
-    public boolean isFavorite() {
+    public Boolean getFavorite() {
         return favorite;
     }
 
-    public void setFavorite(boolean favorite) {
+    public void setFavorite(Boolean favorite) {
         this.favorite = favorite;
     }
 
@@ -108,6 +134,8 @@ public class ProblemRest {
     public void setStatus(String status) {
         this.status = status;
     }
+    
+    
     
     
     

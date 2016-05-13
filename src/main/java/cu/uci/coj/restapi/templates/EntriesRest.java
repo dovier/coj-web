@@ -5,16 +5,25 @@
  */
 package cu.uci.coj.restapi.templates;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 /**
  *
  * @author cesar
  */
+
+@ApiModel
 public class EntriesRest {
-    
+    @ApiModelProperty(value = "Dirección de la iamgen de avatar", required = true)
     String avatar;
+    @ApiModelProperty(value = "Nombre de Usuario", required = true)
     String user;
+    @ApiModelProperty(value = "Fecha de creación", required = true)
     String date;
+    @ApiModelProperty(value = "Contenido", required = true)
     String content;
+    @ApiModelProperty(value = "Puntuación", required = true)
     int rate;
 
     public EntriesRest(String avatar, String user, String date, String content, int rate) {

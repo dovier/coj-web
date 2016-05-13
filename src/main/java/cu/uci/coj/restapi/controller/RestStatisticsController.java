@@ -5,6 +5,10 @@
  */
 package cu.uci.coj.restapi.controller;
 
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.dao.BaseDAO;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.ProblemDAO;
@@ -13,7 +17,9 @@ import cu.uci.coj.model.CompareUsers;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.restapi.templates.CompareUserRest;
+import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.templates.StadisticsRest;
+import cu.uci.coj.restapi.utils.ErrorUtils;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.Resource;
@@ -42,6 +48,12 @@ public class RestStatisticsController {
     @Resource
     private ProblemDAO problemDAO;
 
+    
+    @ApiOperation(value = "Obtener las estadísticas del archivo 24 horas",  
+            notes = "Devuelve todos las estadísticas de envíos por lenguajes en el archio 24 horas.",
+            response = StadisticsRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
     @RequestMapping(value = "/24h", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<StadisticsRest> getStadidistic24h() {
@@ -66,6 +78,12 @@ public class RestStatisticsController {
         return listRestStadistics;
     }
 
+    
+    @ApiOperation(value = "Obtener las estadísticas de las competencias",  
+            notes = "Devuelve todos las estadísticas de envíos por lenguajes en las competencias.",
+            response = StadisticsRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
     @RequestMapping(value = "/contest", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<StadisticsRest> getStadidisticContest() {
@@ -90,9 +108,16 @@ public class RestStatisticsController {
         return listRestStadistics;
     }
 
+    
+    @ApiOperation(value = "Comparar Usuarios",  
+            notes = "Compara dos usuarios registrados del COJ.",
+            response = CompareUserRest.class)
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad user") })
     @RequestMapping(value = "/compare/{user1}/{user2}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getCompareUsers(@PathVariable String user1, @PathVariable String user2) {
+    public ResponseEntity<?> getCompareUsers(
+            @ApiParam(value = "Usuario 1") @PathVariable String user1, 
+            @ApiParam(value = "Usuario 2") @PathVariable String user2) {
         boolean error = true;
         CompareUsers cmp = new CompareUsers(user1, user2);
         List<Problem> solved1 = new LinkedList();
@@ -103,7 +128,7 @@ public class RestStatisticsController {
                 uid1 = userDAO.integer("select.uid.by.username", user1);
                 uid2 = userDAO.integer("select.uid.by.username", user2);
             }catch(NullPointerException ne){
-                return new ResponseEntity<>("bad users", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(ErrorUtils.BAD_USER, HttpStatus.NOT_FOUND);
             }
             if (uid1 != -1 && uid2 != -1) {
                 solved1 = userDAO.objects("problems.solved", Problem.class, user1);
@@ -186,7 +211,7 @@ public class RestStatisticsController {
                 error = false;
             }
         } else {
-            return new ResponseEntity<>("bad users", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ErrorUtils.BAD_USER, HttpStatus.NOT_FOUND);
         }
 
         List<Integer> solvedOnlyByUser1 = ExtraerPID(cmp.getFacc());
@@ -211,12 +236,18 @@ public class RestStatisticsController {
         return lisPID;
     }
     
+     
+    @ApiOperation(value = "Obtener las estadísticas de un problema",  
+            notes = "Dado el identificador de un problema, devuelve todos las estadísticas asociadas a este.",
+            response = StadisticsRest.class)
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad pid") })    
     @RequestMapping(value = "/problem/{pid}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> getStadisticByProblem(@PathVariable int pid) {
+    public ResponseEntity<?> getStadisticByProblem(
+            @ApiParam(value = "Identificador del problema") @PathVariable int pid) {
         
         if (!problemDAO.exists(pid) )
-            return new ResponseEntity<>("bad pid", HttpStatus.BAD_REQUEST);     
+            return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.NOT_FOUND);     
 
         Problem p = problemDAO.getStatistics("en", pid);
         StadisticsRest stadistic = new StadisticsRest(""+pid, p.getAc(), p.getCe(), p.getIvf(), p.getMle(), p.getOle(), p.getPe(), p.getRte(), p.getTle(), p.getWa(), p.getSubmitions());
