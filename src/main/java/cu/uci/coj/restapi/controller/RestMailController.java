@@ -374,8 +374,9 @@ public class RestMailController {
         String username = null;
         try {
             username = TokenUtils.getUsernameFromToken(token);
-        } catch (Exception ex) {
-            Logger.getLogger(RestProblemsController.class.getName()).log(Level.SEVERE, null, ex);
+            
+        } catch (Exception exp) {
+            Logger.getLogger(RestProblemsController.class.getName()).log(Level.SEVERE, null, exp);
         }
 
         return username;
