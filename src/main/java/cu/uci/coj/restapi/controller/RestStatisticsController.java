@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author cesar
  */
 @Controller
-@RequestMapping("/stadistic")
+@RequestMapping("/statistic")
 public class RestStatisticsController {
 
     @Resource

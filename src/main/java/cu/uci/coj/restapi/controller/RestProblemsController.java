@@ -362,7 +362,7 @@ public class RestProblemsController {
             response = ProblemRest.class,
             responseContainer = "List")
     @ApiResponses( value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect") })
-    @RequestMapping(value = "", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "/private", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     public ResponseEntity<?> getAllProblemsOrFiltrerProblemsPrivate(
             @ApiParam(value = "Llave de desarrollador")@RequestParam(required = true, value = "apikey") String apikey,
@@ -399,7 +399,7 @@ public class RestProblemsController {
             responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
                             @ApiResponse(code = 404, message = "page out of index")  })
-    @RequestMapping(value = "/page/{page}", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "private/page/{page}", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     public ResponseEntity<?> getAllProblemsOrderByPagePrivate(
             @ApiParam(value = "Llave de desarrollador") @RequestParam(value = "apikey") String apikey,
@@ -431,7 +431,7 @@ public class RestProblemsController {
             notes = "Cambiar el estado de favorito de un problema dado el identificador del mismo")
     @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
                             @ApiResponse(code = 404, message = "page out of index")  })
-    @RequestMapping(value = "/togglefavorite", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "private/togglefavorite", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     public ResponseEntity<?> togglefavorite(
             @ApiParam(value = "Llave del desarrollador") @RequestParam(required = true, value = "apikey") String apikey,

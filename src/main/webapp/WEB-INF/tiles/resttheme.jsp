@@ -44,7 +44,7 @@
       if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
-        url = "http://coj.uci.cu/api/api-docs";
+        url = "http://localhost:8084/api/api-docs";
       }
 
       hljs.configure({
@@ -58,7 +58,7 @@
       window.swaggerUi = new SwaggerUi({
         url: url,
         dom_id: "swagger-ui-container",
-        supportedSubmitMethods: ['get', 'post'],
+        supportedSubmitMethods: ['get', 'post', 'delete', 'put'],
         onComplete: function(swaggerApi, swaggerUi){
           if(typeof initOAuth == "function") {
             initOAuth({

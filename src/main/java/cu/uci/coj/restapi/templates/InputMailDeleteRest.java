@@ -18,18 +18,15 @@ public class InputMailDeleteRest {
     String apikey;
     @ApiModelProperty(value = "Token de usuario", required = true)
     String token;
-    @ApiModelProperty(value = "Identificador del correo a eliminar", required = true)
-    Integer emailid;
     @ApiModelProperty(value = "Bandeja donde se encuentra el correo", required = true, allowableValues = "inbox,outbox,draft")
     String where;
 
     public InputMailDeleteRest() {
     }
 
-    public InputMailDeleteRest(String apikey, String token, Integer emailid, String where) {
+    public InputMailDeleteRest(String apikey, String token, String where) {
         this.apikey = apikey;
         this.token = token;
-        this.emailid = emailid;
         this.where = where;
     }
 
@@ -47,14 +44,6 @@ public class InputMailDeleteRest {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public Integer getEmailid() {
-        return emailid;
-    }
-
-    public void setEmailid(Integer emailid) {
-        this.emailid = emailid;
     }
 
     public String getWhere() {

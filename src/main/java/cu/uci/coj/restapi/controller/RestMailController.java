@@ -19,7 +19,6 @@ import cu.uci.coj.restapi.templates.InputCredentialRest;
 import cu.uci.coj.restapi.templates.InputMailDeleteRest;
 import cu.uci.coj.restapi.templates.InputMailSend;
 import cu.uci.coj.restapi.templates.MailRest;
-import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
 import cu.uci.coj.utils.paging.IPaginatedList;
@@ -28,7 +27,6 @@ import cu.uci.coj.validator.sendMailValidator;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -41,6 +39,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -192,14 +191,9 @@ public class RestMailController {
     }
     
     
-    //Message body or subject required
-    //There must be at least one recipient
-    //At least one recipient doesn't exist
-    //At most 10 recipients
-    //No valid mail
     @ApiOperation(value = "Enviar un correo (Privado)",  
             notes = "Envía un correo a un usuario registrado del COJ.")
-    @ApiResponses(value = { @ApiResponse(code = 412, message = "receiver inbox overflow, inbox_overflow, Message body or subject required, There must be at least one recipient, At least one recipient doesn't exist, At most 10 recipients,No valid mail"),
+    @ApiResponses(value = { @ApiResponse(code = 412, message = "receiver inbox overflow, inbox_overflow, message body or subject required, there must be at least one recipient, at least one recipient doesn't exist, at most 10 recipients, no valid mail, quote overflow"),
                             @ApiResponse(code = 400, message = "incorrect request"),
                             @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect")})
     @RequestMapping(value = "/send", method = RequestMethod.POST, headers = "Accept=application/json")
@@ -224,12 +218,12 @@ public class RestMailController {
             mail.setTitle(subject);
             mail.setContent(content);
             mail.setUsernameTo(to);            
-           
+            mail.setId_from(username);
             String errors = validateEmail(mail);
             if (errors != null) 
-                return new ResponseEntity<>(errors, HttpStatus.PRECONDITION_FAILED);
+                return new ResponseEntity<>("{\"error\":\""+errors+"\"}", HttpStatus.PRECONDITION_FAILED);
             
-            mail.setId_from(username);
+            
             // result = null se mando el mensaje, "" no habia espacio en el
             // inbox del remitente, o si no hay espacio en el inbox de algun
             // receptor, se devuelve el nombre de ese receptor
@@ -251,41 +245,28 @@ public class RestMailController {
     }
     
     
-    @ApiOperation(value = "Eliminar un correo (Privado)",  
+    @ApiOperation(value = "Eliminar un correo (Privado)",
             notes = "Elimina un correo espesificando la bandeja donde se encuentra.")
     @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
                             @ApiResponse(code = 400, message = "incorrect request")  })
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/delete/{email_id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> DeleteMailByID(
+            @ApiParam(value = "Identificador del correo a eliminar") @PathVariable Integer email_id,
             @ApiParam(value = "JSON para enviar") @RequestBody InputMailDeleteRest bodyjson) {
         try {
            
-            int error = ValidateApiAndToken(bodyjson.getApikey(),bodyjson.getToken());
-            if (error > 0) {
+           int error = ValidateApiAndToken(bodyjson.getApikey(),bodyjson.getToken());
+           if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
-            }
+           }
 
-            String username = null;            
-            String token = bodyjson.getToken();
-            username = ExtractUser(token);            
-            
+           String username = null;            
+           String token = bodyjson.getToken();
+           username = ExtractUser(token);            
+           String where=bodyjson.getWhere();           
            
-           //Iterator<JsonNode> it = node.get("listid").elements();
-           String where=bodyjson.getWhere();
-           
-          // if(!it.hasNext())
-            //   return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
-           
-           //try{
-           //     while(it.hasNext()){
-         //           JsonNode js = it.next();
-          //          int idmail = js.asInt();
-                    deleteMail(bodyjson.getEmailid(), where, username);
-           //     }
-          // }catch(Exception e){
-         //      return new ResponseEntity<>(TokenUtils.ErrorMessage(11), HttpStatus.BAD_REQUEST);
-         //  }
+           deleteMail(email_id, where, username);  
             
            return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException ex) {
@@ -293,7 +274,6 @@ public class RestMailController {
         }
 
     }
-    
 
     private void deleteMail(int idmail,String where,String username) {
 
@@ -339,32 +319,32 @@ public class RestMailController {
         r.setBasename("messages_en");
         try {
             if((mail.getTitle() == null || mail.getTitle().length() == 0) && (mail.getContent() == null || mail.getContent().length() == 0)) 
-                return r.getMessage("errormsg.39",null, new Locale("en"));
+                return r.getMessage("errormsg.39",null, new Locale("en")).toLowerCase();
             
             if(mail.getUsernameTo().equals("") || mail.getUsernameTo() == null)
-                return r.getMessage("errormsg.40",null, new Locale("en"));
+                return r.getMessage("errormsg.40",null, new Locale("en")).toLowerCase();
             
             String[] to = mail.getUsernameTo().split(";");
                if (to.length <= 10) {
                   for (int i = 0; i < to.length; i++) {
                       String string = to[i].replaceAll(" ", "");
                       if (!userDAO.isUser(string)) {
-                          return r.getMessage("errormsg.40",null, new Locale("en"));
+                          return r.getMessage("errormsg.41",null, new Locale("en")).toLowerCase();
                       }
                   }
                 } else 
-                   return r.getMessage("errormsg.41",null, new Locale("en"));
+                   return r.getMessage("errormsg.42",null, new Locale("en")).toLowerCase();
                             
                 Mail m1 = mailDAO.getMailValues(mail.getId_from());
                 int max = m1.getMail_quote();
                 int consumed = m1.getConsumed_quote();
                 int msgSize = mail.getContent().getBytes().length + mail.getTitle().getBytes().length;
                 if (consumed + msgSize > max) 
-                    return r.getMessage("errormsg.42",null, new Locale("en"));
+                    return "quote overflow";
           
                 return errors;
         } catch (Exception e) {
-            errors = "No valid mail";
+            errors = "no valid mail";
         }
         
         return errors;

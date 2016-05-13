@@ -38,8 +38,10 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Resource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +77,7 @@ public class RestJudgmentsController {
 	private Utils utils;
         @Resource
 	private ContestDAO contestDAO;
+        
     
     
     @ApiOperation(value = "Obtener todos los envíos",  
@@ -414,10 +417,11 @@ public class RestJudgmentsController {
             response = ResponseSubmitRest.class)
     @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
                             @ApiResponse(code = 404, message = "bad pid"),
+                            @ApiResponse(code = 412, message = "submit disabled temporarily by admin. maybe an important contest is running?, the problem id is incorrect., the programming language is not enabled for that problem., the source code is required (by file or text)., the source code is too long"),
                             @ApiResponse(code = 429, message = "Rate limit exceeded, wait one minute")})
     @RequestMapping(value = "/submit", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> SubmitProblem(
+    public ResponseEntity<?> submitProblem(
             @ApiParam(value = "JSON para enviar") @RequestBody InputSubmitRest bodyjson) {
         int sid = -1;  
         String username = null;
@@ -445,10 +449,13 @@ public class RestJudgmentsController {
             if (!problemDAO.exists(pid) )
                 return new ResponseEntity<>(ErrorUtils.BAD_PID,HttpStatus.NOT_FOUND);
             
+            
             SubmissionJudge submit = new SubmissionJudge();
             submit.setPid(pid);
             submit.setCode(code);
             submit.setKey(language);
+            
+           
             
             List<Language> languages = new LinkedList<Language>();
             Integer uid = userDAO.integer("select.uid.by.username",username);
@@ -456,15 +463,22 @@ public class RestJudgmentsController {
             if (problemDAO.exists(submit.getPid())) 
                 languages.addAll(utilDAO.getEnabledLanguagesByProblem(pid));
             
+            int lid = 0;
             int cont=0;
             for (Iterator<Language> it = languages.iterator(); it.hasNext();) {
                 Language lang = it.next();
-                if (lang.getKey().equals(language)) 
+                if (lang.getKey().equals(language)) {
+                    lid = lang.getLid();
                     cont++;
+                }
             }
             if(cont == 0)
                 return new ResponseEntity<>(ErrorUtils.BAD_LANGUAGE,HttpStatus.BAD_REQUEST);
 			
+            String errors = validateSubmission(submit,lid);
+            if (errors != null) 
+                return new ResponseEntity<>("{\"error\":\""+errors+"\"}", HttpStatus.PRECONDITION_FAILED);
+            
             
             submit.setLanguages(languages);
             submit.getLanguageIdByKey();
@@ -497,6 +511,36 @@ public class RestJudgmentsController {
       //  String response = "{idsubmission:"+sid+"}";
         return new ResponseEntity<>(new ResponseSubmitRest(sid, bodyjson.getPid(),username, bodyjson.getKeylanguage()),HttpStatus.OK);
     }
+
+    public String validateSubmission(SubmissionJudge submit, int lid){
+        String errors = null;
+        ResourceBundleMessageSource r=new ResourceBundleMessageSource();
+        r.setBasename("messages_en");               
+        submit.getLanguageIdByKey();        
+        try{        
+            if (!utilDAO.bool("submit.enabled"))
+                return r.getMessage("errormsg.43", null, new Locale("en")).toLowerCase();
+
+            if (!problemDAO.exists(submit.getPid()) || !problemDAO.isEnabled(submit.getPid()))
+                return r.getMessage("errormsg.25", null, new Locale("en")).toLowerCase();
+
+            if (problemDAO.isDisable24h(submit.getPid())) 
+                return r.getMessage("errormsg.25", null, new Locale("en")).toLowerCase();
+
+            int problemSourceLimit = problemDAO.getSourceLimitByPid(submit.getPid(), lid);
+
+            if (submit.getCode().length() == 0)
+                return r.getMessage("errormsg.27", null, new Locale("en")).toLowerCase();
+
+            if (submit.getCode().length() > problemSourceLimit) 
+                return r.getMessage("errormsg.28", null, new Locale("en")).toLowerCase();
+
+        
+        }catch(Exception e){
+            errors = r.getMessage("errormsg.43", null, new Locale("en")).toLowerCase();
+        }
+        return errors;
+    }
     
     public int end(int found){
         if(found%20==0)
@@ -504,6 +548,8 @@ public class RestJudgmentsController {
         else
             return (found/20)+1;
     }
+    
+    
     
     private int ValidateApiAndToken(String apikey, String token) throws IOException {
         

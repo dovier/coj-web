@@ -150,7 +150,7 @@ public class RestUserProfileController {
                             @ApiResponse(code = 412, message = "Nick must not more than 25 characters, Nick must not less than 3 characters, The first name is too short, The first name is too long, The first name contains invalid characters, The last name is too long, The last name is too short, The last name contains invalid characters, Required field, This e-mail already exists, Invalid email."),
                             @ApiResponse(code = 404, message = "bad user, bad institution id, bad language, bad locale, bad gender, bad country id"),
                             @ApiResponse(code = 500, message = "failed send email"),})
-    @RequestMapping(value = "/update", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     public ResponseEntity<?> UpdateProfile(
             @ApiParam(value = "Llave de desarrollador") @RequestParam(value = "apikey") String apikey,
@@ -175,24 +175,9 @@ public class RestUserProfileController {
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
-
-            //if(!TokenUtils.ValidatePropertiesinJson(node,"year","month","day","nick","name","lastname","email","country_id","institution_id","lid","locale","gender"))
-              //  return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
             
             String username = null;
             username = ExtractUser(token);
-           /* int year = node.get("year").asInt();
-            int month = node.get("month").asInt();
-            int day = node.get("day").asInt();
-            String nick = node.get("nick").asText();
-            String name = node.get("name").asText();
-            String lastname = node.get("lastname").asText();
-            String email = node.get("email").asText();
-            int country_id = node.get("country_id").asInt();
-            int institution_id = node.get("institution_id").asInt();
-            int lid = node.get("lid").asInt();
-            int locale = node.get("locale").asInt();
-            int gender = node.get("gender").asInt();*/
             
             User user = userDAO.loadAllUserData(username);
             if(year!=null)

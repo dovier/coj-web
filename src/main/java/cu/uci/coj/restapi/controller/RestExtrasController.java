@@ -38,6 +38,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -167,6 +168,20 @@ public class RestExtrasController {
     @ResponseBody
     public List<Faq>  getFAQs() {
         return utilDao.objects("list.faq", Faq.class);
+    }
+    
+
+
+    @ApiOperation(value = "Convertir correo a nombre de usuario",  
+            notes = "Dado el correo de un usuario, devuelve el nombre de usuario del mismo.",
+            response = String.class)  
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
+    @RequestMapping(value = "/convert", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public String getUsername(
+            @ApiParam(value = "Correo electrónico") @RequestParam(required = true, value = "email") String email) {
+        String username = userDAO.userByMail(email);
+        return username;
     }
     
 }

@@ -73,17 +73,12 @@ public class RestPrivateController {
     public ResponseEntity<?> CreateToken(
             @ApiParam(value = "JSON con el envío") @RequestBody InputUserRest bodyjson){
         try {
-            //ObjectMapper mapper = new ObjectMapper();
-            //JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
-
+            
             int error = ValidateApi(bodyjson.getApikey());
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
-            //if(!TokenUtils.ValidatePropertiesinJson(node,"username","password"))
-            //    return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
-            
             String username = bodyjson.getUsername();
             String password = bodyjson.getPassword();
             
@@ -126,22 +121,12 @@ public class RestPrivateController {
             @ApiParam(value = "Correo electrónico") @RequestParam(value = "email") String email){
         try {
             Locale locale = new Locale("en");
-            
-            //ObjectMapper mapper = new ObjectMapper();
-            //JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
 
             int error = ValidateApi(apikey);
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
-
-            //if(!TokenUtils.ValidatePropertiesinJson(node,"email"))
-              //  return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
             
-            //String username = null;
-            //String token = node.get("token").textValue();
-            //username = ExtractUser(token);
-            //String email = node.get("email").asText();
             String passcode;
             
             if (!ValidateEmail(email)) 
@@ -178,16 +163,21 @@ public class RestPrivateController {
     @ResponseBody
     public ResponseEntity<?> GenerateAPI(
             @ApiParam(value = "Nombre de usuario") @RequestParam(value = "username") String username,
-            @ApiParam(value = "Código para fortalecer el encriptado de la apikey") @RequestParam(value = "secret") String secret){
+            @ApiParam(value = "Contraseña") @RequestParam(value = "password") String password){
             
-            int uid1;
-            try{
-                uid1 = userDAO.integer("select.uid.by.username", username);
-            }catch(NullPointerException ne){
+            if(!userDAO.isUser(username))
                 return new ResponseEntity<>(ErrorUtils.BAD_USER, HttpStatus.NOT_FOUND);
-            }
             
-            String apiKey = TokenUtils.CreateAPIKey(username, secret);
+            String sql = "SELECT * FROM public.users WHERE username = ?";            
+           
+            User user =  (User) jdbcTemplate.queryForObject(sql,new Object[]{username},new BeanPropertyRowMapper(User.class));
+            PasswordEncoder encoder = new Md5PasswordEncoder();
+            password = encoder.encodePassword(password,"ABC123XYZ789");
+
+            if(!user.getPassword().equals(password))
+                return  new ResponseEntity<>(ErrorUtils.BAD_USERNAME_PASSWORD, HttpStatus.UNAUTHORIZED);               
+            
+            String apiKey = TokenUtils.CreateAPIKey(username, password);
             
             return new ResponseEntity<>(new ApiRest(apiKey, TokenUtils.expirityAPIKey),HttpStatus.OK);
 
