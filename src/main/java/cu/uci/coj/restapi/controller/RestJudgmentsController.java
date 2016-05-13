@@ -5,8 +5,6 @@
  */
 package cu.uci.coj.restapi.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mangofactory.swagger.annotations.ApiIgnore;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
@@ -21,12 +19,9 @@ import cu.uci.coj.dao.UtilDAO;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
-import cu.uci.coj.model.Status;
 import cu.uci.coj.model.SubmissionJudge;
-import cu.uci.coj.restapi.templates.InputCredentialRest;
 import cu.uci.coj.restapi.templates.InputSubmitRest;
 import cu.uci.coj.restapi.templates.JudgmentsRest;
-import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.templates.ResponseSubmitRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
