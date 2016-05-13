@@ -171,7 +171,7 @@ public class RestExtrasController {
     }
     
 
-
+    @ApiIgnore
     @ApiOperation(value = "Convertir correo a nombre de usuario",  
             notes = "Dado el correo de un usuario, devuelve el nombre de usuario del mismo.",
             response = String.class)  
