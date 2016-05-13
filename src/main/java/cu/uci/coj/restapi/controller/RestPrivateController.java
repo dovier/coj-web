@@ -168,7 +168,8 @@ public class RestPrivateController {
             if(!userDAO.isUser(username))
                 return new ResponseEntity<>(ErrorUtils.BAD_USER, HttpStatus.NOT_FOUND);
             
-            String sql = "SELECT * FROM public.users WHERE username = ?";            
+            String sql = "SELECT * FROM public.users WHERE username = ?";
+          
            
             User user =  (User) jdbcTemplate.queryForObject(sql,new Object[]{username},new BeanPropertyRowMapper(User.class));
             PasswordEncoder encoder = new Md5PasswordEncoder();
