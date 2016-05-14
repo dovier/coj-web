@@ -178,8 +178,8 @@ public class RestExtrasController {
             notes = "Permite postear una entrada.",
             response = String.class)  
     @ApiResponses(value = { @ApiResponse(code = 400, message = "incorrect request"),
-                            @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
-                            @ApiResponse(code = 412, message = "text must not be empty, entry text too long") })
+                            @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
+                            @ApiResponse(code = 412, message = "text must not be empty<br> entry text too long") })
     @RequestMapping(value = "/entry", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> addEntry(

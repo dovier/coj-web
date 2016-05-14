@@ -66,7 +66,7 @@ public class RestMailController {
             notes = "Devuelve los correos de la bandeja de entrada (inbox).",
             response = MailRest.class,
             responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
                             @ApiResponse(code = 400, message = "incorrect request")  })
     @RequestMapping(value = "/inbox", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
@@ -107,7 +107,7 @@ public class RestMailController {
             notes = "Devuelve los correos de la bandeja de salida (outbox).",
             response = MailRest.class,
             responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
                             @ApiResponse(code = 400, message = "incorrect request")  })
     @RequestMapping(value = "/outbox", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
@@ -147,7 +147,7 @@ public class RestMailController {
             notes = "Devuelve los correos de la bandeja de borradores (draft).",
             response = MailRest.class,
             responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
                             @ApiResponse(code = 400, message = "incorrect request")  })
     @RequestMapping(value = "/draft", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
@@ -186,9 +186,9 @@ public class RestMailController {
     
     @ApiOperation(value = "Enviar un correo",  
             notes = "Envía un correo a un usuario registrado del COJ.")
-    @ApiResponses(value = { @ApiResponse(code = 412, message = "receiver inbox overflow, inbox_overflow, message body or subject required, there must be at least one recipient, at least one recipient doesn't exist, at most 10 recipients, no valid mail, quote overflow"),
+    @ApiResponses(value = { @ApiResponse(code = 412, message = "receiver inbox overflow<br> inbox_overflow<br> message body or subject required<br> there must be at least one recipient<br> at least one recipient doesn't exist<br> at most 10 recipients<br> no valid mail<br> quote overflow"),
                             @ApiResponse(code = 400, message = "incorrect request"),
-                            @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect")})
+                            @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect") } )
     @RequestMapping(value = "/send", method = RequestMethod.POST, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> SendEmail(
@@ -240,7 +240,7 @@ public class RestMailController {
     
     @ApiOperation(value = "Eliminar un correo",
             notes = "Elimina un correo espesificando la bandeja donde se encuentra.")
-    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
                             @ApiResponse(code = 400, message = "incorrect request")  })
     @RequestMapping(value = "/delete/{where}/{email_id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
     @ResponseBody

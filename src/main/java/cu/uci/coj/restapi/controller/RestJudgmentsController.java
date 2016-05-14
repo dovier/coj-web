@@ -30,7 +30,6 @@ import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.submitValidator;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -122,7 +121,7 @@ public class RestJudgmentsController {
             notes = "Dado el identificador de una competencia. Devuelve todos los envíos que se realizaron en esta.",
             response = JudgmentsRest.class,
             responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad cid, bad pid") })
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad cid<br> bad pid") })
     @RequestMapping(value = "/contest/{cid}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getAllJudgmentsInContestByCid(
@@ -409,10 +408,10 @@ public class RestJudgmentsController {
     @ApiOperation(value = "Hacer un envío de solución a un problema",  
             notes = "Hacer un envío de solución a un problema dado y Devuelve el identificador del envío para ser buscado posteriormente en los envíos juzgados por el COJ. (Este servicio web no devuelve el veredicto solo lo envía a la cola del juez. Solo se podrán hacer 30 envíos por minuto)",
             response = ResponseSubmitRest.class)
-    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
                             @ApiResponse(code = 404, message = "bad pid"),
-                            @ApiResponse(code = 412, message = "submit disabled temporarily by admin. maybe an important contest is running?, the problem id is incorrect., the programming language is not enabled for that problem., the source code is required (by file or text)., the source code is too long"),
-                            @ApiResponse(code = 429, message = "Rate limit exceeded, wait one minute")})
+                            @ApiResponse(code = 412, message = "submit disabled temporarily by admin. maybe an important contest is running?<br> the problem id is incorrect.<br> the programming language is not enabled for that problem.<br> the source code is required (by file or text).<br> the source code is too long"),
+                            @ApiResponse(code = 429, message = "Rate limit exceeded wait one minute")})
     @RequestMapping(value = "/submit", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> submitProblem(

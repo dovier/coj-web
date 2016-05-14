@@ -66,7 +66,7 @@ public class RestPrivateController {
     @ApiOperation(value = "Autentificar un Usuario",  
             notes = "Autentica un usuario, de ser correcto devuelve un token con el que se podrá acceder a los demás métodos privados.",
             response = TokenRest.class)
-    @ApiResponses(value = { @ApiResponse(code = 401, message = "username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, bad username or password"),
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
                             @ApiResponse(code = 400, message = "incorrect request")  })
     @RequestMapping(value = "/login", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -110,9 +110,9 @@ public class RestPrivateController {
     
     @ApiOperation(value = "Recuperar contraseña olvidada",  
             notes = "Envía un correo al usuario para cambiar la contraseña vía sitio COJ.")
-    @ApiResponses(value = { @ApiResponse(code = 401, message = "username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, bad username or password"),
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> bad username or password"),
                             @ApiResponse(code = 404, message = "invalid email"),
-                            @ApiResponse(code = 500, message = "error update code, failed send email"),
+                            @ApiResponse(code = 500, message = "error update code<br> failed send email"),
                             @ApiResponse(code = 400, message = "incorrect request")})
     @RequestMapping(value = "/forgottenpassword", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

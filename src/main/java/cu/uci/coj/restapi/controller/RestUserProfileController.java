@@ -142,10 +142,10 @@ public class RestUserProfileController {
     
     @ApiOperation(value = "Modificar Perfil de Usuario",  
             notes = "Modifica el perfil de usuario con los datos enviados.")
-    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
-                            @ApiResponse(code = 400, message = "institution witout country, incorrect request"),
-                            @ApiResponse(code = 412, message = "Nick must not more than 25 characters, Nick must not less than 3 characters, The first name is too short, The first name is too long, The first name contains invalid characters, The last name is too long, The last name is too short, The last name contains invalid characters, Required field, This e-mail already exists, Invalid email."),
-                            @ApiResponse(code = 404, message = "bad user, bad institution id, bad language, bad locale, bad gender, bad country id"),
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
+                            @ApiResponse(code = 400, message = "institution witout country<br> incorrect request"),
+                            @ApiResponse(code = 412, message = "Nick must not more than 25 characters<br> Nick must not less than 3 characters<br> The first name is too short<br> The first name is too long<br> The first name contains invalid characters<br> The last name is too long<br> The last name is too short<br> The last name contains invalid characters<br> Required field<br> This e-mail already exists<br> Invalid email."),
+                            @ApiResponse(code = 404, message = "bad user<br> bad institution id<br> bad language<br> bad locale<br> bad gender<br> bad country id"),
                             @ApiResponse(code = 500, message = "failed send email"),})
     @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody

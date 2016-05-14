@@ -292,7 +292,7 @@ public class RestProblemsController {
     
     @ApiOperation(value = "Agregar/Quitar problema como favorito",  
             notes = "Cambiar el estado de favorito de un problema dado el identificador del mismo")
-    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
                             @ApiResponse(code = 404, message = "bad pid")  })
     @RequestMapping(value = "/togglefavorite/{pid}", method = RequestMethod.PUT, headers = "Accept=application/json")
     @ResponseBody
