@@ -20,24 +20,28 @@ import cu.uci.coj.model.Faq;
 import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
 import cu.uci.coj.restapi.templates.CojBoardRest;
-import cu.uci.coj.restapi.templates.ContestDescriptionRest;
 import cu.uci.coj.restapi.templates.EntriesRest;
+import cu.uci.coj.restapi.templates.InputEntryRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
-import cu.uci.coj.utils.EntryHelper;
+import cu.uci.coj.restapi.utils.TokenUtils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
-import cu.uci.coj.validator.entryValidator;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import javax.annotation.Resource;
-import javax.ws.rs.HeaderParam;
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,23 +54,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/extras")
 public class RestExtrasController {
-    	@Resource
-	private EntryDAO entryDAO;
-	@Resource
-	private UserDAO userDAO;
-	@Resource
-	private entryValidator entriesValidator;
-	@Resource
-	private EntryHelper entryHelper;
-
-	private Map<String, String> emoties = new HashMap<String, String>();
-        
-        @Resource
-	WbContestService wbContestService;
-	@Resource
-	WbSiteDAO wbSiteDAO;
-        @Resource
-        private UtilDAO utilDao;
+    
+    
+    @Resource
+    private EntryDAO entryDAO;
+    @Resource
+    private UserDAO userDAO;        
+    @Resource
+    WbContestService wbContestService;
+    @Resource
+    WbSiteDAO wbSiteDAO;
+    @Resource
+    private UtilDAO utilDao;
         
         
     @ApiOperation(value = "Obtener últimas entradas de los usuarios",  
@@ -74,7 +73,7 @@ public class RestExtrasController {
             response = EntriesRest.class,
             responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 400, message = "page out of index")  })    
-    @RequestMapping(value = "/welcome/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/entry/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getAllEntries(
             @ApiParam(value = "Número de la página") @PathVariable int page) {
@@ -85,7 +84,7 @@ public class RestExtrasController {
         PagingOptions options = new PagingOptions(page);
         IPaginatedList<Entry> entries = entryDAO.paginated("enabled.entries.list", Entry.class, 10, options, 0);
       
-        if(entries.getList().size() == 0)
+        if(entries.getList().isEmpty())
             return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX, HttpStatus.BAD_REQUEST);
         
         List<Entry> listEntry = entries.getList();
@@ -102,7 +101,7 @@ public class RestExtrasController {
     }
 
     @ApiOperation(value = "Obtener próximas competencia de diferentes jueces en línea",  
-            notes = "Devuelve las próximas competencias de diferentes jueces en línea posteados alrededor del del mundo.",
+            notes = "Devuelve las próximas competencias de diferentes jueces en línea posteados alrededor del mundo.",
             response = CojBoardRest.class,
             responseContainer = "List")  
     @RequestMapping(value = "/cojboard", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -125,10 +124,10 @@ public class RestExtrasController {
         IPaginatedList<WbContest> contests = wbContestService.getContestList(sid, options, followed, uid);
 
         List<WbSite> list = wbSiteDAO.getSiteList();
-        HashMap<Integer, WbSite> map = new HashMap<Integer, WbSite>();
+        HashMap<Integer, WbSite> map = new HashMap();
 
-        for (int i = 0; i < list.size(); i++) {
-            map.put(list.get(i).getSid(), list.get(i));
+        for (WbSite site : list) {
+            map.put(site.getSid(), site);
         }
         
         List<WbContest> listContest = contests.getList();
@@ -172,8 +171,43 @@ public class RestExtrasController {
         return utilDao.objects("list.faq", Faq.class);
     }
     
+    
+    
 
-    @ApiIgnore
+    @ApiOperation(value = "Postear Entrada",  
+            notes = "Permite postear una entrada.",
+            response = String.class)  
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "incorrect request"),
+                            @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
+                            @ApiResponse(code = 412, message = "text must not be empty, entry text too long") })
+    @RequestMapping(value = "/entry", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> addEntry(
+            @ApiParam(value = "JSON para enviar") @RequestBody InputEntryRest bodyjson ) {
+        try{
+            int error = ValidateApiAndToken(bodyjson.getApikey(),bodyjson.getToken());
+            if (error > 0) {
+                return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
+            }
+            
+            Entry entry = new Entry(bodyjson.getEntryText(), Calendar.getInstance().getTime());
+            if(ValidateEntry(entry) != null)
+                return new ResponseEntity<>("{\"error\":\""+ValidateEntry(entry)+"\"}", HttpStatus.PRECONDITION_FAILED);
+            
+            preProcessEntry(entry);
+            String username = ExtractUser(bodyjson.getToken());
+            entryDAO.addEntry(entry,isAdmin(username),username);
+            
+        }catch(Exception e){
+            return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    
+    
+
+    //@ApiIgnore
     @ApiOperation(value = "Convertir correo a nombre de usuario",  
             notes = "Dado el correo de un usuario, devuelve el nombre de usuario del mismo.",
             response = String.class)  
@@ -183,7 +217,89 @@ public class RestExtrasController {
     public String getUsername(
             @ApiParam(value = "Correo electrónico") @RequestParam(required = true, value = "email") String email) {
         String username = userDAO.userByMail(email);
-        return username;
+        return "{\"username\":\""+username+"\"}";
     }
+    
+    private boolean isAdmin(String username){
+        List<String> roles = userDAO.getUserAuthorities(username);
+        return roles.contains("ROLE_ADMIN");
+    }
+    
+    
+    private String ValidateEntry(Entry entry){
+        String error = null;
+        if(entry.getText().isEmpty())
+            error = "text must not be empty";
+        
+        if ( entry.getText().length() > 255)
+            error = "entry text too long";
+        
+        return error;        
+    }
+    
+    
+    
+    private int ValidateApiAndToken(String apikey, String token) throws IOException {
+        
+
+        try {
+            int error = TokenUtils.ValidateAPIKey(apikey);
+            if (error > 0) {
+                return error;
+            }
+
+            int error2 = TokenUtils.ValidateTokenUser(token);
+            if (error2 > 0) {
+                return error2;
+            }
+        } catch (Exception e) {
+            return 9;
+        }
+
+        return 0;
+    }
+    
+    private void preProcessEntry(Entry entry) {
+        // adicionar html para vinculos a paginas y a usuarios.
+        String text = entry.getText();
+        String[] tokens = text.split(" ");
+        Set<String> tokenSet = new HashSet(Arrays.asList(tokens));
+        for (String token : tokenSet) {
+            token = token.trim();
+            if (token.startsWith("p#")) {
+                if (NumberUtils.isNumber(token.substring(2))) {
+                    entryDAO.bool("select exists(select pid from problem where pid=?)", Integer.valueOf(token.substring(2)));
+                    text = text.replace(token, "<a target=\"new\" href=\"24h/problem.xhtml?pid=" + token.substring(2) + "\" >" + token.substring(2) + "</a>");
+                }
+            } else if (token.startsWith("c#")) {
+                if (NumberUtils.isNumber(token.substring(2))) {
+                    entryDAO.bool("select exists(select pid from contest where pid=?)", Integer.valueOf(token.substring(2)));
+                    text = text.replace(token, "<a target=\"new\" href=\"contest/contestview.xhtml?cid=" + token.substring(1) + "\" >" + token.substring(1) + "</a>");
+                }
+            } else if (token.startsWith("@")) {
+                boolean reply = entryDAO.bool("select exists (select uid from users where username=?)", token.substring(1));
+                entry.setReply(true);
+                entry.setHasUsers(true);
+                if (reply)
+                    text = text.replace(token, "<a target=\"new\" href=\"user/useraccount.xhtml?username=" + token.substring(1) + "\" >" + token + "</a>");
+            } else if (token.startsWith("http://") || token.startsWith("https://")) {
+                text = text.replace(token, "<a target=\"new\" href=\"" + token + "\">" + token + "</a>");
+                entry.setHasLinks(true);
+            }
+        }
+        entry.setText(text);
+    }
+    
+    private String ExtractUser(String token) {
+        String username = null;
+        try {
+            username = TokenUtils.getUsernameFromToken(token);
+            
+        } catch (Exception exp) {
+            
+        }
+
+        return username;
+    }  
     
 }

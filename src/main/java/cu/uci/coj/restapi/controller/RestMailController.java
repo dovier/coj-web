@@ -13,7 +13,6 @@ import cu.uci.coj.dao.MailDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.Mail;
-import cu.uci.coj.restapi.templates.InputMailDeleteRest;
 import cu.uci.coj.restapi.templates.InputMailSend;
 import cu.uci.coj.restapi.templates.MailRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
@@ -63,7 +62,7 @@ public class RestMailController {
        
     
     
-    @ApiOperation(value = "Obtener los correos entrantes (Privado)",  
+    @ApiOperation(value = "Obtener los correos entrantes",  
             notes = "Devuelve los correos de la bandeja de entrada (inbox).",
             response = MailRest.class,
             responseContainer = "List")
@@ -81,7 +80,7 @@ public class RestMailController {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
-            String username = null;
+            String username;
             username = ExtractUser(token);
             
             PagingOptions options = new PagingOptions(1);             
@@ -104,7 +103,7 @@ public class RestMailController {
     }
     
     
-    @ApiOperation(value = "Obtener los correos salientes (Privado)",  
+    @ApiOperation(value = "Obtener los correos salientes",  
             notes = "Devuelve los correos de la bandeja de salida (outbox).",
             response = MailRest.class,
             responseContainer = "List")
@@ -122,7 +121,7 @@ public class RestMailController {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
-            String username = null;
+            String username;
             username = ExtractUser(token);
             
             PagingOptions options = new PagingOptions(1);             
@@ -144,7 +143,7 @@ public class RestMailController {
 
     }
     
-    @ApiOperation(value = "Obtener los borradores (Privado)",  
+    @ApiOperation(value = "Obtener los borradores",  
             notes = "Devuelve los correos de la bandeja de borradores (draft).",
             response = MailRest.class,
             responseContainer = "List")
@@ -162,7 +161,7 @@ public class RestMailController {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
-            String username = null;
+            String username;
             username = ExtractUser(token);
             
             PagingOptions options = new PagingOptions(1);             
@@ -185,7 +184,7 @@ public class RestMailController {
     }
     
     
-    @ApiOperation(value = "Enviar un correo (Privado)",  
+    @ApiOperation(value = "Enviar un correo",  
             notes = "Envía un correo a un usuario registrado del COJ.")
     @ApiResponses(value = { @ApiResponse(code = 412, message = "receiver inbox overflow, inbox_overflow, message body or subject required, there must be at least one recipient, at least one recipient doesn't exist, at most 10 recipients, no valid mail, quote overflow"),
                             @ApiResponse(code = 400, message = "incorrect request"),
@@ -200,7 +199,7 @@ public class RestMailController {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
 
-            String username = null;
+            String username;
             
             String token = bodyjson.getToken();
             String to = bodyjson.getTo();
@@ -239,26 +238,26 @@ public class RestMailController {
     }
     
     
-    @ApiOperation(value = "Eliminar un correo (Privado)",
+    @ApiOperation(value = "Eliminar un correo",
             notes = "Elimina un correo espesificando la bandeja donde se encuentra.")
     @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
                             @ApiResponse(code = 400, message = "incorrect request")  })
-    @RequestMapping(value = "/delete/{email_id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+    @RequestMapping(value = "/delete/{where}/{email_id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> DeleteMailByID(
-            @ApiParam(value = "Identificador del correo a eliminar") @PathVariable Integer email_id,
-            @ApiParam(value = "JSON para enviar") @RequestBody InputMailDeleteRest bodyjson) {
+            @ApiParam(value = "Identificador del correo a eliminar", required = true) @PathVariable Integer email_id,
+            @ApiParam(value = "Bandeja donde se encuentra el correo", required = true, allowableValues = "inbox,outbox,draft") @PathVariable String where,            
+            @ApiParam(value = "Llave de desarrollador") @RequestHeader(value = "apikey", required = false) String apikey,
+            @ApiParam(value = "Token de usuario") @RequestHeader(value = "token", required = false) String token           ) {
         try {
            
-           int error = ValidateApiAndToken(bodyjson.getApikey(),bodyjson.getToken());
+           int error = ValidateApiAndToken(apikey,token);
            if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
            }
 
-           String username = null;            
-           String token = bodyjson.getToken();
-           username = ExtractUser(token);            
-           String where=bodyjson.getWhere();           
+           String username;            
+           username = ExtractUser(token);               
            
            deleteMail(email_id, where, username);  
             
@@ -271,15 +270,19 @@ public class RestMailController {
 
     private void deleteMail(int idmail,String where,String username) {
 
-        if (where.equals("inbox")) {
-            mailDAO.dml("update.quote", username, username, username, username, userDAO.integer("select.uid.by.username", username));
-            mailDAO.dml("delete.user.mail.idmail", idmail, username);
-        } else if (where.equals("outbox")) {
-            mailDAO.dml("update.quote", username, username, username, username, userDAO.integer("select.uid.by.username", username));
-            mailDAO.dml("delete.send.mail.idmail", idmail, username);
-        } else if (where.equals("draft")) {
-            mailDAO.dml("update.quote", username, username, username, username, userDAO.integer("select.uid.by.username", username));
-            mailDAO.dml("delete.draft.mail.iddraft", idmail, username);
+        switch (where) {
+            case "inbox":
+                mailDAO.dml("update.quote", username, username, username, username, userDAO.integer("select.uid.by.username", username));
+                mailDAO.dml("delete.user.mail.idmail", idmail, username);
+                break;
+            case "outbox":
+                mailDAO.dml("update.quote", username, username, username, username, userDAO.integer("select.uid.by.username", username));
+                mailDAO.dml("delete.send.mail.idmail", idmail, username);
+                break;
+            case "draft":
+                mailDAO.dml("update.quote", username, username, username, username, userDAO.integer("select.uid.by.username", username));
+                mailDAO.dml("delete.draft.mail.iddraft", idmail, username);
+                break;
         }
     }
     
@@ -288,7 +291,7 @@ public class RestMailController {
 
 		// metemos el arreglo de remitentes en un set para eliminar los
 		// duplicados.
-		Set<String> toSet = new HashSet<String>(Arrays.asList(mail.getUsernameTo().split(";")));
+		Set<String> toSet = new HashSet(Arrays.asList(mail.getUsernameTo().split(";")));
 
 		if (mailDAO.bool("check.quota", size, mail.getId_from())) {
 			for (String to : toSet) {
@@ -320,12 +323,12 @@ public class RestMailController {
             
             String[] to = mail.getUsernameTo().split(";");
                if (to.length <= 10) {
-                  for (int i = 0; i < to.length; i++) {
-                      String string = to[i].replaceAll(" ", "");
-                      if (!userDAO.isUser(string)) {
-                          return r.getMessage("errormsg.41",null, new Locale("en")).toLowerCase();
-                      }
-                  }
+                for (String to1 : to) {
+                    String string = to1.replaceAll(" ", "");
+                    if (!userDAO.isUser(string)) {
+                        return r.getMessage("errormsg.41",null, new Locale("en")).toLowerCase();
+                    }
+                }
                 } else 
                    return r.getMessage("errormsg.42",null, new Locale("en")).toLowerCase();
                             

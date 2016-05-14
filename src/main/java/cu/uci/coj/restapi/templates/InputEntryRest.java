@@ -13,21 +13,21 @@ import com.wordnik.swagger.annotations.ApiModelProperty;
  * @author cesar
  */
 @ApiModel
-public class InputMailDeleteRest {
+public class InputEntryRest {
     @ApiModelProperty(value = "Llave de desarrollador", required = true)
     String apikey;
     @ApiModelProperty(value = "Token de usuario", required = true)
     String token;
-    @ApiModelProperty(value = "Bandeja donde se encuentra el correo", required = true, allowableValues = "inbox,outbox,draft")
-    String where;
+    @ApiModelProperty(value = "Entrada del Usuario", required = true)
+    String entryText;
 
-    public InputMailDeleteRest() {
+    public InputEntryRest() {
     }
 
-    public InputMailDeleteRest(String apikey, String token, String where) {
+    public InputEntryRest(String apikey, String token, String entryText) {
         this.apikey = apikey;
         this.token = token;
-        this.where = where;
+        this.entryText = entryText;
     }
 
     public String getApikey() {
@@ -46,14 +46,13 @@ public class InputMailDeleteRest {
         this.token = token;
     }
 
-    public String getWhere() {
-        return where;
+    public String getEntryText() {
+        return entryText;
     }
 
-    public void setWhere(String where) {
-        this.where = where;
-    }
+    public void setEntryText(String entryText) {
+        this.entryText = entryText;
+    } 
     
-          
     
 }

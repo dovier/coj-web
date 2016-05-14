@@ -9,19 +9,16 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.board.dao.WbSiteDAO;
-import cu.uci.coj.dao.CountryDAO;
-import cu.uci.coj.dao.InstitutionDAO;
+import cu.uci.coj.config.Config;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.UtilDAO;
-import cu.uci.coj.model.Country;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Locale;
 import cu.uci.coj.model.ProblemClassification;
 import cu.uci.coj.model.WbSite;
-import cu.uci.coj.restapi.templates.ContestRest;
-import cu.uci.coj.restapi.templates.CountryRest;
 import cu.uci.coj.restapi.templates.FilterClassificationRest;
 import cu.uci.coj.restapi.templates.FilterLanguageRest;
+import cu.uci.coj.restapi.templates.FilterVeredictRest;
 import cu.uci.coj.restapi.templates.FiltersCOJBoardRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import java.util.LinkedList;
@@ -53,11 +50,11 @@ public class RestInfoFiltersController {
     
     
     @ApiOperation(value = "Obtener lenguajes habilitados dado un problema",  
-            notes = "Dado el identificador de un problema, devuelve una lista de todos los lenguajes en los que se le peude hacer un envío.",
+            notes = "Dado el identificador de un problema, devuelve una lista de todos los lenguajes en los que se le puede hacer un envío.",
             response = FilterLanguageRest.class,
             responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 404, message = "bad pid")  })
-    @RequestMapping(value = "/submit/language/{pid}", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/submit/languages/{pid}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getLanguagesEnabledByProblem(@PathVariable Integer pid) {
         if (problemDAO.exists(pid) ){ 
@@ -78,7 +75,7 @@ public class RestInfoFiltersController {
             response = FilterLanguageRest.class,
             responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
-    @RequestMapping(value = "/language", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/languages", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<FilterLanguageRest> getAllLanguage() {
 
@@ -121,12 +118,12 @@ public class RestInfoFiltersController {
     }
     
     
-     @ApiOperation(value = "Obtener las diferentes clasificaciones de los problemas",  
+    @ApiOperation(value = "Obtener las diferentes clasificaciones de los problemas",  
             notes = "Devuelve todos las clasificaciones que tiene un problema para utilizarlas como filtro en otros servicios.",
             response = FilterClassificationRest.class,
             responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
-    @RequestMapping(value = "/classification", method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/classifications", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<FilterClassificationRest> getAllClassification() {  
         List<ProblemClassification> classifications = problemDAO.objects("problem.classifications", ProblemClassification.class);
@@ -136,6 +133,26 @@ public class RestInfoFiltersController {
             classificationsRest.add(new FilterClassificationRest(p.getIdClassification(), p.getName()));
         
         return classificationsRest;   
+    }
+    
+    
+    @ApiOperation(value = "Obtener los tipos de veredictos",  
+            notes = "Devuelve todos los posibles tipos de veredictos que pueden tener los envíos realizados a un problema.",
+            response = FilterVeredictRest.class,
+            responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
+    @RequestMapping(value = "/status", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public List<FilterVeredictRest> getAllVeredict() {  
+        
+        List<FilterVeredictRest> veredicts = new LinkedList();
+        
+        String[] ar = Config.getProperty("judge.status").split(",");
+        for (String elemnts : ar) {
+            veredicts.add(new FilterVeredictRest(Config.getProperty(elemnts.replaceAll(" ", ".")),elemnts));
+        }
+        
+        return veredicts;   
     }
     
     

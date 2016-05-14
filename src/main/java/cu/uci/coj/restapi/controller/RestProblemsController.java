@@ -6,7 +6,7 @@
 package cu.uci.coj.restapi.controller;
 
 
-import com.mangofactory.swagger.annotations.ApiIgnore;
+
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
@@ -14,9 +14,7 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.RecommenderDAO;
-import cu.uci.coj.dao.SubmissionDAO;
 import cu.uci.coj.dao.UserDAO;
-import cu.uci.coj.dao.UtilDAO;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Limits;
@@ -27,7 +25,6 @@ import cu.uci.coj.restapi.templates.ProblemDescriptionRest;
 import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
-import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import java.io.IOException;
@@ -37,9 +34,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
 import org.apache.commons.io.FileUtils;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,12 +58,6 @@ public class RestProblemsController {
     private UserDAO userDAO;
     @Resource
     private RecommenderDAO recommenderDAO;
-    @Resource
-    private UtilDAO utilDAO;
-    @Resource
-    private SubmissionDAO submissionDAO;
-    @Resource
-    private Utils utils;
     @Resource
     private ContestDAO contestDAO;
     
@@ -222,7 +211,7 @@ public class RestProblemsController {
             for (Problem p : pages.getList()) {
                 String balloon = contest.isBalloon() == true ? p.getBalloonColor() : null;
                 Integer level  = contest.getStyle() == 4 ? p.getLevel() : null;
-                ProblemContestRest pcr = null;
+                ProblemContestRest pcr;
                 if(contest.getStyle()==1)
                     pcr = new ProblemContestRest(p.getPid(),""+p.getLetter(),balloon, p.getTitle(), p.getAccu(),level);
                 else
@@ -253,7 +242,7 @@ public class RestProblemsController {
         if (!problemDAO.exists(pid) )
             return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.NOT_FOUND);
         
-        Problem p = null;
+        Problem p;
         try {
             p = problemDAO.getProblemByCode(locale, pid, false);
         } catch (NullPointerException ne) {
@@ -305,14 +294,14 @@ public class RestProblemsController {
             notes = "Cambiar el estado de favorito de un problema dado el identificador del mismo")
     @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
                             @ApiResponse(code = 404, message = "bad pid")  })
-    @RequestMapping(value = "/togglefavorite/{pid}", method = RequestMethod.PUT, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "/togglefavorite/{pid}", method = RequestMethod.PUT, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> togglefavorite(
-            @ApiParam(value = "Llave del desarrollador") @RequestParam(required = true, value = "apikey") String apikey,
-            @ApiParam(value = "Token de usuario") @RequestParam(required = true, value = "token") String token,
-            @ApiParam(value = "Marcar o no como favorito") @RequestParam(required = true, value = "favorite", defaultValue = "false") Boolean favorite,
+            @ApiParam(value = "Llave del desarrollador") @RequestHeader(required = true, value = "apikey") String apikey,
+            @ApiParam(value = "Token de usuario") @RequestHeader(required = true, value = "token") String token,
             @ApiParam(value = "Identificador del problema") @PathVariable int pid) {
         try {
+            
             int error = ValidateApiAndToken(apikey,token);
             if (error > 0) {
                 if(error == 8)
@@ -324,27 +313,16 @@ public class RestProblemsController {
             if(!problemDAO.exists(pid))
                 return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.NOT_FOUND);
 
-            String username = null;          
-            username = ExtractUser(token);           
+            String username;          
+            username = ExtractUser(token);  
+   
+            int uid = problemDAO.integer("select.uid.by.username", username);
+            if (!problemDAO.bool("problem.ismark.asfavorite.byuser", uid, pid)) 
+                problemDAO.dml("problem.mark.asfavorite.byuser", uid, pid);
+            else if (problemDAO.bool("problem.ismark.asfavorite.byuser", uid, pid)) 
+                problemDAO.dml("problem.unmark.favorite.byuser", uid, pid);            
 
-            try {
-                int uid = problemDAO.integer("select.uid.by.username", username);
-                if (!problemDAO.bool("problem.ismark.asfavorite.byuser", uid, pid)
-                        && problemDAO.bool("exist.problem.bypid", pid) && favorite) {
-                    problemDAO.dml("problem.mark.asfavorite.byuser", uid, pid);
-                    
-                }
-                
-                if (problemDAO.bool("problem.ismark.asfavorite.byuser", uid, pid) && !favorite) {
-                    problemDAO.dml("problem.unmark.favorite.byuser", uid, pid);
-                }
-                
-                return new ResponseEntity<>(HttpStatus.OK);
-            } catch (EmptyResultDataAccessException e) {
-                return new ResponseEntity<>(ErrorUtils.BAD_PID, HttpStatus.BAD_REQUEST);
-            }
-           
-
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException ex) {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }

@@ -20,7 +20,6 @@ import cu.uci.coj.model.Institution;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.User;
-import cu.uci.coj.restapi.templates.CountryRest;
 import cu.uci.coj.restapi.templates.UserProfileRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
@@ -60,8 +59,6 @@ public class RestUserProfileController {
     protected JdbcTemplate jdbcTemplate;
     @Resource
     private UtilDAO utilDAO;
-    @Resource
-    private CountryDAO countryDAO;
     @Resource
     private InstitutionDAO institutionDAO;
     
@@ -143,7 +140,7 @@ public class RestUserProfileController {
 }
 
     
-    @ApiOperation(value = "Modificar Perfil de Usuario (Privado)",  
+    @ApiOperation(value = "Modificar Perfil de Usuario",  
             notes = "Modifica el perfil de usuario con los datos enviados.")
     @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
                             @ApiResponse(code = 400, message = "institution witout country, incorrect request"),

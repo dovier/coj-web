@@ -15,8 +15,9 @@ import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.User;
 import cu.uci.coj.restapi.templates.ApiRest;
+import cu.uci.coj.restapi.templates.InputForgotPasswordRest;
+import cu.uci.coj.restapi.templates.InputGenerateApiRest;
 import cu.uci.coj.restapi.templates.InputUserRest;
-import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.templates.TokenRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
@@ -40,7 +41,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -63,7 +63,7 @@ public class RestPrivateController {
     private MailNotificationService mailNotificationService;
     
     
-    @ApiOperation(value = "Autentificar un Usuario (Privado)",  
+    @ApiOperation(value = "Autentificar un Usuario",  
             notes = "Autentica un usuario, de ser correcto devuelve un token con el que se podrá acceder a los demás métodos privados.",
             response = TokenRest.class)
     @ApiResponses(value = { @ApiResponse(code = 401, message = "username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, bad username or password"),
@@ -108,40 +108,39 @@ public class RestPrivateController {
 
     }
     
-    @ApiOperation(value = "Recuperar contraseña olvidada (Privado)",  
+    @ApiOperation(value = "Recuperar contraseña olvidada",  
             notes = "Envía un correo al usuario para cambiar la contraseña vía sitio COJ.")
     @ApiResponses(value = { @ApiResponse(code = 401, message = "username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, bad username or password"),
                             @ApiResponse(code = 404, message = "invalid email"),
                             @ApiResponse(code = 500, message = "error update code, failed send email"),
                             @ApiResponse(code = 400, message = "incorrect request")})
-    @RequestMapping(value = "/forgottenpassword", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "/forgottenpassword", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<String> ForgottenPassword(
-            @ApiParam(value = "Llave de desarrollador") @RequestParam(value = "apikey") String apikey,
-            @ApiParam(value = "Correo electrónico") @RequestParam(value = "email") String email){
+            @ApiParam(value = "JSON con el envío") @RequestBody InputForgotPasswordRest bodyjson){
         try {
             Locale locale = new Locale("en");
 
-            int error = ValidateApi(apikey);
+            int error = ValidateApi(bodyjson.getApikey());
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
             
             String passcode;
             
-            if (!ValidateEmail(email)) 
+            if (!ValidateEmail(bodyjson.getEmail())) 
                 return new ResponseEntity<>(ErrorUtils.INVALID_EMAIL,HttpStatus.NOT_FOUND);
             
             try {
                 passcode = generateRandomPassword(30);
-                userDAO.dml("update.passcode", passcode, email);
+                userDAO.dml("update.passcode", passcode, bodyjson.getEmail());
             } catch (Exception e) {
                 return new ResponseEntity<>(ErrorUtils.ERROR_UPDATE_CODE,HttpStatus.INTERNAL_SERVER_ERROR);
             }
             String subject = messageSource.getMessage("mail.pass.recover.subject", new Object[0], java.util.Locale.ENGLISH);
             String msg = messageSource.getMessage("forgotten.password", new Object[]{passcode}, locale);
             try {
-                mailNotificationService.sendForgottenPasswordEmail(email, subject, msg);
+                mailNotificationService.sendForgottenPasswordEmail(bodyjson.getEmail(), subject, msg);
                 return new ResponseEntity<>(HttpStatus.OK);
             } catch (Exception e) {
                 return new ResponseEntity<>(ErrorUtils.FAILED_SEND_EMAIL,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -158,27 +157,27 @@ public class RestPrivateController {
     @ApiOperation(value = "Generar una llave de desarrollador",  
             notes = "Crea una llave de desarrollador para comenzar a utilizar la Capa de servicios Web.",
             response = ApiRest.class)
-    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad user")  })
-    @RequestMapping(value = "/generateapi", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad user"),
+                            @ApiResponse(code = 401, message = "bad username or password") })
+    @RequestMapping(value = "/generateapi", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> GenerateAPI(
-            @ApiParam(value = "Nombre de usuario") @RequestParam(value = "username") String username,
-            @ApiParam(value = "Contraseña") @RequestParam(value = "password") String password){
+            @ApiParam(value = "JSON con el envío") @RequestBody InputGenerateApiRest bodyjson){
             
-            if(!userDAO.isUser(username))
+            if(!userDAO.isUser(bodyjson.getUsername()))
                 return new ResponseEntity<>(ErrorUtils.BAD_USER, HttpStatus.NOT_FOUND);
             
             String sql = "SELECT * FROM public.users WHERE username = ?";
           
            
-            User user =  (User) jdbcTemplate.queryForObject(sql,new Object[]{username},new BeanPropertyRowMapper(User.class));
+            User user =  (User) jdbcTemplate.queryForObject(sql,new Object[]{bodyjson.getUsername()},new BeanPropertyRowMapper(User.class));
             PasswordEncoder encoder = new Md5PasswordEncoder();
-            password = encoder.encodePassword(password,"ABC123XYZ789");
+            String password = encoder.encodePassword(bodyjson.getPassword(),"ABC123XYZ789");
 
             if(!user.getPassword().equals(password))
                 return  new ResponseEntity<>(ErrorUtils.BAD_USERNAME_PASSWORD, HttpStatus.UNAUTHORIZED);               
             
-            String apiKey = TokenUtils.CreateAPIKey(username, password);
+            String apiKey = TokenUtils.CreateAPIKey(bodyjson.getUsername(), password);
             
             return new ResponseEntity<>(new ApiRest(apiKey, TokenUtils.expirityAPIKey),HttpStatus.OK);
 

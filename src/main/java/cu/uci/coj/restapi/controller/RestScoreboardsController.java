@@ -55,8 +55,6 @@ public class RestScoreboardsController{
     @Resource
     private CountryDAO countryDAO;
     @Resource
-    private ProblemDAO problemDAO;
-    @Resource
     private ContestDAO contestDAO;
     
     

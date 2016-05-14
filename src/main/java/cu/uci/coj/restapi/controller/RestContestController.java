@@ -5,7 +5,7 @@
  */
 package cu.uci.coj.restapi.controller;
 
-import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
@@ -16,9 +16,7 @@ import cu.uci.coj.model.ContestStyle;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.restapi.templates.ContestDescriptionRest;
 import cu.uci.coj.restapi.templates.ContestRest;
-import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
-import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import java.util.LinkedList;
@@ -37,9 +35,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  * @author cesar
  */
-//Colega
-//asd
-//Lol
  
 @Controller
 @RequestMapping("/contest")
@@ -47,11 +42,9 @@ public class RestContestController {
     
         @Resource
 	private ContestDAO contestDAO;
-	@Resource
-	private Utils utils;
         
         @ApiOperation(value = "Obtener próximas competencias",
-            notes = "Devuelve las proximas competencias del COJ.",
+            notes = "Devuelve las próximas competencias del COJ.",
             response = ContestRest.class,
             responseContainer = "List")
         @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
@@ -76,7 +69,7 @@ public class RestContestController {
         
 
         @ApiOperation(value = "Obtener competencias actualmente en funcionamiento",
-            notes = "Devuelve las competencias que se estan efectuando actualmente en el COJ.",
+            notes = "Devuelve las competencias que se están efectuando actualmente en el COJ.",
             response = ContestRest.class,
             responseContainer = "List")
         @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método")  })
@@ -118,7 +111,7 @@ public class RestContestController {
                 pages = contestDAO.getPastContests(options,pattern);
                 listContest.addAll(pages.getList());
                 i++;
-            }while(pages.getList().size()!=0);       
+            }while(!pages.getList().isEmpty());       
               
             List<ContestRest> listContestRest = new LinkedList();
 

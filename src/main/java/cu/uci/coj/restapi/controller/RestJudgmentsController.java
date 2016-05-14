@@ -83,13 +83,13 @@ public class RestJudgmentsController {
     @RequestMapping(value = "", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public List<JudgmentsRest> getAllJudgmentsOrFiltrerJudgments(
-            @ApiParam(value = "Filtrar por usuario") @RequestParam(required = false, value = "user") String filter_user,
-            @ApiParam(value = "Filtrar por identificador del problema") @RequestParam(required = false, value = "prob") Integer pid,
-            @ApiParam(value = "Filtrar por estado de la solución (Veredicto)") @RequestParam(required = false, value = "status") String status,
-            @ApiParam(value = "Filtrar por el lenguaje de envío") @RequestParam(required = false, value = "lang") String language) {
+            @ApiParam(value = "Filtrar por usuario") @RequestParam(required = false, value = "username") String filter_username,
+            @ApiParam(value = "Filtrar por identificador del problema") @RequestParam(required = false, value = "pid") Integer pid,
+            @ApiParam(value = "Filtrar por estado de la solución (Ver filter)") @RequestParam(required = false, value = "status") String status,
+            @ApiParam(value = "Filtrar por el lenguaje de envío (Ver filters)(Filtrar por la llave del lenguaje [key])") @RequestParam(required = false, value = "lang") String language) {
         
         String lang = submissionDAO.string("select language from language where key=?", language);        
-	int found = submissionDAO.countSubmissions(filter_user, lang, pid,Config.getProperty("judge.status." + status));	
+	int found = submissionDAO.countSubmissions(filter_username, lang, pid,Config.getProperty("judge.status." + status));	
         
         if(found>500)
             found = 500;
@@ -100,7 +100,7 @@ public class RestJudgmentsController {
         
         for(int i=1;i<=end(found);i++){
             PagingOptions options = new PagingOptions(i);            
-            IPaginatedList<SubmissionJudge> pages = submissionDAO.getSubmissions(filter_user, found, lang, pid,st,options,false,false,null);
+            IPaginatedList<SubmissionJudge> pages = submissionDAO.getSubmissions(filter_username, found, lang, pid,st,options,false,false,null);
             listSubmitions.addAll(pages.getList());
         }  
         
@@ -119,24 +119,24 @@ public class RestJudgmentsController {
     
     
     @ApiOperation(value = "Obtener todos los envíos por competencia",  
-            notes = "Dado el identiicador de una competencia. Devuelve todos los envíos que se realizaron en esta.",
+            notes = "Dado el identificador de una competencia. Devuelve todos los envíos que se realizaron en esta.",
             response = JudgmentsRest.class,
             responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad cid") })
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "bad cid, bad pid") })
     @RequestMapping(value = "/contest/{cid}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getAllJudgmentsInContestByCid(
             @ApiParam(value = "Identificador de la competencia") @PathVariable Integer cid,
-            @ApiParam(value = "Filtrar por usuario") @RequestParam(required = false, value = "user") String filter_user,
-            @ApiParam(value = "Filtrar por identificador del problema") @RequestParam(required = false, value = "prob") Integer pid,
-            @ApiParam(value = "Filtrar por estado de la solución (Sentencia)") @RequestParam(required = false, value = "status") String status,
-            @ApiParam(value = "Filtrar por el lenguaje de envío") @RequestParam(required = false, value = "lang") String language) {
+            @ApiParam(value = "Filtrar por usuario") @RequestParam(required = false, value = "username") String filter_user,
+            @ApiParam(value = "Filtrar por identificador del problema") @RequestParam(required = false, value = "pid") Integer pid,
+            @ApiParam(value = "Filtrar por estado de la solución (Ver filter)") @RequestParam(required = false, value = "status") String status,
+            @ApiParam(value = "Filtrar por el lenguaje de envío (Ver filters)(Filtrar por la llave del lenguaje [key])") @RequestParam(required = false, value = "lang") String language) {
         
         if(!contestDAO.existsContest(cid))
             return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.NOT_FOUND);
         
-        if (pid==0) 
-            pid = null;
+        if(pid != null && !problemDAO.exists(pid))
+            return new ResponseEntity<>(ErrorUtils.BAD_PID,HttpStatus.NOT_FOUND);
         
         String username = null;
         Contest contest = contestDAO.loadContest(cid);
@@ -191,7 +191,7 @@ public class RestJudgmentsController {
     
     
     @ApiOperation(value = "Obtener todos los envíos por competencia (Por páginas)",  
-            notes = "Dado el identiicador de una competencia. Devuelve todos los envíos que se realizaron en esta por páginas (50 envíos).",
+            notes = "Dado el identificador de una competencia. Devuelve todos los envíos que se realizaron en esta por páginas (50 envíos).",
             response = JudgmentsRest.class,
             responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 404, message = "bad cid"),
@@ -201,16 +201,15 @@ public class RestJudgmentsController {
     public ResponseEntity<?> getAllJudgmentsInContestByCidbyPage(
             @ApiParam(value = "Identificador de la competencia")  @PathVariable Integer cid,
             @ApiParam(value = "Número de la página") @PathVariable int page,
-            @ApiParam(value = "Filtrar por usuario") @RequestParam(required = false, value = "user") String filter_user,
-            @ApiParam(value = "Filtrar por identificador del problema") @RequestParam(required = false, value = "prob") Integer pid,
-            @ApiParam(value = "Filtrar por estado de la solución (Sentencia)") @RequestParam(required = false, value = "status") String status,
-            @ApiParam(value = "Filtrar por el lenguaje de envío") @RequestParam(required = false, value = "lang") String language) {
+            @ApiIgnore @ApiParam(value = "Filtrar por usuario") @RequestParam(required = false, value = "user") String filter_user,
+            @ApiIgnore @ApiParam(value = "Filtrar por identificador del problema") @RequestParam(required = false, value = "prob") Integer pid,
+            @ApiIgnore @ApiParam(value = "Filtrar por estado de la solución (Sentencia)") @RequestParam(required = false, value = "status") String status,
+            @ApiIgnore @ApiParam(value = "Filtrar por el lenguaje de envío") @RequestParam(required = false, value = "lang") String language) {
         
         if(!contestDAO.existsContest(cid))
             return new ResponseEntity<>(ErrorUtils.BAD_CID,HttpStatus.NOT_FOUND);
         
-        if (pid==0) 
-            pid = null;
+        pid = null;
         
         String username = null;
         Contest contest = contestDAO.loadContest(cid);
@@ -279,7 +278,7 @@ public class RestJudgmentsController {
         if (page > 0 && page <= end(found)) {
             String st = Config.getProperty("judge.status." + status);
 
-            List<SubmissionJudge> listSubmitions = new LinkedList(); 
+            List<SubmissionJudge> listSubmitions; 
 
             if(page>end(found))
                 page=-1;
@@ -370,15 +369,15 @@ public class RestJudgmentsController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
     
-    @ApiOperation(value = "Obtener las mejores soluciones a un problema",  
-            notes = "Dado el identificador de un problema, devuelve las mejores soluciones que le han enviado.",
+    @ApiOperation(value = "Obtener las mejores soluciones de un problema",  
+            notes = "Dado el identificador de un problema, devuelve las mejores soluciones de este.",
             response = JudgmentsRest.class,
             responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 404, message = "bad pid") })
     @RequestMapping(value = "/best/{pid}", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getBestJudgmentsByProblem(
-            @ApiParam(value = "Identificador de problema") @PathVariable int pid,
+            @ApiParam(value = "Identificador del problema") @PathVariable int pid,
             @ApiIgnore SecurityContextHolderAwareRequestWrapper requestWrapper) {
         
         if (!problemDAO.exists(pid) )
@@ -407,8 +406,8 @@ public class RestJudgmentsController {
         return new ResponseEntity<>(listJudgmentsRest, HttpStatus.OK);
     }  
     
-    @ApiOperation(value = "Hacer un envío de solución a un problema (Privado)",  
-            notes = "Devuelve el identificador del envío para ser buscado posteriormente en los envíos juzgados por el COJ. (Este servicio web no devuelve el veredicto solo lo envía a la cola del juez. Solo se podrán hacer 30 envíos por minuto)",
+    @ApiOperation(value = "Hacer un envío de solución a un problema",  
+            notes = "Hacer un envío de solución a un problema dado y Devuelve el identificador del envío para ser buscado posteriormente en los envíos juzgados por el COJ. (Este servicio web no devuelve el veredicto solo lo envía a la cola del juez. Solo se podrán hacer 30 envíos por minuto)",
             response = ResponseSubmitRest.class)
     @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
                             @ApiResponse(code = 404, message = "bad pid"),
@@ -418,8 +417,8 @@ public class RestJudgmentsController {
     @ResponseBody
     public ResponseEntity<?> submitProblem(
             @ApiParam(value = "JSON para enviar") @RequestBody InputSubmitRest bodyjson) {
-        int sid = -1;  
-        String username = null;
+        int sid;  
+        String username;
         try {
             //ObjectMapper mapper = new ObjectMapper();
             //JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
@@ -452,7 +451,7 @@ public class RestJudgmentsController {
             
            
             
-            List<Language> languages = new LinkedList<Language>();
+            List<Language> languages = new LinkedList();
             Integer uid = userDAO.integer("select.uid.by.username",username);
             
             if (problemDAO.exists(submit.getPid())) 
@@ -460,8 +459,7 @@ public class RestJudgmentsController {
             
             int lid = 0;
             int cont=0;
-            for (Iterator<Language> it = languages.iterator(); it.hasNext();) {
-                Language lang = it.next();
+            for (Language lang : languages) {
                 if (lang.getKey().equals(language)) {
                     lid = lang.getLid();
                     cont++;
