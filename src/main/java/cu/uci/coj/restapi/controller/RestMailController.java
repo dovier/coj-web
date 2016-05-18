@@ -238,6 +238,50 @@ public class RestMailController {
     }
     
     
+    
+    @ApiOperation(value = "Marcar como leído/no leído",
+            notes = "Marca el correo a leído/no leído dado el identificador del mismo.")
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
+                            @ApiResponse(code = 404, message = "invalid email"),
+                            @ApiResponse(code = 400, message = "incorrect request")})
+    @RequestMapping(value = "/toggle/status/{email_id}", method = RequestMethod.PUT, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<?> DeleteMailByID(
+            @ApiParam(value = "Identificador del correo", required = true) @PathVariable Integer email_id,           
+            @ApiParam(value = "Llave de desarrollador") @RequestHeader(value = "apikey", required = true) String apikey,
+            @ApiParam(value = "Token de usuario") @RequestHeader(value = "token", required = true) String token           ) {
+        try{
+           
+            int error = ValidateApiAndToken(apikey,token);
+            if (error > 0) {
+                return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
+            }
+
+            String username;            
+            username = ExtractUser(token);               
+           
+            if (email_id > 0 && mailDAO.bool("mail.belong.to", email_id, username)){ 
+                Mail mail = mailDAO.object("get.user.mail", Mail.class, email_id, username);
+                if(mail == null)
+                    return new ResponseEntity<>(ErrorUtils.INVALID_EMAIL,HttpStatus.NOT_FOUND);
+                
+                if (!mail.isIsread()) 
+                    mailDAO.dml("change.read.state", true, email_id);
+                else     
+                    mailDAO.dml("change.read.state", false, email_id);            
+            } 
+            else
+                return new ResponseEntity<>(ErrorUtils.INVALID_EMAIL,HttpStatus.NOT_FOUND);
+            
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IOException ex) {
+            return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+    
+    
+    
     @ApiOperation(value = "Eliminar un correo",
             notes = "Elimina un correo espesificando la bandeja donde se encuentra.")
     @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
@@ -285,6 +329,8 @@ public class RestMailController {
                 break;
         }
     }
+
+
     
     private String sendMail(Mail mail) {
 		int size = mail.getContent().getBytes().length + mail.getTitle().getBytes().length;
