@@ -131,7 +131,7 @@ public class AuthenticatedTestCase {
 				.param("author", "")
 		).andReturn();
 
-		System.out.println("PINGA SO YO "+res.getResponse().getRedirectedUrl());
+		System.out.println("ertert "+res.getResponse().getRedirectedUrl());
 	}*/
 
 	@Test
@@ -142,7 +142,9 @@ public class AuthenticatedTestCase {
 		
 		when( problemDAOMock.getPidByTitle("Test Title")).thenReturn( 10000 );
 
-		mockMvc.perform(post("/admin/manageproblem.xhtml").param("title", "Test Title").session((MockHttpSession) result.getRequest().getSession()))
+		mockMvc.perform(post("/admin/manageproblem.xhtml")
+				.param("title", "Test Title")
+				.session((MockHttpSession) result.getRequest().getSession()))
 		
 		.andExpect(status().isFound());
 		verify( problemDAOMock,times(1)).getPidByTitle("Test Title");
@@ -184,7 +186,7 @@ public class AuthenticatedTestCase {
 	
 	@Test
 	public void addUserContest() throws Exception {
-		MvcResult result = mockMvc.perform(post("/j_spring_security_check").param("j_username", "ybroche").param("j_password", "adminpass123"))
+		MvcResult result = mockMvc.perform(post("/j_spring_security_check").param("j_username", "alison").param("j_password", "adminpass123"))
 				.andReturn();
 		
 		mockMvc.perform(post("/admin/contestusers.xhtml").param("usersids", users).param("judgesids",judges).session((MockHttpSession) result.getRequest().getSession()))

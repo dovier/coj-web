@@ -29,6 +29,10 @@ public class userValidator implements Validator {
     @Resource
     private UserDAO userDAO;
 
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+
     @Override
     public boolean supports(Class<?> clazz) {
         return User.class.isAssignableFrom(clazz);

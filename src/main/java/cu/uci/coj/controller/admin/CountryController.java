@@ -62,7 +62,8 @@ public class CountryController extends BaseController {
         return "redirect:/admin/managecountries.xhtml";
     }
 
-    @RequestMapping(value = "/managecountry.xhtml", method = RequestMethod.GET)
+    @RequestMapping(value = "" +
+            "/managecountry.xhtml", method = RequestMethod.GET)
     public String editCountry(Model model, @RequestParam("country_id") Integer country_id) {
         Country country = countryDAO.object("country.by.id.enabled", Country.class, country_id);
         country.setId(country_id);
