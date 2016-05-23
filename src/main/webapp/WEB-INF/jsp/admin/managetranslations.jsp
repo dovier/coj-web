@@ -11,11 +11,12 @@
     <!-- article-content -->
     <div class="row">
         <div class="col-xs-12">
-            <form:form action="/admin/tables/managetranslations.xhtml" method="get" id="filter-form" class="form-inline">
+            <form:form action="/admin/tables/managetranslations.xhtml" method="get" id="filter-form"
+                       class="form-inline">
                 <div class="form-group coj_float_rigth">
                     <input class="form-control" placeholder="<spring:message code="fieldhdr.user" />"
                            type="text" name="username" value="${username}" size="12"/>
-                    <input class="form-control" placeholder="<spring:message code="fieldhdr.prob" />"
+                    <input id="pid" class="form-control" placeholder="<spring:message code="fieldhdr.prob" />"
                            type="text" name="pid" maxlength="9" size="10"/>
                     <select class="form-control" name="locale" title="<spring:message code="fieldhdr.idioma" />"
                             data-toggle="tooltip">
@@ -26,20 +27,6 @@
                     </select>
                     <input class="btn btn-primary" type="submit" id="filter-button"
                            value="<spring:message code="button.filter"/>"/>
-                </div>
-                <div>
-                    <c:choose>
-                        <c:when test="${notid}">
-                            <div class="error col-xs-12 col-md-offset-8">
-                                <span class="label label-danger"><spring:message code="errormsg.25"/></span>
-                            </div>
-                        </c:when>
-                        <c:when test="${notint}">
-                            <div class="error col-xs-12 col-md-offset-8">
-                                <span class="label label-danger"><spring:message code="typeMismatch.submit.pid"/></span>
-                            </div>
-                        </c:when>
-                    </c:choose>
                 </div>
 
             </form:form>
@@ -63,6 +50,9 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        $('#pid').numeric();
+    });
     $(initStandardFilterForm);
 
     $("[data-toggle='tooltip']").tooltip();

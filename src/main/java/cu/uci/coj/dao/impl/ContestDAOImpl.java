@@ -971,7 +971,7 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		int found = integer(query.count(), query.arguments());
 
 		query.order(Order.desc("running"), Order.desc("coming"),
-				Order.asc("enddate"));
+				Order.desc("enddate"));
 		query.paginate(options, 50);
 
 		List<Contest> contests = objects(

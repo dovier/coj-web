@@ -81,10 +81,12 @@
 
     <ul>
         <li>Yonny Mondelo Hernández <spring:message code="text.about.20" /></li>
-        <li>Tomás Orlando Junco Vázquez <spring:message code="text.about.20" /></li>
         <li>Dovier Antonio Ripoll Méndez <spring:message code="text.about.20" /></li>
         <li>Jorge Amado Hernández Betancourt <spring:message code="text.about.20" /></li>
         <li>Yunier Broche Guevara <spring:message code="text.about.20" /></li>
+        <li>Frank Arteaga Salgado (ULT, Cuba).</li>
+        <li>Yelaine Sánchez Oliü <spring:message code="text.about.20" /></li>
+        <li>Alison Muñoz Capote <spring:message code="text.about.20" /></li>
     </ul>
 
     <p>
@@ -92,6 +94,7 @@
     </p>
 
     <ul>
+        <li>Tomás Orlando Junco Vázquez <spring:message code="text.about.20" /></li>
         <li>Jorge Amado Soria Ramirez <spring:message code="text.about.20" /></li>
         <li>Eddy Roberto Morales Pérez  <spring:message code="text.about.20" /></li>
         <li>Leandro González Vallejo <spring:message code="text.about.20" /></li>

@@ -7,12 +7,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import cu.uci.coj.utils.Notification;
+import cu.uci.coj.utils.Utils;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -46,6 +51,9 @@ import cu.uci.coj.model.Entry;
 import cu.uci.coj.model.Institution;
 import cu.uci.coj.model.Locale;
 import cu.uci.coj.model.Problem;
+import cu.uci.coj.model.ProblemClassification;
+import cu.uci.coj.model.ProblemComplexity;
+import cu.uci.coj.model.ProblemRichTitle;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.User;
 import cu.uci.coj.model.WbContest;
@@ -56,6 +64,7 @@ import cu.uci.coj.utils.paging.PagingOptions;
 import cu.uci.coj.validator.forgottenValidator;
 import cu.uci.coj.validator.registrationValidator;
 import cu.uci.coj.validator.userValidator;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -190,6 +199,7 @@ public class UserController extends BaseController {
         return "/user/compareusers";
     }*/
 
+    @Deprecated 
     @RequestMapping(value = "/compareusers.xhtml", method = RequestMethod.GET)
     public String compareUsersPost(Principal principal, Model model, @RequestParam(required = false, value = "uid1") String user1, @RequestParam(required = false, value = "uid2") String user2) {
         int error = 1;
@@ -302,6 +312,143 @@ public class UserController extends BaseController {
         model.addAttribute("errormessage", "general.error.userproblem");
         return "/user/compareusers";
     }
+    
+	//frankr addition start
+	@RequestMapping(value = "/compareusersbytag.xhtml", method = RequestMethod.GET)
+	public String compareUsersByTag(Principal principal, Model model, 
+			@RequestParam(required = false, value = "user1", defaultValue = "-1") String user1, 
+			@RequestParam(required = false, value = "user2", defaultValue = "-1") String user2,
+			@RequestParam(required = false, defaultValue = "-1", value = "classification") Integer idClassification) { 
+		
+		boolean error = true;
+		boolean usernameError = false;
+		Integer uid1 = -2;
+		Integer uid2 = -2;
+		if ((user1.compareTo("-1") == 0) || (user2.compareTo("-1") == 0)){
+			if (principal != null){
+				user1 = getUsername(principal);
+				user2 = "";
+			}
+			else{
+				user1 = "";
+				user2 = "";
+			}
+		}
+		else{
+			boolean existUser1 = userDAO.existUsername(user1);
+			boolean existUser2 = userDAO.existUsername(user2);
+			if (existUser1 && existUser2){
+				uid1 = userDAO.idByUsername(user1);
+				uid2 = userDAO.idByUsername(user2);
+				error = false;
+			}
+			else{
+				usernameError = true;
+			}
+		}
+				
+		model.addAttribute("user1", user1);
+		model.addAttribute("user2", user2);
+		List<ProblemClassification> classifications = problemDAO.objects("problem.classifications", ProblemClassification.class);
+		String classifName = utilDAO.getClassificationNameById(idClassification);
+		model.addAttribute("classifications", classifications);
+		model.addAttribute("classification", idClassification);
+		model.addAttribute("classifName", classifName);
+
+		//FIXME: DRY principle
+		if (!error){
+			if (idClassification != -1){
+				//Problems solved
+				Set<ProblemComplexity> solved_user1 = new TreeSet<ProblemComplexity>(userDAO.getPublicProblemsSolvedByUIdAndTagId(uid1, idClassification));
+				Set<ProblemComplexity> solved_user2 = new TreeSet<ProblemComplexity>(userDAO.getPublicProblemsSolvedByUIdAndTagId(uid2, idClassification));
+						
+				Set<ProblemComplexity> onlyUser1 = new TreeSet<ProblemComplexity>(solved_user1);
+				onlyUser1.removeAll(solved_user2);
+				
+				Set<ProblemComplexity> both = new TreeSet<ProblemComplexity>(solved_user1);
+				both.retainAll(solved_user2);
+				
+				Set<ProblemComplexity> onlyUser2 = new TreeSet<ProblemComplexity>(solved_user2);
+				onlyUser2.removeAll(solved_user1);
+						
+				model.addAttribute("onlybyuser1", onlyUser1.size());
+				model.addAttribute("byboth", both.size());
+				model.addAttribute("onlybyuser2", onlyUser2.size());
+				
+				Map<Integer, List<ProblemComplexity>> onlyUser1Complexity = Utils.separateByComplexity(onlyUser1);
+				Map<Integer, List<ProblemComplexity>> bothComplexity = Utils.separateByComplexity(both);
+				Map<Integer, List<ProblemComplexity>> onlyUser2Complexity = Utils.separateByComplexity(onlyUser2);
+				
+				model.addAttribute("onlyUser1Complexity", onlyUser1Complexity);
+				model.addAttribute("bothComplexity", bothComplexity);
+				model.addAttribute("onlyUser2Complexity", onlyUser2Complexity);
+				
+				// Problems tried
+				Set<ProblemComplexity> tried_user1 = new TreeSet<ProblemComplexity>(userDAO.getPublicProblemsTriedByUIdAndTagId(uid1, idClassification));
+				Set<ProblemComplexity> tried_user2 = new TreeSet<ProblemComplexity>(userDAO.getPublicProblemsTriedByUIdAndTagId(uid2, idClassification));
+						
+				Set<ProblemComplexity> triedOnlyUser1 = new TreeSet<ProblemComplexity>(tried_user1);
+				triedOnlyUser1.removeAll(tried_user2);
+				
+				Set<ProblemComplexity> triedBoth = new TreeSet<ProblemComplexity>(tried_user1);
+				triedBoth.retainAll(tried_user2);
+				
+				Set<ProblemComplexity> triedOnlyUser2 = new TreeSet<ProblemComplexity>(tried_user2);
+				triedOnlyUser2.removeAll(tried_user1);
+						
+				model.addAttribute("triedonlybyuser1", triedOnlyUser1.size());
+				model.addAttribute("triedbyboth", triedBoth.size());
+				model.addAttribute("triedonlybyuser2", triedOnlyUser2.size());
+				
+				Map<Integer, List<ProblemComplexity>> triedUser1Complexity = Utils.separateByComplexity(triedOnlyUser1);
+				Map<Integer, List<ProblemComplexity>> triedBothComplexity = Utils.separateByComplexity(triedBoth);
+				Map<Integer, List<ProblemComplexity>> triedUser2Complexity = Utils.separateByComplexity(triedOnlyUser2);
+				
+				model.addAttribute("triedUser1Complexity", triedUser1Complexity);
+				model.addAttribute("triedBothComplexity", triedBothComplexity);
+				model.addAttribute("triedUser2Complexity", triedUser2Complexity);
+			}
+			else{
+				Set<ProblemRichTitle> allSolved_user1 = new TreeSet<ProblemRichTitle> (userDAO.getPublicProblemsSolvedWithRichTitleByUid(uid1));			
+				Set<ProblemRichTitle> allSolved_user2 = new TreeSet<ProblemRichTitle> (userDAO.getPublicProblemsSolvedWithRichTitleByUid(uid2));
+				
+				Set<ProblemRichTitle> allOnlyUser1 = new TreeSet<ProblemRichTitle>(allSolved_user1);
+				allOnlyUser1.removeAll(allSolved_user2);
+				
+				Set<ProblemRichTitle> allByBoth = new TreeSet<ProblemRichTitle>(allSolved_user1);
+				allByBoth.retainAll(allSolved_user2);
+				
+				Set<ProblemRichTitle> allOnlyUser2 = new TreeSet<ProblemRichTitle>(allSolved_user2);
+				allOnlyUser2.removeAll(allSolved_user1);
+				
+				model.addAttribute("allonlybyuser1", allOnlyUser1);
+				model.addAttribute("allbyboth", allByBoth);
+				model.addAttribute("allonlybyuser2", allOnlyUser2);
+				
+				Set<ProblemRichTitle> allTried_user1 = new TreeSet<ProblemRichTitle> (userDAO.getPublicProblemsTriedWithRichTitleByUid(uid1));			
+				Set<ProblemRichTitle> allTried_user2 = new TreeSet<ProblemRichTitle> (userDAO.getPublicProblemsTriedWithRichTitleByUid(uid2));
+				
+				Set<ProblemRichTitle> allTriedUser1 = new TreeSet<ProblemRichTitle>(allTried_user1);
+				allTriedUser1.removeAll(allTried_user2);
+				
+				Set<ProblemRichTitle> allTriedBoth = new TreeSet<ProblemRichTitle>(allTried_user1);
+				allTriedBoth.retainAll(allTried_user2);
+				
+				Set<ProblemRichTitle> allTriedUser2 = new TreeSet<ProblemRichTitle>(allTried_user2);
+				allTriedUser2.removeAll(allTried_user1);
+				
+				model.addAttribute("allTriedUser1", allTriedUser1);
+				model.addAttribute("allTriedBoth", allTriedBoth);
+				model.addAttribute("allTriedUser2", allTriedUser2);
+			}
+		} //if (!error)
+
+		model.addAttribute("error", error); //FIXME: hacer mas particular y pasar error de parametros incorrectos al formlario
+		model.addAttribute("usernameError", usernameError);
+	
+		return "/user/compareusersbytag";
+	}
+	//frankr addition end    
 
     @RequestMapping(value = "/updateaccount.xhtml", method = RequestMethod.GET)
     public String updateAccount(Principal principal, Model model) {

@@ -30,7 +30,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import com.wordnik.swagger.annotations.ApiParam;
+import com.wordnik.swagger.annotations.ApiResponse;
+import com.wordnik.swagger.annotations.ApiResponses;
 /**
  *
  * @author cesar
@@ -38,7 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  
 @Controller
 @RequestMapping("/contest")
-public class RestContestController {
+public class  RestContestController {
     
         @Resource
 	private ContestDAO contestDAO;

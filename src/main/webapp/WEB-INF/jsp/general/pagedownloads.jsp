@@ -38,7 +38,7 @@
 						<c:out value="${files.list[loop.index+1].name}" />
 					</a>
                     <div class="clearfix"></div>
-                        <i>${files.list[loop.index].size} kB</i>
+                        <i>${files.list[loop.index+1].size} kB</i>
 				</div>
 			</div>
 		</c:if>

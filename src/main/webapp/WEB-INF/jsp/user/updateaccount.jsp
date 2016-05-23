@@ -156,6 +156,7 @@
 						<form:options items="${countries}" itemValue="id" itemLabel="name" />
 					</form:select>
 				</div>
+				<input type="hidden" name="noneInstitution" value='<spring:message code="user.none.institution" />'/>
 				<div class="error col-xs-8 col-xs-offset-3">
 					<span class="label label-danger"><form:errors path="country" /></span>
 				</div>

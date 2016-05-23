@@ -126,6 +126,7 @@
                            title="<spring:message code="infomsg.6"/>"></i></a>
                 </div>
             </authz:authorize>
+            <input type="hidden" name="noneInstitution" value='<spring:message code="user.none.institution" />'/>
 
             <!-- LANGUAGE OF USER-->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
@@ -447,6 +448,10 @@
                                     </c:forEach>
                                 </form:select>
                             </div>
+                        </div>
+
+                        <div class="error col-xs-8 col-xs-offset-3">
+                            <span class="label label-danger"><form:errors path="dob"/></span>
                         </div>
 
                     </div>

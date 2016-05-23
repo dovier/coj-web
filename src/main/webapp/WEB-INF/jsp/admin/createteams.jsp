@@ -205,6 +205,8 @@
                 </div>
             </authz:authorize>
 
+            <input type="hidden" name="noneInstitution" value='<spring:message code="user.none.institution" />'/>
+
             <!-- DEFAULT GUI LANGUAGUE OF TEAM -->
             <authz:authorize ifAnyGranted="ROLE_USER,ROLE_TEAM">
                 <div class="form-group">

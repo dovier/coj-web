@@ -226,6 +226,8 @@ public class ProblemController extends BaseController {
             model.addAttribute("sources", problemDAO.getProblemSources());
             model.addAttribute("psetters", utilDAO.objects("select.psetters.pid", User.class, problem.getPid()));
             model.addAttribute(problem);
+            /*model.addAttribute("showpsetters", (requestWrapper.isUserInRole(Roles.ROLE_ADMIN) && requestWrapper.isUserInRole(Roles.ROLE_ADMIN)) || principal.getName().equals(problem.getUsername()));
+            model.addAttribute("create", false);*/
             return "/admin/manageproblem";
         }
 

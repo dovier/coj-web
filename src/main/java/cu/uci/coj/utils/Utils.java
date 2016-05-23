@@ -8,6 +8,7 @@ import cu.uci.coj.exceptions.PlagiCOJUnsupportedLanguageException;
 import cu.uci.coj.model.DatagenDataset;
 import cu.uci.coj.model.Filter;
 import cu.uci.coj.model.Language;
+import cu.uci.coj.model.ProblemComplexity;
 import cu.uci.coj.model.Stats;
 import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.plagicoj.lexers.PlagiCOJCLexer;
@@ -17,6 +18,7 @@ import cu.uci.coj.plagicoj.lexers.PlagiCOJJavaLexer;
 import cu.uci.coj.plagicoj.lexers.PlagiCOJPascalLexer;
 import cu.uci.coj.plagicoj.lexers.PlagiCOJPythonLexer;
 import cu.uci.coj.utils.paging.PagingOptions;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -31,12 +33,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.Semaphore;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.Lexer;
@@ -617,4 +623,17 @@ public class Utils {
 
         private static final Utils INSTANCE = new Utils();
     }
+    
+    //frankr addition start para usar en el comparador por etiquetas
+	public static Map<Integer, List<ProblemComplexity>> separateByComplexity(Set<ProblemComplexity> problems){
+		Map<Integer, List<ProblemComplexity>> result = new TreeMap<Integer, List<ProblemComplexity>>();
+		for (int i = 1 ; i <= 5 ; i++){
+			result.put(i, new ArrayList<ProblemComplexity>());
+		}
+		for (ProblemComplexity pc : problems) {
+			result.get(pc.getComplexity()).add(pc);
+		}
+		return result;
+	}
+    //frankr addition end	
 }

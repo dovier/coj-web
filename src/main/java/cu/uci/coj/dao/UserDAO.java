@@ -1,11 +1,14 @@
 package cu.uci.coj.dao;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import cu.uci.coj.model.ProblemComplexity;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
+import cu.uci.coj.model.ProblemRichTitle;
 import cu.uci.coj.model.Registration;
 import cu.uci.coj.model.Team;
 import cu.uci.coj.model.User;
@@ -145,4 +148,19 @@ public interface UserDAO extends BaseDAO {
 	public UserClassificationStats getUserClassifications(Integer uid);
 
 	UserClassificationStats getTotalClassifications();
+
+	//frankr addition start
+	public boolean existUsername(String user1);
+
+	List<ProblemComplexity> getPublicProblemsSolvedByUIdAndTagId(Integer uid,
+			Integer idClassification);
+
+	List<ProblemComplexity> getPublicProblemsTriedByUIdAndTagId(Integer uid,
+			Integer idClassification);
+
+	List<ProblemRichTitle> getPublicProblemsSolvedWithRichTitleByUid(Integer uid);
+
+	public List<ProblemRichTitle> getPublicProblemsTriedWithRichTitleByUid(Integer uid);
+	
+	//frankr addition end
 }

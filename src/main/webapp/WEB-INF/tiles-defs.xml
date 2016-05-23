@@ -719,7 +719,15 @@
 		<put-attribute name="title" value="pagetit.24hcusers" />
 		<put-attribute name="content" value="/WEB-INF/jsp/user/compareusers.jsp" />
 	</definition>
-
+	
+	<!-- frankr addition start -->
+	<definition name="/user/compareusersbytag" extends="template">
+		<put-attribute name="idpage" value="compareusersbytag" />
+		<put-attribute name="title" value="pagetit.24hcusers" />
+		<put-attribute name="content" value="/WEB-INF/jsp/user/compareusersbytag.jsp" />
+	</definition>
+	<!-- frankr addition end -->
+	
 	<definition name="/error/flush" extends="errortemplate">
 		<put-attribute name="title" value="pagetit.welcomemsg" />
 		<put-attribute name="content" value="/WEB-INF/jsp/error/flush.jsp" />
