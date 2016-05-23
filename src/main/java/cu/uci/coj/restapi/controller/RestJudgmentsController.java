@@ -43,6 +43,7 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -405,6 +406,7 @@ public class RestJudgmentsController {
         return new ResponseEntity<>(listJudgmentsRest, HttpStatus.OK);
     }  
     
+    
     @ApiOperation(value = "Hacer un envío de solución a un problema",  
             notes = "Hacer un envío de solución a un problema dado y Devuelve el identificador del envío para ser buscado posteriormente en los envíos juzgados por el COJ. (Este servicio web no devuelve el veredicto solo lo envía a la cola del juez. Solo se podrán hacer 30 envíos por minuto)",
             response = ResponseSubmitRest.class)
@@ -412,43 +414,32 @@ public class RestJudgmentsController {
                             @ApiResponse(code = 404, message = "bad pid"),
                             @ApiResponse(code = 412, message = "submit disabled temporarily by admin. maybe an important contest is running?<br> the problem id is incorrect.<br> the programming language is not enabled for that problem.<br> the source code is required (by file or text).<br> the source code is too long"),
                             @ApiResponse(code = 429, message = "Rate limit exceeded wait one minute")})
-    @RequestMapping(value = "/submit", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/submit/{keylanguage}/{pid}", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> submitProblem(
-            @ApiParam(value = "JSON para enviar") @RequestBody InputSubmitRest bodyjson) {
+            @ApiParam(value = "Código a enviar", required = true) @RequestBody String code,
+            @ApiParam(value = "Identificador del problema") @PathVariable int pid,
+            @ApiParam(value = "IIdentificador en forma de cadena de texto del lenguaje (key)") @PathVariable String keylanguage,
+            @ApiParam(value = "Llave de desarrollador") @RequestHeader(value = "apikey", required = true) String apikey,
+            @ApiParam(value = "Token de usuario") @RequestHeader(value = "token", required = true) String token) {
         int sid;  
         String username;
-        try {
-            //ObjectMapper mapper = new ObjectMapper();
-            //JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
+        try {         
 
-            int error = ValidateApiAndToken(bodyjson.getApikey(), bodyjson.getToken());
+            int error = ValidateApiAndToken(apikey, token);
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
+            
+            username = ExtractUser(token);
 
-
-            username = ExtractUser(bodyjson.getToken());
-            
-            //if(!TokenUtils.ValidatePropertiesinJson(node,"pid","language","source"))
-              //  return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
-     
-            int pid = bodyjson.getPid();
-            String language = bodyjson.getKeylanguage();
-            String code = bodyjson.getSource();
-                     
-            
-            
             if (!problemDAO.exists(pid) )
                 return new ResponseEntity<>(ErrorUtils.BAD_PID,HttpStatus.NOT_FOUND);
-            
-            
+                        
             SubmissionJudge submit = new SubmissionJudge();
             submit.setPid(pid);
             submit.setCode(code);
-            submit.setKey(language);
-            
-           
+            submit.setKey(keylanguage); 
             
             List<Language> languages = new LinkedList();
             Integer uid = userDAO.integer("select.uid.by.username",username);
@@ -459,7 +450,7 @@ public class RestJudgmentsController {
             int lid = 0;
             int cont=0;
             for (Language lang : languages) {
-                if (lang.getKey().equals(language)) {
+                if (lang.getKey().equals(keylanguage)) {
                     lid = lang.getLid();
                     cont++;
                 }
@@ -492,17 +483,116 @@ public class RestJudgmentsController {
             } catch (Exception e) {
                 submissionDAO.changeStatus(sid, "Unqualified");
             }
-            
-                  
-           
+       
 
         } catch (IOException ex) {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }
         
-      //  String response = "{idsubmission:"+sid+"}";
-        return new ResponseEntity<>(new ResponseSubmitRest(sid, bodyjson.getPid(),username, bodyjson.getKeylanguage()),HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseSubmitRest(sid, pid,username, keylanguage),HttpStatus.OK);
     }
+    
+//    @ApiOperation(value = "Hacer un envío de solución a un problema",  
+//            notes = "Hacer un envío de solución a un problema dado y Devuelve el identificador del envío para ser buscado posteriormente en los envíos juzgados por el COJ. (Este servicio web no devuelve el veredicto solo lo envía a la cola del juez. Solo se podrán hacer 30 envíos por minuto)",
+//            response = ResponseSubmitRest.class)
+//    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
+//                            @ApiResponse(code = 404, message = "bad pid"),
+//                            @ApiResponse(code = 412, message = "submit disabled temporarily by admin. maybe an important contest is running?<br> the problem id is incorrect.<br> the programming language is not enabled for that problem.<br> the source code is required (by file or text).<br> the source code is too long"),
+//                            @ApiResponse(code = 429, message = "Rate limit exceeded wait one minute")})
+//    @RequestMapping(value = "/submit", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseBody
+//    public ResponseEntity<?> submitProblem(
+//            @ApiParam(value = "JSON para enviar") @RequestBody InputSubmitRest bodyjson) {
+//        int sid;  
+//        String username;
+//        try {
+//            //ObjectMapper mapper = new ObjectMapper();
+//            //JsonNode node = mapper.readValue(bodyjson, JsonNode.class);
+//
+//            int error = ValidateApiAndToken(bodyjson.getApikey(), bodyjson.getToken());
+//            if (error > 0) {
+//                return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
+//            }
+//
+//
+//            username = ExtractUser(bodyjson.getToken());
+//            
+//            //if(!TokenUtils.ValidatePropertiesinJson(node,"pid","language","source"))
+//              //  return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
+//     
+//            int pid = bodyjson.getPid();
+//            String language = bodyjson.getKeylanguage();
+//            String code = bodyjson.getSource();
+//                     
+//            
+//            
+//            if (!problemDAO.exists(pid) )
+//                return new ResponseEntity<>(ErrorUtils.BAD_PID,HttpStatus.NOT_FOUND);
+//            
+//            
+//            SubmissionJudge submit = new SubmissionJudge();
+//            submit.setPid(pid);
+//            submit.setCode(code);
+//            submit.setKey(language);
+//            
+//           
+//            
+//            List<Language> languages = new LinkedList();
+//            Integer uid = userDAO.integer("select.uid.by.username",username);
+//            
+//            if (problemDAO.exists(submit.getPid())) 
+//                languages.addAll(utilDAO.getEnabledLanguagesByProblem(pid));
+//            
+//            int lid = 0;
+//            int cont=0;
+//            for (Language lang : languages) {
+//                if (lang.getKey().equals(language)) {
+//                    lid = lang.getLid();
+//                    cont++;
+//                }
+//            }
+//            if(cont == 0)
+//                return new ResponseEntity<>(ErrorUtils.BAD_LANGUAGE,HttpStatus.BAD_REQUEST);
+//			
+//            String errors = validateSubmission(submit,lid);
+//            if (errors != null) 
+//                return new ResponseEntity<>("{\"error\":\""+errors+"\"}", HttpStatus.PRECONDITION_FAILED);
+//            
+//            
+//            submit.setLanguages(languages);
+//            submit.getLanguageIdByKey();
+//            submit.setHaspriviligeForProblem(false);
+//            
+//            Problem problem = problemDAO.getProblemSubmitDataByAbb(submit.getPid(),submit.getLid());
+//            problem.setUserLanguage("en");
+//            boolean locked = problemDAO.bool("issolved.byuser", uid,problem.getPid()) && problemDAO.isLocked(uid, problem.getPid());
+//            
+//            sid = submissionDAO.insertSubmission(uid,username, problem.getPid(), submit.getCode(),submit.getLanguageByLid(), locked, null);
+//            SubmissionJudge submission = new SubmissionJudge(sid, uid,
+//					submit.getCode(), problem.getPid(), problem.getTime(),
+//					problem.getCasetimelimit(), problem.getMemory(),
+//					submit.getLanguageByLid());
+//            submission.setSpecialJudge(problem.isSpecial_judge());
+//            try {                            
+//                int priority = 6;
+//                utils.startCalification(submission,priority);
+//            } catch (Exception e) {
+//                submissionDAO.changeStatus(sid, "Unqualified");
+//            }
+//            
+//                  
+//           
+//
+//        } catch (IOException ex) {
+//            return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
+//        }
+//        
+//      //  String response = "{idsubmission:"+sid+"}";
+//        return new ResponseEntity<>(new ResponseSubmitRest(sid, bodyjson.getPid(),username, bodyjson.getKeylanguage()),HttpStatus.OK);
+//    }
+    
+    
+    
 
     public String validateSubmission(SubmissionJudge submit, int lid){
         String errors = null;

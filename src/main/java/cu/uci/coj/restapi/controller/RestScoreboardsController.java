@@ -92,6 +92,7 @@ public class RestScoreboardsController{
         return listUsersRest;
     }  
     
+    @ApiIgnore
     @ApiOperation(value = "Obtener tabla de posiciones por instituciones",  
             notes = "Devuelve las posiciones de todos las instituciones registradas en el COJ.",
             response = InstitutionRest.class,
@@ -261,7 +262,7 @@ public class RestScoreboardsController{
         return new ResponseEntity<>(listUsersRest, HttpStatus.OK);
     }
     
-    
+    @ApiIgnore
     @ApiOperation(value = "Obtener tabla de posiciones de los usuarios en las competencias",  
             notes = "Devuelve las posiciones de todos los usuarios en las competencias.",
             response = UserRest.class,
