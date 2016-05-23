@@ -86,18 +86,21 @@ public class problemValidator implements Validator {
         if (problem.getPid() == 0) {
             if (problemDAO.existProblemByTitle(problem.getTitle())) {
                 errors.rejectValue("title",
-                        "page.manageproblem.titleexist");
+                        "page.manageproblem.pidexist",
+                        "Already Exist.");
             }
         } else {
             if (problemDAO.existProblemTitleOffPid(problem.getPid(), problem.getTitle())) {
                 errors.rejectValue("title",
-                        "page.manageproblem.pidexist");
+                        "page.manageproblem.pidexist",
+                        "Already Exist.");
             }
         }        
 
         if (problem.getLanguageids() == null || problem.getLanguageids().length == 0) {
             errors.rejectValue("languages",
-                    "lpage.manageproblem.languageselect");
+                    "languages.addproblem.required",
+                    "At least one language should be select");
         }
     }
 }

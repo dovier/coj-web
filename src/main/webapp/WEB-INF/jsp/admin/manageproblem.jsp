@@ -505,8 +505,8 @@
 
                             <%--File de los zip--%>
 
-                        <div class="col-xs-4">
-                            <input id="zipfile" name="zipfile" type="file" class="file"
+                        <div class="col-xs-8">
+                            <input id="zipfile" name="zipfile" type="file"
                                    data-show-upload="false"/>
                         </div>
                     </div>
@@ -631,15 +631,12 @@ $('[data-toggle="unit-selector"]').unitSelector()
 </script>
 
 <script>
-    /* $('#zipfile').inputFileText({
-     text: "<spring:message code="message.filename"/>"
-     });*/
 
     $(".file").fileinput({
         maxFileSize: 5000000,
         allowedFileTypes: ['text'],
         removeClass: "btn btn-default",
-        removeLabel: "tablehdr.delete",
+        removeLabel: "<spring:message code="tablehdr.delete"/>",
         previewFileType: 'text',
         showPreview: 0,
         msgProgress: 'Loading {percent}%',
@@ -654,11 +651,12 @@ $('[data-toggle="unit-selector"]').unitSelector()
 
     $("#zipfile").fileinput({
         maxFileSize: 50000000,
-        allowedFileTypes: ['object'],
+        allowedFileExtensions: ['zip'],
         removeClass: "btn btn-default",
-        removeLabel: "tablehdr.delete",
+        showPreview: false,
+        removeLabel: "<spring:message code="tablehdr.delete"/>",
         msgProgress: 'Loading {percent}%',
-        browseClass: "btn btn-danger",
+        browseClass: "btn btn-primary",
         browseLabel: "<spring:message code="message.filename"/>",
         browseIcon: '<i class="fa fa-file-o"></i>&nbsp;',
         removeIcon: '<i class="fa fa-trash"></i>',

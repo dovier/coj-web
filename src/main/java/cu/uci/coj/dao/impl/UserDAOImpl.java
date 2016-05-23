@@ -1,5 +1,6 @@
 package cu.uci.coj.dao.impl;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,11 +13,15 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import cu.uci.coj.config.Config;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.mail.MailNotificationService;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
+import cu.uci.coj.model.ProblemClassification;
+import cu.uci.coj.model.ProblemComplexity;
+import cu.uci.coj.model.ProblemRichTitle;
 import cu.uci.coj.model.Registration;
 import cu.uci.coj.model.Roles;
 import cu.uci.coj.model.Team;
@@ -754,5 +759,64 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		List<Map<String, Object>> probs = maps("select.prob.classif");
 		return new UserClassificationStats(probs);
 	}
+	
+	//frankr addition start
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProblemComplexity> getPublicProblemsSolvedByUIdAndTagId(Integer uid, Integer idClassification) {
+		String sqlKey = Config.getProperty("public.problems.solved.by.uid.and.tagid"); 
+		List<ProblemComplexity> result = super.objects(sqlKey, ProblemComplexity.class, uid, idClassification);
+		return result;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProblemComplexity> getPublicProblemsTriedByUIdAndTagId(Integer uid, Integer idClassification) {
+		String sqlKey = Config.getProperty("public.problems.tried.by.uid.and.tagid"); 
+		List<ProblemComplexity> result = super.objects(sqlKey, ProblemComplexity.class, uid, idClassification);
+		return result;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProblemRichTitle> getPublicProblemsSolvedWithRichTitleByUid(Integer uid) {
+		String sqlKey = Config.getProperty("public.problems.solved.by.uid"); 
+		List<ProblemRichTitle> result = super.objects(sqlKey, ProblemRichTitle.class, uid);
+		//makeRichTitle(result);
+		return result;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<ProblemRichTitle> getPublicProblemsTriedWithRichTitleByUid(Integer uid) {
+		String sqlKey = Config.getProperty("public.problems.tried.by.uid"); 
+		List<ProblemRichTitle> result = super.objects(sqlKey, ProblemRichTitle.class, uid);
+		//makeRichTitle(result);
+		return result;
+	}
+	
+	@Transactional(readOnly = true)
+	private void makeRichTitle(List<ProblemRichTitle> result){
+		for (ProblemRichTitle prt : result){
+			String sqlKey = Config.getProperty("get.problem.classifications");
+			List<ProblemClassification> pcs = super.objects(sqlKey, ProblemClassification.class, prt.getPid());
+			
+			String richTitle = "";
+			for (ProblemClassification pc : pcs){
+				richTitle += " | " + pc.getName() + " " + Integer.valueOf(pc.getComplexity());
+			}
+			prt.setRichTitle(richTitle);
+		}
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public boolean existUsername(String username){
+		String sqlKey = Config.getProperty("exist.username");
+		boolean result = super.bool(sqlKey, username);
+		return result;
+	}
+	//frankr addition end	
+
 
 }

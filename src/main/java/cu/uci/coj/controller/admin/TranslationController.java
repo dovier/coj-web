@@ -37,34 +37,12 @@ public class TranslationController extends BaseController {
 	String manageTranslations(Model model) {
 		return "/admin/managetranslations";
 	}
-
-	@RequestMapping(value = "/managetranslations.xhtml", method = RequestMethod.POST)
-	String managePostTranslations(Model model, PagingOptions options, @RequestParam(required=false) String username, @RequestParam(required=false,defaultValue="0",value="pid") Integer pid,
-								  @RequestParam(required=false) String locale){
-
-		if (pid == 0) pid = null;
-
-		IPaginatedList<Translation> translations = problemDAO.getTranslationList(username, pid, locale, options);
-		model.addAttribute("translations", translations);
-
-		return "/admin/managetranslations";
-	}
 	
 	@RequestMapping(value="/tables/managetranslations.xhtml", method=RequestMethod.GET)
 	String manageTranslationsTable(Model model, PagingOptions options, @RequestParam(required=false) String username, @RequestParam(required=false,defaultValue="0",value="pid") Integer pid,
 			@RequestParam(required=false) String locale) {
-
 		if (pid == 0) pid = null;
-
-
-
 		IPaginatedList<Translation> translations = problemDAO.getTranslationList(username, pid, locale, options);
-
-
-		if (translations.getList().size() <= 0 && !problemDAO.exists(pid)){
-			model.addAttribute("notid", true);
-		}
-
 		model.addAttribute("translations", translations);
 		
 		return "/admin/tables/managetranslations";
@@ -98,7 +76,7 @@ public class TranslationController extends BaseController {
 		return "redirect:/admin/managetranslations.xhtml";
 	}
 
-	@ExceptionHandler(TypeMismatchException.class)
+	/*@ExceptionHandler(TypeMismatchException.class)
 	public RedirectView handleIOExceptionN(TypeMismatchException e, HttpServletRequest request) {
 		RedirectView redirectView = new RedirectView("/admin/errortranslationRedirectPage.xhtml");
 		redirectView.addStaticAttribute("errorMessage", e.getMessage());
@@ -109,5 +87,5 @@ public class TranslationController extends BaseController {
 	public String errorRedirectPageN(HttpServletRequest request, Model model) {
 		model.addAttribute("notint", true);
 		return "/admin/tables/managetranslations";
-	}
+	}*/
 }
