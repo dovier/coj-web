@@ -71,8 +71,8 @@ public class RestMailController {
     @RequestMapping(value = "/inbox", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getMailInbox(
-             @ApiParam(value = "Llave de desarrollador") @RequestHeader(value = "apikey", required = false) String apikey,
-             @ApiParam(value = "Token de usuario") @RequestHeader(value = "token", required = false) String token   ) {
+             @ApiParam(value = "Llave de desarrollador") @RequestHeader(value = "apikey", required = true) String apikey,
+             @ApiParam(value = "Token de usuario") @RequestHeader(value = "token", required = true) String token   ) {
         try {
 
             int error = ValidateApiAndToken(apikey, token);
@@ -112,8 +112,8 @@ public class RestMailController {
     @RequestMapping(value = "/outbox", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getMailSend(
-            @ApiParam(value = "Llave de desarrollador") @RequestHeader(value = "apikey", required = false) String apikey,
-            @ApiParam(value = "Token de usuario") @RequestHeader(value = "token", required = false) String token   ) {
+            @ApiParam(value = "Llave de desarrollador") @RequestHeader(value = "apikey", required = true) String apikey,
+            @ApiParam(value = "Token de usuario") @RequestHeader(value = "token", required = true) String token   ) {
         try {
             
             int error = ValidateApiAndToken(apikey,token);
@@ -152,8 +152,8 @@ public class RestMailController {
     @RequestMapping(value = "/draft", method = RequestMethod.GET, headers = "Accept=application/json")
     @ResponseBody
     public ResponseEntity<?> getMailDraft(
-            @ApiParam(value = "Llave de desarrollador") @RequestHeader(value = "apikey", required = false) String apikey,
-            @ApiParam(value = "Token de usuario") @RequestHeader(value = "token", required = false) String token   ) {
+            @ApiParam(value = "Llave de desarrollador") @RequestHeader(value = "apikey", required = true) String apikey,
+            @ApiParam(value = "Token de usuario") @RequestHeader(value = "token", required = true) String token   ) {
         try {
 
             int error = ValidateApiAndToken(apikey,token);
@@ -246,7 +246,7 @@ public class RestMailController {
                             @ApiResponse(code = 400, message = "incorrect request")})
     @RequestMapping(value = "/toggle/status/{email_id}", method = RequestMethod.PUT, headers = "Accept=application/json")
     @ResponseBody
-    public ResponseEntity<?> DeleteMailByID(
+    public ResponseEntity<?> ToogleRead(
             @ApiParam(value = "Identificador del correo", required = true) @PathVariable Integer email_id,           
             @ApiParam(value = "Llave de desarrollador") @RequestHeader(value = "apikey", required = true) String apikey,
             @ApiParam(value = "Token de usuario") @RequestHeader(value = "token", required = true) String token           ) {
@@ -291,8 +291,8 @@ public class RestMailController {
     public ResponseEntity<?> DeleteMailByID(
             @ApiParam(value = "Identificador del correo a eliminar", required = true) @PathVariable Integer email_id,
             @ApiParam(value = "Bandeja donde se encuentra el correo", required = true, allowableValues = "inbox,outbox,draft") @PathVariable String where,            
-            @ApiParam(value = "Llave de desarrollador") @RequestHeader(value = "apikey", required = false) String apikey,
-            @ApiParam(value = "Token de usuario") @RequestHeader(value = "token", required = false) String token           ) {
+            @ApiParam(value = "Llave de desarrollador") @RequestHeader(value = "apikey", required = true) String apikey,
+            @ApiParam(value = "Token de usuario") @RequestHeader(value = "token", required = true) String token           ) {
         try {
            
            int error = ValidateApiAndToken(apikey,token);

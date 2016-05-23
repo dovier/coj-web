@@ -333,10 +333,10 @@ public class RestProblemsController {
     
     
     
-    private ProblemRest BuildProblemRest(Problem p,String username){
+    private ProblemRest BuildProblemRest(Problem p,String username){        
         if(username == null)
-            return new ProblemRest(p.getPid(), p.getTitle(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints());
-        return new ProblemRest(p.getPid(), p.getTitle(), p.getSubmissions(), p.getAc(), p.getAvgs(), p.getPoints(), p.isFavorite(), ResolveStatus(p, username));
+            return new ProblemRest(p.getPid(), p.getTitle(), p.getSubmitions(), p.getAc(), p.getAccp(), p.getPoints());
+        return new ProblemRest(p.getPid(), p.getTitle(), p.getSubmitions(), p.getAc(), p.getAccp(), p.getPoints(), p.isFavorite(), ResolveStatus(p, username));
     }
     
     private String[] author_source(int pid){
