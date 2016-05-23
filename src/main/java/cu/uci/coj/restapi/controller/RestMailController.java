@@ -185,7 +185,7 @@ public class RestMailController {
     
     
     @ApiOperation(value = "Enviar un correo",  
-            notes = "Envía un correo a un usuario registrado del COJ.")
+            notes = "Envía un correo a un usuario registrado del COJ. Convertir el contenido del correo a HTML antes de enviar, no olvide que esta enviando contenido en formato JSON, las comillas y otros caracteres especiales encerrarlos como caracteres especiales de un string. Ej: \\\" ")
     @ApiResponses(value = { @ApiResponse(code = 412, message = "receiver inbox overflow<br> inbox_overflow<br> message body or subject required<br> there must be at least one recipient<br> at least one recipient doesn't exist<br> at most 10 recipients<br> no valid mail<br> quote overflow"),
                             @ApiResponse(code = 400, message = "incorrect request"),
                             @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect") } )
