@@ -5,26 +5,24 @@
  */
 package cu.uci.coj.restapi.templates;
 
-import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 
 /**
  *
  * @author cesar
  */
-@ApiModel
-public class InputCredentialRest {
+public class InputForgotPasswordRest {
     @ApiModelProperty(value = "Llave de desarrollador", required = true)
     String apikey;
-    @ApiModelProperty(value = "token de usuario", required = true)
-    String token;
+    @ApiModelProperty(value = "Correo electrónico", required = true)
+    String email;
 
-    public InputCredentialRest() {
+    public InputForgotPasswordRest(String apikey, String email) {
+        this.apikey = apikey;
+        this.email = email;
     }
 
-    public InputCredentialRest(String apikey, String token) {
-        this.apikey = apikey;
-        this.token = token;
+    public InputForgotPasswordRest() {
     }
 
     public String getApikey() {
@@ -35,13 +33,15 @@ public class InputCredentialRest {
         this.apikey = apikey;
     }
 
-    public String getToken() {
-        return token;
+    public String getEmail() {
+        return email;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setEmail(String email) {
+        this.email = email;
     }
+    
+    
     
     
 }

@@ -13,7 +13,6 @@ import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.CountryDAO;
 import cu.uci.coj.dao.InstitutionDAO;
-import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.model.Country;
 import cu.uci.coj.model.Institution;
@@ -54,8 +53,6 @@ public class RestScoreboardsController{
     private InstitutionDAO institutionDAO;
     @Resource
     private CountryDAO countryDAO;
-    @Resource
-    private ProblemDAO problemDAO;
     @Resource
     private ContestDAO contestDAO;
     

@@ -17,7 +17,6 @@ import cu.uci.coj.model.CompareUsers;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.restapi.templates.CompareUserRest;
-import cu.uci.coj.restapi.templates.ProblemRest;
 import cu.uci.coj.restapi.templates.StadisticsRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import java.util.LinkedList;
@@ -36,7 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author cesar
  */
 @Controller
-@RequestMapping("/stadistic")
+@RequestMapping("/statistic")
 public class RestStatisticsController {
 
     @Resource
@@ -44,13 +43,11 @@ public class RestStatisticsController {
     @Resource
     private UserDAO userDAO;
     @Resource
-    private ContestDAO contestDAO;
-    @Resource
     private ProblemDAO problemDAO;
 
     
     @ApiOperation(value = "Obtener las estadísticas del archivo 24 horas",  
-            notes = "Devuelve todos las estadísticas de envíos por lenguajes en el archio 24 horas.",
+            notes = "Devuelve todos las estadísticas de envíos por lenguajes en el archivo 24 horas.",
             response = StadisticsRest.class,
             responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
@@ -120,8 +117,8 @@ public class RestStatisticsController {
             @ApiParam(value = "Usuario 2") @PathVariable String user2) {
         boolean error = true;
         CompareUsers cmp = new CompareUsers(user1, user2);
-        List<Problem> solved1 = new LinkedList();
-        List<Problem> solved2 = new LinkedList();
+        List<Problem> solved1;
+        List<Problem> solved2;
         if (user1 != null && user2 != null && user1.length() > 0 && user2.length() > 0) {
             int uid1, uid2;
             try{
@@ -133,10 +130,10 @@ public class RestStatisticsController {
             if (uid1 != -1 && uid2 != -1) {
                 solved1 = userDAO.objects("problems.solved", Problem.class, user1);
                 solved2 = userDAO.objects("problems.solved", Problem.class, user2);
-                List<Problem> s1 = new LinkedList<Problem>();
-                List<Problem> s2 = new LinkedList<Problem>();
-                List<Problem> f1 = new LinkedList<Problem>();
-                List<Problem> f2 = new LinkedList<Problem>();
+                List<Problem> s1 = new LinkedList();
+                List<Problem> s2 = new LinkedList();
+                List<Problem> f1 = new LinkedList();
+                List<Problem> f2 = new LinkedList();
                 while (solved1.size() > 0 && solved2.size() > 0) {
                     if (solved1.get(0).getPid() < solved2.get(0).getPid()) {
                         cmp.getFacc().add(solved1.remove(0));

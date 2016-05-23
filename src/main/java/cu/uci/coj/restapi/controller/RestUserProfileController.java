@@ -20,7 +20,6 @@ import cu.uci.coj.model.Institution;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.User;
-import cu.uci.coj.restapi.templates.CountryRest;
 import cu.uci.coj.restapi.templates.UserProfileRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
@@ -60,8 +59,6 @@ public class RestUserProfileController {
     protected JdbcTemplate jdbcTemplate;
     @Resource
     private UtilDAO utilDAO;
-    @Resource
-    private CountryDAO countryDAO;
     @Resource
     private InstitutionDAO institutionDAO;
     
@@ -143,14 +140,14 @@ public class RestUserProfileController {
 }
 
     
-    @ApiOperation(value = "Modificar Perfil de Usuario (Privado)",  
+    @ApiOperation(value = "Modificar Perfil de Usuario",  
             notes = "Modifica el perfil de usuario con los datos enviados.")
-    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
-                            @ApiResponse(code = 400, message = "institution witout country, incorrect request"),
-                            @ApiResponse(code = 412, message = "Nick must not more than 25 characters, Nick must not less than 3 characters, The first name is too short, The first name is too long, The first name contains invalid characters, The last name is too long, The last name is too short, The last name contains invalid characters, Required field, This e-mail already exists, Invalid email."),
-                            @ApiResponse(code = 404, message = "bad user, bad institution id, bad language, bad locale, bad gender, bad country id"),
+    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch<br> hash incorrect<br> token expirated<br> username apikey mismatch<br> apikey hash incorrect<br> apikey expirated<br> apikey secret incorrect<br> token or apikey incorrect"),
+                            @ApiResponse(code = 400, message = "institution witout country<br> incorrect request"),
+                            @ApiResponse(code = 412, message = "Nick must not more than 25 characters<br> Nick must not less than 3 characters<br> The first name is too short<br> The first name is too long<br> The first name contains invalid characters<br> The last name is too long<br> The last name is too short<br> The last name contains invalid characters<br> Required field<br> This e-mail already exists<br> Invalid email."),
+                            @ApiResponse(code = 404, message = "bad user<br> bad institution id<br> bad language<br> bad locale<br> bad gender<br> bad country id"),
                             @ApiResponse(code = 500, message = "failed send email"),})
-    @RequestMapping(value = "/update", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     public ResponseEntity<?> UpdateProfile(
             @ApiParam(value = "Llave de desarrollador") @RequestParam(value = "apikey") String apikey,
@@ -175,24 +172,9 @@ public class RestUserProfileController {
             if (error > 0) {
                 return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
             }
-
-            //if(!TokenUtils.ValidatePropertiesinJson(node,"year","month","day","nick","name","lastname","email","country_id","institution_id","lid","locale","gender"))
-              //  return new ResponseEntity<>(TokenUtils.ErrorMessage(10), HttpStatus.BAD_REQUEST);
             
             String username = null;
             username = ExtractUser(token);
-           /* int year = node.get("year").asInt();
-            int month = node.get("month").asInt();
-            int day = node.get("day").asInt();
-            String nick = node.get("nick").asText();
-            String name = node.get("name").asText();
-            String lastname = node.get("lastname").asText();
-            String email = node.get("email").asText();
-            int country_id = node.get("country_id").asInt();
-            int institution_id = node.get("institution_id").asInt();
-            int lid = node.get("lid").asInt();
-            int locale = node.get("locale").asInt();
-            int gender = node.get("gender").asInt();*/
             
             User user = userDAO.loadAllUserData(username);
             if(year!=null)
