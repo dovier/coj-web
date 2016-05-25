@@ -19,7 +19,6 @@ import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
-import cu.uci.coj.validator.sendMailValidator;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -54,8 +53,6 @@ public class RestMailController {
 	private MailDAO mailDAO;
 	@Resource
 	private UserDAO userDAO;
-	@Resource
-	private sendMailValidator sendmailValidator;
 	@Resource
 	private MailNotificationService MailNotificationService;
         
