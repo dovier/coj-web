@@ -28,7 +28,6 @@ import cu.uci.coj.restapi.utils.TokenUtils;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
-import cu.uci.coj.validator.submitValidator;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,8 +65,6 @@ public class RestJudgmentsController {
 	private UtilDAO utilDAO;
 	@Resource
 	private ProblemDAO problemDAO;
-	@Resource
-	private submitValidator submitValidator;
 	@Resource
 	private Utils utils;
         @Resource
