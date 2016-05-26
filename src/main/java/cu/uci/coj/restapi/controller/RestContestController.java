@@ -7,9 +7,6 @@ package cu.uci.coj.restapi.controller;
 
 
 import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
-import com.wordnik.swagger.annotations.ApiResponse;
-import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.ContestStyle;
@@ -113,7 +110,7 @@ public class  RestContestController {
                 pages = contestDAO.getPastContests(options,pattern);
                 listContest.addAll(pages.getList());
                 i++;
-            }while(!pages.getList().isEmpty());       
+            }while(!pages.getList().isEmpty() && listContest.size()<400);       
               
             List<ContestRest> listContestRest = new LinkedList();
 
@@ -124,6 +121,34 @@ public class  RestContestController {
             }
 
             return listContestRest ;
+        }
+        
+        
+        @ApiOperation(value = "Obtener competencias previas por páginas",
+            notes = "Devuelve las competencias ya efectuadas del COJ.",
+            response = ContestRest.class,
+            responseContainer = "List")
+        @ApiResponses(value = { @ApiResponse(code = 404, message = "page out of index"),  })
+        @RequestMapping(value = "/past/{page}", method = RequestMethod.GET, headers = "Accept=application/json")
+        @ResponseBody
+        public ResponseEntity<?> getAllPastContestbyPage(
+                @ApiParam(value = "Número de la página") @PathVariable int page) {            
+                 
+            PagingOptions options = new PagingOptions(page);            
+            IPaginatedList<Contest> pages = contestDAO.getPastContests(options,null);          
+            if(pages.getList().isEmpty())
+                return new ResponseEntity<>(ErrorUtils.PAGE_OUT_OF_INDEX,HttpStatus.NOT_FOUND);
+
+            List<Contest> listContest = pages.getList();
+            List<ContestRest> listContestRest = new LinkedList();
+
+            for(Contest c:listContest){
+                String access = c.getRegistration() == 2 ? "private" : "open";
+                ContestRest cr = new ContestRest(c.getCid(),access,c.getName(),c.getInitdate().toString(),c.getEnddate().toString());
+                listContestRest.add(cr);
+            }
+
+            return new ResponseEntity<>(listContestRest,HttpStatus.OK);
         }
         
         

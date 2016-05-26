@@ -10,7 +10,6 @@ import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
 import cu.uci.coj.dao.BaseDAO;
-import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.model.CompareUsers;

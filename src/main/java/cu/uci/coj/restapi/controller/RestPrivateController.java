@@ -54,8 +54,6 @@ public class RestPrivateController {
     @Resource
     protected JdbcTemplate jdbcTemplate;
     @Resource
-    private forgottenValidator forgottenValidator;
-    @Resource
     private UserDAO userDAO;
     @Resource
     protected MessageSource messageSource;

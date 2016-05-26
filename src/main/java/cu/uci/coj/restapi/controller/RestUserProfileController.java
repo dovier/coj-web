@@ -10,7 +10,6 @@ import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
 import com.wordnik.swagger.annotations.ApiResponse;
 import com.wordnik.swagger.annotations.ApiResponses;
-import cu.uci.coj.dao.CountryDAO;
 import cu.uci.coj.dao.InstitutionDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.dao.UtilDAO;
@@ -102,17 +101,6 @@ public class RestUserProfileController {
             user.setTot_rankingbycountry(userDAO.countEnabledUsersByCountry(null, false, user.getCountry_id()));
             user.setRankingbyinstitution(userDAO.integer("ranking.position.institution", user.getInstitution_id(), username));
             user.setTot_rankingbyinstitution(userDAO.countEnabledUsersByInstitutions(null, false, user.getInstitution_id()));
-
-            //PagingOptions options = new PagingOptions(1, "asc", "startDate");
-            //IPaginatedList<WbContest> contests = wbContestService.getContestList(0, options, 1, user.getUid());
-            //model.addAttribute("contests", contests);
-
-            //List<WbSite> list = wbSiteDAO.getSiteList();
-            //HashMap<Integer, WbSite> map = new HashMap<Integer, WbSite>();
-            //for (int i = 0; i < list.size(); i++) {
-            //    map.put(list.get(i).getSid(), list.get(i));
-            //}
-            //model.addAttribute("mapsites", map);
         }
 
         Entry lastentry = userDAO.object("last.entry.by.user", Entry.class, uid);
@@ -123,8 +111,7 @@ public class RestUserProfileController {
             lastentryText = lastentry.getText();
             lastentryDate = lastentry.getDate().toString();
         }
-               
-        //model.addAttribute("count.entries", userDAO.integer(0, "count.entries", uid));
+
         int followers = userDAO.integer(0, "count.followers", uid);
         int following = userDAO.integer(0, "count.following", uid);
         
@@ -249,7 +236,7 @@ public class RestUserProfileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
-    public boolean ValidateCountry(Integer country_id){
+    private boolean ValidateCountry(Integer country_id){
         String sql = "SELECT * FROM public.country WHERE country_id = ?";
         try{
         Country country =  (Country) jdbcTemplate.queryForObject(sql,new Object[]{country_id},new BeanPropertyRowMapper(Country.class));
@@ -258,7 +245,7 @@ public class RestUserProfileController {
         return true;
     }
     
-    public boolean ValidateLocale(Integer locale){
+    private boolean ValidateLocale(Integer locale){
         List<cu.uci.coj.model.Locale> listlocale = utilDAO.objects("enabled.locale", cu.uci.coj.model.Locale.class);
         for(cu.uci.coj.model.Locale l:listlocale){
             if(locale == l.getLid())
@@ -268,7 +255,7 @@ public class RestUserProfileController {
         return false;
     }
     
-    public boolean ValidateLanguage(Integer lid){
+    private boolean ValidateLanguage(Integer lid){
         List<Language> listlanguages = utilDAO.getEnabledProgramingLanguages();
         for(Language l:listlanguages){
             if(lid == l.getLid())

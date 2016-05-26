@@ -71,8 +71,8 @@ public class RestScoreboardsController{
         
         Integer uid = null;
         int found = userDAO.countEnabledUsersForScoreboard(pattern, online, uid);
-        if(found>2000)
-            found = 2000;
+        if(found>400)
+            found = 400;
      
         List<User> listUsers = new LinkedList();   
         
@@ -92,7 +92,7 @@ public class RestScoreboardsController{
         return listUsersRest;
     }  
     
-    @ApiIgnore
+
     @ApiOperation(value = "Obtener tabla de posiciones por instituciones",  
             notes = "Devuelve las posiciones de todos las instituciones registradas en el COJ.",
             response = InstitutionRest.class,
@@ -104,7 +104,9 @@ public class RestScoreboardsController{
             @RequestParam(required = false, value = "pattern") String pattern) {
         
       
-        int found = institutionDAO.countEnabledInstitutions(pattern); 
+        int found = institutionDAO.countEnabledInstitutions(pattern);
+        if(found>400)
+            found = 400;
      
         List<Institution> listInstitution = new LinkedList();   
         
@@ -135,6 +137,8 @@ public class RestScoreboardsController{
     public List<CountryRest> getRankingByCountry(@RequestParam(required = false, value = "pattern") String pattern) {
         
         int found = countryDAO.countEnabledCountries(pattern);
+        if(found>400)
+            found = 400;
      
         List<Country> listCountry = new LinkedList();   
         
@@ -169,6 +173,8 @@ public class RestScoreboardsController{
             return new ResponseEntity<>(ErrorUtils.BAD_COUNTRY_ID, HttpStatus.NOT_FOUND);
         
         int found = institutionDAO.countEnabledInstitutionsByCountry("", country_id);
+        if(found>400)
+            found = 400;
      
         List<Institution> listInstitution = new LinkedList();   
         
@@ -204,8 +210,8 @@ public class RestScoreboardsController{
 
         int found = userDAO.countEnabledUsersByCountry("",false, country_id);
 
-        if(found>2000)
-            found = 2000;
+        if(found>400)
+            found = 400;
 
         List<User> listUsers = new LinkedList();   
         
@@ -241,8 +247,8 @@ public class RestScoreboardsController{
   
         int found = userDAO.countEnabledUsersByInstitutions("", false, inst_id);
 
-        if(found>2000)
-            found = 2000;
+        if(found>400)
+            found = 400;
 
         List<User> listUsers = new LinkedList();   
         
@@ -262,7 +268,7 @@ public class RestScoreboardsController{
         return new ResponseEntity<>(listUsersRest, HttpStatus.OK);
     }
     
-    @ApiIgnore
+
     @ApiOperation(value = "Obtener tabla de posiciones de los usuarios en las competencias",  
             notes = "Devuelve las posiciones de todos los usuarios en las competencias.",
             response = UserRest.class,
@@ -274,6 +280,8 @@ public class RestScoreboardsController{
             @ApiParam(value = "Filtrar por nombre de usuario") @RequestParam(required = false, value = "pattern") String pattern) {
         
         int found = contestDAO.countContestGeneralScoreboard(pattern);
+        if(found>400)
+            found = 400;
      
         List<User> listUsers = new LinkedList();   
         
@@ -337,8 +345,7 @@ public class RestScoreboardsController{
         String flag = "http://coj.uci.cu/images/countries/"+c.getZip()+".png";
         CountryDescriptionRest cdescrip = new CountryDescriptionRest(c.getName(),c.getZip_two(), c.getZip(), flag, c.getWebsite(), c.getInstitutions(), c.getUsers(), c.getPoints(), c.getRank());
         return new ResponseEntity<>(cdescrip, HttpStatus.OK);
-    }
-    
+    }   
     
     
     @ApiOperation(value = "Obtener tabla de posiciones por usuarios (Paginados)",  

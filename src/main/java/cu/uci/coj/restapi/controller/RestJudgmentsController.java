@@ -20,7 +20,6 @@ import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.SubmissionJudge;
-import cu.uci.coj.restapi.templates.InputSubmitRest;
 import cu.uci.coj.restapi.templates.JudgmentsRest;
 import cu.uci.coj.restapi.templates.ResponseSubmitRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
@@ -490,7 +489,7 @@ public class RestJudgmentsController {
     }
     
 
-    public String validateSubmission(SubmissionJudge submit, int lid){
+    private String validateSubmission(SubmissionJudge submit, int lid){
         String errors = null;
         ResourceBundleMessageSource r=new ResourceBundleMessageSource();
         r.setBasename("messages_en");               
@@ -520,7 +519,7 @@ public class RestJudgmentsController {
         return errors;
     }
     
-    public int end(int found){
+    private int end(int found){
         if(found%20==0)
             return found/20;
         else
