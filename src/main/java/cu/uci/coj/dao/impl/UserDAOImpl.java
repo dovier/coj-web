@@ -1,29 +1,8 @@
 package cu.uci.coj.dao.impl;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import cu.uci.coj.teamanalyzer.models.analysis;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.mail.MailNotificationService;
-import cu.uci.coj.model.Contest;
-import cu.uci.coj.model.Language;
-import cu.uci.coj.model.Problem;
-import cu.uci.coj.model.Registration;
-import cu.uci.coj.model.Roles;
-import cu.uci.coj.model.Team;
-import cu.uci.coj.model.User;
-import cu.uci.coj.model.UserClassificationStats;
-import cu.uci.coj.model.UserProfile;
+import cu.uci.coj.model.*;
 import cu.uci.coj.query.DmlPart;
 import cu.uci.coj.query.Order;
 import cu.uci.coj.query.Query;
@@ -31,12 +10,24 @@ import cu.uci.coj.query.Where;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Repository("userDAO")
 @Transactional
 public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 
 	private int number;
+	@Resource
+	private MailNotificationService mailNotificationService;
 
 	public void unbanUser(int uid) {
 		dml("update users set ban_reason=null,status='inactive',enabled=true,ban_date=null where uid=?",
@@ -47,9 +38,6 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 		dml("update users set ban_reason=?,status='banned',enabled=false,ban_date=now() where uid=?",
 				description, uid);
 	}
-
-	@Resource
-	private MailNotificationService mailNotificationService;
 
 	public void updateUsersStatusOnStartUp() {
 		dml("update.users.startup");
@@ -768,8 +756,8 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	}
 
 	@Override
-	public List<User> loadUsefulUsersOffAnalysis(Integer uid, int aid) {
-		return objects("load.all.users.off.analysis", User.class, uid, aid);
+	public List<User> loadUsefulUsersOffAnalysis(Integer uid, int taid) {
+		return objects("load.all.users.off.analysis", User.class, taid, uid);
 	}
 
 }

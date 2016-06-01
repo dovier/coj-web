@@ -45,31 +45,31 @@ public class teamAnalyzerController extends BaseController {
 
 
     @RequestMapping(value = "/deleteAnalysis.xhtml", method = RequestMethod.GET)
-    public String deleteAnalysis(Principal principal, @RequestParam(required = false, value = "aid") int aid) {
-        analysisDAO.deleteAnalysis(aid);
-        analysisDAO.registerDeletedAnalysis(getUsername(principal),aid);
+    public String deleteAnalysis(Principal principal, @RequestParam(required = true, value = "taid") int taid) {
+        analysisDAO.deleteAnalysis(taid);
+        analysisDAO.registerDeletedAnalysis(getUsername(principal), taid);
         return "/teamanalyzer/deleteAnalysis";
     }
 
     @RequestMapping(value = "/viewAnalysis.xhtml", method = RequestMethod.GET)
-    public String viewAnalysis(@RequestParam(required = true, value = "aid") int aid) {
+    public String viewAnalysis(@RequestParam(required = true, value = "taid") int taid) {
         return "/teamanalyzer/viewAnalysis";
     }
 
     @RequestMapping(value = "/dataAnalysis.xhtml", method = RequestMethod.GET)
-    public String generateData(Model model, Principal principal, @RequestParam(required = true, value = "aid") int aid) {
-        if (aid == 0) {
+    public String generateData(Model model, Principal principal, @RequestParam(required = true, value = "taid") int taid) {
+        if (taid == 0) {
             analysis analysis = new analysis();
             model.addAttribute(analysis);
             model.addAttribute("allusers", userDAO.loadUsefulUsersForAnalysis(getUid(principal)));
             model.addAttribute("allcontests", contestDAO.loadUsefulContestForAnalysis());
         } else {
-            analysis analysis = analysisDAO.getAnalysisById(aid);
-            analysis.setUsers(userDAO.loadUsefulUsersInAnalysis(aid));
-            analysis.setContest(contestDAO.loadUsefulContestInAnalysis(aid));
+            analysis analysis = analysisDAO.getAnalysisById(taid);
+            analysis.setUsers(userDAO.loadUsefulUsersInAnalysis(taid));
+            analysis.setContest(contestDAO.loadUsefulContestInAnalysis(taid));
             model.addAttribute(analysis);
-            model.addAttribute("allusers", userDAO.loadUsefulUsersOffAnalysis(getUid(principal), aid));
-            model.addAttribute("allcontests", contestDAO.loadUsefulContestOffAnalysis(aid));
+            model.addAttribute("allusers", userDAO.loadUsefulUsersOffAnalysis(getUid(principal), taid));
+            model.addAttribute("allcontests", contestDAO.loadUsefulContestOffAnalysis(taid));
         }
 
         return "/teamanalyzer/dataAnalysis";
@@ -93,16 +93,16 @@ public class teamAnalyzerController extends BaseController {
             return "/teamanalyzer/dataAnalysis";
         }
         if (analysis.getId() == 0) {
-            analysis.setId(analysisDAO.integer("max.available.analysis.id") + 1);
             analysis.setCoach(userDAO.idByUsername(getUsername(principal)));
             analysisDAO.saveAnalysis(analysis);
-            analysisDAO.saveUsersAnalysis(analysis);
+            analysis.setId(analysisDAO.integer("max.available.analysis.id"));
             analysisDAO.saveContestsAnalysis(analysis);
+            analysisDAO.saveUsersAnalysis(analysis);
             analysisDAO.registerNewAnalysis(getUsername(principal));
         } else {
             analysisDAO.updateNameAnalysis(analysis);
-            analysisDAO.updateUsersAnalysis(analysis);
             analysisDAO.updateContestsAnalysis(analysis);
+            analysisDAO.updateUsersAnalysis(analysis);
             analysisDAO.registerEditedAnalysis(getUsername(principal),analysis.getId());
         }
         doAnalysis(analysis);
@@ -128,7 +128,7 @@ public class teamAnalyzerController extends BaseController {
     }
 
     @RequestMapping(value = "/viewGraph.xhtml", method = RequestMethod.GET)
-    public String generateGraph(@RequestParam(required = true, value = "aid") int aid) {
+    public String generateGraph(@RequestParam(required = true, value = "taid") int taid) {
 
         return "/teamanalyzer/viewGraph";
     }

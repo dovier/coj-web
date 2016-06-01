@@ -37,4 +37,6 @@ public interface analysisDAO extends BaseDAO {
     void registerEditedAnalysis(String username, int analysis);
 
     void registerDeletedAnalysis(String username, int analysis);
+
+    void saveUserStats(analysis analysis);
 }

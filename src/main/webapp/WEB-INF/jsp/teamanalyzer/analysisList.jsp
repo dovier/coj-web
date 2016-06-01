@@ -15,15 +15,15 @@
     <display:column titleKey="tablehdr.actions">
         <ul class="list-inline">
             <li><a
-                    href="<c:url value="/teamanalyzer/viewGraph.xhtml?aid=${analysis.id}" />"
+                    href="<c:url value="/teamanalyzer/viewGraph.xhtml?taid=${analysis.id}" />"
             ><i title="<spring:message code="messages.general.view"/>"
                 data-toggle="tooltip" class="fa fa-eye"></i></a></li>
             <li><a
-                    href="<c:url value="/teamanalyzer/dataAnalysis.xhtml?aid=${analysis.id}" />"
+                    href="<c:url value="/teamanalyzer/dataAnalysis.xhtml?taid=${analysis.id}" />"
             ><i title="<spring:message code="messages.general.edit"/>"
                 data-toggle="tooltip" class="fa fa-edit"></i></a></li>
             <li><a
-                    href="<c:url value="/teamanalyzer/deleteAnalysis.xhtml?aid=${analysis.id}" />"
+                    href="<c:url value="/teamanalyzer/deleteAnalysis.xhtml?taid=${analysis.id}" />"
             ><i title="<spring:message code="messages.general.delete"/>"
                 data-toggle="tooltip" class="fa fa-trash"></i></a></li>
         </ul>
