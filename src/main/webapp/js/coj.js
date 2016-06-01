@@ -565,6 +565,11 @@ function SeleccionarRangosContest() {
     SeleccionaRangos('balloontrackers');
 }
 
+function SeleccionarRangosTeamAnalyzer() {
+    SeleccionaRangos('analysis_users');
+    SeleccionaRangos('analysis_contests');
+}
+
 function SeleccionarRangosVirtualContest() {
     SeleccionaRangos('contest_users');
     SeleccionaRangos('contests_problem');

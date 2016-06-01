@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import cu.uci.coj.teamanalyzer.models.analysis;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -1677,5 +1678,22 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
         
     }
 
- 
+	@Override
+	@Transactional(readOnly = true)
+	public List<Contest> loadUsefulContestForAnalysis() {
+		return objects("load.all.useful.contest", Contest.class);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Contest> loadUsefulContestInAnalysis(int aid) {
+		return objects("load.all.contests.in.analysis", Contest.class, aid);
+	}
+
+    @Override
+    public List<Contest> loadUsefulContestOffAnalysis(int aid) {
+        return objects("load.all.contests.off.analysis", Contest.class, aid);
+    }
+
+
 }

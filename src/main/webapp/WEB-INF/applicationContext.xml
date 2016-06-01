@@ -100,6 +100,8 @@
 			access="hasAnyRole('ROLE_ADMIN')" />
 		<security:intercept-url pattern="/practice/**"
 			access="hasAnyRole('ROLE_USER','ROLE_TEAM')" />
+		<security:intercept-url pattern="/teamanalyzer/**"
+			access="hasAnyRole('ROLE_USER','ROLE_COACH')" />
 		<security:intercept-url pattern="/datagen/**"
 			access="hasRole('ROLE_USER')" />
 		<security:intercept-url pattern="/contest/sendclarification.xhtml"

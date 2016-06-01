@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import cu.uci.coj.teamanalyzer.models.analysis;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -753,6 +754,22 @@ public class UserDAOImpl extends BaseDAOImpl implements UserDAO {
 	public UserClassificationStats getTotalClassifications() {
 		List<Map<String, Object>> probs = maps("select.prob.classif");
 		return new UserClassificationStats(probs);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<User> loadUsefulUsersForAnalysis(int uid) {
+		return objects("load.all.useful.users", User.class, uid);
+	}
+
+	@Override
+	public List<User> loadUsefulUsersInAnalysis(int aid) {
+		return objects("load.all.users.in.analysis", User.class, aid);
+	}
+
+	@Override
+	public List<User> loadUsefulUsersOffAnalysis(Integer uid, int aid) {
+		return objects("load.all.users.off.analysis", User.class, uid, aid);
 	}
 
 }

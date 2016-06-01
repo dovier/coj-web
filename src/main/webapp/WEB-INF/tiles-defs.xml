@@ -238,6 +238,26 @@
 		<put-attribute name="content" value="/WEB-INF/jsp/admin/poll/manage.jsp" />
 	</definition>
 
+    <definition name="/teamanalyzer/main" extends="template">
+        <put-attribute name="title" value="pagetit.teamanalyzer" />
+        <put-attribute name="content" value="/WEB-INF/jsp/teamanalyzer/main.jsp" />
+    </definition>
+
+    <definition name="/teamanalyzer/viewAnalysis" extends="template">
+        <put-attribute name="title" value="pagetit.teamanalyzer" />
+        <put-attribute name="content" value="/WEB-INF/jsp/teamanalyzer/viewAnalysis.jsp" />
+    </definition>
+
+    <definition name="/teamanalyzer/dataAnalysis" extends="template">
+        <put-attribute name="title" value="pagetit.teamanalyzer" />
+        <put-attribute name="content" value="/WEB-INF/jsp/teamanalyzer/dataAnalysis.jsp" />
+    </definition>
+
+    <definition name="/teamanalyzer/viewGraph" extends="template">
+        <put-attribute name="title" value="pagetit.teamanalyzer" />
+        <put-attribute name="content" value="/WEB-INF/jsp/teamanalyzer/viewGraph.jsp" />
+    </definition>
+
 	<definition name="/user/entry" extends="template">
 		<put-attribute name="title" value="Entry" />
 		<put-attribute name="content" value="/WEB-INF/jsp/user/entry.jsp" />

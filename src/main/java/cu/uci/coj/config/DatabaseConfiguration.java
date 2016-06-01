@@ -30,6 +30,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 		"classpath:cu/uci/coj/config/sql/achievements.properties",
 		"classpath:cu/uci/coj/config/sql/events.properties",
 		"classpath:cu/uci/coj/config/sql/corrections.properties",
+		"classpath:cu/uci/coj/config/sql/teamanalyzer.properties",
 		"classpath:cu/uci/coj/config/sql/recommender.properties",
 		"classpath:cu/uci/coj/config/sql/wboard.properties",
 		"classpath:cu/uci/coj/config/sql/ws.properties" })

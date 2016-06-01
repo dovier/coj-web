@@ -11,6 +11,7 @@ import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.SubmissionJudge;
 import cu.uci.coj.model.User;
 import cu.uci.coj.model.VirtualContest;
+import cu.uci.coj.teamanalyzer.models.analysis;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 
@@ -231,4 +232,10 @@ public interface ContestDAO extends BaseDAO {
     public Object getCantCountryGuest(Integer cid, String guestGroup);
 
     public Object getCantInstGuest(Integer cid, String guestGroup);
+
+    List<Contest> loadUsefulContestForAnalysis();
+
+    List<Contest> loadUsefulContestInAnalysis(int aid);
+
+    List<Contest> loadUsefulContestOffAnalysis(int aid);
 }

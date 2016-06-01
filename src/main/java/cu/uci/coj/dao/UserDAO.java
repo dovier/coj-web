@@ -11,6 +11,7 @@ import cu.uci.coj.model.Team;
 import cu.uci.coj.model.User;
 import cu.uci.coj.model.UserClassificationStats;
 import cu.uci.coj.model.UserProfile;
+import cu.uci.coj.teamanalyzer.models.analysis;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 
@@ -145,4 +146,10 @@ public interface UserDAO extends BaseDAO {
 	public UserClassificationStats getUserClassifications(Integer uid);
 
 	UserClassificationStats getTotalClassifications();
+
+	List<User> loadUsefulUsersForAnalysis(int uid);
+
+	List<User> loadUsefulUsersInAnalysis(int aid);
+
+	List<User> loadUsefulUsersOffAnalysis(Integer uid, int aid);
 }
