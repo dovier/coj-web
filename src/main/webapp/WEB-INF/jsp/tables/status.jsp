@@ -48,7 +48,9 @@
 			</c:if>
 			<c:if test="${submission.ontest}">
 				<br />
-				<i><sub><spring:message code="tableval.test" />&nbsp;${submission.firstWaCase+1}</sub></i>
+				<c:if test="${ submission.firstWaCase != -1 }">
+					<i><sub><spring:message code="tableval.test" />&nbsp;${submission.firstWaCase+1}</sub></i>
+				</c:if>
 			</c:if>
 		</div>
 	</display:column>

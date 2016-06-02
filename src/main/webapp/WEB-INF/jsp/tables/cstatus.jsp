@@ -56,8 +56,10 @@
 				${submission.status} </label>
 			<c:if test="${contest.show_ontest and submission.ontest}">
 				<br />
-				<i><sub><spring:message code="tableval.test" />
-						${submission.firstWaCase+1}</sub></i>
+				<c:if test="${ submission.firstWaCase != -1 }">
+					<i><sub><spring:message code="tableval.test" />
+							${submission.firstWaCase+1}</sub></i>
+				</c:if>
 			</c:if>
 		</c:if>
 	</display:column>
