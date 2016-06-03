@@ -72,7 +72,7 @@ FIXME: DRY principle
 						<div class="panel-heading">
 							<spring:message code="fieldhdr.probsolvedonlyby" />
 							<a href="<c:url value="useraccount.xhtml?username=${user1}"/>">${user1}</a>
-							in <a href="/24h/problems.xhtml?classification=${classification}">${classifName}</a>
+							<spring:message code="text.in" /> <a href="/24h/problems.xhtml?classification=${classification}">${classifName}</a>
 							<div class="badge">${onlybyuser1}</div>
 							<div class="badge pull-right">
 								<a data-toggle="collapse" href="#pFirstAC"><i
@@ -89,7 +89,7 @@ FIXME: DRY principle
 											<spring:message code="fieldhdr.probsolvedonlyby" />
 											<a
 												href="<c:url value="useraccount.xhtml?username=${user1}"/>">${user1}</a>
-											in <a
+											<spring:message code="text.in" /> <a
 												href="/24h/problems.xhtml?classification=${classification}&complexity=${entry.key}">${classifName}
 												${entry.key}</a>
 											<div class="badge">${entry.value.size()}</div>
@@ -126,7 +126,7 @@ FIXME: DRY principle
 					<div class="panel panel-info">
 						<div class="panel-heading">
 							<spring:message code="fieldhdr.probsolvedbyboth" />
-							in <a href="/24h/problems.xhtml?classification=${classification}">${classifName}</a>
+							<spring:message code="text.in" /> <a href="/24h/problems.xhtml?classification=${classification}">${classifName}</a>
 							<div class="badge">${byboth}</div>
 							<div class="badge pull-right">
 								<a data-toggle="collapse" href="#bothAC"><i
@@ -141,7 +141,7 @@ FIXME: DRY principle
 									<div class="panel panel-info">
 										<div class="panel-heading">
 											<spring:message code="fieldhdr.probsolvedbyboth" />
-											in <a
+											<spring:message code="text.in" /> <a
 												href="/24h/problems.xhtml?classification=${classification}&complexity=${entry.key}">${classifName}
 												${entry.key}</a>
 											<div class="badge">${entry.value.size()}</div>
@@ -177,7 +177,7 @@ FIXME: DRY principle
 						<div class="panel-heading">
 							<spring:message code="fieldhdr.probsolvedonlyby" />
 							<a href="<c:url value="useraccount.xhtml?username=${user2}"/>">${user2}</a>
-							in <a href="/24h/problems.xhtml?classification=${classification}">${classifName}</a>
+							<spring:message code="text.in" /> <a href="/24h/problems.xhtml?classification=${classification}">${classifName}</a>
 							<div class="badge">${onlybyuser2}</div>
 							<div class="badge pull-right">
 								<a data-toggle="collapse" href="#pSecondAC"><i
@@ -194,7 +194,7 @@ FIXME: DRY principle
 											<spring:message code="fieldhdr.probsolvedonlyby" />
 											<a
 												href="<c:url value="useraccount.xhtml?username=${user2}"/>">${user2}</a>
-											in <a
+											<spring:message code="text.in" /> <a
 												href="/24h/problems.xhtml?classification=${classification}&complexity=${entry.key}">${classifName}
 												${entry.key}</a>
 											<div class="badge">${entry.value.size()}</div>
@@ -231,7 +231,7 @@ FIXME: DRY principle
 						<div class="panel-heading">
 							<spring:message code="fieldhdr.probtriedonlyby" />
 							<a href="<c:url value="useraccount.xhtml?username=${user1}"/>">${user1}</a>
-							in <a href="/24h/problems.xhtml?classification=${classification}">${classifName}</a>
+							<spring:message code="text.in" /> <a href="/24h/problems.xhtml?classification=${classification}">${classifName}</a>
 							<div class="badge">${triedonlybyuser1}</div>
 							<div class="badge pull-right">
 								<a data-toggle="collapse" href="#pFirstTried"><i
@@ -248,7 +248,7 @@ FIXME: DRY principle
 											<spring:message code="fieldhdr.probtriedonlyby" />
 											<a
 												href="<c:url value="useraccount.xhtml?username=${user1}"/>">${user1}</a>
-											in <a
+											<spring:message code="text.in" /> <a
 												href="/24h/problems.xhtml?classification=${classification}&complexity=${entry.key}">${classifName}
 												${entry.key}</a>
 											<div class="badge">${entry.value.size()}</div>
@@ -283,7 +283,7 @@ FIXME: DRY principle
 					<div class="panel panel-danger">
 						<div class="panel-heading">
 							<spring:message code="fieldhdr.probtriedbyboth" />
-							in <a href="/24h/problems.xhtml?classification=${classification}">${classifName}</a>
+							<spring:message code="text.in" /> <a href="/24h/problems.xhtml?classification=${classification}">${classifName}</a>
 							<div class="badge">${triedbyboth}</div>
 							<div class="badge pull-right">
 								<a data-toggle="collapse" href="#bothTried"><i
@@ -298,7 +298,7 @@ FIXME: DRY principle
 									<div class="panel panel-danger">
 										<div class="panel-heading">
 											<spring:message code="fieldhdr.probtriedbyboth" />
-											in <a
+											<spring:message code="text.in" /> <a
 												href="/24h/problems.xhtml?classification=${classification}&complexity=${entry.key}">${classifName}
 												${entry.key}</a>
 											<div class="badge">${entry.value.size()}</div>
@@ -333,7 +333,7 @@ FIXME: DRY principle
 						<div class="panel-heading">
 							<spring:message code="fieldhdr.probtriedonlyby" />
 							<a href="<c:url value="useraccount.xhtml?username=${user2}"/>">${user2}</a>
-							in <a href="/24h/problems.xhtml?classification=${classification}">${classifName}</a>
+							<spring:message code="text.in" /> <a href="/24h/problems.xhtml?classification=${classification}">${classifName}</a>
 							<div class="badge">${triedonlybyuser2}</div>
 							<div class="badge pull-right">
 								<a data-toggle="collapse" href="#pSecondTried"><i
@@ -350,7 +350,7 @@ FIXME: DRY principle
 											<spring:message code="fieldhdr.probtriedonlyby" />
 											<a
 												href="<c:url value="useraccount.xhtml?username=${user2}"/>">${user2}</a>
-											in <a
+											<spring:message code="text.in" /> <a
 												href="/24h/problems.xhtml?classification=${classification}&complexity=${entry.key}">${classifName}
 												${entry.key}</a>
 											<div class="badge">${entry.value.size()}</div>

@@ -71,6 +71,12 @@
             src="<c:url value="/js/jquery.form.js" />"></script>
     <script type="text/javascript" src="<c:url value="/js/script.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/js/coj.js" />"></script>
+	<script>
+	    $(document).ready(function () {
+	        window.i18nPleaseWait="<spring:message code="text.please.wait"/>";  
+	    });
+	</script>
+    
     <script type="text/javascript" src="<c:url value="/js/displayTables.js" />"></script>
     <script src="<c:url value="/js/countdown.js"/>"></script>
 </head>

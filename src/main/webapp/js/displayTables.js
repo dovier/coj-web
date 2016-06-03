@@ -21,7 +21,7 @@ function displayTableReload(page) {
                 .html(
                     "<br>" +
                     "<center class='text-muted'><i class='fa fa-spinner fa-3x fa-spin'></i>" +
-                    "<br><br>Espere por favor</center>");
+                    "<br><br>" + window.i18nPleaseWait + "</center>");
         },
         success: function (data) {
             //alert(data);
