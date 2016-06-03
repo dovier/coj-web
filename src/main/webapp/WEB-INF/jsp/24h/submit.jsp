@@ -1,4 +1,5 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp"%>
+<jsp:useBean id="FileUtils" class="org.apache.commons.io.FileUtils" />
 <script type="text/javascript"
 	src="<c:url value="/js/edit_area/edit_area_full.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/coj.js" />"></script>
@@ -13,26 +14,102 @@
 				<thead>
 					<tr>
 						<th><spring:message code="tablehdr.judgment" /></th>
-						<th><spring:message code="tablehdr.time" /></th>
+<%-- 						<th><spring:message code="tablehdr.time" /></th> --%>
 						<th><spring:message code="tablehdr.mem" /></th>
-						<th><spring:message code="tablehdr.size" /></th>
+<%-- 						<th><spring:message code="tablehdr.size" /></th> --%>
 					</tr>
 				</thead>
 				<tr>
-					<td><label class="sub${testSubmit.statusClass}">
+					<td align="center"><label class=<c:if test="${testSubmit.status eq 'Accepted'}">"subAC"</c:if> 
+									 <c:if test="${!(testSubmit.status eq 'Accepted')}">"subWA"</c:if> >
 							${testSubmit.status} </label></td>
-					<td><c:if test="${testSubmit.timeUsed == -1}">
-				...
-			</c:if> <c:if test="${testSubmit.timeUsed != -1}">
-				${testSubmit.timeUsed}
-			</c:if></td>
-					<td>${testSubmit.memoryMB}</td>
-					<td>${testSubmit.fontMB}</td>
+<%-- 					<td><c:if test="${testSubmit.timeUsed == -1}"> --%>
+<!-- 				... -->
+<%-- 			</c:if> <c:if test="${testSubmit.timeUsed != -1}"> --%>
+<%-- 				${testSubmit.timeUsed} --%>
+<%-- 			</c:if></td> --%>
+ 					<td align="center">${testSubmit.memoryMB}</td> 
+<%-- 					<td>${FileUtils.byteCountToDisplaySize(submit.code.length())}</td>  --%>
 				</tr>
+				<c:if test="${ not empty testSubmit.errMsg }">
 				<tr>
 					<th class="col-xs-2">Error</th>
 					<td colspan="3">${testSubmit.errMsg}</td>
+				</tr>
+				</c:if>
 			</table>
+
+		<c:if
+ 			test="${!(testSubmit.status eq 'Compilation Error') and !(testSubmit.status eq 'Judging') and !(testSubmit.status eq 'Internal Error') and !(testSubmit.status eq 'Invalid Function')}"> 			 
+			<table class="volume">
+				<thead>
+					<th><spring:message code="tablehdr.tests" /></th>
+					<th><spring:message code="tablehdr.totaltime" /></th>
+					<th><spring:message code="tablehdr.avetime" /></th>
+					<th><spring:message code="tablehdr.mintesttime" /></th>
+					<th><spring:message code="tablehdr.maxtesttime" /></th>
+				</thead>
+				<tr>
+					<td width="16%">${testSubmit.acTestCases} 		<c:if test="${testSubmit.totalTestCases > 0}">
+						 / ${testSubmit.totalTestCases} 
+						 (<b><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" 
+						 value="${(testSubmit.acTestCases / testSubmit.totalTestCases * 100.0)}"/></b>)
+					</c:if> </td>
+					<td width="16%"><c:if test="${testSubmit.status eq 'Accepted'}">${testSubmit.timeUsed}</c:if>
+					                <c:if test="${!(testSubmit.status eq 'Accepted')}">...</c:if></td>
+					<td width="17%"><c:if test="${testSubmit.status eq 'Accepted'}">${testSubmit.avgTimeUsed}</c:if>
+					                <c:if test="${!(testSubmit.status eq 'Accepted')}">...</c:if></td>
+					<td width="17%">${testSubmit.minTimeUsed}</td>
+					<td width="17%">${testSubmit.maxTimeUsed}</td>
+				</tr>
+			</table>
+		</c:if>
+		
+		<c:if
+ 			test="${testSubmit.totalTestCases > 0}"> 
+	
+			<div class="">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+					
+						<div class="badge pull-left"><spring:message code="fieldhdr.verdictsdetails" /> </div>
+						<div class="badge pull-right">
+							<a data-toggle="collapse" href="#details"><i
+								class="fa fa-chevron-down"></i></a>
+						</div>
+						<br />
+					</div>
+					<div id="details" class="panel-body collapse">
+						<table class="volume" width='100%'>
+							<thead>
+								<th><spring:message code="tablehdr.testnum" /></th>
+								<th class="result"><spring:message code="tablehdr.judgment" /></th>
+								<th><spring:message code="tablehdr.time" /></th>
+								<th><spring:message code="tablehdr.mem" /></th>
+							</thead>
+			
+							<c:forEach items="${testSubmit.datasetVerdicts}" var="dv" varStatus="loop">
+								<tr>
+									<td><c:out value="${loop.index + 1}" /></td>
+									<td><label class=<c:if test="${dv.verdict.associatedMessage() eq 'Accepted'}">"subAC"</c:if>
+													 <c:if test="${!(dv.verdict.associatedMessage() eq 'Accepted')}">"subWA"</c:if>	> 
+										<c:out value="${dv.verdict.associatedMessage()}" />
+										</label></td>
+									<td><c:out value="${dv.userTime}" /> <c:if
+										test="${!empty dv.userTime}">ms</c:if><c:if
+										test="${empty dv.userTime}">...</c:if></td>
+									<td><c:if
+										test="${!empty dv.memory}"> <c:out value="${FileUtils.byteCountToDisplaySize(dv.memory)}" /></c:if><c:if
+										test="${empty dv.memory}">...</c:if></td>
+								</tr>
+							</c:forEach>
+						</table>			
+					</div>
+
+				</div>
+			</div>			
+		</c:if>
+			
 		</div>
 	</div>
 
@@ -68,7 +145,7 @@
 					<span class="label label-danger"><form:errors path="key" /></span>
 				</div>
 			</div>
-			<authz:authorize ifAnyGranted="ROLE_ADMIN,ROLE_SUPER_PSETTER">
+			<authz:authorize ifAnyGranted="ROLE_ADMIN,ROLE_SUPER_PSETTER,ROLE_PSETTER">
 				<div class="form-group col-xs-12">
 					<label class="control-label col-xs-3"><spring:message
 							code="fieldhdr.test" /></label>
