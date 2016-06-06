@@ -36,13 +36,14 @@
 				<td><spring:message code="fieldhdr.contestanttype" />:</td>
 				<td><c:choose>
 						<c:when test="${contest.contestant eq 1}">
-							<spring:message code="fieldval.teams" />
+							<spring:message code="fieldval.analyzerTeams"/>
 						</c:when>
 						<c:when test="${contest.contestant eq 2}">
 							<spring:message code="page.managecontest.user" />
 						</c:when>
 						<c:otherwise>
-							<spring:message code="fieldval.teams" />, <spring:message code="page.managecontest.user" />
+							<spring:message code="fieldval.analyzerTeams"/>, <spring:message
+								code="page.managecontest.user"/>
 						</c:otherwise>
 					</c:choose></td>
 			</tr>

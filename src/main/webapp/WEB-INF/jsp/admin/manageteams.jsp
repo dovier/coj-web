@@ -4,7 +4,7 @@
 
 <h2 class="postheader">
     <spring:message code="page.general.admin.header"/>:
-    <spring:message code="pagehdr.teams"/>
+    <spring:message code="pagehdr.analyzerTeams"/>
 </h2>
 
 <div class="postcontent">

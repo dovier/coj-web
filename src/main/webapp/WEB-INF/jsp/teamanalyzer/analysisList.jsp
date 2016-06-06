@@ -15,7 +15,7 @@
     <display:column titleKey="tablehdr.actions">
         <ul class="list-inline">
             <li><a
-                    href="<c:url value="/teamanalyzer/viewGraph.xhtml?taid=${analysis.id}" />"
+                    href="<c:url value="/teamanalyzer/viewAnalysis.xhtml?taid=${analysis.id}" />"
             ><i title="<spring:message code="messages.general.view"/>"
                 data-toggle="tooltip" class="fa fa-eye"></i></a></li>
             <li><a

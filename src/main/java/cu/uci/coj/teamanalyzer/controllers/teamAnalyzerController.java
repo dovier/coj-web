@@ -10,6 +10,10 @@ import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.teamanalyzer.dao.analysisDAO;
 import cu.uci.coj.teamanalyzer.models.analysis;
+import cu.uci.coj.teamanalyzer.models.analyzerTeam;
+import cu.uci.coj.teamanalyzer.utils.analysisStats;
+import cu.uci.coj.teamanalyzer.utils.teamStats;
+import cu.uci.coj.teamanalyzer.utils.userStats;
 import cu.uci.coj.teamanalyzer.validators.analysisValidator;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
@@ -39,7 +43,7 @@ public class teamAnalyzerController extends BaseController {
     private analysisValidator analysisValidator;
 
     @RequestMapping(value = "/main.xhtml", method = RequestMethod.GET)
-    public String listAnalysis(Model model){
+    public String listAnalysis() {
         return "/teamanalyzer/main";
     }
 
@@ -52,7 +56,8 @@ public class teamAnalyzerController extends BaseController {
     }
 
     @RequestMapping(value = "/viewAnalysis.xhtml", method = RequestMethod.GET)
-    public String viewAnalysis(@RequestParam(required = true, value = "taid") int taid) {
+    public String viewAnalysis(Model model, @RequestParam(required = true, value = "taid") int taid) {
+        model.addAttribute("taid", taid);
         return "/teamanalyzer/viewAnalysis";
     }
 
@@ -103,7 +108,8 @@ public class teamAnalyzerController extends BaseController {
             analysisDAO.updateNameAnalysis(analysis);
             analysisDAO.updateContestsAnalysis(analysis);
             analysisDAO.updateUsersAnalysis(analysis);
-            analysisDAO.registerEditedAnalysis(getUsername(principal),analysis.getId());
+            analysisDAO.clearTeamData(analysis);
+            analysisDAO.registerEditedAnalysis(getUsername(principal), analysis.getId());
         }
         doAnalysis(analysis);
         return "redirect:/teamanalyzer/main.xhtml";
@@ -124,13 +130,33 @@ public class teamAnalyzerController extends BaseController {
         return "/teamanalyzer/analysisList";
     }
 
-    private void doAnalysis(analysis analysis) {
+    @RequestMapping(value = "/viewTeamsList.xhtml", method = RequestMethod.GET)
+    public String tableTeams(Model model, PagingOptions options, @RequestParam(required = true, value = "taid") int taid) {
+
+        List<analyzerTeam> analyzerTeamList = analysisDAO.getTeamsByAnalysisId(taid);
+        int found = analyzerTeamList.size();
+
+        if (found != 0) {
+            IPaginatedList<analyzerTeam> teams = analysisDAO.getPaginatedTeamList(found, taid, options);
+            model.addAttribute("teams", teams);
+        }
+
+        return "/teamanalyzer/viewTeamsList";
     }
 
     @RequestMapping(value = "/viewGraph.xhtml", method = RequestMethod.GET)
-    public String generateGraph(@RequestParam(required = true, value = "taid") int taid) {
-
+    public String generateGraph(Model model, @RequestParam(required = true, value = "tid") int tid, @RequestParam(required = true, value = "taid") int taid) {
+        teamStats teamStats = analysisDAO.getTeamStats(tid);
+        model.addAttribute("teamStats", teamStats);
+        model.addAttribute("taid", taid);
+        model.addAttribute("tid", tid);
         return "/teamanalyzer/viewGraph";
     }
 
+    private void doAnalysis(analysis analysis) {
+        int[] idsClassifications = analysisDAO.getIdClassifications();
+        List<userStats> usersStats = analysisDAO.getUsersStats(analysis, idsClassifications);
+        analysisStats analysisStats = new analysisStats(usersStats, idsClassifications, analysis, analysisDAO);
+        analysisStats.makeTeams();
+    }
 }

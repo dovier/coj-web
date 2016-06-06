@@ -8,7 +8,7 @@
 <div class="postcontent">
 
 
-    <form id="filter-form" class="form-inline coj_float_rigth">
+    <form class="form-inline coj_float_rigth">
         <div class="form-group">
             <a class="btn btn-primary"
                href="<c:url value="/teamanalyzer/dataAnalysis.xhtml?taid=0"/>"><spring:message code="button.add"/></a>
