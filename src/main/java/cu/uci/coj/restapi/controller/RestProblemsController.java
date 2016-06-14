@@ -328,11 +328,7 @@ public class RestProblemsController {
         }
     }
     
-    
-    
-    
-    
-    
+       
     private ProblemRest BuildProblemRest(Problem p,String username){        
         if(username == null)
             return new ProblemRest(p.getPid(), p.getTitle(), p.getSubmitions(), p.getAc(), p.getAccp(), p.getPoints());
@@ -343,6 +339,12 @@ public class RestProblemsController {
         String[] arreglo = new String[2];
         
         String s = problemDAO.string("select.author.problem.id",pid);
+        if(s==null){
+            arreglo[0] = "";
+            arreglo[1] = "";
+            return arreglo;
+        }
+        
         if(s.contains("[")){
             s = s.replace("[", "!");
             arreglo = s.split("!");
