@@ -20,7 +20,6 @@ import cu.uci.coj.model.Contest;
 import cu.uci.coj.model.Language;
 import cu.uci.coj.model.Problem;
 import cu.uci.coj.model.SubmissionJudge;
-import cu.uci.coj.restapi.templates.InputSubmitRest;
 import cu.uci.coj.restapi.templates.JudgmentsRest;
 import cu.uci.coj.restapi.templates.ResponseSubmitRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
@@ -28,7 +27,6 @@ import cu.uci.coj.restapi.utils.TokenUtils;
 import cu.uci.coj.utils.Utils;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
-import cu.uci.coj.validator.submitValidator;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,8 +64,6 @@ public class RestJudgmentsController {
 	private UtilDAO utilDAO;
 	@Resource
 	private ProblemDAO problemDAO;
-	@Resource
-	private submitValidator submitValidator;
 	@Resource
 	private Utils utils;
         @Resource
@@ -493,7 +489,7 @@ public class RestJudgmentsController {
     }
     
 
-    public String validateSubmission(SubmissionJudge submit, int lid){
+    private String validateSubmission(SubmissionJudge submit, int lid){
         String errors = null;
         ResourceBundleMessageSource r=new ResourceBundleMessageSource();
         r.setBasename("messages_en");               
@@ -523,7 +519,7 @@ public class RestJudgmentsController {
         return errors;
     }
     
-    public int end(int found){
+    private int end(int found){
         if(found%20==0)
             return found/20;
         else

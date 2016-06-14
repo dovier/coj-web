@@ -63,7 +63,7 @@ public class RestProblemsController {
     
     
     @ApiOperation(value = "Obtener todos los problemas",  
-            notes = "Devuelve todos los problemas del COJ. Si se agrega los headers apikey y token correctamente entonces se devuelve los datos privados de los problemas correspondiente al usuario autenticado.",
+            notes = "Devuelve todos los problemas del COJ (máximo 1000 problemas). Si se agrega los headers apikey y token correctamente entonces se devuelve los datos privados de los problemas correspondiente al usuario autenticado.",
             response = ProblemRest.class,
             responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
@@ -113,6 +113,8 @@ public class RestProblemsController {
         }
 
         int found = problemDAO.countProblem(pattern, filterby, username, idClassification, complexity);
+        if(found>1000)
+            found = 1000;
 
         List<Problem> listProblems = new LinkedList();
         for (int i = 1; i <= end(found); i++) {
@@ -284,11 +286,7 @@ public class RestProblemsController {
 
         return new ResponseEntity<>(problemDescrptions, HttpStatus.OK);
 
-    }
-    
-    
-    
-    
+    } 
     
     @ApiOperation(value = "Agregar/Quitar problema como favorito",  
             notes = "Cambiar el estado de favorito de un problema dado el identificador del mismo")
@@ -327,8 +325,7 @@ public class RestProblemsController {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }
     }
-    
-       
+     
     private ProblemRest BuildProblemRest(Problem p,String username){        
         if(username == null)
             return new ProblemRest(p.getPid(), p.getTitle(), p.getSubmitions(), p.getAc(), p.getAccp(), p.getPoints());
@@ -357,8 +354,7 @@ public class RestProblemsController {
         }
         return arreglo;
     }
-            
-    
+               
     private int end(int found) {
         if (found % 50 == 0) {
             return found / 50;
@@ -416,86 +412,5 @@ public class RestProblemsController {
 
         return username;
     }  
-
-   
-   /* @ApiOperation(value = "Obtener todos los problemas (Privado)",  
-            notes = "Devuelve todos los problemas del COJ.",
-            response = ProblemRest.class,
-            responseContainer = "List")
-    @ApiResponses( value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect") })
-    @RequestMapping(value = "/private", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    @ResponseBody
-    public ResponseEntity<?> getAllProblemsOrFiltrerProblemsPrivate(
-            @ApiParam(value = "Llave de desarrollador")@RequestParam(required = true, value = "apikey") String apikey,
-            @ApiParam(value = "Token de usuario")@RequestParam(required = true, value = "token") String token,
-            @ApiParam(value = "Filtrar por nombre, id o descripción") @RequestParam(required = false, value = "pattern") String pattern,
-            @ApiParam(value = "Filtrar por Todos(0), Resueltos(1), Por Resolver(2), Por Intentar(3), Favoritos(4), Recommendados(5)",allowableValues = "0,1,2,3,4,5") @RequestParam(required = false, value = "filterby", defaultValue = "0") Integer filterby,
-            @ApiParam(value = "Filtrar por clasificación del problema (Ver filter)") @RequestParam(required = false, value = "classification", defaultValue = "-1") Integer classification,
-            @ApiParam(value = "Filtrar por complejidad", allowableValues = "-1,1,2,3,4,5") @RequestParam(required = false, value = "complexity", defaultValue = "-1") Integer complexity) {
-        try {
-            int error = ValidateApiAndToken(apikey,token);
-            if (error > 0) {
-                if(error == 8)
-                    return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
-                else    
-                    return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
-            }
-
-            String username = null;
-            username = ExtractUser(token);
-
-            List<ProblemRest> listproblemrest = getAllProblemsOrFiltrerProblems(username, pattern, filterby, classification, complexity);
-
-            return new ResponseEntity<>(listproblemrest, HttpStatus.OK);
-        } catch (IOException ex) {
-            return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
-        }
-
-    }*/
-
-    
-    /*@ApiOperation(value = "Obtener problemas por páginas (Privado)",  
-            notes = "Devuelve los problemas por páginas (50 problemas por página) como en el sitio web COJ.",
-            response = ProblemRest.class,
-            responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 401, message = "username token mismatch, hash incorrect, token expirated, username apikey mismatch, apikey hash incorrect, apikey expirated, apikey secret incorrect, token or apikey incorrect"),
-                            @ApiResponse(code = 404, message = "page out of index")  })
-    @RequestMapping(value = "private/page/{page}", method = RequestMethod.POST, headers = "Accept=application/json", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    @ResponseBody
-    public ResponseEntity<?> getAllProblemsOrderByPagePrivate(
-            @ApiParam(value = "Llave de desarrollador") @RequestParam(value = "apikey") String apikey,
-            @ApiParam(value = "Token de usuario") @RequestParam(value = "token") String token,
-            @ApiParam(value = "Número de la página") @PathVariable int page) {
-        try {
-
-           int error = ValidateApiAndToken(apikey,token);
-            if (error > 0) {
-                if(error == 8)
-                    return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
-                else    
-                    return new ResponseEntity<>(TokenUtils.ErrorMessage(error), HttpStatus.UNAUTHORIZED);
-            }
-
-            String username = null;
-            username = ExtractUser(token);
-
-            return getAllProblemsOrderByPage(page, username);
-
-        } catch (IOException ex) {
-           return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
-        }
-
-    }*/
-    
-    
-       /* try {
-            PasswordEncoder encoder = new Md5PasswordEncoder();
-            String password = encoder.encodePassword("dovier","ABC123XYZ789");
-            System.out.println(password);
-            Long l = new Long(15 * 60 * 1000);
-            System.out.println(TokenUtils.CreateTokenUser("dovier"));
-            l = new Long(15 * 60 * 1000);
-            System.out.println(TokenUtils.CreateAPIKey("dovier", "cesar"));
-        } catch (Exception e) {}*/
    
 }
