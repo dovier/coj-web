@@ -4,7 +4,8 @@
 <script type="text/javascript" src="/js/jquery.typewatch.js"></script>
 
 <h2 class="postheader">
-    <spring:message code="pagehdr.teamanalyzer"/>
+    <spring:message code="pagehdr.teamanalyzer"/>:
+    <spring:message code="pagehdr.teamanalyzer.data"/>
 </h2>
 
 <div class="postcontent">

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="coj:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="coj-3.0.war">
+      <element id="artifact" artifact-name="coj:war exploded" />
+    </root>
+  </artifact>
+</component>

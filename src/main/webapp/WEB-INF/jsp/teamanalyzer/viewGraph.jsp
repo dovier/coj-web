@@ -5,14 +5,15 @@
       type="text/css" media="screen"/>
 
 <h2 class="postheader">
-    <spring:message code="pagehdr.teamanalyzer"/>
+    <spring:message code="pagehdr.teamanalyzer"/>:
+    <spring:message code="pagehdr.teamanalyzer.graph"/>
 </h2>
 
 <div class="postcontent">
 
     <div class="row row-centered no-gutters">
         <div class="col-xs-12">
-            <label> <spring:message code="pagehdr.teamanalyzer.graph"/> ${tid}
+            <label> <spring:message code="pagehdr.teamanalyzer.graph.team"/> ${tid}
             </label>
             <canvas id="top-chart" width="500" height="500"></canvas>
         </div>

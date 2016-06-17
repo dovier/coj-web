@@ -2,7 +2,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 
 <h2 class="postheader">
-    <spring:message code="pagehdr.teamanalyzer"/>
+    <spring:message code="pagehdr.teamanalyzer"/>:
+    <spring:message code="pagehdr.teamanalyzer.main"/>
 </h2>
 
 <div class="postcontent">
