@@ -1,0 +1,73 @@
+CREATE SEQUENCE team_analyzer_analysis_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+ CREATE SEQUENCE team_analyzer_team_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+  
+CREATE TABLE team_analyzer_analysis
+(
+  id integer NOT NULL DEFAULT nextval('team_analyzer_analysis_id_seq'::regclass),
+  name character varying,
+  coach integer,
+  date timestamp without time zone DEFAULT now(),
+  CONSTRAINT team_analizer_analysis_pk PRIMARY KEY (id),
+  CONSTRAINT team_analizer_analysis_coach_fkey FOREIGN KEY (coach)
+      REFERENCES users (uid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
+);
+
+CREATE TABLE team_analyzer_contest
+(
+  taid integer NOT NULL,
+  cid integer NOT NULL,
+  CONSTRAINT team_analyzer_contest_pk PRIMARY KEY (taid, cid),
+  CONSTRAINT team_analyzer_contest_cid_fkey FOREIGN KEY (cid)
+      REFERENCES contest (cid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT team_analyzer_contest_taid_fkey FOREIGN KEY (taid)
+      REFERENCES team_analyzer_analysis (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
+);
+
+CREATE TABLE team_analyzer_team
+(
+  id integer NOT NULL DEFAULT nextval('team_analyzer_team_id_seq'::regclass),
+  uid1 integer,
+  uid2 integer,
+  uid3 integer,
+  taid integer,
+  CONSTRAINT team_analyzer_team_pk PRIMARY KEY (id),
+  CONSTRAINT team_analyzer_team_taid_fkey FOREIGN KEY (taid)
+      REFERENCES team_analyzer_analysis (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT team_analyzer_team_uid1_fkey FOREIGN KEY (uid1)
+      REFERENCES users (uid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT team_analyzer_team_uid2_fkey FOREIGN KEY (uid2)
+      REFERENCES users (uid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT team_analyzer_team_uid3_fkey FOREIGN KEY (uid3)
+      REFERENCES users (uid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
+);
+
+CREATE TABLE team_analyzer_user
+(
+  taid integer NOT NULL,
+  uid integer NOT NULL,
+  CONSTRAINT team_analyzer_user_pk PRIMARY KEY (taid, uid),
+  CONSTRAINT team_analyzer_user_fkey FOREIGN KEY (taid)
+      REFERENCES team_analyzer_analysis (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT team_analyzer_user_uid_fkey FOREIGN KEY (uid)
+      REFERENCES users (uid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
+);
