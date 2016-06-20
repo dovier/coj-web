@@ -139,7 +139,7 @@ public abstract class BasePdf {
         System.out.println(html);
         String server = "http://coj.uci.cu";
         int idxFImg = 0;
-        String tagImg = "<img src = \"";
+        String tagImg = "<img src=\"";
         int idxIImg = html.indexOf(tagImg, 0);
         while (idxIImg != -1) {
             boolean fin = false;
@@ -150,9 +150,9 @@ public abstract class BasePdf {
                     idxFSrc = i;
                 }
 
-                if (html.substring(i, i + 3).equals("\"/>")) {
+                if (html.substring(i, i + 2).equals("\">")) {
                     fin = true;
-                    idxFImg = i + 3;
+                    idxFImg = i + 2;
                 }
             }
 
