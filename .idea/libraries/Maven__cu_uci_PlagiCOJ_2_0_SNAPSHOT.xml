@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: cu.uci:PlagiCOJ:2.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/cu/uci/PlagiCOJ/2.0-SNAPSHOT/PlagiCOJ-2.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/cu/uci/PlagiCOJ/2.0-SNAPSHOT/PlagiCOJ-2.0-SNAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/cu/uci/PlagiCOJ/2.0-SNAPSHOT/PlagiCOJ-2.0-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
