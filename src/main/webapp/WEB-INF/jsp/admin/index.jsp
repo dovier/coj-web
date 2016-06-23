@@ -161,7 +161,7 @@
 								<a href="<c:url value="manageteams.xhtml" />"
 									title="<spring:message code="titval.manage"/>"><i data-toggle="tooltip"
 									class="fa fa-gear"></i>&nbsp;<spring:message
-										code="tableval.analyzerTeams"/></a>
+										code="tableval.teams"/></a>
 							</div>
 						</authz:authorize>
 					</div>

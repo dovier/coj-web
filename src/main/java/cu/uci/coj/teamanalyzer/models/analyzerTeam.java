@@ -1,8 +1,13 @@
+/*
+* analyzerTeam.java
+*
+* v1.0
+*
+* 14/05/2016
+*/
+
 package cu.uci.coj.teamanalyzer.models;
 
-/**
- * Created by ricardo on 2/06/16.
- */
 public class analyzerTeam {
 
     private int id;

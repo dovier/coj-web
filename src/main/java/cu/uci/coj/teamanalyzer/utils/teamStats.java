@@ -1,3 +1,11 @@
+/*
+* teamStats.java
+*
+* v1.0
+*
+* 14/05/2016
+*/
+
 package cu.uci.coj.teamanalyzer.utils;
 
 import java.util.Arrays;
@@ -5,21 +13,28 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by ricardo on 6/06/16.
+ * Clase que contiene los métodos necesarios para conformar los equipos
  */
 public class teamStats {
+    /** Para los nombres de las áreas de conocimientos */
     private String labels;
-
+    /** Almacena el 100% tantas veces como áreas de conocimientos existan*/
     private String percentTotal;
-
+    /** Almacena el porciento máximo alcanzado por integrante 1 del equipo*/
     private String percentTop1;
+    /** Almacena el porciento máximo alcanzado por integrante 2 del equipo*/
     private String percentTop2;
+    /** Almacena el porciento máximo alcanzado por integrante 3 del equipo*/
     private String percentTop3;
+    /** Almacena el porciento máximo alcanzado en cada área de conocimiento por el equipo */
     private String percentTopMax;
-
+    /** Almacena el valor máximo alcanzado por integrante 1 del equipo*/
     private String top1;
+    /** Almacena el valor máximo alcanzado por integrante 2 del equipo*/
     private String top2;
+    /** Almacena el valor máximo alcanzado por integrante 3 del equipo*/
     private String top3;
+    /** Almacena el valor máximo alcanzado en cada área de conocimiento por el equipo */
     private String topMax;
 
     public teamStats(List<Map<String, Object>> maps1, List<Map<String, Object>> maps2, List<Map<String, Object>> maps3, List<Map<String, Object>> probs, List<Map<String, Object>> classifications) {
@@ -31,7 +46,7 @@ public class teamStats {
         int[] topMax = new int[classifications.size()];
 
         int j = 0, k = 0, l = 0;
-
+        // Se inicializan todos los datos estadísticos
         for (int i = 0; i < classifications.size(); i++) {
             Map<String, Object> row1 = maps1.get(j);
             Map<String, Object> row2 = maps2.get(k);
