@@ -1,7 +1,10 @@
-
 /*
- * Created by ricardo on 15/05/16.
- */
+* teamAnalyzerController.java
+*
+* v1.0
+*
+* 14/05/2016
+*/
 
 package cu.uci.coj.teamanalyzer.controllers;
 
@@ -15,6 +18,7 @@ import cu.uci.coj.teamanalyzer.utils.analysisStats;
 import cu.uci.coj.teamanalyzer.utils.teamStats;
 import cu.uci.coj.teamanalyzer.utils.userStats;
 import cu.uci.coj.teamanalyzer.validators.analysisValidator;
+import cu.uci.coj.utils.Notification;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
 import org.springframework.stereotype.Controller;
@@ -23,6 +27,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import java.security.Principal;
@@ -49,10 +54,12 @@ public class teamAnalyzerController extends BaseController {
 
 
     @RequestMapping(value = "/deleteAnalysis.xhtml", method = RequestMethod.GET)
-    public String deleteAnalysis(Principal principal, @RequestParam(required = true, value = "taid") int taid) {
+    public String deleteAnalysis(Principal principal, @RequestParam(required = true, value = "taid") int taid,
+                                 RedirectAttributes redirectAttributes) {
         analysisDAO.deleteAnalysis(taid);
         analysisDAO.registerDeletedAnalysis(getUsername(principal), taid);
-        return "/teamanalyzer/deleteAnalysis";
+        redirectAttributes.addFlashAttribute("message", Notification.getDeleteAnalysis());
+        return "redirect:/teamanalyzer/main.xhtml";
     }
 
     @RequestMapping(value = "/viewAnalysis.xhtml", method = RequestMethod.GET)
@@ -81,7 +88,8 @@ public class teamAnalyzerController extends BaseController {
     }
 
     @RequestMapping(value = "/dataAnalysis.xhtml", method = RequestMethod.POST)
-    public String saveAnalysis(Model model, Principal principal, analysis analysis, BindingResult bindingResult) {
+    public String saveAnalysis(Model model, Principal principal, analysis analysis, BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes) {
         analysisValidator.validate(analysis, bindingResult);
         if (bindingResult.hasErrors()) {
             if (analysis.getId() == 0) {
@@ -104,12 +112,14 @@ public class teamAnalyzerController extends BaseController {
             analysisDAO.saveContestsAnalysis(analysis);
             analysisDAO.saveUsersAnalysis(analysis);
             analysisDAO.registerNewAnalysis(getUsername(principal));
+            redirectAttributes.addFlashAttribute("message", Notification.getCreateAnalysis());
         } else {
             analysisDAO.updateNameAnalysis(analysis);
             analysisDAO.updateContestsAnalysis(analysis);
             analysisDAO.updateUsersAnalysis(analysis);
             analysisDAO.clearTeamData(analysis);
             analysisDAO.registerEditedAnalysis(getUsername(principal), analysis.getId());
+            redirectAttributes.addFlashAttribute("message", Notification.getEditAnalysis());
         }
         doAnalysis(analysis);
         return "redirect:/teamanalyzer/main.xhtml";

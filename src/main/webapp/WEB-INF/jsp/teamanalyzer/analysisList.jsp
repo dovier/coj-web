@@ -7,10 +7,10 @@
         <c:out value="${analysis.id}"/>
     </display:column>
     <display:column titleKey="tablehdr.date">
-        <fmt:formatDate value="${analysis.date}" pattern="yyyy-MM-dd HH:mm:ss" />
+        <fmt:formatDate value="${analysis.date}" pattern="yyyy-MM-dd HH:mm:ss"/>
     </display:column>
     <display:column titleKey="tablehdr.name" style="text-transform:none">
-            <c:out value="${analysis.name}" />
+        <c:out value="${analysis.name}"/>
     </display:column>
     <display:column titleKey="tablehdr.actions">
         <ul class="list-inline">
@@ -22,13 +22,14 @@
                     href="<c:url value="/teamanalyzer/dataAnalysis.xhtml?taid=${analysis.id}" />"
             ><i title="<spring:message code="messages.general.edit"/>"
                 data-toggle="tooltip" class="fa fa-edit"></i></a></li>
-            <li><a
-                    href="<c:url value="/teamanalyzer/deleteAnalysis.xhtml?taid=${analysis.id}" />"
+            <li><a onclick="confirm_delete('<c:url value="/teamanalyzer/deleteAnalysis.xhtml?taid=${analysis.id}"/>')"
+                   href="#"
             ><i title="<spring:message code="messages.general.delete"/>"
                 data-toggle="tooltip" class="fa fa-trash"></i></a></li>
         </ul>
     </display:column>
 </display:table>
+
 <script>
     $(function () {
         $("[data-toggle='tooltip']").tooltip();

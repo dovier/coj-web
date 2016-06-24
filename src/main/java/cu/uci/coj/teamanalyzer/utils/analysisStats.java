@@ -1,3 +1,11 @@
+/*
+* analysisStats.java
+*
+* v1.0
+*
+* 14/05/2016
+*/
+
 package cu.uci.coj.teamanalyzer.utils;
 
 import cu.uci.coj.teamanalyzer.dao.analysisDAO;
@@ -5,9 +13,6 @@ import cu.uci.coj.teamanalyzer.models.analysis;
 
 import java.util.List;
 
-/**
- * Created by ricardo on 2/06/16.
- */
 public class analysisStats {
     private List<userStats> usersStats;
     private int[] idsClassifications;
