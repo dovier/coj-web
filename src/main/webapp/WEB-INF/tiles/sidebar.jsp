@@ -52,9 +52,17 @@
 								</li>
 							</ul>
 						</li>
-						<li <c:if test="${idpage == 'compareusers'}"> class="item-sidebar-selected" </c:if>><a href="<c:url value="/user/compareusers.xhtml" />"><i
+<%-- 						<li <c:if test="${idpage == 'compareusers'}"> class="item-sidebar-selected" </c:if>><a href="<c:url value="/user/compareusers.xhtml" />"><i --%>
+<%-- 								class="fa fa-refresh"></i>&nbsp;<spring:message --%>
+<%-- 									code="link.cusers" /></a></li> --%>
+									
+						<!-- frankr addition start -->
+						<li <c:if test="${idpage == 'compareusersbytag'}"> class="item-sidebar-selected" </c:if>><a href="<c:url value="/user/compareusersbytag.xhtml" />"><i
 								class="fa fa-refresh"></i>&nbsp;<spring:message
 									code="link.cusers" /></a></li>
+						<!-- frankr addition end -->									
+									
+									
 						<li <c:if test="${idpage == 'statistics'}"> class="item-sidebar-selected" </c:if>><a href="<c:url value="/24h/statistics.xhtml" />"><i
 								class="fa fa-bar-chart"></i>&nbsp;<spring:message
 									code="link.statistics" /></a></li>

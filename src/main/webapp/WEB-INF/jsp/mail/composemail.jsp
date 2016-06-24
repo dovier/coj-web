@@ -58,10 +58,16 @@
                 <%--<form:input path="usernameTo" class="form-control"/>--%>
             <input class="form-control" value="${tos}" name="usernameTo"/>
         </div>
+            <a>
+                <i data-toggle="tooltip" class="fa fa-asterisk"
+                   title="<spring:message code="mandatory.field"/>">
+                </i>
+            </a>
 
         <div class="col-xs-8 col-xs-offset-1">
 					<span class="label label-danger"><form:errors
                             path="usernameTo"/></span>
+
         </div>
     </div>
 
@@ -69,6 +75,11 @@
         <label class="col-md-1 control-label"><spring:message code="fieldhdr.subject"/>:</label>
 
         <div class="col-md-4"><form:input path="title" class="form-control"/></div>
+        <a>
+            <i data-toggle="tooltip" class="fa fa-asterisk"
+               title="<spring:message code="mandatory.field"/>">
+            </i>
+        </a>
         <div class="col-xs-8 col-xs-offset-1">
 					<span class="label label-danger"><form:errors
                             path="title"/></span>
@@ -106,6 +117,7 @@
 <script src="/js/admin/utility.js"></script>
 
 <script>
+    $("[data-toggle='tooltip']").tooltip();
     var i18n = {};
     i18n.title = "<spring:message code="message.confirm.rejudge.title"/>";
     i18n.message = "<spring:message code="message.confirm.rejudge.body"/>";

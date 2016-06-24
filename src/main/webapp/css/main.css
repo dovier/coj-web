@@ -20,7 +20,7 @@ textarea {
 .zoom {
     position: absolute;
     right: 9px;
-    text-align: right;
+   /*text-align: right;*/
     top: 95px;
     z-index: 120;
 }
@@ -67,7 +67,7 @@ p.ex, div.ex {
 
 .date {
     width: 10%;
-/ / font-size: 11 px;
+    font-size: 11 px;
     font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 

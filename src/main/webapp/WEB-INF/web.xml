@@ -19,18 +19,33 @@
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
+  
   <servlet-mapping>
     <servlet-name>dispatcher</servlet-name>
     <url-pattern>*.xhtml</url-pattern>
   </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>dispatcher</servlet-name>
     <url-pattern>*.json</url-pattern>
   </servlet-mapping>
+  
   <servlet-mapping>
     <servlet-name>dispatcher</servlet-name>
     <url-pattern>*.xml</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+      <servlet-name>rest</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <load-on-startup>2</load-on-startup>
+  </servlet>
+ 
+  <servlet-mapping>
+      <servlet-name>rest</servlet-name>
+      <url-pattern>/api/*</url-pattern>
+  </servlet-mapping>
+  
   <servlet>
     <description>AtmosphereServlet</description>
     <servlet-name>AtmosphereServlet</servlet-name>
@@ -68,6 +83,10 @@
   </servlet-mapping>
   <session-config>
     <session-timeout>30</session-timeout>
+<!--    <cookie-config>
+      <http-only>true</http-only>
+      <secure>true</secure>
+    </cookie-config>-->
   </session-config>
   <welcome-file-list>
     <welcome-file>redirect.jsp</welcome-file>
@@ -119,8 +138,6 @@
     <web-resource-collection>
       <web-resource-name><strong>restricted methods</strong></web-resource-name>
       <url-pattern>/*</url-pattern>
-      <http-method>PUT</http-method>
-      <http-method>DELETE</http-method>
       <http-method>OPTIONS</http-method>
       <http-method>TRACE</http-method>
     </web-resource-collection>

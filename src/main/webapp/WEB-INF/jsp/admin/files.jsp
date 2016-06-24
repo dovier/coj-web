@@ -112,21 +112,16 @@
                     <c:forEach items="${cutFiles}" var="cutFile">
                         <div class="col-xs-10">
                             <c:if test="${cutFile.directory}">
-                                <a
-                                        href="/admin/files/list.xhtml?f=<c:out value="${cutFile.name}"/>"><i
-                                        class="fa fa-folder-o"></i>&nbsp;${cutFile.name}</a>
+                                <i
+                                        class="fa fa-folder-o"></i>&nbsp;${cutFile.name}
                             </c:if>
                             <c:if test="${not cutFile.directory}">
-                                <a download
-                                   href="/admin/files/download.xhtml?f=<c:out value="${cutFile.name}"/>"><i
-                                        class="fa fa-file-o"></i>&nbsp;${cutFile.name}</a>
+                                <i
+                                        class="fa fa-file-o"></i>&nbsp;${cutFile.name}
                             </c:if>
                         </div>
                         <div class="col-xs-2">
-                            <a class="pull-right" title="<spring:message code="message.files.clear"/> ${cutFile.name}"
-                               data-toggle="tooltip"
-                               href="/admin/files/clear.xhtml?f=<c:out value="${cutFile.name}"/>"><i
-                                    class="fa fa-close"></i></a>
+                            <a class="pull-right" title="<spring:message code="message.files.clear"/> ${cutFile.name}" data-toggle="tooltip" href="/admin/files/clear.xhtml?f=<c:out value="${cutFile.name}"/>&fp=<c:out value="${cutFile.absolutePath}"/>"><i class="fa fa-close"></i></a>
                         </div>
                     </c:forEach>
                     <div class="col-xs-12">
@@ -145,23 +140,21 @@
                     <c:forEach items="${copiedFiles}" var="copiedFile">
                         <div class="col-xs-10">
                             <c:if test="${copiedFile.directory}">
-                                <a
-                                        href="/admin/files/list.xhtml?f=<c:out value="${copiedFile.name}"/>"><i
-                                        class="fa fa-folder-o"></i>&nbsp;${copiedFile.name}</a>
+
+                                        <i
+                                        class="fa fa-folder-o"></i>&nbsp;${copiedFile.name}
                             </c:if>
                             <c:if test="${not copiedFile.directory}">
 
-                                <a download
-                                   href="/admin/files/download.xhtml?f=<c:out value="${copiedFile.name}"/>"><i
-                                        class="fa fa-file-o"></i>&nbsp;${copiedFile.name}</a>
+                                <i
+                                        class="fa fa-file-o"></i>&nbsp;${copiedFile.name}
                             </c:if>
                         </div>
+
                         <div class="col-xs-2">
-                            <a class="pull-right" title="<spring:message code="message.files.clear"/> ${copiedFile.name}"
-                               data-toggle="tooltip"
-                               href="/admin/files/clear.xhtml?f=<c:out value="${copiedFile.name}"/>"><i
-                                    class="fa fa-close"></i></a>
+                            <a class="pull-right" title="<spring:message code="message.files.clear"/> ${cutFile.name}" data-toggle="tooltip" href="/admin/files/clear.xhtml?f=<c:out value="${copiedFile.name}"/>&fp=<c:out value="${copiedFile.absolutePath}"/>"><i class="fa fa-close"></i></a>
                         </div>
+
                     </c:forEach>
                     <div class="col-xs-12">
                         <a class="pull-right" title="<spring:message code="message.files.paste"/> ${cutFile.name}"

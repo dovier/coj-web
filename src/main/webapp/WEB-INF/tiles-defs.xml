@@ -22,6 +22,16 @@
 		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
 		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
 	</definition>
+        
+	<definition name="resttemplate" template="/WEB-INF/tiles/resttheme.jsp">
+		<put-attribute name="title" value="pagetit.welcomemsg" />
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
+		<put-attribute name="sidebar" value="sidebar" />
+		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
+	</definition>
+        
+        <definition name="/general/doc" extends="resttemplate"></definition>
 
 	<definition name="sidebar" template="/WEB-INF/tiles/sidebar.jsp" />
 
@@ -729,7 +739,15 @@
 		<put-attribute name="title" value="pagetit.24hcusers" />
 		<put-attribute name="content" value="/WEB-INF/jsp/user/compareusers.jsp" />
 	</definition>
-
+	
+	<!-- frankr addition start -->
+	<definition name="/user/compareusersbytag" extends="template">
+		<put-attribute name="idpage" value="compareusersbytag" />
+		<put-attribute name="title" value="pagetit.24hcusers" />
+		<put-attribute name="content" value="/WEB-INF/jsp/user/compareusersbytag.jsp" />
+	</definition>
+	<!-- frankr addition end -->
+	
 	<definition name="/error/flush" extends="errortemplate">
 		<put-attribute name="title" value="pagetit.welcomemsg" />
 		<put-attribute name="content" value="/WEB-INF/jsp/error/flush.jsp" />
