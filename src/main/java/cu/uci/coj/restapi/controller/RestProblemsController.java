@@ -34,6 +34,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
 import org.apache.commons.io.FileUtils;
+import org.json.zip.JSONzip;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -325,7 +326,27 @@ public class RestProblemsController {
             return new ResponseEntity<>(TokenUtils.ErrorMessage(8), HttpStatus.BAD_REQUEST);
         }
     }
-     
+    
+    
+    @ApiOperation(value = "Obtener el último problema",  
+            notes = "Devuelve el último problema del COJ.",
+            response = ProblemRest.class)
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
+    @RequestMapping(value = "/last", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ProblemRest getLastProblems() {
+        
+        int found = problemDAO.countProblem(null, 0, null, -1, -1);
+
+        List<Problem> listProblems = new LinkedList();
+        PagingOptions options = new PagingOptions(end(found));
+        IPaginatedList<Problem> pages = problemDAO.findAllProblems("en", null, found, options, null, 0, 0, -1, -1);
+        listProblems.addAll(pages.getList());
+
+        ProblemRest pr = BuildProblemRest(listProblems.get(listProblems.size()-1), null);
+        return pr;
+    }
+    
     private ProblemRest BuildProblemRest(Problem p,String username){        
         if(username == null)
             return new ProblemRest(p.getPid(), p.getTitle(), p.getSubmitions(), p.getAc(), p.getAccp(), p.getPoints());
