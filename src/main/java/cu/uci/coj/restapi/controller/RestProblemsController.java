@@ -347,6 +347,20 @@ public class RestProblemsController {
         return pr;
     }
     
+    @ApiOperation(value = "Obtener la última página de problemas",  
+            notes = "Devuelve el número de la última página de problemas.",
+            response = Integer.class)
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ejemplo de respuesta del método") })
+    @RequestMapping(value = "/lastpage", method = RequestMethod.GET, headers = "Accept=application/json")
+    @ResponseBody
+    public ResponseEntity<String> getLastProblemsPage() {
+        
+        int found = problemDAO.countProblem(null, 0, null, -1, -1);
+        String response = "{\"lastpage\":"+end(found)+"}";
+        
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+    
     private ProblemRest BuildProblemRest(Problem p,String username){        
         if(username == null)
             return new ProblemRest(p.getPid(), p.getTitle(), p.getSubmitions(), p.getAc(), p.getAccp(), p.getPoints());
