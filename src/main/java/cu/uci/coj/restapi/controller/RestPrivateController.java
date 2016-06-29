@@ -21,7 +21,6 @@ import cu.uci.coj.restapi.templates.InputUserRest;
 import cu.uci.coj.restapi.templates.TokenRest;
 import cu.uci.coj.restapi.utils.ErrorUtils;
 import cu.uci.coj.restapi.utils.TokenUtils;
-import cu.uci.coj.validator.forgottenValidator;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Random;
