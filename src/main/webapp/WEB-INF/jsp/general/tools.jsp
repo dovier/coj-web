@@ -9,11 +9,10 @@
 <div class="postcontent">
     <!-- article-content -->
 
-    <ul>
 
-       <%-- <li>
-            <a href="/datagen/datasets.xhtml?mode=customsol"><spring:message code="text.tools.1"/></a>
-        </li>--%>
+    <%-- <li>
+         <a href="/datagen/datasets.xhtml?mode=customsol"><spring:message code="text.tools.1"/></a>
+     </li>--%>
 
         <%--  <li>
               <a href="/services/specification.xhtml"><spring:message code="text.tools.2"/></a>
@@ -22,7 +21,7 @@
         <div class="col-xs-3">
             <a class="clearfix" href="/general/docs.xhtml"><i title="<spring:message code="text.tools.2"/>"
                                                               data-toggle="tooltip"
-                                                              class="fa fa-exchange fa-5x"></i></a>
+                                                              class="fa fa-exchange fa-5x"></i>></a>
             <label><spring:message code="text.tools.2"/></label>
         </div>
 
@@ -46,9 +45,10 @@
            </div>
            <div class="col-xs-3">
             <a class="clearfix" href="<c:url value="/general/mapsite.xhtml" />"><i
-                    title="<spring:message code="text.tools.6"/>" data-toggle="tooltip" class="fa fa-sitemap fa-5x"></i></a>
+                    title="<spring:message code="text.tools.6"/>" data-toggle="tooltip"
+                    class="fa fa-sitemap fa-5x"></i></a>
             <label><spring:message code="text.tools.6"/></label>
-        </div>
+           </div>
 
            <div class="col-xs-3">
                <a href="/wboard/contests.xhtml" class="clearfix">
@@ -57,7 +57,19 @@
                </a>
                <label>COJboard</label>
            </div>
-    </ul>
+
+
+    <authz:authorize ifAnyGranted="ROLE_ADMIN,ROLE_COACH">
+        <div class="col-xs-3">
+            <a href="/teamanalyzer/main.xhtml" class="clearfix">
+                <i title=" <spring:message code="text.tools.7"/>" data-toggle="tooltip"
+                   class="fa fa-sitemap fa-5x"></i>
+                <label><spring:message code="text.tools.7"/></label>
+
+            </a>
+        </div>
+    </authz:authorize>
+
     <!-- /article-content -->
 </div>
 <script>
