@@ -75,7 +75,9 @@
 				</thead>
 				<tr>
 					<td width="16%">${submission.acTestCases} 		<c:if test="${submission.totalTestCases > 0}">
-						 / ${submission.totalTestCases}
+						 / ${submission.totalTestCases} 
+						 (<b><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" 
+						 value="${(submission.acTestCases / submission.totalTestCases * 100.0)}"/></b>)
 					</c:if> </td>
 					<td width="16%"><c:if test="${submission.status eq 'Accepted'}">${submission.timeUsed}</c:if>
 					                <c:if test="${!(submission.status eq 'Accepted')}">...</c:if></td>
