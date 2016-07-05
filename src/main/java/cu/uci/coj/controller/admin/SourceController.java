@@ -89,12 +89,13 @@ public class SourceController extends BaseController {
                                     @RequestParam(required = true, value = "name") String name,
                                     @RequestParam(required = true, value = "author") String author,
                                     ProblemSource problemSource, BindingResult result, RedirectAttributes redirectAttributes) {
+
         problemSourceValidator.validateUpdate(problemSource,result);
+
         if (result.hasErrors()) {
             model.addAttribute(problemSource);
             return "/admin/wbsource/edit";
         }
-
 
         problemDAO.updateProblemSource(idSource, name, author);
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());

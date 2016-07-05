@@ -149,6 +149,7 @@ public class WbBoardAdminController extends BaseController {
 
     @RequestMapping(value = "/wboard/site/edit.xhtml", method = RequestMethod.POST)
     public String editSitePost(Model model, WbSite wbSite, BindingResult result, RedirectAttributes redirectAttributes) {
+
         wbSiteValidator.validateUpdate(wbSite, result);
         if (result.hasErrors()) {
             model.addAttribute("timezones", TimeZone.getAvailableIDs());

@@ -53,6 +53,8 @@ public class ProblemSourceValidator implements Validator {
 
         String author = ((ProblemSource) o).getAuthor().replaceAll(" ", "");
         String name = ((ProblemSource) o).getName().replaceAll(" ", "");
+
+
         if (author.isEmpty() && name.isEmpty()) {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "author", "general.error.oneempty");
 

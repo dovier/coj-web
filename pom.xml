@@ -183,6 +183,11 @@
             <version>3.1.1.RELEASE</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <version>4.1.0.RELEASE</version>
+        </dependency>
+        <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
             <version>5.0.6</version>
@@ -194,6 +199,16 @@
             <version>3.0</version>
             <type>jar</type>
         </dependency>
+
+
+
+
+
+
+
+
+
+
         <dependency>
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-amqp</artifactId>
