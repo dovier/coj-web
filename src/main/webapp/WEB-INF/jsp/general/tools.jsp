@@ -6,7 +6,7 @@
     <spring:message code="pagehdr.tools"/>
 </h2>
 
-<div class="postcontent">
+<div class="postcontent clearfix">
     <!-- article-content -->
 
 
@@ -21,7 +21,7 @@
         <div class="col-xs-3">
             <a class="clearfix" href="/general/docs.xhtml"><i title="<spring:message code="text.tools.2"/>"
                                                               data-toggle="tooltip"
-                                                              class="fa fa-exchange fa-5x"></i>></a>
+                                                              class="fa fa-exchange fa-5x"></i></a>
             <label><spring:message code="text.tools.2"/></label>
         </div>
 
@@ -62,11 +62,11 @@
     <authz:authorize ifAnyGranted="ROLE_ADMIN,ROLE_COACH">
         <div class="col-xs-3">
             <a href="/teamanalyzer/main.xhtml" class="clearfix">
-                <i title=" <spring:message code="text.tools.7"/>" data-toggle="tooltip"
-                   class="fa fa-sitemap fa-5x"></i>
-                <label><spring:message code="text.tools.7"/></label>
+                <i title=" <spring:message code="text.tools.8"/>" data-toggle="tooltip"
+                   class="fa fa-users fa-5x"></i>
 
             </a>
+            <label><spring:message code="text.tools.8"/></label>
         </div>
     </authz:authorize>
 
