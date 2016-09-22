@@ -81,24 +81,19 @@
                           title="<spring:message code="onemandatory.field"/>"></i></a>
                 </td>
             </tr>
-
-
             <tr>
                 <td width="15%"></td>
                 <td style="width: 70%;">
                     <form:textarea path="description"/>
                 </td>
-
                 <td><span class="label label-danger"><form:errors path="description"/></span></td>
-
             </tr>
             <c:if test="${not empty clarification.originalMSG}">
                 <tr>
                     <td width="15%"><spring:message code="fieldhdr.originalmsg"/>:</td>
                     <td style="width: 70%;">
-                            ${clarification.originalMSG}
+                        <form:textarea readonly="true" path="originalMSG"/>
                     </td>
-
                 </tr>
             </c:if>
 
