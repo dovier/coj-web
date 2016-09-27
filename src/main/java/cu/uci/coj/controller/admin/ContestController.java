@@ -444,13 +444,14 @@ public class ContestController extends BaseController {
     }
 
     @RequestMapping(value = "/importicpcusers.xhtml", method = RequestMethod.POST)
-    public String importICPCUsers(
+    public @ResponseBody
+    byte[] importICPCUsers(
             Model model,
             HttpServletResponse response,
             Contest contest,
             Locale locale,
             @RequestParam("cid") Integer cid,
-            @RequestParam(value = "warmupCid", required = false) String warmupCids,
+            @RequestParam(value = "warmupCid", required = false) Integer warmupCid,
             @RequestParam("prefix") String prefix,
             @RequestParam MultipartFile personFile,
             @RequestParam MultipartFile schoolFile,
@@ -458,22 +459,6 @@ public class ContestController extends BaseController {
             @RequestParam MultipartFile teamFile,
             @RequestParam MultipartFile teamPersonFile,
             RedirectAttributes redirectAttributes) throws IOException {
-
-        if (personFile == null || schoolFile == null || siteFile == null || teamFile == null || teamPersonFile == null) {
-            model.addAttribute("cid", cid);
-            model.addAttribute("eproblem", withProblems(cid));
-            redirectAttributes.addFlashAttribute("messagerror", Notification.getNotSuccesfull());
-            return "redirect:/admin/importicpcusers.xhtml?cid=" + contest.getCid();
-        }
-        int warmupCid =0;
-        try {
-           warmupCid = Integer.parseInt(warmupCids);
-        }catch (Exception e){
-            model.addAttribute("cid", cid);
-            model.addAttribute("eproblem", withProblems(cid));
-            redirectAttributes.addFlashAttribute("messagerror", Notification.getNotSuccesfull());
-            return "redirect:/admin/importicpcusers.xhtml?cid=" + contest.getCid();
-        }
 
         List<String> messages = contestService.importICPCUsers(prefix,
                 new String(personFile.getBytes()).split("\r\n"), new String(
@@ -492,12 +477,12 @@ public class ContestController extends BaseController {
         response.setHeader("Content-Disposition", "attachment; filename=\""
                 + prefix + "users");
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
-        return "/admin/importicpcusers";
+        return builder.toString().getBytes("UTF-8");
     }
 
     @RequestMapping(value = "/contestproblemcolors.xhtml", method = RequestMethod.GET)
     public String contestProblemColors(Model model, Locale locale,
-                                       @RequestParam("cid") Integer cid) {
+            @RequestParam("cid") Integer cid) {
         Contest contest = contestDAO.loadContestForProblems(cid);
         List<Problem> problems = contestDAO.loadContestProblems(contest
                 .getCid());
@@ -523,16 +508,10 @@ public class ContestController extends BaseController {
     }
 
     @RequestMapping(value = "/baylorxml.xhtml", method = RequestMethod.POST)
-    public
-    String baylorXml(Model model, Locale locale,
-                     HttpServletResponse response, MultipartFile xml,
-                     @RequestParam("cid") Integer cid, RedirectAttributes redirectAttributes) throws IOException {
-        if (xml.isEmpty()){
-            model.addAttribute("cid", cid);
-            model.addAttribute("eproblem", withProblems(cid));
-            redirectAttributes.addFlashAttribute("messagerror", Notification.getNotSuccesfull());
-            return "redirect:/admin/baylorxml.xhtml?cid=" + cid;
-        }
+    public @ResponseBody
+    byte[] baylorXml(Model model, Locale locale,
+            HttpServletResponse response, MultipartFile xml,
+            @RequestParam("cid") Integer cid, RedirectAttributes redirectAttributes) throws IOException {
         List<Map<String, Object>> maps = contestDAO.baylorXMLData(cid);
 
         maps.get(0).put("rank", 1);
@@ -551,7 +530,7 @@ public class ContestController extends BaseController {
             } else if (cMap.get("accepted").equals(maps.get(i).get("accepted"))
                     && cMap.get("penalty").equals(maps.get(i).get("penalty"))
                     && cMap.get("last_time").equals(
-                    maps.get(i).get("last_time"))) {
+                            maps.get(i).get("last_time"))) {
                 maps.get(i).put("rank", cMap.get("rank"));
             } else {
                 maps.get(i).put("rank", i + 1);
@@ -568,8 +547,8 @@ public class ContestController extends BaseController {
             int i = 0;
             while (i < maps.size()
                     && !(line.contains("TeamName=\""
-                    + HtmlUtils.htmlEscape(maps.get(i).get("nick")
-                    .toString()) + "\"") || line
+                            + HtmlUtils.htmlEscape(maps.get(i).get("nick")
+                                    .toString()) + "\"") || line
                     .contains("TeamName=\""
                             + maps.get(i).get("nick").toString()
                             + "\""))) {
@@ -588,7 +567,7 @@ public class ContestController extends BaseController {
                         + maps.get(i).get("accepted") + "\"");
                 line = line.replace("LastProblemTime=\"0\"",
                         "LastProblemTime=\"" + maps.get(i).get("last_time")
-                                + "\"");
+                        + "\"");
                 line = line + "\n";
             }
             builder.append(line);
@@ -597,12 +576,12 @@ public class ContestController extends BaseController {
         response.setHeader("Content-Disposition", "attachment; filename=\""
                 + xml.getOriginalFilename());
         redirectAttributes.addFlashAttribute("message", Notification.getSuccesfullUpdate());
-        return "/admin/baylorxml";
+        return builder.toString().getBytes("UTF-8");
     }
 
     @RequestMapping(value = "/contestproblemcolors.xhtml", method = RequestMethod.POST)
     public String contestProblemColors(Model model, Locale locale,
-                                       String[] colors, Contest contest, RedirectAttributes redirectAttributes) {
+            String[] colors, Contest contest, RedirectAttributes redirectAttributes) {
 
         int idx = 0;
         List<Problem> problems = contestDAO.loadContestProblems(contest

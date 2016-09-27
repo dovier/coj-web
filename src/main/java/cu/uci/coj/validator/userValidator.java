@@ -8,14 +8,6 @@ import cu.uci.coj.dao.UserDAO;
 import cu.uci.coj.model.IpAddress;
 import cu.uci.coj.model.Team;
 import cu.uci.coj.model.User;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Resource;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.EmailValidator;
 import org.springframework.stereotype.Component;
@@ -23,11 +15,17 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import javax.annotation.Resource;
+import java.util.Calendar;
+import java.util.Date;
+
 @Component
 public class userValidator implements Validator {
 
     @Resource
     private UserDAO userDAO;
+
+    //private static final String STRING_PATTERN = "[ A-Za-zäÄëËïÏöÖüÜáéíóúáéíóúÁÉÍÓÚÂÊÎÔÛâêîôûàèìòùÀÈÌÒÙñÑ.-/']+";
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
@@ -38,13 +36,14 @@ public class userValidator implements Validator {
         return User.class.isAssignableFrom(clazz);
     }
 
+
     @Override
     public void validate(Object o, Errors errors) {
         User user = (User) o;
         user.setDob(new Date(user.getYear() - 1900, user.getMonth() - 1, user.getDay()));
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nick", "judge.register.error.nick");
         if (!errors.hasFieldErrors("nick")) {
-            if ((user.getNick().length()) > 15) {
+            if ((user.getNick().length()) > 30) {
                 errors.rejectValue("nick", "judge.register.error.long25charact");
             } else if (user.getNick().length() < 3) {
                 errors.rejectValue("nick", "judge.register.error.less3charact");
@@ -57,16 +56,16 @@ public class userValidator implements Validator {
                 errors.rejectValue("name", "errormsg.7");
             } else if (user.getName().length() > 30) {
                 errors.rejectValue("name", "errormsg.6");
-            } else if (!user.getName().matches("[a-zA-Z\\.\\-\\'\\s]+")) {
-                errors.rejectValue("name", "errormsg.8");
+           /* } else if (!user.getName().matches(STRING_PATTERN)) {
+                errors.rejectValue("name", "errormsg.8");*/
             }
 
             if (user.getLastname().length() < 1) {
                 errors.rejectValue("lastname", "errormsg.10");
             } else if (user.getLastname().length() > 50) {
                 errors.rejectValue("lastname", "errormsg.9");
-            } else if (!user.getLastname().matches("[a-zA-Z\\.\\-\\'\\s]+")) {
-                errors.rejectValue("lastname", "errormsg.11");
+           /* } else if (!user.getLastname().matches(STRING_PATTERN)) {
+                errors.rejectValue("lastname", "errormsg.11");*/
             }
             // si el correo ha sido cambiado y esta en uso por otra persona en el
             // COJ
@@ -136,7 +135,7 @@ public class userValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nick", "mandatory.field");
 
         if (!errors.hasFieldErrors("nick")) {
-            if ((user.getNick().length()) > 15) {
+            if ((user.getNick().length()) > 30) {
                 errors.rejectValue("nick", "judge.register.error.long25charact");
             } else if (user.getNick().length() < 3) {
                 errors.rejectValue("nick", "judge.register.error.less3charact");
@@ -240,11 +239,12 @@ public class userValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nick", "judge.register.error.nick");
 
         if (!errors.hasFieldErrors("nick")) {
-            if (!team.getNick().isEmpty()) {
+           /* if (!team.getNick().isEmpty()) {
                 if (!team.getNick().matches("[0-9a-zA-Z _-]+")) {
                     errors.rejectValue("nick", "general.error.onlylettersnumbers");
                 }
-            } else if ((team.getNick().length()) > 15) {
+            } else*/
+            if ((team.getNick().length()) > 30) {
                 errors.rejectValue("nick", "judge.register.error.long25charact");
             } else if (team.getNick().length() < 3) {
                 errors.rejectValue("nick", "judge.register.error.less3charact");

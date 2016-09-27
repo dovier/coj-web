@@ -643,9 +643,9 @@ public class SubmissionJudge implements Serializable {
 			this.statusName = "CE";
 		}
 
-		if (status.equals("Runtime Error")) {
+		/*if (status.equals("Runtime Error")) {
 			this.statusName = "RTE";
-		}
+		}*/
 
 		if (status.equals("Compilation Error") || status.equals("Runtime Error") || status.equals("Invalid Function")) {
 			this.memoryUsed = -1;

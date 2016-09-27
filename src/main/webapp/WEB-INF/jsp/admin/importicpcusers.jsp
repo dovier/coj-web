@@ -176,7 +176,7 @@
     $("#fileper").fileinput({
         maxFileSize: 51200,
         msgProgress: 'Loading {percent}%',
-       // showPreview: false,
+        showPreview: false,
         /*previewClass: 'file_preview',
         previewFileType: "file",*/
         browseClass: "btn btn-primary",
@@ -187,14 +187,14 @@
         removeIcon: '<i class="fa fa-trash"></i>',
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>',
         msgValidationError: '<spring:message code="message.files.msgvalidationerror"/>',
-        allowedFileExtensions:['.tab'],
-        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'
+        /*allowedFileExtensions:['.tab'],
+        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'*/
     });
 
     $("#filesch").fileinput({
         maxFileSize: 51200,
         msgProgress: 'Loading {percent}%',
-      //  showPreview: false,
+        showPreview: false,
         /*previewClass: 'file_preview',
         previewFileType: "file",*/
         browseClass: "btn btn-primary",
@@ -205,14 +205,14 @@
         removeIcon: '<i class="fa fa-trash"></i>',
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>',
         msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
-        allowedFileExtensions:['.tab'],
-        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'
+      /*  allowedFileExtensions:['.tab'],
+        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'*/
     });
 
     $("#filesit").fileinput({
         maxFileSize: 51200,
         msgProgress: 'Loading {percent}%',
-       // showPreview: false,
+        showPreview: false,
         /*previewClass: 'file_preview',
         previewFileType: "file",*/
         browseClass: "btn btn-primary",
@@ -223,17 +223,17 @@
         removeIcon: '<i class="fa fa-trash"></i>',
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>',
         msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
-        allowedFileExtensions:['.tab'],
-        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'
+     /*   allowedFileExtensions:['.tab'],
+        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'*/
     });
 
     $("#filetea").fileinput({
         maxFileSize: 51200,
         msgProgress: 'Loading {percent}%',
-       // showPreview: false,
+       showPreview: false,
         /*previewClass: 'file_preview',
-        previewFileType: "file",
-        browseClass: "btn btn-primary",*/
+        previewFileType: "file",*/
+        browseClass: "btn btn-primary",
         browseLabel: "<spring:message code="message.filename"/>",
         browseIcon: '<i class="fa fa-file-archive-o"></i>&nbsp;',
         removeClass: "btn btn-default",
@@ -241,14 +241,14 @@
         removeIcon: '<i class="fa fa-trash"></i>',
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>',
         msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
-        allowedFileExtensions:['.tab'],
-        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'
+       /* allowedFileExtensions:['.tab'],
+        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'*/
     });
 
     $("#filetep").fileinput({
         maxFileSize: 51200,
         msgProgress: 'Loading {percent}%',
-       // showPreview: false,
+        showPreview: false,
        /* previewClass: 'file_preview',
         previewFileType: "file",*/
         browseClass: "btn btn-primary",
@@ -259,8 +259,8 @@
         removeIcon: '<i class="fa fa-trash"></i>',
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>',
         msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
-        allowedFileExtensions:['.tab'],
-        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'
+      /*  allowedFileExtensions:['.tab'],
+        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'*/
     });
 
 

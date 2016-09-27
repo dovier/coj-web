@@ -7,12 +7,12 @@ src="<c:url value="/js/jquery.js"/>"></script>-->
 
 <jsp:useBean id="now" class="java.util.Date"/>
 <fmt:formatDate var="year" value="${now}" pattern="yyyy"/>
-    <legend>
-<h2>
+
+<h2 class="postheader">
         <spring:message code="pagehdr.ruaccount"/>
 </h2>
-    </legend>
-<div class="row postcontent">
+
+<div class="row">
     <div class="col-xs-10">
         <form:form method="post" commandName="user" cssClass="form-horizontal">
             <div class="form-group">

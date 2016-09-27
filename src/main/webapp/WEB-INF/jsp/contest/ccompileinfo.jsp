@@ -1,7 +1,7 @@
 <%@include file="/WEB-INF/jsp/include/include.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <script  type="text/javascript" src="/chjudge/js/edit_area/edit_area_full.js"></script>
-<style type="text/css">
+<%--<style type="text/css">
     table {
 
         font: .9em/1.2em Georgia, "Times New Roman", Times, serif;
@@ -53,7 +53,7 @@
     th + td {
         padding-left: .5em;
     }
-</style>
+</style>--%>
 <script  type="text/javascript">
     editAreaLoader.init({
         id: "code"	// id of the textarea to transform

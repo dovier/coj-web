@@ -47,11 +47,11 @@
 					<c:choose>
 						<c:when test="${user.update_nick == false}">
 							<form:input cssClass="form-control" path="nick" size="30"
-								maxlength="15" readonly="true" tabindex="1" />
+								maxlength="30" readonly="true" tabindex="1" />
 						</c:when>
 						<c:otherwise>
 							<form:input cssClass="form-control" path="nick" size="30"
-								maxlength="15" tabindex="1" />
+								maxlength="30" tabindex="1" />
 						</c:otherwise>
 					</c:choose>
 				</div>

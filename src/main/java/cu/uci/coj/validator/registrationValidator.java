@@ -74,7 +74,7 @@ public class registrationValidator implements Validator {
         if (!errors.hasFieldErrors("nick")) {
             if (user.getNick().length() < 3) {
                 errors.rejectValue("nick", "errormsg.5");
-            } else if (user.getNick().length() > 15) {
+            } else if (user.getNick().length() > 30) {
                 errors.rejectValue("nick", "errormsg.4");
             }
         }
@@ -83,8 +83,8 @@ public class registrationValidator implements Validator {
                 errors.rejectValue("name", "errormsg.7");
             } else if (user.getName().length() > 30) {
                 errors.rejectValue("name", "errormsg.6");
-            } else if (!user.getName().matches("[a-zA-Z\\.\\-\\'\\s]+")) {
-                errors.rejectValue("name", "errormsg.8");
+           /* } else if (!user.getName().matches("[a-zA-Z\\.\\-\\'\\s]+")) {
+                errors.rejectValue("name", "errormsg.8");*/
             }
         }
         if (!errors.hasFieldErrors("lastname")) {
@@ -92,8 +92,8 @@ public class registrationValidator implements Validator {
                 errors.rejectValue("lastname", "errormsg.10");
             } else if (user.getLastname().length() > 50) {
                 errors.rejectValue("lastname", "errormsg.9");
-            } else if (!user.getLastname().matches("[a-zA-Z\\.\\-\\'\\s]+")) {
-                errors.rejectValue("lastname", "errormsg.11");
+           /* } else if (!user.getLastname().matches("[a-zA-Z\\.\\-\\'\\s]+")) {
+                errors.rejectValue("lastname", "errormsg.11");*/
             }
         }
         if (user.getCountry_id() == 0) {

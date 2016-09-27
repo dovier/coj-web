@@ -87,13 +87,13 @@ public class institutionValidator implements Validator {
         }
 
         // input string conatains characters only
-        if (!errors.hasFieldErrors("name")) {
+       /* if (!errors.hasFieldErrors("name")) {
             pattern = Pattern.compile(STRING_PATTERN);
             matcher = pattern.matcher(institution.getName());
             if (!matcher.matches()) {
                 errors.rejectValue("name", "name.containNonChar");
             }
-        }
+        }*/
 
         if (!errors.hasFieldErrors("name") && institutionDAO.existInstitutionNameByCountry(institution.getName(), institution.getCountry_id())) {
             errors.rejectValue("name",
@@ -130,13 +130,13 @@ public class institutionValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "website", "general.error.empty");
 
         // input string conatains characters only
-        if (!errors.hasFieldErrors("name")) {
+      /*  if (!errors.hasFieldErrors("name")) {
             pattern = Pattern.compile(STRING_PATTERN);
             matcher = pattern.matcher(institution.getName());
             if (!matcher.matches()) {
                 errors.rejectValue("name", "name.containNonChar");
             }
-        }
+        }*/
 
         // input string conatains valid website address
         if (!errors.hasFieldErrors("website")) {
