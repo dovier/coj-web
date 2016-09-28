@@ -495,7 +495,7 @@ public class UserController extends BaseController {
         // si no es admin ni es el mismo usuario logueado el que se quiere
         // cambiar, entonces que no deje hacer nada.
         if (!principal.getName().equals(user.getUsername())) {
-            return "error/accessdenied";
+            return "/error/accessdenied";
         }
 
         user.setUid(userDAO.integer("select.uid.by.username", user.getUsername()));
