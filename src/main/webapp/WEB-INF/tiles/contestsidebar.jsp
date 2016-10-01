@@ -68,17 +68,17 @@
                                         class="fa fa-sort-numeric-asc"></i>&nbsp;<spring:message
                                         code="link.standings"/></a></li>
                                 <c:if test="${contest.balloon and showBalloons}">
-                                    <%--<authz:authorize ifAllGranted="ROLE_USER">--%>
+                                    <authz:authorize ifAnyGranted="ROLE_USER">
                                     <li <c:if test="${idpage == 'cballontracker_contest'}"> class="item-sidebar-selected" </c:if>>
                                         <a target="_blank"
                                            href="<c:url value="/contest/cballoontracker.xhtml?cid=${contest.cid}" />">
                                             <i class="fa fa-circle-o"></i>&nbsp;<spring:message code="link.balloontracker"/>
                                         </a>
                                     </li>
-                                    <%--</authz:authorize>--%>
+                                    </authz:authorize>
                                 </c:if>
                                 <c:if test="${contest.saris and showSaris}">
-                                    <%--<authz:authorize ifAllGranted="ROLE_USER">--%>
+                                    <authz:authorize ifAnyGranted="ROLE_USER">
                                     <li <c:if test="${idpage == 'saris_contest'}"> class="item-sidebar-selected" </c:if>>
                                         <a target="_blank"
                                            href="<c:url value="/contest/saris.xhtml?cid=${contest.cid}" />">
@@ -86,7 +86,7 @@
                                                 code="link.saris"/>
                                         </a>
                                     </li>
-                                    <%--</authz:authorize>--%>
+                                    </authz:authorize>
                                 </c:if>
                                 <c:if test="${contest.past and contest.style == 1}">
                                     <li <c:if test="${idpage == 'cawards_contest'}"> class="item-sidebar-selected" </c:if>>

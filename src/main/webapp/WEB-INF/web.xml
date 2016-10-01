@@ -127,11 +127,12 @@
   </filter-mapping>
   <error-page>
     <error-code>500</error-code>
-    <location>/error/error.xhtml?error=2</location>
+    <location>//error/error.xhtml?error=2</location>
   </error-page>
   <error-page>
     <error-code>404</error-code>
-    <location>/error/error.xhtml?error=2</location>
+    <location>//error/error.xhtml</location>
+
   </error-page>
 
   <security-constraint>
