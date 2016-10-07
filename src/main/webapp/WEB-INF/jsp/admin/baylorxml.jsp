@@ -89,7 +89,7 @@
     $("#file").fileinput({
         maxFileSize: 51200,
         msgProgress: 'Loading {percent}%',
-       // showPreview: false,
+        showPreview: false,
         browseClass: "btn btn-primary",
         browseLabel: "<spring:message code="message.filename"/>",
         browseIcon: '<i class="fa fa-file-archive-o"></i>&nbsp;',
@@ -98,8 +98,6 @@
         removeIcon: '<i class="fa fa-trash"></i>',
         msgSizeTooLarge: '<spring:message code="message.filename.largeerror"/>',
         msgValidationError: "<spring:message code="message.files.msgvalidationerror"/>",
-        allowedFileExtensions:['.xml'],
-        msgInvalidFileExtension: '<spring:message code="message.filename.msgInvalidFileExtension"/>'
     });
 
     $("[data-toggle='tooltip']").tooltip();
