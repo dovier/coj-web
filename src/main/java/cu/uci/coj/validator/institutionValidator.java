@@ -37,7 +37,7 @@ public class institutionValidator implements Validator {
     private Matcher matcher;
 
     private static final String STRING_PATTERN = "[a-zA-Záéíóú ]+";
-    private String WEBSITE_PATTERN = "^(http(?:s)?\\:\\/\\/[a-zA-Z0-9]+(?:(?:\\.|\\-)[a-zA-Z0-9]+)+(?:\\:\\d+)?(?:\\/[\\w\\-]+)*(?:\\/?|\\/\\w+\\.[a-zA-Z]{2,4}(?:\\?[\\w]+\\=[\\w\\-]+)?)?(?:\\&[\\w]+\\=[\\w\\-]+)*)$";
+  //  private String WEBSITE_PATTERN = "^(http(?:s)?\\:\\/\\/[a-zA-Z0-9]+(?:(?:\\.|\\-)[a-zA-Z0-9]+)+(?:\\:\\d+)?(?:\\/[\\w\\-]+)*(?:\\/?|\\/\\w+\\.[a-zA-Z]{2,4}(?:\\?[\\w]+\\=[\\w\\-]+)?)?(?:\\&[\\w]+\\=[\\w\\-]+)*)$";
     private String ZIP_PATTERN = "[0-9A-Z/-]+";
 
     //private String URLREGEX = "^(http(?:s)?\\:\\/\\/[a-zA-Z0-9]+(?:(?:\\.|\\-)[a-zA-Z0-9]+)+(?:\\:\\d+)?(?:\\/[\\w\\-]+)*(?:\\/?|\\/\\w+\\.[a-zA-Z]{2,4}(?:\\?[\\w]+\\=[\\w\\-]+)?)?(?:\\&[\\w]+\\=[\\w\\-]+)*)$";
@@ -70,22 +70,22 @@ public class institutionValidator implements Validator {
 
 
         // input string contains valid website address
-        if (!(institution.getWebsite() != null && institution.getWebsite().isEmpty())) {
-            /*if (!urlValidator.isValid(institution.getWebsite())){
+       /* if (!(institution.getWebsite() != null && institution.getWebsite().isEmpty())) {
+            *//*if (!urlValidator.isValid(institution.getWebsite())){
                 errors.rejectValue("website", "website.containNonAddress");
-            }*/
+            }*//*
 
-            if (!institution.getWebsite().matches(WEBSITE_PATTERN)){
+        *//*    if (!institution.getWebsite().matches(WEBSITE_PATTERN)){
                 errors.rejectValue("website", "website.containNonAddress");
-            }
+            }*//*
 
-            /*pattern = Pattern.compile(WEBSITE_PATTERN);
+            *//*pattern = Pattern.compile(WEBSITE_PATTERN);
             matcher = pattern.matcher(institution.getWebsite());
             if (!matcher.matches()) {
                 errors.rejectValue("website", "website.containNonAddress");
-            }*/
+            }*//*
         }
-
+*/
         // input string conatains characters only
        /* if (!errors.hasFieldErrors("name")) {
             pattern = Pattern.compile(STRING_PATTERN);
@@ -139,13 +139,13 @@ public class institutionValidator implements Validator {
         }*/
 
         // input string conatains valid website address
-        if (!errors.hasFieldErrors("website")) {
-            pattern = Pattern.compile(WEBSITE_PATTERN);
-            matcher = pattern.matcher(institution.getWebsite());
+      /*  if (!errors.hasFieldErrors("website")) {
+          //  pattern = Pattern.compile(WEBSITE_PATTERN);
+          //  matcher = pattern.matcher(institution.getWebsite());
             if (!matcher.matches()) {
                 errors.rejectValue("website", "website.containNonAddress");
             }
-        }
+        }*/
 
 
         if (!errors.hasFieldErrors("name") && institutionDAO.bool("exist.inst.name.but", institution.getName(), institution.getId())) {
