@@ -523,11 +523,11 @@ public class ContestController extends BaseController {
         while ((line = reader.readLine()) != null) {
             int i = 0;
             while (i < maps.size()
-                    && !(line.contains("TeamName=\""
-                            + HtmlUtils.htmlEscape(maps.get(i).get("nick")
+                    && !(line.contains("TeamID=\""
+                            + HtmlUtils.htmlEscape(maps.get(i).get("icpc_baylor_id")
                                     .toString()) + "\"") || line
-                    .contains("TeamName=\""
-                            + maps.get(i).get("nick").toString()
+                    .contains("TeamID=\""
+                            + maps.get(i).get("icpc_baylor_id").toString()
                             + "\""))) {
                 i++;
             }
