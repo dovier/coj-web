@@ -119,8 +119,10 @@ public class ContestScoreboardsController extends BaseController {
 		List<User> judges = userDAO.loadContestJudges(cid);
 		boolean autorizeJudge = false;
 		for (int i = 0; i < judges.size(); i++) {
-			if (principal.getName().equals(judges.get(i).getUsername())) {
-				autorizeJudge = true;
+			if (principal != null) {
+				if (principal.getName().equals(judges.get(i).getUsername())) {
+					autorizeJudge = true;
+				}
 			}
 		}
 
