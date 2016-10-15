@@ -1,28 +1,5 @@
 package cu.uci.coj.controller.contest;
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import atg.taglib.json.util.JSONArray;
 import atg.taglib.json.util.JSONException;
 import atg.taglib.json.util.JSONObject;
@@ -32,15 +9,24 @@ import cu.uci.coj.dao.ContestAwardDAO;
 import cu.uci.coj.dao.ContestDAO;
 import cu.uci.coj.dao.ProblemDAO;
 import cu.uci.coj.dao.UserDAO;
-import cu.uci.coj.model.Contest;
-import cu.uci.coj.model.ContestAwards;
-import cu.uci.coj.model.ContestAwardsFlags;
-import cu.uci.coj.model.Problem;
-import cu.uci.coj.model.Roles;
-import cu.uci.coj.model.SarisSubmission;
-import cu.uci.coj.model.User;
+import cu.uci.coj.model.*;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.Principal;
+import java.util.*;
+import java.util.Locale;
 
 @Controller
 public class ContestScoreboardsController extends BaseController {
@@ -130,11 +116,18 @@ public class ContestScoreboardsController extends BaseController {
 			return "redirect:/contest/contestview.xhtml?cid=" + cid;
 		}
 
+		List<User> judges = userDAO.loadContestJudges(cid);
+		boolean autorizeJudge = false;
+		for (int i = 0; i < judges.size(); i++) {
+			if (principal.getName().equals(judges.get(i).getUsername())) {
+				autorizeJudge = true;
+			}
+		}
+
 		if ((contest.isRunning() || contest.isPast()) && !contest.isRepointing()) {
-			if (contest.isShow_scoreboard() || (principal != null && requestWrapper.isUserInRole(Roles.ROLE_ADMIN))) {
+			if (contest.isShow_scoreboard() || (principal != null && (requestWrapper.isUserInRole(Roles.ROLE_ADMIN)) || autorizeJudge)) {
 				contest.setShow_status(false);
-				if (contest.isShow_scoreboard_out() || (principal != null && requestWrapper.isUserInRole(Roles.ROLE_ADMIN))
-						|| (!contest.isShow_scoreboard_out() && request.getUserPrincipal() != null && contestDAO.isInContest(cid, contestDAO.integer("users.uid", getUsername(principal))))) {
+				if (contest.isShow_scoreboard_out() || (principal != null && (requestWrapper.isUserInRole(Roles.ROLE_ADMIN))||autorizeJudge) || (!contest.isShow_scoreboard_out() && request.getUserPrincipal() != null && contestDAO.isInContest(cid, contestDAO.integer("users.uid", getUsername(principal))))) {
 					contest.setShow_status(true);
                                         switch (contest.getStyle()) {
 					case 1: {
