@@ -193,7 +193,9 @@ public class SubmissionDAOImpl extends BaseDAOImpl implements SubmissionDAO {
 	public void removeEffects(SubmissionJudge submit, boolean isDisabling) {
 		if (!isDisabling) {
 			dml("update.submit.for.removal", submit.getSid());
-			dml("update.source.error.for.removal", submit.getSid());
+
+			//esto lo comentareo porque esta quitando la info de los CE de la bd
+			//dml("update.source.error.for.removal", submit.getSid());
 		}
 		// INFO: aqui deberiamos limpiar la ocurrencia de este submit en
 		// user_problem

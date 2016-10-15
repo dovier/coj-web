@@ -1,26 +1,18 @@
 package cu.uci.coj.controller.admin;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Logger;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import cu.uci.coj.config.Config;
+import cu.uci.coj.controller.BaseController;
+import cu.uci.coj.dao.*;
+import cu.uci.coj.mail.MailNotificationService;
+import cu.uci.coj.model.*;
+import cu.uci.coj.service.ContestService;
+import cu.uci.coj.utils.FileUtils;
+import cu.uci.coj.utils.Notification;
+import cu.uci.coj.utils.Utils;
+import cu.uci.coj.utils.paging.IPaginatedList;
+import cu.uci.coj.utils.paging.PagingOptions;
+import cu.uci.coj.validator.contestValidator;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
@@ -31,35 +23,20 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.mvc.multiaction.InternalPathMethodNameResolver;
-import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.web.util.HtmlUtils;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import cu.uci.coj.utils.Notification;
+import org.springframework.web.util.HtmlUtils;
 
-import cu.uci.coj.config.Config;
-import cu.uci.coj.controller.BaseController;
-import cu.uci.coj.dao.ContestAwardDAO;
-import cu.uci.coj.dao.ContestDAO;
-import cu.uci.coj.dao.ProblemDAO;
-import cu.uci.coj.dao.UserDAO;
-import cu.uci.coj.dao.UtilDAO;
-import cu.uci.coj.mail.MailNotificationService;
-import cu.uci.coj.model.Contest;
-import cu.uci.coj.model.ContestAwardsFlags;
-import cu.uci.coj.model.Level;
-import cu.uci.coj.model.Problem;
-import cu.uci.coj.model.Rejudge;
-import cu.uci.coj.model.RepointUser;
-import cu.uci.coj.model.Roles;
-import cu.uci.coj.model.User;
-import cu.uci.coj.model.VirtualContest;
-import cu.uci.coj.service.ContestService;
-import cu.uci.coj.utils.FileUtils;
-import cu.uci.coj.utils.Utils;
-import cu.uci.coj.utils.paging.IPaginatedList;
-import cu.uci.coj.utils.paging.PagingOptions;
-import cu.uci.coj.validator.contestValidator;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.security.Principal;
+import java.util.*;
+import java.util.Locale;
+import java.util.logging.Logger;
 
 @Controller("AdminContestController")
 @RequestMapping(value = "/admin")

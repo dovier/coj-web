@@ -1,23 +1,23 @@
 package cu.uci.coj.controller.user;
 
-import java.security.Principal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
+import atg.taglib.json.util.JSONArray;
+import atg.taglib.json.util.JSONObject;
+import cu.uci.coj.board.dao.WbSiteDAO;
+import cu.uci.coj.board.service.WbContestService;
+import cu.uci.coj.config.Config;
+import cu.uci.coj.controller.BaseController;
+import cu.uci.coj.dao.*;
+import cu.uci.coj.mail.MailNotificationService;
+import cu.uci.coj.model.*;
+import cu.uci.coj.model.Locale;
+import cu.uci.coj.utils.FileUtils;
 import cu.uci.coj.utils.Notification;
 import cu.uci.coj.utils.Utils;
-
+import cu.uci.coj.utils.paging.IPaginatedList;
+import cu.uci.coj.utils.paging.PagingOptions;
+import cu.uci.coj.validator.forgottenValidator;
+import cu.uci.coj.validator.registrationValidator;
+import cu.uci.coj.validator.userValidator;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -31,41 +31,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
-import atg.taglib.json.util.JSONArray;
-import atg.taglib.json.util.JSONObject;
-import cu.uci.coj.board.dao.WbSiteDAO;
-import cu.uci.coj.board.service.WbContestService;
-import cu.uci.coj.config.Config;
-import cu.uci.coj.controller.BaseController;
-import cu.uci.coj.dao.CountryDAO;
-import cu.uci.coj.dao.InstitutionDAO;
-import cu.uci.coj.dao.ProblemDAO;
-import cu.uci.coj.dao.UserDAO;
-import cu.uci.coj.dao.UtilDAO;
-import cu.uci.coj.mail.MailNotificationService;
-import cu.uci.coj.model.Achievement;
-import cu.uci.coj.model.CompareUsers;
-import cu.uci.coj.model.Country;
-import cu.uci.coj.model.Entry;
-import cu.uci.coj.model.Institution;
-import cu.uci.coj.model.Locale;
-import cu.uci.coj.model.Problem;
-import cu.uci.coj.model.ProblemClassification;
-import cu.uci.coj.model.ProblemComplexity;
-import cu.uci.coj.model.ProblemRichTitle;
-import cu.uci.coj.model.Roles;
-import cu.uci.coj.model.User;
-import cu.uci.coj.model.WbContest;
-import cu.uci.coj.model.WbSite;
-import cu.uci.coj.utils.FileUtils;
-import cu.uci.coj.utils.paging.IPaginatedList;
-import cu.uci.coj.utils.paging.PagingOptions;
-import cu.uci.coj.validator.forgottenValidator;
-import cu.uci.coj.validator.registrationValidator;
-import cu.uci.coj.validator.userValidator;
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/user")

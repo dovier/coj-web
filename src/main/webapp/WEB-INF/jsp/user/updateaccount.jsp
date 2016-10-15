@@ -144,44 +144,96 @@
 					</div>
 				</div>
 			</authz:authorize>
-			<div class="form-group">
-				<label class="control-label col-xs-3"><spring:message
-						code="fieldhdr.country" />: </label>
-				<div class="col-xs-8">
-					<form:select cssClass="form-control" path="country_id" id="country"
-						onchange="getInstitution();">
-						<form:option value="0">
-							<spring:message code="fieldval.select" />
-						</form:option>
-						<form:options items="${countries}" itemValue="id" itemLabel="name" />
-					</form:select>
-				</div>
-				<input type="hidden" name="noneInstitution" value='<spring:message code="user.none.institution" />'/>
-				<div class="error col-xs-8 col-xs-offset-3">
-					<span class="label label-danger"><form:errors path="country" /></span>
-				</div>
-				<a><i data-toggle="tooltip" class="fa fa-asterisk"
-					title="<spring:message code="mandatory.field"/>"></i></a> <a><i
-					data-toggle="tooltip" class="fa fa-info-circle"
-					title="<spring:message code="infomsg.5"/>"></i></a>
-			</div>
-			<div id="inst" class="form-group">
-				<label class="control-label col-xs-3"><spring:message
-						code="fieldhdr.institution" />: </label>
-				<div class="col-xs-8">
-					<form:select cssClass="form-control" path="institution_id"
-						id="institution">
-						<form:options items="${institutions}" itemLabel="name"
-							itemValue="id" />
-					</form:select>
-					<div class="error col-xs-8 col-xs-offset-3">
+			<c:choose>
+				<c:when test="${user.update_nick == false}">
+					<div class="form-group" hidden>
+						<label class="control-label col-xs-3"><spring:message
+								code="fieldhdr.country" />: </label>
+						<div class="col-xs-8">
+							<form:select cssClass="form-control" path="country_id" id="country"
+										 onchange="getInstitution();">
+								<form:option value="0">
+									<spring:message code="fieldval.select" />
+								</form:option>
+								<form:options items="${countries}" itemValue="id" itemLabel="name" />
+							</form:select>
+						</div>
+						<input type="hidden" name="noneInstitution" value='<spring:message code="user.none.institution" />'/>
+						<div class="error col-xs-8 col-xs-offset-3">
+							<span class="label label-danger"><form:errors path="country" /></span>
+						</div>
+						<a><i data-toggle="tooltip" class="fa fa-asterisk"
+							  title="<spring:message code="mandatory.field"/>"></i></a> <a><i
+							data-toggle="tooltip" class="fa fa-info-circle"
+							title="<spring:message code="infomsg.5"/>"></i></a>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="form-group">
+						<label class="control-label col-xs-3"><spring:message
+								code="fieldhdr.country" />: </label>
+						<div class="col-xs-8">
+							<form:select cssClass="form-control" path="country_id" id="country"
+										 onchange="getInstitution();">
+								<form:option value="0">
+									<spring:message code="fieldval.select" />
+								</form:option>
+								<form:options items="${countries}" itemValue="id" itemLabel="name" />
+							</form:select>
+						</div>
+						<input type="hidden" name="noneInstitution" value='<spring:message code="user.none.institution" />'/>
+						<div class="error col-xs-8 col-xs-offset-3">
+							<span class="label label-danger"><form:errors path="country" /></span>
+						</div>
+						<a><i data-toggle="tooltip" class="fa fa-asterisk"
+							  title="<spring:message code="mandatory.field"/>"></i></a> <a><i
+							data-toggle="tooltip" class="fa fa-info-circle"
+							title="<spring:message code="infomsg.5"/>"></i></a>
+					</div>
+				</c:otherwise>
+			</c:choose>
+
+			<c:choose>
+				<c:when test="${user.update_nick == false}">
+					<div id="inst" class="form-group" hidden>
+						<label class="control-label col-xs-3"><spring:message
+								code="fieldhdr.institution" />: </label>
+						<div class="col-xs-8">
+							<form:select cssClass="form-control" path="institution_id"
+										 id="institution">
+								<form:options items="${institutions}" itemLabel="name"
+											  itemValue="id" />
+							</form:select>
+							<div class="error col-xs-8 col-xs-offset-3">
 						<span class="label label-danger"><form:errors
 								path="institution" /></span>
+							</div>
+						</div>
+						<a><i class="fa fa-info-circle" data-toggle="tooltip"
+							  title="<spring:message code="infomsg.6"/>"></i></a>
 					</div>
-				</div>
-				<a><i class="fa fa-info-circle" data-toggle="tooltip"
-					title="<spring:message code="infomsg.6"/>"></i></a>
-			</div>
+				</c:when>
+				<c:otherwise>
+					<div id="inst" class="form-group">
+						<label class="control-label col-xs-3"><spring:message
+								code="fieldhdr.institution" />: </label>
+						<div class="col-xs-8">
+							<form:select cssClass="form-control" path="institution_id"
+										 id="institution">
+								<form:options items="${institutions}" itemLabel="name"
+											  itemValue="id" />
+							</form:select>
+							<div class="error col-xs-8 col-xs-offset-3">
+						<span class="label label-danger"><form:errors
+								path="institution" /></span>
+							</div>
+						</div>
+						<a><i class="fa fa-info-circle" data-toggle="tooltip"
+							  title="<spring:message code="infomsg.6"/>"></i></a>
+					</div>
+				</c:otherwise>
+			</c:choose>
+
 			
 			<authz:authorize ifAllGranted="ROLE_USER">
 				<div class="form-group">
@@ -380,7 +432,7 @@
 				<label class="control-label col-xs-3"><spring:message
 						code="fieldhdr.npassword" />:</label>
 				<div class="col-xs-8">
-					<form:password cssClass="form-control" path="password" size="30"
+					<form:password disabled="true" cssClass="form-control" path="password" size="30"
 						minlength="8" maxlength="100"></form:password>
 				</div>
 				<div class="error col-xs-8 col-xs-offset-3">
@@ -394,7 +446,7 @@
 				<label class="control-label col-xs-3" for="confirmPassword"><spring:message
 						code="fieldhdr.cpassword" />:</label>
 				<div class="col-xs-8">
-					<form:password cssClass="form-control" path="confirmPassword"
+					<form:password disabled="true" cssClass="form-control" path="confirmPassword"
 						size="30" minlength="8" maxlength="100" />
 				</div>
 				<div class="error col-xs-8 col-xs-offset-3">

@@ -83,7 +83,8 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
 		dml("insert.contest.data.2", uid, teamCoach == null ? "none"
 				: teamCoach, teamUsers[0] == null ? "none" : teamUsers[0],
 				teamUsers[1] == null ? "none" : teamUsers[1],
-				teamUsers[2] == null ? "none" : teamUsers[2]);
+				teamUsers[2] == null ? "none" : teamUsers[2],
+				user[5]==null? "-1":user[5]);
 
 		dml("insert.contest.data.3", uid, cid, site);
 		dml("insert.contest.data.4", uid, cid);
