@@ -37,12 +37,16 @@
             <a href="<%=url_en%>"><img data-toggle="tooltip" data-placement="bottom"
                                        src="<c:url value="/images/i18n/en.png"/>"
                                        alt="<spring:message code="altval.en"/>"
-                                       title="<spring:message code="titval.en"/>" class="image"/></a> <a
-                href="<%=url_es%>"><img data-toggle="tooltip" data-placement="bottom"
+                                       title="<spring:message code="titval.en"/>" class="image"/></a>
+            <a href="<%=url_es%>"><img data-toggle="tooltip" data-placement="bottom"
                                         src="<c:url value="/images/i18n/es.png"/>"
                                         alt="<spring:message code="altval.es"/>"
                                         title="<spring:message code="titval.es"/>" class="image"/></a>
-            <a href="<%=url_pt%>"><img src="<c:url value="/images/i18n/pt.png"/>" alt="<spring:message code="altval.pt"/>" title="<spring:message code="titval.pt"/>" class="image" /></a>
+			<a href="<%=url_pt%>"><img data-toggle="tooltip" data-placement="bottom"
+                                        src="<c:url value="/images/i18n/pt.png"/>"
+                                        alt="<spring:message code="altval.pt"/>"
+                                        title="<spring:message code="titval.pt"/>" class="image"/></a>
+<%--             <a href="<%=url_pt%>"><img src="<c:url value="/images/i18n/pt.png"/>" alt="<spring:message code="altval.pt"/>" title="<spring:message code="titval.pt"/>" class="image" /></a> --%>
         </div>
 
         <div class="zoom">

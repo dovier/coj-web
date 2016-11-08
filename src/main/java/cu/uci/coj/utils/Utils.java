@@ -465,6 +465,8 @@ public class Utils {
         url = url.replace("&lang=en", "");
         url = url.replace("?lang=es", "");
         url = url.replace("&lang=es", "");
+        url = url.replace("?lang=pt", "");
+        url = url.replace("&lang=pt", "");
         if (url.contains("?")) {
             url += "&" + parameter;
         } else {
