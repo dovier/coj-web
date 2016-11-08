@@ -42,7 +42,7 @@
                                         src="<c:url value="/images/i18n/es.png"/>"
                                         alt="<spring:message code="altval.es"/>"
                                         title="<spring:message code="titval.es"/>" class="image"/></a>
-            <!--a href="<%=url_pt%>"><img src="<c:url value="/images/i18n/pt.png"/>" alt="<spring:message code="altval.pt"/>" title="<spring:message code="titval.pt"/>" class="image" /></a-->
+            <a href="<%=url_pt%>"><img src="<c:url value="/images/i18n/pt.png"/>" alt="<spring:message code="altval.pt"/>" title="<spring:message code="titval.pt"/>" class="image" /></a>
         </div>
 
         <div class="zoom">
