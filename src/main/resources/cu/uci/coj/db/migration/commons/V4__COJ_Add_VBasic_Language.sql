@@ -1,2 +1,0 @@
-insert into achievements values(32,'VBasic Master','Being a Microsoft friend','AC 20 problems in VBasic','VBasic',TRUE);
-insert into language values('VBasic','vbnc',19,TRUE,'vbnc 0.0.0.5943','vbasic','vb',32,17)
