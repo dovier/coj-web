@@ -4,6 +4,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cu.uci</groupId>
   <artifactId>PlagiCOJ</artifactId>
-  <version>2.0-SNAPSHO</version>
+  <version>2.0-SNAPSHOT</version>
   <description>POM was created from install:install-file</description>
 </project>
