@@ -345,7 +345,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>3.2.1</version>
+            <version>4.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
@@ -440,7 +440,7 @@
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>4.0.3</version>
                 <configuration>
                     <driver>${database.driver}</driver>
                     <url>${database.url}</url>

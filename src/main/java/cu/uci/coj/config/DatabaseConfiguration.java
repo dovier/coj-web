@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,7 +60,7 @@ public class DatabaseConfiguration {
     }
 
     @Bean
-    // @DependsOn("flyway")
+    @DependsOn("flyway")
     public JdbcTemplate jdbcTemplate() {
         JdbcTemplate bean = new JdbcTemplate();
         bean.setDataSource(ds());
