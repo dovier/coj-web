@@ -267,7 +267,6 @@
             <groupId>cu.uci</groupId>
             <artifactId>plagicoj</artifactId>
             <version>3.0.0-SNAPSHOT</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <artifactId>slf4j-api</artifactId>
