@@ -100,7 +100,8 @@ public class WbContestDAOImpl extends BaseDAOImpl implements WbContestDAO {
 			query.order(Order.desc(options.getSort()));
 		}
 
-		List<WbContest> list = objects(query.select("id", "url", "name", "sid", "startdate", "enddate"), WbContest.class, query.arguments());
+		List<WbContest> list = wbSiteDAO.getContestsList();
+		// objects(query.select("id", "url", "name", "sid", "startdate", "enddate"), WbContest.class, query.arguments());
 
 		List<WbSite> sitelist = wbSiteDAO.getSiteList();
 		HashMap<Integer, WbSite> map =  new HashMap<Integer, WbSite>();

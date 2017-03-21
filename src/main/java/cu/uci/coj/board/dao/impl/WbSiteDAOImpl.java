@@ -178,6 +178,14 @@ public class WbSiteDAOImpl extends BaseDAOImpl implements WbSiteDAO {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public List<WbContest> getContestsList() {
+		return objects("wbcontest.activesites.list", WbContest.class);
+	}
+
+
+
+	@Override
 	public WbSite getSiteById(Integer sid) {
 		return object("wbsite.by.sid", WbSite.class, sid);
 	}

@@ -3,6 +3,7 @@ package cu.uci.coj.board.dao;
 import java.util.List;
 
 import cu.uci.coj.dao.BaseDAO;
+import cu.uci.coj.model.WbContest;
 import cu.uci.coj.model.WbSite;
 import cu.uci.coj.utils.paging.IPaginatedList;
 import cu.uci.coj.utils.paging.PagingOptions;
@@ -50,4 +51,6 @@ public interface WbSiteDAO extends BaseDAO {
 	WbSite getSiteById(Integer sid);
 	
 	IPaginatedList<WbSite> getPaginatedSiteList(PagingOptions options);
+
+	List<WbContest> getContestsList();
 }
