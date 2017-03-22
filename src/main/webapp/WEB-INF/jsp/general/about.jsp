@@ -82,11 +82,11 @@
     <ul>
         <li>Yonny Mondelo Hernández <spring:message code="text.about.20" /></li>
         <li>Dovier Antonio Ripoll Méndez <spring:message code="text.about.20" /></li>
-        <li>Jorge Amado Hernández Betancourt <spring:message code="text.about.20" /></li>
         <li>Yunier Broche Guevara <spring:message code="text.about.20" /></li>
         <li>Frank Arteaga Salgado (ULT, Cuba).</li>
-        <li>Yelaine Sánchez Oliü <spring:message code="text.about.20" /></li>
-        <li>Alison Muñoz Capote <spring:message code="text.about.20" /></li>
+        <li>Amaro Francisco Benjamim Buta (ISUTIC, Angola).</li>
+        <li>Moisés Daniel Gonga (ISUTIC, Angola).</li>
+
     </ul>
 
     <p>
@@ -106,6 +106,9 @@
         <li>Nellis Margarita Cabrera Mallea <spring:message code="text.about.20" /></li>
         <li>Frank Yurell Villafranca <spring:message code="text.about.20" /></li>
         <li>Alain Félix Plana Botello<spring:message code="text.about.20" /></li>
+        <li>Yelaine Sánchez Oliü <spring:message code="text.about.20" /></li>
+        <li>Alison Muñoz Capote <spring:message code="text.about.20" /></li>
+        <li>Jorge Amado Hernández Betancourt <spring:message code="text.about.20" /></li>
     </ul>
 
     <a id="about.22"></a>
