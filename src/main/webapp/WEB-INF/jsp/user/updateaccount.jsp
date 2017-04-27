@@ -432,7 +432,7 @@
 				<label class="control-label col-xs-3"><spring:message
 						code="fieldhdr.npassword" />:</label>
 				<div class="col-xs-8">
-					<form:password disabled="true" cssClass="form-control" path="password" size="30"
+					<form:password cssClass="form-control" path="password" size="30"
 						minlength="8" maxlength="100"></form:password>
 				</div>
 				<div class="error col-xs-8 col-xs-offset-3">
@@ -446,7 +446,7 @@
 				<label class="control-label col-xs-3" for="confirmPassword"><spring:message
 						code="fieldhdr.cpassword" />:</label>
 				<div class="col-xs-8">
-					<form:password disabled="true" cssClass="form-control" path="confirmPassword"
+					<form:password cssClass="form-control" path="confirmPassword"
 						size="30" minlength="8" maxlength="100" />
 				</div>
 				<div class="error col-xs-8 col-xs-offset-3">
