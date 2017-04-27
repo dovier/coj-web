@@ -76,10 +76,10 @@ public class problemValidator implements Validator {
                     "At must 40 characters.");
         }
 
-        if ((problem.getTitle().length()) > 40) {
+        if ((problem.getTitle().length()) > 100) {
             errors.rejectValue("Title",
                     "lengthtitle.addproblem.name",
-                    "At must 40 characters.");
+                    "At must 100 characters.");
         }        
 
 
