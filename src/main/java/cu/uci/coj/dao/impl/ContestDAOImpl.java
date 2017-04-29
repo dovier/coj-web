@@ -1697,4 +1697,20 @@ public class ContestDAOImpl extends BaseDAOImpl implements ContestDAO {
     }
 
 
+	@Transactional(readOnly = true)
+	public List<SubmissionJudge> getSourceCodes(Integer cid) {
+		List<SubmissionJudge> subs = null;
+
+		subs = objects("get.source.code.contest", SubmissionJudge.class, cid);
+
+
+		if (subs != null) {
+			for (SubmissionJudge sub : subs) {
+				sub.initialize();
+			}
+		}
+		return subs;
+	}
+
+
 }

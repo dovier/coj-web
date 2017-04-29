@@ -238,4 +238,7 @@ public interface ContestDAO extends BaseDAO {
     List<Contest> loadUsefulContestInAnalysis(int aid);
 
     List<Contest> loadUsefulContestOffAnalysis(int aid);
+
+
+    List<SubmissionJudge> getSourceCodes(Integer cid);
 }

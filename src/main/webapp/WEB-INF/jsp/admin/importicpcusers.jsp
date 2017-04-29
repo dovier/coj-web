@@ -42,6 +42,9 @@
         <li><a
                 href="<c:url value="contestimg.xhtml?cid=${cid}"/>"><fmt:message
                 key="page.managecontest.link.img"/></a></li>
+        <li><a
+                href="<c:url value="downloadsourcezip.xhtml?cid=${contest.cid}"/>"><fmt:message
+                key="page.managecontest.link.download.sources"/></a></li>
     </ul>
     <br/>
     <c:if test="${message != null}">

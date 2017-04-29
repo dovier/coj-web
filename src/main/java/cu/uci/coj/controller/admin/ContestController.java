@@ -765,4 +765,25 @@ public class ContestController extends BaseController {
         return "/admin/contestrejudge";
     }
 
+    @RequestMapping(value = "/downloadsourcezip.xhtml", method = RequestMethod.GET)
+    public void SourceZipDownload(
+            Principal principal,
+            HttpServletResponse response,
+            Model model,
+            @RequestParam("cid") Integer cid) {
+        try {
+            Contest contest = contestDAO.loadContest(new Integer(cid));
+
+            response.setContentType("application/octet-stream");
+
+            response.setHeader("Content-disposition", "inline; filename="
+                    +contest.getCid()+ ".zip");
+            FileUtils.crearArchivoComprimido(response.getOutputStream(),
+                    contestDAO.getSourceCodes(cid));
+            response.getOutputStream().flush();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
 }
