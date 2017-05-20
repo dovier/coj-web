@@ -115,8 +115,9 @@ public abstract class BasePdf {
 
         html = html.replace("&#8804;", "&lt;=");
 
-        html = procesarHtmlImage(html);
-
+        //html = procesarHtmlImage(html);
+        html = html.replaceAll("/home/Judge/uploads/","/downloads/");
+        System.out.println(html);
         String buffer = "";
         while (html.contains("\n")) {
             buffer += html.substring(0, html.indexOf("\n") + 1);
