@@ -1,14 +1,14 @@
 package cu.uci.coj.validator;
 
-import cu.uci.coj.dao.ProblemDAO;
-import cu.uci.coj.model.ProblemSource;
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import javax.annotation.Resource;
-import javax.persistence.AssociationOverride;
+import cu.uci.coj.dao.ProblemDAO;
+import cu.uci.coj.model.ProblemSource;
 
 /**
  * Created by alison on 14/01/16.

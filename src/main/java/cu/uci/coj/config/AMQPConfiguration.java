@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.amqp.core.AcknowledgeMode;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -38,7 +40,17 @@ public class AMQPConfiguration {
     public RabbitAdmin rabbitAdmin() {
         return new RabbitAdmin(connectionFactory());
     }
-    
+
+    @Bean
+    Queue queue() {
+        return new Queue(env.getProperty("submit.response.queue"), true);
+    }
+
+    @Bean
+    DirectExchange exchange() {
+        return new DirectExchange(env.getProperty("submit.exchange"));
+    }
+
     @Bean
     public RabbitTemplate submitTemplate() {
         RabbitTemplate bean = new RabbitTemplate(connectionFactory());
@@ -80,7 +92,8 @@ public class AMQPConfiguration {
     public SimpleMessageListenerContainer listenerContainer() {
         SimpleMessageListenerContainer bean = new SimpleMessageListenerContainer(connectionFactory());
         bean.setMessageListener(messageListener);
-        bean.setQueueNames(env.getProperty("submit.response.queue"));
+        bean.setQueues(queue());
+
         bean.setAcknowledgeMode(AcknowledgeMode.AUTO);
         return bean;
     }

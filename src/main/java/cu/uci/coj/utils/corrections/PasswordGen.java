@@ -6,7 +6,7 @@ public class PasswordGen {
 
 	public static void main(String[] args) {
 		Md5PasswordEncoder md5 = new Md5PasswordEncoder();
-		System.out.println(md5.encodePassword("password",null));
+		System.out.println(md5.encodePassword("password","ABC123XYZ789"));
 
 	}
 

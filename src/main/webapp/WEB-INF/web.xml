@@ -137,7 +137,7 @@
 
   <security-constraint>
     <web-resource-collection>
-      <web-resource-name><strong>restricted methods</strong></web-resource-name>
+      <web-resource-name>restricted methods</web-resource-name>
       <url-pattern>/*</url-pattern>
       <http-method>OPTIONS</http-method>
       <http-method>TRACE</http-method>

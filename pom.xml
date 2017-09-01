@@ -2,12 +2,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cu.uci</groupId>
-    <artifactId>coj</artifactId>
-    <version>3.0</version>
+    <parent>
+        <groupId>cu.uci</groupId>
+        <artifactId>coj</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    
+    <artifactId>coj-web</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>coj</name>
+    <name>coj-web</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -259,9 +265,8 @@
         </dependency>
         <dependency>
             <groupId>cu.uci</groupId>
-            <artifactId>PlagiCOJ</artifactId>
-            <version>2.0-SNAPSHOT</version>
-            <type>jar</type>
+            <artifactId>plagicoj</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>slf4j-api</artifactId>
@@ -295,11 +300,12 @@
             <version>2.4</version>
             <classifier>jdk15</classifier>
         </dependency>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.7.3</version>
-        </dependency>
+       <dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901-1.jdbc4</version>
+		</dependency>
+       
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-facebook</artifactId>
@@ -344,7 +350,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>3.2.1</version>
+            <version>4.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
@@ -439,7 +445,7 @@
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>4.0.3</version>
                 <configuration>
                     <driver>${database.driver}</driver>
                     <url>${database.url}</url>
@@ -494,4 +500,17 @@
         </pluginManagement>
     </build>
 
+<repositories>
+		<repository>
+			<id>repo</id>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<url>file://${project.basedir}/src/main/resources/repo</url>
+		</repository>
+	</repositories>
 </project>
